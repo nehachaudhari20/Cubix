@@ -21,6 +21,102 @@ The goal is to:
 9. Re-attack the hardened environment
 
 ---
+## Repository Structure
+payment-defense-twin/
+│
+├── .env.example
+├── .gitignore
+├── README.md
+├── LICENSE
+├── requirements.txt
+├── docker-compose.yml          # Local infrastructure — expanded as services are implemented
+├── Makefile                    # Common development commands
+│
+├── docs/
+│   ├── architecture.md
+│   ├── data-dictionary.md
+│   └── taxonomies/
+│       ├── identity-kyc.pdf
+│       ├── authentication.pdf
+│       └── ...                 # Payment lifecycle stage taxonomies
+│
+├── data/
+│   ├── baseline/
+│   │   └── baseline_transactions.csv
+│   │
+│   ├── known_fraud/
+│   │   └── known_fraud.csv
+│   │
+│   ├── synthetic_generated/
+│   │                           # Red Team generated attacks
+│   │
+│   ├── knowledge/
+│   │   ├── attack_families.json
+│   │   ├── attack_signals.json
+│   │   ├── lifecycle_stages.json
+│   │   └── control_gaps.json
+│   │
+│   └── models/
+│       └── fraudshield_v1.pkl
+│
+├── src/
+│   ├── backend/
+│   │   ├── api/
+│   │   │   ├── __init__.py
+│   │   │   ├── routes.py
+│   │   │   └── schemas.py
+│   │   │
+│   │   ├── sandbox/
+│   │   │   ├── engines/
+│   │   │   ├── rules/
+│   │   │   └── state.py
+│   │   │
+│   │   ├── red_team/
+│   │   │   ├── agents/
+│   │   │   ├── memory/
+│   │   │   └── strategies/
+│   │   │
+│   │   ├── blue_team/
+│   │   │   ├── features.py
+│   │   │   ├── model.py
+│   │   │   ├── trainer.py
+│   │   │   └── evaluator.py
+│   │   │
+│   │   ├── knowledge/
+│   │   │   ├── loader.py
+│   │   │   └── vector_store.py
+│   │   │
+│   │   ├── utils/
+│   │   └── main.py
+│   │
+│   ├── frontend/
+│   │   ├── public/
+│   │   ├── src/
+│   │   │   ├── components/
+│   │   │   ├── pages/
+│   │   │   ├── hooks/
+│   │   │   └── services/
+│   │   └── package.json
+│   │
+│   ├── ml/
+│   │   ├── train_baseline.py
+│   │   └── evaluate_unseen.py
+│   │
+│   └── scripts/
+│       ├── seed_knowledge.py
+│       ├── generate_baseline.py
+│       ├── load_taxonomies.py
+│       └── init_db.py
+│
+├── tests/
+│   ├── unit/
+│   ├── integration/
+│   └── conftest.py
+│
+└── .github/
+    └── workflows/
+
+---
 
 ## Product Architecture
 
