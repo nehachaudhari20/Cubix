@@ -1,11 +1,8 @@
-"""Risk Scoring Engine with Rules + ML Model"""
+"""Risk Scoring Engine with Rules + ML Model (KB-Connected)"""
 
 from typing import Dict, Any
 from ..state import SandboxState
-from ..rules.amount_rules import AmountRules
-from ..rules.velocity_rules import VelocityRules
-from ..rules.device_rules import DeviceRules
-from ..rules.merchant_rules import MerchantRules
+from ..rules import AmountRules, VelocityRules, DeviceRules, MerchantRules
 
 
 class RiskEngine:
@@ -15,7 +12,7 @@ class RiskEngine:
         self.state = state
         self.ml_model = None
         
-        # Initialize rule engines
+        # Initialize rule engines (they now fetch from KB)
         self.amount_rules = AmountRules()
         self.velocity_rules = VelocityRules()
         self.device_rules = DeviceRules()
@@ -39,9 +36,8 @@ class RiskEngine:
             "customer": self.state.get_customer(transaction.get("customer_id"))
         }
         
-        # 1. Apply static rules
+        # 1. Apply static rules (now dynamic from KB)
         rule_risk = 0.0
-        
         rule_results = []
         
         amount_result = self.amount_rules.evaluate(features)
@@ -64,7 +60,7 @@ class RiskEngine:
         rule_risk = min(1.0, rule_risk)
         
         # 2. ML model score (if available)
-        ml_score = 0.3  # Default
+        ml_score = 0.3
         if self.ml_model:
             try:
                 ml_score = self.ml_model.predict_proba([[
@@ -73,8 +69,7 @@ class RiskEngine:
                     int(features["is_new_device"]),
                     features["merchant_risk"]
                 ]])[0][1]
-            except Exception as e:
-                # Fallback if model fails
+            except Exception:
                 pass
         
         # 3. Combined risk (weighted average)
