@@ -57,6 +57,8 @@ payment-defense-twin/
 │
 ├── src/
 │   ├── backend/
+│   │   ├── api/
+│   │   └── knowledge/
 │   ├── frontend/
 │   ├── ml/
 │   └── scripts/

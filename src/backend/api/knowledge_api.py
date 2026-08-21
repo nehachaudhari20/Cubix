@@ -6,12 +6,9 @@ Exposes attack families, signals, and lifecycle stages via REST endpoints.
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from typing import List, Optional, Dict, Any
-import sys
-import os
 from urllib.parse import unquote
 
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from knowledge.loader import KnowledgeLoader
+from src.backend.knowledge.loader import KnowledgeLoader
 
 app = FastAPI(
     title="Payment Defense Twin - Knowledge Base API",
@@ -357,7 +354,7 @@ async def startup_event():
         print(f"📊 Available stages: {available_stages}")
 
 # ============================================================
-# Run with: uvicorn src.api.knowledge_api:app --reload
+# Run with: uvicorn src.backend.api.knowledge_api:app --reload
 # ============================================================
 
 if __name__ == "__main__":

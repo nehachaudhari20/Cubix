@@ -12,7 +12,7 @@ train:
 	$(PYTHON) src/ml/train_baseline.py
 
 run:
-	uvicorn src.backend.main:app --reload --host 0.0.0.0 --port 8000
+	uvicorn src.backend.api.knowledge_api:app --reload --host 0.0.0.0 --port 8000
 
 test:
 	pytest -q
