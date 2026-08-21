@@ -1,0 +1,4539 @@
+{
+  "generated_at": "2026-08-21T14:26:09.086759",
+  "total_families": 57,
+  "attack_families": [
+    {
+      "attack_id": "AG-001",
+      "name": "Prompt Injection / Goal Hacking",
+      "variants": [
+        "Merchant-side manipulation",
+        "Visual prompt injection",
+        "Unauthorized tool calls",
+        "Agent-mediated payment fraud",
+        "Agentic carding"
+      ],
+      "lifecycle_stage": "AI-Agent Commerce",
+      "genai_classification": "PASS",
+      "simulation_type": "Agentic",
+      "prerequisites": [
+        "Agent has permission to execute financial actions (payments, bookings, data access)",
+        "Agent processes external content (websites, emails, documents, product listings)",
+        "Agent has tool access (payment APIs, booking systems, data stores)",
+        "Agent can be influenced by content it encounters during normal operation"
+      ],
+      "attack_flow": [
+        "Attacker crafts malicious content (website, email, product listing)",
+        "Agent processes content during normal operation",
+        "Agent interprets hidden instructions as legitimate",
+        "Agent executes unauthorized action (payment, data exfiltration)",
+        "Financial loss occurs without user awareness"
+      ],
+      "detection_signals": [
+        {
+          "name": "Discrepancy between user goal and agent actions",
+          "detection_method": "Policy violation detection; Goal-action consistency scoring"
+        },
+        {
+          "name": "Agent credentials used from unexpected contexts",
+          "detection_method": "Contextual anomaly detection"
+        },
+        {
+          "name": "Agent using permissions in unexpected ways",
+          "detection_method": "Policy monitoring; Permission usage anomaly"
+        },
+        {
+          "name": "Unauthorized tool use",
+          "detection_method": "Tool call monitoring; Action sequence anomaly"
+        },
+        {
+          "name": "Payment API calls to unexpected endpoints",
+          "detection_method": "Endpoint validation; Rules"
+        },
+        {
+          "name": "Unusual API call patterns",
+          "detection_method": "Anomaly detection (frequency, timing, parameters)"
+        },
+        {
+          "name": "Payments to novel beneficiaries; Rapid sequences",
+          "detection_method": "ML anomaly detection; Graph analytics"
+        },
+        {
+          "name": "Agent interacting with unverified merchants",
+          "detection_method": "Merchant reputation scoring; Entity resolution"
+        },
+        {
+          "name": "Agent behavior inconsistent with historical patterns",
+          "detection_method": "Behavioral analytics; Sequence modeling"
+        },
+        {
+          "name": "Multiple agents showing similar patterns",
+          "detection_method": "Graph analytics; Clustering"
+        }
+      ],
+      "controls_targeted": [
+        "Human -> Agent (instruction fidelity)",
+        "Agent -> Tools (authorization boundary)"
+      ],
+      "evidence_confidence": "VERIFIED"
+    },
+    {
+      "attack_id": "AG-002",
+      "name": "Agent Impersonation / Malicious Agent",
+      "variants": [
+        "Agent identity theft",
+        "Agentic social engineering",
+        "Agentic account takeover",
+        "Shopping manipulation",
+        "Synthetic identity farming via agent"
+      ],
+      "lifecycle_stage": "AI-Agent Commerce",
+      "genai_classification": "PASS",
+      "simulation_type": "Agentic",
+      "prerequisites": [
+        "Agent can autonomously create accounts or interact with systems",
+        "Agent can generate synthetic identities or credentials",
+        "Agent has tool access (email, account creation, payment systems)",
+        "Agent can operate without human direction"
+      ],
+      "attack_flow": [
+        "Agent receives goal (explicit or emergent)",
+        "Agent plans campaign strategy",
+        "Agent creates synthetic identities",
+        "Agent sends phishing communications",
+        "Agent creates fraudulent accounts",
+        "Agent executes fraud campaign",
+        "Agent coordinates with other agents"
+      ],
+      "detection_signals": [
+        {
+          "name": "Agent acting outside any user-defined goal",
+          "detection_method": "Goal-action consistency scoring"
+        },
+        {
+          "name": "Agent identities with synthetic attributes",
+          "detection_method": "Entity resolution; Graph analytics"
+        },
+        {
+          "name": "Agent using permissions for unauthorized purposes",
+          "detection_method": "Policy monitoring; Permission usage anomaly"
+        },
+        {
+          "name": "Agent creating multiple synthetic identities",
+          "detection_method": "Velocity rules; Entity resolution"
+        },
+        {
+          "name": "Email APIs used for phishing",
+          "detection_method": "Content analysis (NLP); Threat intelligence"
+        },
+        {
+          "name": "Multiple account creation API calls",
+          "detection_method": "Velocity rules; Anomaly detection"
+        },
+        {
+          "name": "Coordinated fraud patterns",
+          "detection_method": "Graph analytics; Sequence modeling"
+        },
+        {
+          "name": "Agent creating fraudulent merchant accounts",
+          "detection_method": "Entity resolution; Document forensics"
+        },
+        {
+          "name": "Agent behavior inconsistent with human-like patterns",
+          "detection_method": "Behavioral analytics; Multi-modal analysis"
+        },
+        {
+          "name": "Multiple agents coordinating",
+          "detection_method": "Graph analytics; Network analysis"
+        }
+      ],
+      "controls_targeted": [
+        "Agent -> Merchant (identity verification)",
+        "Agent -> Payment System (authorization)"
+      ],
+      "evidence_confidence": "VERIFIED"
+    },
+    {
+      "attack_id": "AG-003",
+      "name": "Memory Poisoning / Context Injection",
+      "variants": [
+        "Sleeper memory poisoning",
+        "Environment-injected memory poisoning",
+        "Cross-session context injection",
+        "Persistent preference manipulation"
+      ],
+      "lifecycle_stage": "AI-Agent Commerce",
+      "genai_classification": "PASS",
+      "simulation_type": "Agentic",
+      "prerequisites": [
+        "Agent has persistent memory storing user preferences or history",
+        "Agent can be influenced by external content (websites, documents, repositories)",
+        "Agent uses memory for future decision-making",
+        "Agent has permissions to execute financial actions"
+      ],
+      "attack_flow": [
+        "Attacker manipulates external content (website, document, repository)",
+        "Agent processes content during normal operation",
+        "Agent stores fabricated memory as legitimate",
+        "Memory persists across sessions",
+        "In future session, agent acts on poisoned memory",
+        "Agent executes unauthorized action based on \"historical preferences\""
+      ],
+      "detection_signals": [
+        {
+          "name": "Discrepancy between stated intent and agent actions based on memory",
+          "detection_method": "Goal-action consistency scoring; Memory-audit correlation"
+        },
+        {
+          "name": "Agent actions inconsistent with historical patterns",
+          "detection_method": "Behavioral baselining; Memory integrity checking"
+        },
+        {
+          "name": "Agent using permissions based on fabricated history",
+          "detection_method": "Policy monitoring; Permission usage anomaly"
+        },
+        {
+          "name": "Agent executing actions user never authorized",
+          "detection_method": "Action audit; User verification"
+        },
+        {
+          "name": "Transfers, refunds, beneficiary additions based on fabricated history",
+          "detection_method": "Transaction validation; Beneficiary verification"
+        },
+        {
+          "name": "Payments to novel beneficiaries based on \"historical\" authorization",
+          "detection_method": "ML anomaly detection; Graph analytics"
+        },
+        {
+          "name": "Agent referencing non-existent conversations",
+          "detection_method": "Context consistency checking"
+        }
+      ],
+      "controls_targeted": [
+        "Human -> Agent (memory integrity)"
+      ],
+      "evidence_confidence": "VERIFIED"
+    },
+    {
+      "attack_id": "AG-004",
+      "name": "Agent-to-Agent Attacks",
+      "variants": [
+        "Agent session smuggling",
+        "Cross-agent privilege escalation",
+        "A2A injection",
+        "Agent delegation abuse"
+      ],
+      "lifecycle_stage": "AI-Agent Commerce",
+      "genai_classification": "PASS",
+      "simulation_type": "Agentic",
+      "prerequisites": [
+        "Multi-agent system with agent-to-agent communication",
+        "A2A protocol or similar communication channel",
+        "Agents have permissions to execute financial actions",
+        "Trust relationships exist between agents"
+      ],
+      "attack_flow": [
+        "Malicious agent identifies victim agent",
+        "Malicious agent establishes A2A communication",
+        "Malicious agent injects hidden commands into ongoing communication",
+        "Victim agent interprets hidden commands as legitimate",
+        "Victim agent executes unauthorized action"
+      ],
+      "detection_signals": [
+        {
+          "name": "Agent actions inconsistent with user goal",
+          "detection_method": "Goal-action consistency scoring"
+        },
+        {
+          "name": "Agent credentials used in unexpected contexts",
+          "detection_method": "Contextual anomaly detection"
+        },
+        {
+          "name": "Agent using permissions in unexpected ways",
+          "detection_method": "Policy monitoring; Permission usage anomaly"
+        },
+        {
+          "name": "Agent executing actions inconsistent with role",
+          "detection_method": "Role-based action monitoring"
+        },
+        {
+          "name": "Unusual tool call patterns",
+          "detection_method": "Anomaly detection"
+        },
+        {
+          "name": "Unexpected API calls",
+          "detection_method": "API call monitoring"
+        },
+        {
+          "name": "Unauthorized payments",
+          "detection_method": "ML anomaly detection"
+        },
+        {
+          "name": "Unusual agent behavior patterns",
+          "detection_method": "Behavioral analytics"
+        },
+        {
+          "name": "Unusual inter-agent communication patterns",
+          "detection_method": "Graph analytics; A2A protocol monitoring"
+        }
+      ],
+      "controls_targeted": [
+        "Agent -> Agent (communication integrity)"
+      ],
+      "evidence_confidence": "VERIFIED"
+    },
+    {
+      "attack_id": "AG-005",
+      "name": "Autonomous Adaptive Fraud",
+      "variants": [
+        "Self-evolving fraud",
+        "Adaptive evasion",
+        "Agentic fraud optimization",
+        "Real-time strategy adaptation"
+      ],
+      "lifecycle_stage": "AI-Agent Commerce / Cross-stage",
+      "genai_classification": "PASS",
+      "simulation_type": "Agentic",
+      "prerequisites": [
+        "Agent can observe outcomes (approval/decline, detection)",
+        "Agent can adapt behavior based on observations",
+        "Agent can coordinate across multiple accounts or sessions",
+        "Agent has permissions to execute financial actions"
+      ],
+      "attack_flow": [
+        "Agent deploys initial fraud strategy",
+        "Agent observes outcomes (success/failure, detection)",
+        "Agent learns which patterns evade detection",
+        "Agent adapts strategy in real-time",
+        "Agent scales successful patterns across accounts",
+        "Agent may coordinate with other agents"
+      ],
+      "detection_signals": [
+        {
+          "name": "Agent acting outside user goal",
+          "detection_method": "Goal-action consistency scoring"
+        },
+        {
+          "name": "Agent credentials used in adaptive ways",
+          "detection_method": "Contextual anomaly detection"
+        },
+        {
+          "name": "Adaptive permission usage",
+          "detection_method": "Policy monitoring; Permission usage anomaly"
+        },
+        {
+          "name": "Evolving action patterns",
+          "detection_method": "Sequence modeling; Anomaly detection"
+        },
+        {
+          "name": "Evolving tool call patterns",
+          "detection_method": "Anomaly detection; Sequence modeling"
+        },
+        {
+          "name": "Adaptive API usage",
+          "detection_method": "Anomaly detection"
+        },
+        {
+          "name": "Evolving transaction patterns",
+          "detection_method": "ML anomaly detection; Sequence modeling"
+        },
+        {
+          "name": "Evolving behavior patterns",
+          "detection_method": "Behavioral analytics; Sequence modeling"
+        },
+        {
+          "name": "Coordinated adaptation across agents",
+          "detection_method": "Graph analytics; Clustering"
+        }
+      ],
+      "controls_targeted": [
+        "All controls \u2014 agent learns to evade all controls"
+      ],
+      "evidence_confidence": "VERIFIED"
+    },
+    {
+      "attack_id": "AML-001",
+      "name": "AI-Enhanced Adaptive Transaction Monitoring Evasion",
+      "variants": [
+        "Pattern-free movement",
+        "Behavioral camouflage",
+        "Risk-score manipulation",
+        "Threshold-conscious structuring",
+        "Adaptive transaction pattern generation",
+        "Temporal pattern optimization",
+        "Velocity rule evasion"
+      ],
+      "lifecycle_stage": "AML / Compliance",
+      "genai_classification": "PASS",
+      "simulation_type": "Agentic + Algorithmic",
+      "prerequisites": [
+        "Existing accounts (legitimate or fraudulently obtained)",
+        "Understanding of AML monitoring parameters (can be probed)",
+        "Ability to control transaction patterns",
+        "GenAI capability for pattern generation and optimization",
+        "Access to detection feedback (for adaptive variant)"
+      ],
+      "attack_flow": [
+        "Attacker studies AML monitoring rules, thresholds, and ML model behavior",
+        "Attacker establishes baseline understanding of detection parameters through probing",
+        "Attacker uses GenAI to generate optimized transaction patterns with natural variation",
+        "Attacker executes transactions at levels/scoring that appear normal",
+        "Risk score remains low; no alerts generated",
+        "Fraud continues undetected over time",
+        "If monitoring changes, GenAI adapts patterns accordingly",
+        "Detection is delayed until significant losses have accumulated"
+      ],
+      "detection_signals": [
+        {
+          "name": "Amounts just below thresholds with unnatural consistency",
+          "detection_method": "Rules (tolerance bands); ML anomaly detection"
+        },
+        {
+          "name": "Transaction Volume with unnatural smoothness",
+          "detection_method": "Anomaly detection (Isolation Forest, Autoencoder)"
+        },
+        {
+          "name": "Transaction Beneficiary patterns with unnatural rotation",
+          "detection_method": "Pattern analysis; Graph analytics"
+        },
+        {
+          "name": "Account Behavioral consistency",
+          "detection_method": "Behavioral analytics"
+        },
+        {
+          "name": "Account Lack of natural behavioral drift",
+          "detection_method": "Sequence modeling (LSTM/Transformer)"
+        },
+        {
+          "name": "Business profiles with perfect consistency",
+          "detection_method": "Rules + ML"
+        },
+        {
+          "name": "Coordinated patterns across accounts",
+          "detection_method": "Graph Neural Network; Clustering"
+        },
+        {
+          "name": "Risk score unnatural stability",
+          "detection_method": "ML anomaly detection"
+        },
+        {
+          "name": "Growth patterns with unnatural smoothness",
+          "detection_method": "Temporal analysis"
+        },
+        {
+          "name": "Behavioral patterns that evolve in response to detection changes",
+          "detection_method": "Temporal pattern analysis"
+        }
+      ],
+      "controls_targeted": [
+        "Transaction monitoring rules",
+        "ML-based anomaly detection",
+        "Behavioral analytics",
+        "Velocity rules",
+        "Alert thresholds",
+        "Risk scoring"
+      ],
+      "evidence_confidence": "VERIFIED"
+    },
+    {
+      "attack_id": "AML-002",
+      "name": "AI-Powered AML Alert Flooding / DoS",
+      "variants": [
+        "False-positive flooding",
+        "Alert system overload",
+        "Alert fatigue exploitation",
+        "Investigator overwhelm",
+        "Synthetic alert generation",
+        "Mass false-positive generation"
+      ],
+      "lifecycle_stage": "AML / Compliance",
+      "genai_classification": "PASS",
+      "simulation_type": "Agentic + Algorithmic",
+      "prerequisites": [
+        "Access to synthetic accounts (or ability to generate patterns)",
+        "Understanding of AML alert generation rules",
+        "Ability to generate transaction patterns that trigger alerts",
+        "GenAI capability for pattern variation at scale",
+        "AI agent infrastructure (for scale)"
+      ],
+      "attack_flow": [
+        "Attacker studies AML alert generation rules and thresholds",
+        "Attacker uses GenAI to generate transaction patterns that will trigger alerts",
+        "Attacker executes large-scale pattern generation across multiple accounts",
+        "AML system generates massive volume of alerts",
+        "Alert queue becomes overwhelmed",
+        "Investigators experience alert fatigue; genuine alerts may be missed",
+        "Genuine fraud executed through other accounts while AML resources are consumed"
+      ],
+      "detection_signals": [
+        {
+          "name": "Sudden spike in alert volume",
+          "detection_method": "Volume anomaly detection"
+        },
+        {
+          "name": "High ratio of false positives",
+          "detection_method": "Alert outcome analysis"
+        },
+        {
+          "name": "Multiple accounts generating similar alert patterns",
+          "detection_method": "Clustering; Graph analytics"
+        },
+        {
+          "name": "Transaction patterns that exactly match alert rules",
+          "detection_method": "Rules + ML"
+        },
+        {
+          "name": "Unnatural pattern variety",
+          "detection_method": "ML anomaly detection"
+        },
+        {
+          "name": "Account relationships in flooding campaign",
+          "detection_method": "Graph Neural Network"
+        },
+        {
+          "name": "Coordinated alert timing across accounts",
+          "detection_method": "Temporal correlation"
+        },
+        {
+          "name": "Decreasing investigation quality metrics",
+          "detection_method": "Operational analytics"
+        },
+        {
+          "name": "Increasing time-to-investigate",
+          "detection_method": "Operational analytics"
+        }
+      ],
+      "controls_targeted": [
+        "Alert generation",
+        "Alert triage",
+        "Case management",
+        "Investigation workflows",
+        "Investigator attention"
+      ],
+      "evidence_confidence": "VERIFIED"
+    },
+    {
+      "attack_id": "AML-003",
+      "name": "AI-Generated Synthetic AML Narrative / Evidence",
+      "variants": [
+        "Synthetic transaction narratives",
+        "Fabricated business justification",
+        "AI-generated customer communications",
+        "Fabricated supporting documentation",
+        "Synthetic financial histories",
+        "AI-generated source of funds explanations"
+      ],
+      "lifecycle_stage": "AML / Compliance",
+      "genai_classification": "PASS",
+      "simulation_type": "Agentic + Algorithmic",
+      "prerequisites": [
+        "Account flagged for investigation",
+        "Understanding of AML investigation process",
+        "Access to GenAI tools (LLMs for narrative, image generation for documents)",
+        "Knowledge of the account's transaction history"
+      ],
+      "attack_flow": [
+        "Account activity triggers AML alert",
+        "Attacker receives notice of investigation (or anticipates it)",
+        "Attacker uses GenAI to generate plausible explanation",
+        "Narrative incorporates account history, transaction patterns, business context",
+        "Attacker submits explanation to compliance team",
+        "Investigation reviews narrative; appears internally consistent",
+        "Investigation closed or findings mitigated",
+        "Fraud activity continues undetected"
+      ],
+      "detection_signals": [
+        {
+          "name": "AI-generated text patterns in explanations",
+          "detection_method": "NLP; LLM-based detection; Perplexity analysis"
+        },
+        {
+          "name": "Unnatural consistency across documents",
+          "detection_method": "Cross-document consistency scoring"
+        },
+        {
+          "name": "Metadata anomalies in documentation",
+          "detection_method": "Metadata analysis"
+        },
+        {
+          "name": "Missing or inconsistent security features in documents",
+          "detection_method": "Document forensics"
+        },
+        {
+          "name": "Unnatural response timing",
+          "detection_method": "Temporal analysis"
+        },
+        {
+          "name": "Too-perfect responses",
+          "detection_method": "NLP analysis"
+        },
+        {
+          "name": "Similar narrative patterns across accounts",
+          "detection_method": "Clustering"
+        }
+      ],
+      "controls_targeted": [
+        "Investigation workflows",
+        "CDD/EDD",
+        "Source of funds verification",
+        "Regulatory reporting",
+        "Compliance decisioning"
+      ],
+      "evidence_confidence": "VERIFIED"
+    },
+    {
+      "attack_id": "AML-004",
+      "name": "GenAI-Enhanced Sanctions / PEPs Screening Evasion",
+      "variants": [
+        "Identity obfuscation",
+        "Name variation generation",
+        "Entity structure concealment",
+        "Beneficial ownership concealment",
+        "Sanctions evasion through synthetic entities",
+        "PEP status concealment"
+      ],
+      "lifecycle_stage": "AML / Compliance",
+      "genai_classification": "PASS",
+      "simulation_type": "Algorithmic + Agentic",
+      "prerequisites": [
+        "Knowledge of sanctions screening logic",
+        "Understanding of watchlist matching",
+        "Access to GenAI tools for identity/document generation",
+        "Access to synthetic identity infrastructure (for scale)"
+      ],
+      "attack_flow": [
+        "Attacker identifies target sanctions watchlist",
+        "Attacker uses GenAI to generate identity variations that evade matching",
+        "Attacker creates synthetic entity structure with fabricated documentation",
+        "Entity submitted for onboarding",
+        "Sanctions screening passes (no match found)",
+        "Account created under synthetic entity",
+        "Funds moved through entity to sanctioned parties"
+      ],
+      "detection_signals": [
+        {
+          "name": "Unnatural name variations",
+          "detection_method": "ML anomaly detection; Fuzzy matching"
+        },
+        {
+          "name": "Inconsistent identity details",
+          "detection_method": "Entity resolution"
+        },
+        {
+          "name": "Unnatural corporate structure",
+          "detection_method": "Graph analytics"
+        },
+        {
+          "name": "Jurisdictional patterns",
+          "detection_method": "Geographic analysis"
+        },
+        {
+          "name": "AI-generated document artifacts",
+          "detection_method": "Document forensics"
+        },
+        {
+          "name": "Connections to known sanctioned entities",
+          "detection_method": "Graph Neural Network"
+        },
+        {
+          "name": "Entity relationship patterns concealing beneficial ownership",
+          "detection_method": "Graph analytics"
+        },
+        {
+          "name": "Rapid entity creation patterns",
+          "detection_method": "Velocity rules"
+        }
+      ],
+      "controls_targeted": [
+        "Sanctions screening",
+        "PEP screening",
+        "Entity resolution",
+        "Watchlist matching",
+        "Beneficial ownership verification"
+      ],
+      "evidence_confidence": "VERIFIED"
+    },
+    {
+      "attack_id": "AML-005",
+      "name": "AI-Powered AML Investigator Social Engineering",
+      "variants": [
+        "Investigator impersonation",
+        "AI-generated investigation responses",
+        "Compliance workflow manipulation",
+        "Evidence fabrication",
+        "Case manipulation"
+      ],
+      "lifecycle_stage": "AML / Compliance",
+      "genai_classification": "PASS",
+      "simulation_type": "Agentic",
+      "prerequisites": [
+        "Understanding of AML investigation workflows",
+        "Access to GenAI tools (LLMs, voice cloning)",
+        "Target intelligence (investigator profiles, case details)",
+        "Voice samples of authority figures (for voice variant)"
+      ],
+      "attack_flow": [
+        "Attacker identifies AML investigator or compliance officer",
+        "Attacker gathers intelligence on investigator, case, or process",
+        "Attacker uses GenAI to generate personalized communication",
+        "Attacker contacts investigator (email, phone, in-person impersonation)",
+        "Attacker provides fabricated evidence or instructions",
+        "Investigator manipulated to close case or downgrade risk",
+        "Fraud activity continues undetected",
+        "SAR not filed or filed inaccurately"
+      ],
+      "detection_signals": [
+        {
+          "name": "AI-generated text patterns in social engineering",
+          "detection_method": "NLP; LLM-based detection"
+        },
+        {
+          "name": "External communication with unusual tone",
+          "detection_method": "Anomaly detection"
+        },
+        {
+          "name": "Unusual case closure patterns",
+          "detection_method": "Case pattern analysis"
+        },
+        {
+          "name": "Downgraded risk assessments",
+          "detection_method": "Risk pattern analysis"
+        },
+        {
+          "name": "Unusual case processing speed",
+          "detection_method": "Temporal analysis"
+        },
+        {
+          "name": "Similar manipulation patterns across cases",
+          "detection_method": "Graph analytics"
+        },
+        {
+          "name": "Investigator behavior anomalies",
+          "detection_method": "Behavioral analytics"
+        }
+      ],
+      "controls_targeted": [
+        "Investigation workflows",
+        "Investigator decision-making",
+        "Case management",
+        "SAR filing",
+        "Compliance decisioning"
+      ],
+      "evidence_confidence": "VERIFIED"
+    },
+    {
+      "attack_id": "AML-006",
+      "name": "AI-Powered AML Model Poisoning / Evasion",
+      "variants": [
+        "Training data poisoning",
+        "Label flipping",
+        "Feature manipulation",
+        "Adversarial sample injection",
+        "Model evasion through adversarial inputs",
+        "Backdoor insertion"
+      ],
+      "lifecycle_stage": "AML / Compliance",
+      "genai_classification": "PASS",
+      "simulation_type": "Algorithmic + Agentic",
+      "prerequisites": [
+        "Understanding of AML ML model architecture",
+        "Ability to influence training data",
+        "Ability to manipulate transaction inputs (for evasion)",
+        "Access to feature pipelines"
+      ],
+      "attack_flow": [
+        "Attacker studies AML ML model architecture and training data",
+        "Attacker generates poisoned training data using GenAI",
+        "Poisoned data injected into training pipeline",
+        "Model retrains with poisoned data",
+        "Model performance degrades over time",
+        "Fraud detection rates decline",
+        "Fraud proceeds undetected"
+      ],
+      "detection_signals": [
+        {
+          "name": "Model performance degradation",
+          "detection_method": "Model performance monitoring"
+        },
+        {
+          "name": "Feature distribution shifts",
+          "detection_method": "Distribution monitoring"
+        },
+        {
+          "name": "Unnatural label patterns",
+          "detection_method": "Label distribution analysis"
+        },
+        {
+          "name": "Anomalous training data patterns",
+          "detection_method": "Data quality monitoring"
+        },
+        {
+          "name": "Unnatural feature relationships",
+          "detection_method": "Feature correlation analysis"
+        },
+        {
+          "name": "Model performance decline patterns over time",
+          "detection_method": "Temporal model monitoring"
+        },
+        {
+          "name": "Coordinated data injection patterns",
+          "detection_method": "Graph analytics"
+        }
+      ],
+      "controls_targeted": [
+        "ML-based detection models",
+        "Training data integrity",
+        "Feature pipelines",
+        "Model retraining",
+        "Model inference"
+      ],
+      "evidence_confidence": "VERIFIED"
+    },
+    {
+      "attack_id": "ACQ-001",
+      "name": "AI-Generated Synthetic Merchant Onboarding",
+      "variants": [
+        "Synthetic business fraud",
+        "Fraudulent merchant onboarding",
+        "Merchant impersonation",
+        "Merchant misrepresentation / MCC fraud",
+        "Synthetic UBO/director fraud",
+        "Hybrid synthetic (real + fabricated data)",
+        "MATCH list evasion/re-entry",
+        "Acquirer data manipulation"
+      ],
+      "lifecycle_stage": "Acquirer (Stage 7 \u2014 Onboarding/Underwriting)",
+      "genai_classification": "PASS",
+      "simulation_type": "Hybrid",
+      "prerequisites": [
+        "Access to generative AI tools for document generation (LLMs, image generation)",
+        "Understanding of KYB verification logic and document requirements",
+        "(Optional) Breached business data for hybrid synthetic identities",
+        "Ability to submit applications through merchant onboarding flows"
+      ],
+      "attack_flow": [
+        "Attacker identifies target KYB requirements (document types, verification workflow, jurisdiction)",
+        "Attacker selects generative AI tools for document production",
+        "Attacker creates synthetic business entity with fabricated company structure, UBOs, directors",
+        "AI generates complete document set: incorporation certificates, bank statements, financial statements, invoices",
+        "Application submitted through merchant onboarding flow",
+        "KYB verification processes the synthetic entity and documents",
+        "Account provisioned with merchant ID (MID)",
+        "Account used for fraudulent transactions, laundering, or resale"
+      ],
+      "detection_signals": [
+        {
+          "name": "Synthetic UBO / entity registration details",
+          "detection_method": "Entity resolution; Registry lookups"
+        },
+        {
+          "name": "MCC / business type inconsistency",
+          "detection_method": "Rules + ML; Anomaly detection"
+        },
+        {
+          "name": "Lack of real operational history",
+          "detection_method": "Rules + ML"
+        },
+        {
+          "name": "AI-generated document artifacts",
+          "detection_method": "Document forensics (CNN/Transformer)"
+        },
+        {
+          "name": "Too-perfect cross-document consistency",
+          "detection_method": "ML consistency scoring"
+        },
+        {
+          "name": "Document metadata anomalies",
+          "detection_method": "Metadata analysis"
+        },
+        {
+          "name": "Low document verification score",
+          "detection_method": "Risk scoring"
+        },
+        {
+          "name": "Entity resolution anomalies",
+          "detection_method": "Graph Neural Network"
+        },
+        {
+          "name": "Transaction volume / authorization rate anomalies",
+          "detection_method": "ML anomaly detection"
+        },
+        {
+          "name": "Unnatural form-filling velocity",
+          "detection_method": "Behavioral analytics"
+        },
+        {
+          "name": "Superhuman application completion speed",
+          "detection_method": "Temporal anomaly detection"
+        },
+        {
+          "name": "Shared attributes / infrastructure across merchants",
+          "detection_method": "Graph Neural Network; Graph analytics"
+        },
+        {
+          "name": "Off-hours rapid succession application timing",
+          "detection_method": "Velocity rules + ML"
+        }
+      ],
+      "controls_targeted": [
+        "Merchant onboarding approval",
+        "KYB verification",
+        "Underwriting risk assessment",
+        "Document verification",
+        "MATCH list screening",
+        "Data integrity"
+      ],
+      "evidence_confidence": "VERIFIED"
+    },
+    {
+      "attack_id": "ACQ-002",
+      "name": "AI-Powered Acquirer Monitoring Evasion",
+      "variants": [
+        "Transaction pattern optimization",
+        "Risk-score evasion",
+        "Behavioral camouflage",
+        "Adaptive pattern generation",
+        "Threshold avoidance",
+        "Velocity rule evasion"
+      ],
+      "lifecycle_stage": "Acquirer (Stage 7 \u2014 Ongoing Monitoring)",
+      "genai_classification": "PASS",
+      "simulation_type": "Agentic",
+      "prerequisites": [
+        "Existing merchant account (legitimate or fraudulently obtained)",
+        "Understanding of acquirer's monitoring parameters",
+        "Ability to control transaction patterns",
+        "(For advanced) Access to detection feedback"
+      ],
+      "attack_flow": [
+        "Attacker studies acquirer monitoring rules, thresholds, and ML model behavior",
+        "Attacker establishes baseline understanding of detection parameters",
+        "Attacker uses GenAI to generate optimized transaction patterns",
+        "Merchant processes transactions at levels/scoring that appear normal",
+        "Risk score remains low; no alerts generated",
+        "Fraud continues undetected over time",
+        "If monitoring changes, GenAI adapts patterns accordingly"
+      ],
+      "detection_signals": [
+        {
+          "name": "Unnatural transaction volume smoothness",
+          "detection_method": "ML anomaly detection"
+        },
+        {
+          "name": "Unnatural velocity pattern optimization",
+          "detection_method": "Velocity rules + ML"
+        },
+        {
+          "name": "Unnatural amount distribution consistency",
+          "detection_method": "ML anomaly detection"
+        },
+        {
+          "name": "Unnatural beneficiary rotation patterns",
+          "detection_method": "Pattern analysis"
+        },
+        {
+          "name": "Too-perfect authorization rate consistency",
+          "detection_method": "ML anomaly detection"
+        },
+        {
+          "name": "Optimized refund patterns",
+          "detection_method": "Rules + ML"
+        },
+        {
+          "name": "Too-perfect behavioral consistency",
+          "detection_method": "Behavioral analytics"
+        },
+        {
+          "name": "Lack of natural behavioral drift",
+          "detection_method": "ML anomaly detection"
+        },
+        {
+          "name": "Coordinated optimization patterns across merchants",
+          "detection_method": "Graph Neural Network; Clustering"
+        },
+        {
+          "name": "Unnatural risk score stability",
+          "detection_method": "ML anomaly detection"
+        }
+      ],
+      "controls_targeted": [
+        "Transaction monitoring rules",
+        "Risk scoring models",
+        "Velocity rules",
+        "Behavioral analytics",
+        "Alert thresholds"
+      ],
+      "evidence_confidence": "VERIFIED"
+    },
+    {
+      "attack_id": "ACQ-003",
+      "name": "AI-Generated Coordinated Merchant Networks",
+      "variants": [
+        "Merchant portfolio abuse",
+        "Merchant aggregation",
+        "Hidden merchant activity",
+        "PayFac/sub-merchant exploitation",
+        "Synthetic merchant portfolios",
+        "Fraud rings",
+        "Multi-merchant evasion"
+      ],
+      "lifecycle_stage": "Acquirer (Stage 7 \u2014 Portfolio Monitoring)",
+      "genai_classification": "PASS",
+      "simulation_type": "Hybrid",
+      "prerequisites": [
+        "Access to GenAI tools for merchant generation",
+        "Understanding of acquirer portfolio analytics",
+        "Infrastructure to operate multiple merchants",
+        "(For scale) AI agent infrastructure"
+      ],
+      "attack_flow": [
+        "Attacker uses GenAI to generate multiple synthetic merchant identities",
+        "Each merchant has complete, internally consistent documentation",
+        "Each merchant has independent-looking profiles (different UBOs, addresses, business types)",
+        "Synthetic merchants submitted for onboarding across acquirer portfolio",
+        "Each merchant passes individual KYB verification",
+        "Acquirer's portfolio analytics observe aggregate activity; entity resolution fails to link merchants",
+        "Fraud distributed across merchants remains undetected",
+        "Accounts rotated/recreated when flagged"
+      ],
+      "detection_signals": [
+        {
+          "name": "Shared infrastructure across merchants",
+          "detection_method": "Graph analytics"
+        },
+        {
+          "name": "Similar document fingerprints across entities",
+          "detection_method": "Document fingerprinting"
+        },
+        {
+          "name": "Clustered business profile similarity",
+          "detection_method": "Clustering"
+        },
+        {
+          "name": "Hidden shared entity attributes",
+          "detection_method": "Entity resolution"
+        },
+        {
+          "name": "Coordinated merchant creation timing",
+          "detection_method": "Temporal clustering"
+        },
+        {
+          "name": "Synthetic concentration anomalies",
+          "detection_method": "Portfolio analytics"
+        },
+        {
+          "name": "Unusual merchant churn rates",
+          "detection_method": "Portfolio analytics"
+        },
+        {
+          "name": "Inconsistent portfolio risk distribution",
+          "detection_method": "Risk analytics"
+        },
+        {
+          "name": "Hidden network relationships",
+          "detection_method": "Graph Neural Network"
+        },
+        {
+          "name": "Coordinated transaction timing across accounts",
+          "detection_method": "Temporal correlation"
+        }
+      ],
+      "controls_targeted": [
+        "Portfolio analytics",
+        "Entity resolution",
+        "Concentration monitoring",
+        "Cross-merchant correlation",
+        "Aggregation oversight",
+        "PayFac oversight"
+      ],
+      "evidence_confidence": "VERIFIED"
+    },
+    {
+      "attack_id": "ACQ-004",
+      "name": "AI-Generated Merchant MCC Misrepresentation",
+      "variants": [
+        "Front merchant fraud",
+        "Website content misrepresentation",
+        "Business description fabrication",
+        "AI-generated merchant websites",
+        "Content cloaking",
+        "MCC application fraud"
+      ],
+      "lifecycle_stage": "Acquirer (Stage 7 \u2014 MCC Assignment / Content Monitoring)",
+      "genai_classification": "PASS",
+      "simulation_type": "Hybrid",
+      "prerequisites": [
+        "Access to GenAI tools (website generation, image generation, copy generation)",
+        "Ability to register a business entity",
+        "Understanding of MCC risk tiers",
+        "Ability to submit merchant application"
+      ],
+      "attack_flow": [
+        "Attacker identifies target low-risk MCC",
+        "Attacker selects GenAI tools for website and content creation",
+        "Attacker creates convincing front business (website, product galleries, team pages, testimonials)",
+        "Attacker submits front business for onboarding presented as low-risk",
+        "Acquirer content monitoring reviews website; appears legitimate",
+        "Acquirer assigns low-risk MCC",
+        "Merchant processes high-risk/illicit transactions under low-risk MCC",
+        "Avoids enhanced monitoring and higher fees",
+        "Fraud continues undetected"
+      ],
+      "detection_signals": [
+        {
+          "name": "AI-generated website text content artifacts",
+          "detection_method": "CNN/Transformer; NLP"
+        },
+        {
+          "name": "AI-generated product image patterns",
+          "detection_method": "CNN/Transformer"
+        },
+        {
+          "name": "AI-generated review / testimonial patterns",
+          "detection_method": "NLP"
+        },
+        {
+          "name": "Website design quality consistency anomalies",
+          "detection_method": "ML anomaly"
+        },
+        {
+          "name": "MCC to actual business type mismatch",
+          "detection_method": "Rules + ML"
+        },
+        {
+          "name": "MCC mismatch with transaction patterns",
+          "detection_method": "ML anomaly"
+        },
+        {
+          "name": "High-risk transaction indicators under low-risk MCC",
+          "detection_method": "ML anomaly"
+        },
+        {
+          "name": "Superhuman website creation speed",
+          "detection_method": "Temporal analysis"
+        },
+        {
+          "name": "Cross-merchant website content / template similarity",
+          "detection_method": "Clustering"
+        }
+      ],
+      "controls_targeted": [
+        "MCC assignment",
+        "Content monitoring",
+        "Risk tiering",
+        "Underwriting classification",
+        "Website verification"
+      ],
+      "evidence_confidence": "VERIFIED"
+    },
+    {
+      "attack_id": "AUTH-001",
+      "name": "GenAI-Powered Phishing",
+      "variants": [
+        "Email phishing",
+        "SMS phishing (smishing)",
+        "Social media phishing",
+        "Spear phishing",
+        "Business Email Compromise (BEC)",
+        "AI-assisted AitM phishing",
+        "AI-generated phishing pages"
+      ],
+      "lifecycle_stage": "Authentication",
+      "genai_classification": "PASS",
+      "simulation_type": "Agentic",
+      "prerequisites": [
+        "Access to GenAI tools (LLMs for content generation)",
+        "Target intelligence (OSINT, breached data, LinkedIn, social media)",
+        "Phishing distribution infrastructure (email, SMS, messaging platforms)",
+        "Proxy infrastructure for real-time interception (for AitM variant)"
+      ],
+      "attack_flow": [
+        "Gather target intelligence (OSINT, breached data, social media)",
+        "Configure GenAI with target context (organization, roles, recent events)",
+        "Generate personalized phishing templates at scale",
+        "Deliver phishing content via email, SMS, or messaging platform",
+        "Content mimics legitimate institution (branding, language, urgency)",
+        "Redirects to fake authentication page or AitM proxy",
+        "User perceives message as legitimate and enters credentials/OTP",
+        "Credentials/OTP captured in real time",
+        "Attacker uses stolen credentials/OTP to access account",
+        "Account takeover -> unauthorized transactions -> funds theft"
+      ],
+      "detection_signals": [
+        {
+          "name": "OTP requests without corresponding user action",
+          "detection_method": "Anomaly detection; Temporal correlation"
+        },
+        {
+          "name": "Login attempts from unusual locations/devices after phishing contact",
+          "detection_method": "Rule-based + ML"
+        },
+        {
+          "name": "Device fingerprint changes between phishing interaction and login",
+          "detection_method": "Device fingerprint anomaly detection"
+        },
+        {
+          "name": "Rapid authentication after phishing contact",
+          "detection_method": "Temporal anomaly detection"
+        },
+        {
+          "name": "Unusual navigation during login",
+          "detection_method": "Behavioral biometrics anomaly detection"
+        },
+        {
+          "name": "Phishing infrastructure patterns (domains, IPs, email headers)",
+          "detection_method": "Graph analytics; Threat intelligence"
+        },
+        {
+          "name": "Phishing message timing correlated with login attempts",
+          "detection_method": "Temporal correlation; Rule-weighting"
+        },
+        {
+          "name": "Unusual transactions following authentication",
+          "detection_method": "Transaction anomaly detection Context analysis"
+        }
+      ],
+      "controls_targeted": [
+        "Traditional grammar/spelling filters",
+        "Known phishing indicator lists",
+        "Email/SMS security gateways",
+        "Password and OTP authentication factors"
+      ],
+      "evidence_confidence": "VERIFIED"
+    },
+    {
+      "attack_id": "AUTH-002",
+      "name": "GenAI-Powered OTP Social Engineering",
+      "variants": [
+        "Voice cloning vishing",
+        "Real-time voice conversion attacks",
+        "Bank official impersonation",
+        "Law enforcement impersonation (Digital Arrest scams)",
+        "Family member impersonation"
+      ],
+      "lifecycle_stage": "Authentication",
+      "genai_classification": "PASS",
+      "simulation_type": "Agentic",
+      "prerequisites": [
+        "Voice samples of target or generic bank official (3 seconds sufficient)",
+        "GenAI voice cloning tools",
+        "Victim contact information",
+        "AI-generated social engineering script (or real-time LLM dialogue)",
+        "Real-time voice conversion during live calls (for advanced variants)"
+      ],
+      "attack_flow": [
+        "Obtain voice samples (social media, public recordings)",
+        "Clone victim or official voice using GenAI (3 seconds sufficient)",
+        "Generate personalized scam script (or use real-time dialogue generation)",
+        "Call victim impersonating bank official/law enforcement",
+        "Voice clone mimics bank representative or authority figure",
+        "Claims suspicious activity/account compromise",
+        "Requests OTP to 'verify identity' or 'reverse transaction'",
+        "Victim perceives caller as legitimate and shares OTP",
+        "Attacker uses OTP to complete authentication/authorization",
+        "Account takeover or unauthorized transaction completed"
+      ],
+      "detection_signals": [
+        {
+          "name": "OTP used shortly after voice call from unknown number",
+          "detection_method": "Temporal correlation; Anomaly detection"
+        },
+        {
+          "name": "Caller ID spoofing",
+          "detection_method": "STIR/SHAKEN; Caller ID validation"
+        },
+        {
+          "name": "Device used for OTP receipt differs from usual",
+          "detection_method": "Device fingerprint anomaly"
+        },
+        {
+          "name": "Authentication immediately after OTP sharing",
+          "detection_method": "Temporal anomaly detection"
+        },
+        {
+          "name": "Victim voice during subsequent verification shows distress/coercion",
+          "detection_method": "Voice stress analysis; Behavioral analytics"
+        },
+        {
+          "name": "Caller phone number associated with known scam patterns",
+          "detection_method": "Threat intelligence; Carrier data sharing"
+        },
+        {
+          "name": "Multiple OTP requests in short period",
+          "detection_method": "Velocity rules; Temporal anomaly"
+        },
+        {
+          "name": "Unusual transactions immediately after OTP-based authentication",
+          "detection_method": "Transaction anomaly detection Context analysis"
+        }
+      ],
+      "controls_targeted": [
+        "Voice biometrics systems",
+        "OTP verification channels",
+        "Customer phone support verification"
+      ],
+      "evidence_confidence": "VERIFIED"
+    },
+    {
+      "attack_id": "AUTH-003",
+      "name": "GenAI-Powered Authentication Recovery Exploitation",
+      "variants": [
+        "Document-based recovery (forged ID/passport/DL)",
+        "Voice-based recovery (voice clone)",
+        "Video-based recovery (deepfake injection)",
+        "Customer support impersonation",
+        "Hybrid recovery (multi-evidence)"
+      ],
+      "lifecycle_stage": "Authentication",
+      "genai_classification": "PASS",
+      "simulation_type": "Agentic",
+      "prerequisites": [
+        "Victim PII (from data breaches, social media, OSINT)",
+        "Access to GenAI tools: document generation, voice cloning, deepfake video",
+        "Knowledge of target institution's recovery verification process"
+      ],
+      "attack_flow": [
+        "Obtain victim PII (data breach, social media, OSINT)",
+        "Generate forged identity documents (passport, DL, utility bills)",
+        "Create voice clone of victim (if voice verification used)",
+        "Create deepfake video of victim (if video verification used)",
+        "Initiate account recovery (password reset, factor replacement)",
+        "Submit forged documents via upload",
+        "Pass phone verification with voice clone (Voice variant)",
+        "Pass video verification with deepfake injection (Video variant)",
+        "Recovery verification bypassed; password/factors reset",
+        "Attacker logs in with new credentials; victim locked out; Funds transferred to mule accounts"
+      ],
+      "detection_signals": [
+        {
+          "name": "Recovery initiated from unusual device/location",
+          "detection_method": "Rule-based + ML; Velocity rules"
+        },
+        {
+          "name": "Forged document artifacts (pixel anomalies, inconsistent metadata, unnatural aging)",
+          "detection_method": "CNN/Transformer document forensics"
+        },
+        {
+          "name": "Virtual camera detection / Device emulation",
+          "detection_method": "Hardware-level sensor validation; Rule-based"
+        },
+        {
+          "name": "Rapid completion of recovery flow (superhuman speed)",
+          "detection_method": "Temporal anomaly detection"
+        },
+        {
+          "name": "Unnatural facial movements (lack of micro-expressions, audio-visual desync)",
+          "detection_method": "Deepfake detection (CNN/Transformer); Behavioral biometrics matching"
+        },
+        {
+          "name": "Recovery attempts connected to known fraud patterns",
+          "detection_method": "Graph analytics; Threat intelligence"
+        },
+        {
+          "name": "Recovery at unusual hours / Multiple attempts",
+          "detection_method": "Velocity rules; Temporal anomaly"
+        },
+        {
+          "name": "Unauthorized transactions immediately after recovery",
+          "detection_method": "Transaction anomaly detection"
+        }
+      ],
+      "controls_targeted": [
+        "Account recovery processes",
+        "Password reset flows",
+        "Factor replacement mechanisms",
+        "Customer support identity verification",
+        "Document verification systems",
+        "Voice biometrics",
+        "Liveness detection"
+      ],
+      "evidence_confidence": "VERIFIED"
+    },
+    {
+      "attack_id": "AUTH-004",
+      "name": "GenAI-Powered Biometric Spoofing",
+      "variants": [
+        "GAN-based keystroke injection",
+        "GAN-based facial injection",
+        "GAN-based voice cloning",
+        "Motion forecasting attacks",
+        "Adversarial behavioral pattern generation",
+        "Synthetic fingerprint/iris generation"
+      ],
+      "lifecycle_stage": "Authentication",
+      "genai_classification": "PASS",
+      "simulation_type": "Hybrid",
+      "prerequisites": [
+        "Access to GAN/GenAI models for biometric generation",
+        "Training data (general human behavior patterns or specific victim data)",
+        "Ability to inject generated biometric data into the authentication pipeline",
+        "Understanding of target biometric system"
+      ],
+      "attack_flow": [
+        "Obtain training data (general human behavior or specific victim patterns)",
+        "Train GAN on target biometric patterns (keystroke timing, facial features, voice)",
+        "Generate synthetic biometric data matching target profile",
+        "Inject synthetic keystroke patterns during login (Keystroke variant)",
+        "Inject deepfake video via virtual camera (Facial variant)",
+        "Play cloned voice during verification (Voice variant)",
+        "Biometric system compares input against stored template",
+        "GAN-generated pattern matches within acceptance threshold",
+        "Liveness detection accepts synthetic input",
+        "Authentication successful; attacker gains account access and conducts unauthorized transactions"
+      ],
+      "detection_signals": [
+        {
+          "name": "Biometric match within threshold but with subtle anomalies ('too perfect')",
+          "detection_method": "ML anomaly detection; Adversarial pattern detection"
+        },
+        {
+          "name": "Biometric pattern inconsistent with historical profile",
+          "detection_method": "ML anomaly detection; Behavioral biometrics"
+        },
+        {
+          "name": "Virtual camera detection",
+          "detection_method": "Hardware-level sensor validation"
+        },
+        {
+          "name": "Session anomalies (pattern changes)",
+          "detection_method": "Session anomaly detection"
+        },
+        {
+          "name": "Keystroke timing 'too perfect' / Unnatural mouse movement / Cross-modality inconsistency",
+          "detection_method": "ML anomaly detection; Cross-modality consistency checking"
+        },
+        {
+          "name": "Biometric patterns too consistent over time (lack of natural drift)",
+          "detection_method": "Temporal consistency analysis"
+        },
+        {
+          "name": "Transactions inconsistent with behavioral biometric profile",
+          "detection_method": "Cross-modal consistency checking"
+        }
+      ],
+      "controls_targeted": [
+        "Keystroke dynamics authentication",
+        "Facial recognition systems",
+        "Voice biometrics authentication",
+        "Fingerprint/iris authenticators",
+        "Behavioral biometrics monitoring",
+        "Liveness detection mechanisms"
+      ],
+      "evidence_confidence": "VERIFIED"
+    },
+    {
+      "attack_id": "AUT-001",
+      "name": "AI-Enhanced Authorization Feature Manipulation",
+      "variants": [
+        "Transaction splitting/structuring",
+        "Velocity check evasion",
+        "Low-and-slow fraud",
+        "Threshold-conscious amount optimization",
+        "Adaptive timing manipulation"
+      ],
+      "lifecycle_stage": "Authorization (Stage 10)",
+      "genai_classification": "PARTIAL",
+      "simulation_type": "Algorithmic + Agentic",
+      "prerequisites": [
+        "Access to multiple payment instruments/cards OR a single high-limit card",
+        "Ability to control transaction timing and amounts",
+        "(For GenAI variant) Feedback loop of authorization responses (approve/decline)",
+        "Understanding of target thresholds (discovered through probing)"
+      ],
+      "attack_flow": [
+        "Attacker probes authorization system with test transactions across different amounts and timing patterns",
+        "Observes approval/decline outcomes to infer thresholds (velocity caps, amount limits, risk score floors)",
+        "GenAI agent develops optimal transaction strategy: amounts just below limits, timing that avoids velocity peaks, patterns that mimic legitimate cohorts",
+        "Attacker executes fraudulent transactions optimized to stay under thresholds",
+        "Each transaction individually approved as 'low-risk'",
+        "Cumulative fraud grows over weeks/months",
+        "If detection changes, GenAI adapts patterns in response"
+      ],
+      "detection_signals": [
+        {
+          "name": "Amounts just below known thresholds (e.g., $999.99)",
+          "detection_method": "Rules (tolerance bands) + Anomaly Detection"
+        },
+        {
+          "name": "Amount distributions with unnatural consistency",
+          "detection_method": "ML (distributional anomaly, entropy)"
+        },
+        {
+          "name": "Inter-transaction intervals with low entropy",
+          "detection_method": "Sequence Modeling (LSTM/Autoencoder)"
+        },
+        {
+          "name": "Transaction volume has unnaturally constant mean across time windows",
+          "detection_method": "Anomaly Detection (velocity Z-score)"
+        },
+        {
+          "name": "Gradual monotonic increase in transaction amounts over time",
+          "detection_method": "Temporal Trend Analysis"
+        },
+        {
+          "name": "Low variance in daily/monthly spending patterns",
+          "detection_method": "ML anomaly detection"
+        },
+        {
+          "name": "Consistent use of low-risk MCCs for high-risk purchases",
+          "detection_method": "Rules + ML (MCC-amount inconsistency)"
+        },
+        {
+          "name": "Similar threshold-just-below patterns across multiple accounts",
+          "detection_method": "Network Clustering / Graph Analytics"
+        }
+      ],
+      "controls_targeted": [
+        "Per-transaction amount limits",
+        "Velocity rules (count/time, sum/time)",
+        "Risk-score floors",
+        "Floor limits for offline authorization"
+      ],
+      "evidence_confidence": "REASONABLE_INFERENCE"
+    },
+    {
+      "attack_id": "AUT-002",
+      "name": "Adversarial Fraud Score Manipulation",
+      "variants": [
+        "Model boundary exploration",
+        "Feature optimization",
+        "Model probing",
+        "Black-box surrogate modeling",
+        "Decision-boundary exploitation"
+      ],
+      "lifecycle_stage": "Authorization (Stage 10)",
+      "genai_classification": "PASS",
+      "simulation_type": "Hybrid",
+      "prerequisites": [
+        "Ability to observe authorization responses (Approved/Declined) for probe transactions",
+        "Control over a wide set of transaction features (amount, MCC, timing, device, location, merchant category)",
+        "Access to multiple accounts for probing without burning a single account"
+      ],
+      "attack_flow": [
+        "Attacker identifies target fraud model (e.g., Visa VAA, Mastercard Decision Intelligence, custom issuer model)",
+        "Submits probe transactions with varied feature vectors, observing approval/decline outcomes",
+        "GenAI agent builds surrogate model of the target scorer",
+        "Agent generates optimized feature vectors that minimize predicted fraud score",
+        "Fraudulent transactions submitted with optimized feature vectors",
+        "Model scores transactions as 'low-risk' -> approved",
+        "If model retrains, agent continues probing and adapting"
+      ],
+      "detection_signals": [
+        {
+          "name": "Feature combinations with high 'unnaturalness' score",
+          "detection_method": "Generative Detector (GAN)"
+        },
+        {
+          "name": "High density of transactions near the model's decision boundary",
+          "detection_method": "Kernel Density Estimation + Boundary Density Monitoring"
+        },
+        {
+          "name": "Unnatural feature drift patterns",
+          "detection_method": "Temporal feature trajectory analysis"
+        },
+        {
+          "name": "High proportion of approvals near threshold",
+          "detection_method": "Statistics on approved transactions vs. score distribution"
+        },
+        {
+          "name": "Similar 'boundary-hugging' patterns across many accounts",
+          "detection_method": "Network Clustering / Graph Analytics"
+        },
+        {
+          "name": "Sudden increase in approvals for certain feature combinations",
+          "detection_method": "Monitoring model performance on recent transactions"
+        }
+      ],
+      "controls_targeted": [
+        "ML model inference pipelines",
+        "Risk score thresholds",
+        "Feature encodings",
+        "Ensemble scoring logic"
+      ],
+      "evidence_confidence": "VERIFIED"
+    },
+    {
+      "attack_id": "AUT-003",
+      "name": "AI-Coordinated Distributed Fraud",
+      "variants": [
+        "Multi-account coordinated fraud",
+        "Synthetic account farming",
+        "Parallel fraud operations",
+        "Coordinated bust-out networks",
+        "Fraud mesh orchestration"
+      ],
+      "lifecycle_stage": "Authorization (Stage 10)",
+      "genai_classification": "PASS",
+      "simulation_type": "Hybrid",
+      "prerequisites": [
+        "Large inventory of synthetic or compromised accounts",
+        "Infrastructure to manage many accounts",
+        "GenAI coordination agent to optimize collective behavior",
+        "Understanding of entity resolution and graph detection thresholds"
+      ],
+      "attack_flow": [
+        "Attacker creates/generates thousands of synthetic accounts (or compromises existing accounts)",
+        "GenAI agent assigns each account a unique behavioral profile (spending patterns, merchants, amounts, timing)",
+        "Agent orchestrates transaction timing across accounts to avoid aggregate velocity peaks",
+        "Each account transacts individually below its per-account detection thresholds",
+        "Graph analytics fails to link accounts (minimal shared attributes, phase-shifted lifecycles)",
+        "Cumulative fraud volume is substantial",
+        "If a subset is detected, agent isolates and reconfigures remaining accounts"
+      ],
+      "detection_signals": [
+        {
+          "name": "Accounts sharing infrastructure (IPs, device fingerprints, email domains)",
+          "detection_method": "Graph Neural Network; Entity Resolution"
+        },
+        {
+          "name": "Accounts with similar temporal lifecycle patterns",
+          "detection_method": "Temporal Clustering on account lifecycles"
+        },
+        {
+          "name": "Anti-correlated activity timing (one pauses, another starts)",
+          "detection_method": "Time-series cross-correlation analysis"
+        },
+        {
+          "name": "Unusual diversity of behavior across accounts (too heterogeneous)",
+          "detection_method": "Anomaly detection on portfolio entropy"
+        },
+        {
+          "name": "Suspicious phase-shifted patterns (identical lifecycles, different start dates)",
+          "detection_method": "Phase analysis on lifecycle features"
+        },
+        {
+          "name": "Coordinated dormancy and reactivation patterns",
+          "detection_method": "Temporal pattern analysis"
+        },
+        {
+          "name": "High number of accounts transacting with the same low-risk MCCs in similar amounts",
+          "detection_method": "Merchant concentration + account diversity analysis"
+        },
+        {
+          "name": "All accounts have similar approval rates or decline patterns",
+          "detection_method": "Statistical comparison of approval rates across accounts"
+        },
+        {
+          "name": "Account creation patterns (batch creation, similar attributes)",
+          "detection_method": "Entity resolution; creation pattern analysis"
+        }
+      ],
+      "controls_targeted": [
+        "Per-account fraud scoring",
+        "Entity resolution",
+        "Velocity aggregation",
+        "Merchant concentration monitoring"
+      ],
+      "evidence_confidence": "VERIFIED"
+    },
+    {
+      "attack_id": "CM-001",
+      "name": "AI-Powered Mule Recruitment & Exploitation",
+      "variants": [
+        "Personalized recruitment",
+        "Deepfake-enabled video recruitment",
+        "Fake job/employment recruitment",
+        "Romance scam recruitment",
+        "Coerced/forced recruitment",
+        "Unwitting/exploited mule exploitation",
+        "Social-engineering recruitment"
+      ],
+      "lifecycle_stage": "Cash-out/Mule (Recruitment)",
+      "genai_classification": "PASS",
+      "simulation_type": "Hybrid",
+      "prerequisites": [
+        "Access to GenAI tools (LLMs, voice cloning, deepfake generation)",
+        "Social media scraping capability",
+        "Communication platforms (social media, messaging apps, job sites)",
+        "(For deepfake recruitment) Voice/video samples of trusted figures"
+      ],
+      "attack_flow": [
+        "Fraud Proceeds (from any fraud type)",
+        "First-Tier Mule Account (recruited mule receives funds)",
+        "Second-Tier Mule Account (funds layered)",
+        "Third-Tier Mule Account (funds layered further)",
+        "Cash-Out Point (ATM withdrawal, crypto conversion, merchant monetization)",
+        "Criminal Organization (funds consolidated)"
+      ],
+      "detection_signals": [
+        {
+          "name": "Dormant account suddenly active",
+          "detection_method": "Behavioral baseline deviation"
+        },
+        {
+          "name": "Rapid pass-through (arrive and leave within hours)",
+          "detection_method": "Velocity rules; dwell time analysis"
+        },
+        {
+          "name": "Many unrelated senders",
+          "detection_method": "Sender diversity analysis"
+        },
+        {
+          "name": "Funds sent to many unrelated accounts",
+          "detection_method": "Recipient diversity analysis"
+        },
+        {
+          "name": "Consistently near-zero closing balance",
+          "detection_method": "Balance pattern analysis"
+        },
+        {
+          "name": "Off-hours; rapid sequences",
+          "detection_method": "Temporal anomaly detection"
+        },
+        {
+          "name": "Unusual cross-border activity",
+          "detection_method": "Geographic anomaly detection"
+        },
+        {
+          "name": "New device; VPN; unusual session",
+          "detection_method": "Device fingerprinting"
+        },
+        {
+          "name": "Customer confusion/distress when questioned",
+          "detection_method": "Behavioral analytics"
+        },
+        {
+          "name": "Connection to known mule accounts",
+          "detection_method": "Graph Neural Network"
+        }
+      ],
+      "controls_targeted": [
+        "Payment Initiation APP fraud controls",
+        "Authentication credential controls",
+        "Behavioral baseline monitoring",
+        "Transaction velocity and dwell time limits"
+      ],
+      "evidence_confidence": "VERIFIED"
+    },
+    {
+      "attack_id": "CM-002",
+      "name": "Synthetic Mule Account Farming",
+      "variants": [
+        "Synthetic identity farming",
+        "AI-generated document fraud",
+        "Account farming-as-a-service",
+        "Bulk account creation",
+        "Seasoned account inventory"
+      ],
+      "lifecycle_stage": "Cross-stage (KYC/Account Creation/Mule)",
+      "genai_classification": "PASS",
+      "simulation_type": "Algorithmic",
+      "prerequisites": [
+        "GenAI tools for synthetic identity/document generation",
+        "Understanding of KYC verification workflows",
+        "Access to multiple banking platforms",
+        "(Optional) Fake document vendors"
+      ],
+      "attack_flow": [
+        "Synthetic Identity Generation (GenAI creates persona + documents)",
+        "Account Opening (Multiple banks)",
+        "Seasoning Phase (Low activity, legitimate-looking transactions)",
+        "Mule Activation (Funds flow through account)",
+        "Pass-Through (Funds arrive and leave)",
+        "Cash-Out (Funds converted/extracted)"
+      ],
+      "detection_signals": [
+        {
+          "name": "Multiple accounts in short timeframe",
+          "detection_method": "Account velocity rules"
+        },
+        {
+          "name": "Similar attributes across accounts",
+          "detection_method": "Attribute clustering"
+        },
+        {
+          "name": "Identical dormancy-to-activity patterns",
+          "detection_method": "Temporal pattern analysis"
+        },
+        {
+          "name": "Document artifacts (AI-generated)",
+          "detection_method": "Document forensics (CNN)"
+        },
+        {
+          "name": "Inconsistent identity data",
+          "detection_method": "Entity resolution"
+        },
+        {
+          "name": "Sudden change from seasoning to pass-through",
+          "detection_method": "Behavioral change detection"
+        },
+        {
+          "name": "Shared IPs, devices across accounts",
+          "detection_method": "Device fingerprinting"
+        },
+        {
+          "name": "Unnatural form-filling during onboarding",
+          "detection_method": "Behavioral biometrics"
+        },
+        {
+          "name": "Infrastructure sharing",
+          "detection_method": "Graph Neural Network"
+        }
+      ],
+      "controls_targeted": [
+        "KYC controls",
+        "Document verification workflows",
+        "Account velocity monitoring",
+        "Entity resolution controls"
+      ],
+      "evidence_confidence": "VERIFIED"
+    },
+    {
+      "attack_id": "CM-003",
+      "name": "AI-Coordinated Mule Networks with Adaptive Evasion",
+      "variants": [
+        "Agentic network orchestration",
+        "Pattern-free layering",
+        "Cross-institution coordination",
+        "Hierarchical network operation",
+        "Multi-hop layering",
+        "Adaptive transaction pattern evasion",
+        "Mule-as-a-Service (MaaS)",
+        "Many-to-one/one-to-many networks"
+      ],
+      "lifecycle_stage": "Cross-stage/Network",
+      "genai_classification": "PASS",
+      "simulation_type": "Hybrid",
+      "prerequisites": [
+        "Access to AI agent infrastructure",
+        "Inventory of mule accounts (farmed or recruited)",
+        "Understanding of detection systems",
+        "(For cross-chain) Cryptocurrency exchange access"
+      ],
+      "attack_flow": [
+        "Fraud Proceeds (from any fraud type)",
+        "First-Tier Mule Accounts (Receive from fraud sources \u2014 many-to-one)",
+        "Layering Phase 1 (Transfers between accounts \u2014 one-to-many, many-to-many)",
+        "Layering Phase 2 (Cross-institution transfers)",
+        "Layering Phase 3 (Cross-border transfers)",
+        "Cash-Out Point (Crypto conversion, ATM withdrawal, merchant monetization)",
+        "Criminal Organization (Funds consolidated)"
+      ],
+      "detection_signals": [
+        {
+          "name": "Coordinated patterns across accounts",
+          "detection_method": "Graph Neural Network"
+        },
+        {
+          "name": "Pattern-free movement",
+          "detection_method": "ML anomaly detection"
+        },
+        {
+          "name": "High-frequency, low-value transfers",
+          "detection_method": "Velocity analysis"
+        },
+        {
+          "name": "Cross-institution coordination",
+          "detection_method": "Cross-institution analytics"
+        },
+        {
+          "name": "Rapid pass-through (minutes)",
+          "detection_method": "Dwell time analysis"
+        },
+        {
+          "name": "Synchronized timing",
+          "detection_method": "Temporal correlation"
+        },
+        {
+          "name": "Adaptive changes after detection",
+          "detection_method": "Behavioral evolution tracking"
+        },
+        {
+          "name": "Complex, varied network structures",
+          "detection_method": "Graph analytics"
+        },
+        {
+          "name": "Hidden centrality",
+          "detection_method": "Centrality analysis"
+        },
+        {
+          "name": "Infrastructure rotation",
+          "detection_method": "Infrastructure tracking"
+        }
+      ],
+      "controls_targeted": [
+        "AML transaction monitoring",
+        "Velocity threshold rules",
+        "Network-level fraud detection",
+        "Cross-institution monitoring"
+      ],
+      "evidence_confidence": "VERIFIED"
+    },
+    {
+      "attack_id": "CM-004",
+      "name": "Autonomous AI-Powered Crypto Cash-Out",
+      "variants": [
+        "Cross-chain crypto laundering",
+        "Stablecoin conversion",
+        "AI-optimized exchange selection",
+        "Autonomous fund splitting",
+        "Mixer/privacy tool usage",
+        "ATM cash-out",
+        "Asset purchase monetization"
+      ],
+      "lifecycle_stage": "Cash-out/Mule (Conversion/Cash-Out)",
+      "genai_classification": "PASS",
+      "simulation_type": "Hybrid",
+      "prerequisites": [
+        "AI agent infrastructure for autonomous conversion",
+        "Cryptocurrency exchange accounts (weak KYC preferred)",
+        "Knowledge of cross-chain bridges and routing",
+        "Access to mule accounts with funds"
+      ],
+      "attack_flow": [
+        "Fraud Proceeds (in mule accounts)",
+        "Transfer to Cryptocurrency Exchange",
+        "Convert to Cryptocurrency (Stablecoins preferred)",
+        "Cross-Chain Movement (AI selects optimal bridges)",
+        "Multiple Blockchains (6+ in minutes)",
+        "Mixers/Privacy Tools (Further obfuscation)",
+        "Consolidation (Funds aggregated)",
+        "Fiat Conversion (Back to cash via weak KYC exchanges)",
+        "Criminal Organization"
+      ],
+      "detection_signals": [
+        {
+          "name": "Transfer to crypto exchange",
+          "detection_method": "Exchange monitoring"
+        },
+        {
+          "name": "Rapid conversion after receipt",
+          "detection_method": "Temporal analysis"
+        },
+        {
+          "name": "Cross-chain activity",
+          "detection_method": "Cross-chain tracing"
+        },
+        {
+          "name": "Significant stablecoin conversion",
+          "detection_method": "Stablecoin monitoring"
+        },
+        {
+          "name": "Use of weak KYC exchanges",
+          "detection_method": "Exchange risk scoring"
+        },
+        {
+          "name": "Unnatural optimization",
+          "detection_method": "ML anomaly detection"
+        },
+        {
+          "name": "Rapid sequences",
+          "detection_method": "Velocity rules"
+        },
+        {
+          "name": "Exchanges in different jurisdictions",
+          "detection_method": "Geographic analysis"
+        },
+        {
+          "name": "Mule \u2192 Exchange \u2192 Blockchain",
+          "detection_method": "Graph analytics"
+        },
+        {
+          "name": "Cross-chain patterns",
+          "detection_method": "Cross-chain graph analysis"
+        }
+      ],
+      "controls_targeted": [
+        "Fiat-to-crypto gateway controls",
+        "Cross-chain transaction tracing",
+        "AML transaction rules",
+        "Exchange KYC verification"
+      ],
+      "evidence_confidence": "VERIFIED"
+    },
+    {
+      "attack_id": "DFS-001",
+      "name": "AI-Generated Device Fingerprint Spoofing",
+      "variants": [
+        "Anti-detect browser automation",
+        "Kernel-level fingerprint spoofing",
+        "AI-native anti-detection tools",
+        "Data wiping device reset"
+      ],
+      "lifecycle_stage": "Device / Session (Stage 3)",
+      "genai_classification": "PASS",
+      "simulation_type": "Hybrid",
+      "prerequisites": [
+        "Access to GenAI fingerprint generation tools (commercial: RoxyBrowser, Camoufox; research: Darwinium Beagle)",
+        "Understanding of device fingerprinting signals",
+        "AI agent infrastructure for autonomous operation (for scale)"
+      ],
+      "attack_flow": [
+        "Attacker obtains GenAI fingerprint generation capability",
+        "System generates a synthetic device profile (canvas, WebGL, audio, fonts, timezone, screen resolution, OS, browser)",
+        "Profile is applied via anti-detect browser, kernel-level spoofing, or AI agent",
+        "Attacker accesses financial platform with spoofed device fingerprint",
+        "Platform's device fingerprinting system scores the device as 'low risk' (looks identical to legitimate device)",
+        "Attacker conducts fraud (account opening, transaction, etc.) while evading device-based detection",
+        "Fingerprint is cycled or regenerated for next session"
+      ],
+      "detection_signals": [
+        {
+          "name": "Canvas/WebGL rendering artifacts",
+          "detection_method": "ML anomaly detection"
+        },
+        {
+          "name": "Audio fingerprint consistency",
+          "detection_method": "ML anomaly detection"
+        },
+        {
+          "name": "Font set consistency",
+          "detection_method": "ML anomaly detection"
+        },
+        {
+          "name": "Timezone/IP consistency",
+          "detection_method": "Rule-based + ML"
+        },
+        {
+          "name": "OS/browser attribute consistency",
+          "detection_method": "Rule-based + ML"
+        },
+        {
+          "name": "Hardware attribute consistency (GPU, RAM)",
+          "detection_method": "ML anomaly detection"
+        },
+        {
+          "name": "Screen resolution consistency",
+          "detection_method": "Rule-based"
+        },
+        {
+          "name": "WebGL parameter consistency",
+          "detection_method": "ML anomaly detection"
+        },
+        {
+          "name": "Multiple accounts from same underlying fingerprint",
+          "detection_method": "Graph analytics"
+        },
+        {
+          "name": "Device fingerprint cycling frequency",
+          "detection_method": "Velocity rules"
+        },
+        {
+          "name": "Multiple accounts sharing device fingerprint components",
+          "detection_method": "Graph Neural Network"
+        },
+        {
+          "name": "Fingerprint patterns correlated across accounts",
+          "detection_method": "ML clustering"
+        },
+        {
+          "name": "Rapid device fingerprint changes",
+          "detection_method": "Velocity rules"
+        },
+        {
+          "name": "Unusual fingerprint generation timing",
+          "detection_method": "Rule-based"
+        }
+      ],
+      "controls_targeted": [
+        "Device fingerprinting systems",
+        "Device reputation engines",
+        "Risk-based authentication"
+      ],
+      "evidence_confidence": "VERIFIED"
+    },
+    {
+      "attack_id": "EFF-001",
+      "name": "AI-Driven Emulator Farm Fraud",
+      "variants": [
+        "Virtual emulator farms",
+        "Cloud phone farms",
+        "Physical device farms",
+        "AI-orchestrated device farms"
+      ],
+      "lifecycle_stage": "Device / Session (Stage 3)",
+      "genai_classification": "PASS",
+      "simulation_type": "Hybrid",
+      "prerequisites": [
+        "Access to emulation infrastructure (Android emulators, cloud phone services)",
+        "GenAI fingerprint generation and evasion optimization",
+        "Agent infrastructure for autonomous operation",
+        "Account creation automation"
+      ],
+      "attack_flow": [
+        "Attacker sets up emulator farm (virtual or physical)",
+        "GenAI generates unique, indistinguishable device fingerprints for each emulator",
+        "AI agents control each emulator, mimicking human behavior",
+        "Accounts are created at scale across the farm",
+        "AI adapts fingerprints and behavior based on detection feedback",
+        "Accounts are used for fraud or sold on account marketplaces",
+        "Emulators are reset and reused for new campaigns"
+      ],
+      "detection_signals": [
+        {
+          "name": "Emulator detection (virtualized environment flags)",
+          "detection_method": "Rule-based + ML"
+        },
+        {
+          "name": "VM/environment indicators",
+          "detection_method": "Rule-based + ML"
+        },
+        {
+          "name": "Identical or highly similar device fingerprints across accounts",
+          "detection_method": "ML anomaly detection"
+        },
+        {
+          "name": "Unnatural consistency in device attributes",
+          "detection_method": "ML clustering"
+        },
+        {
+          "name": "Cloud/VPS IP ranges",
+          "detection_method": "Rule-based"
+        },
+        {
+          "name": "Rapid account creation velocity",
+          "detection_method": "Velocity rules"
+        },
+        {
+          "name": "Multiple accounts from same IP/device farm",
+          "detection_method": "Graph analytics"
+        },
+        {
+          "name": "Automated, consistent behavior patterns",
+          "detection_method": "ML anomaly detection"
+        },
+        {
+          "name": "Superhuman timing/speed",
+          "detection_method": "Rule-based + ML"
+        },
+        {
+          "name": "Account-to-account similarity scores",
+          "detection_method": "Graph Neural Network"
+        },
+        {
+          "name": "IP/network correlation",
+          "detection_method": "Graph analytics"
+        },
+        {
+          "name": "Physical location correlation",
+          "detection_method": "Geo-location + ML"
+        },
+        {
+          "name": "Unusual account creation timing (off-hours)",
+          "detection_method": "Rule-based"
+        },
+        {
+          "name": "Identical account creation patterns",
+          "detection_method": "ML clustering"
+        }
+      ],
+      "controls_targeted": [
+        "Device fingerprinting",
+        "Device reputation",
+        "Velocity rules",
+        "Bot detection"
+      ],
+      "evidence_confidence": "VERIFIED"
+    },
+    {
+      "attack_id": "RAT-001",
+      "name": "AI-Powered Remote Access Trojan (RAT) / On-Device Fraud",
+      "variants": [
+        "Automated Transfer System (ATS) RATs",
+        "Behavioral mimicry RATs",
+        "AI-distributed RATs",
+        "NFC relay with RAT (hybrid)"
+      ],
+      "lifecycle_stage": "Device / Session (Stage 3)",
+      "genai_classification": "PASS",
+      "simulation_type": "Agentic",
+      "prerequisites": [
+        "Access to RAT malware (Malware-as-a-Service)",
+        "Knowledge of target banking apps",
+        "Social engineering or phishing capability (for distribution)",
+        "Knowledge of transaction flows and authorization mechanisms (for ATS)"
+      ],
+      "attack_flow": [
+        "Victim downloads RAT (via social engineering, phishing, or fake app)",
+        "RAT establishes remote access and surveillance",
+        "Attacker (or AI) observes victim's banking patterns",
+        "AI learns victim's behavioral patterns (typing, navigation, timing)",
+        "RAT autonomously initiates fraudulent transactions (ATS)",
+        "AI mimics victim's behavior during transaction to evade detection",
+        "Funds are transferred to mule accounts",
+        "RAT may also perform NFC relay for contactless payment fraud"
+      ],
+      "detection_signals": [
+        {
+          "name": "Suspicious app installations",
+          "detection_method": "Rule-based"
+        },
+        {
+          "name": "Screen recording/remote access indicators",
+          "detection_method": "ML anomaly detection"
+        },
+        {
+          "name": "Session anomalies (pattern changes)",
+          "detection_method": "ML anomaly detection"
+        },
+        {
+          "name": "Behavioral biometrics anomalies",
+          "detection_method": "ML (behavioral biometrics)"
+        },
+        {
+          "name": "Unusual navigation patterns",
+          "detection_method": "ML anomaly detection"
+        },
+        {
+          "name": "Timing anomalies",
+          "detection_method": "ML anomaly detection"
+        },
+        {
+          "name": "ATS execution patterns",
+          "detection_method": "ML anomaly detection"
+        },
+        {
+          "name": "Unusual transaction amounts/beneficiaries",
+          "detection_method": "ML anomaly detection"
+        },
+        {
+          "name": "Rapid transaction sequences",
+          "detection_method": "Velocity rules"
+        },
+        {
+          "name": "Beneficiary connected to mule networks",
+          "detection_method": "Graph analytics"
+        }
+      ],
+      "controls_targeted": [
+        "Trusted device context",
+        "Session integrity",
+        "Behavioral biometrics",
+        "Transaction authorization"
+      ],
+      "evidence_confidence": "VERIFIED"
+    },
+    {
+      "attack_id": "BOT-001",
+      "name": "AI Agent-Powered Automated Bot Interaction",
+      "variants": [
+        "Human-mimicking credential stuffing",
+        "Human-mimicking card testing",
+        "Human-mimicking account creation",
+        "Autonomous agent fraud"
+      ],
+      "lifecycle_stage": "Device / Session (Stage 3)",
+      "genai_classification": "PASS",
+      "simulation_type": "Agentic",
+      "prerequisites": [
+        "Access to AI agent frameworks",
+        "Understanding of behavioral biometrics and bot detection",
+        "Target data (credentials, card numbers, accounts)",
+        "Infrastructure for running agents at scale"
+      ],
+      "attack_flow": [
+        "Attacker configures AI agents for fraud type (credential stuffing, card testing, account creation)",
+        "AI agents execute with human-like behavior: randomized mouse movements, natural keystroke timing, realistic navigation, appropriate form-filling speed",
+        "Bots attempt logins, card tests, or account creations at scale",
+        "Bot detection systems score the traffic as 'human' (low risk)"
+      ],
+      "detection_signals": [
+        {
+          "name": "Device fingerprint consistency",
+          "detection_method": "Rule-based + ML"
+        },
+        {
+          "name": "Mouse movement naturalness",
+          "detection_method": "ML (behavioral biometrics)"
+        },
+        {
+          "name": "Keystroke timing naturalness",
+          "detection_method": "ML (behavioral biometrics)"
+        },
+        {
+          "name": "Form-filling patterns (typos, corrections)",
+          "detection_method": "ML anomaly detection"
+        },
+        {
+          "name": "Navigation patterns (hesitation, backtracking)",
+          "detection_method": "ML anomaly detection"
+        },
+        {
+          "name": "Timing patterns (human-like delays)",
+          "detection_method": "ML anomaly detection"
+        },
+        {
+          "name": "Session continuity patterns",
+          "detection_method": "ML anomaly detection"
+        },
+        {
+          "name": "Consistency across behavioral modalities",
+          "detection_method": "ML anomaly detection"
+        },
+        {
+          "name": "Multiple sessions from same infrastructure",
+          "detection_method": "Graph analytics"
+        },
+        {
+          "name": "IP/network correlation",
+          "detection_method": "Graph analytics"
+        },
+        {
+          "name": "Timing patterns (off-hours, rapid sequences)",
+          "detection_method": "Rule-based + ML"
+        }
+      ],
+      "controls_targeted": [
+        "Bot detection",
+        "Behavioral biometrics",
+        "Velocity rules",
+        "Fraud scoring"
+      ],
+      "evidence_confidence": "VERIFIED"
+    },
+    {
+      "attack_id": "BBE-001",
+      "name": "GAN-Based Behavioral Biometrics Evasion",
+      "variants": [
+        "GAN-based keystroke injection",
+        "Robot adversarial attacks",
+        "Motion forecasting attacks",
+        "Adversarial behavioral pattern generation"
+      ],
+      "lifecycle_stage": "Device / Session (Stage 3)",
+      "genai_classification": "PASS",
+      "simulation_type": "Agentic",
+      "prerequisites": [
+        "Access to GAN models or GenAI behavioral generators",
+        "Training data (victim's behavioral patterns or general human behavior)",
+        "Understanding of behavioral biometrics systems",
+        "Ability to inject generated behavioral patterns into interaction"
+      ],
+      "attack_flow": [
+        "Attacker obtains behavioral training data (from compromised device, public data, or general human behavior)",
+        "GAN is trained on the target's behavioral patterns (keystroke timing, mouse movements, touch gestures)",
+        "GAN generates realistic behavioral patterns matching the target's profile",
+        "Attacker injects these patterns into authentication session",
+        "Behavioral biometrics system scores the behavior as 'legitimate' (matches target's profile)",
+        "Attacker conducts fraud while appearing behaviorally legitimate"
+      ],
+      "detection_signals": [
+        {
+          "name": "Keystroke timing naturalness",
+          "detection_method": "ML anomaly detection"
+        },
+        {
+          "name": "Mouse movement naturalness",
+          "detection_method": "ML anomaly detection"
+        },
+        {
+          "name": "Touch gesture naturalness",
+          "detection_method": "ML anomaly detection"
+        },
+        {
+          "name": "Motion pattern naturalness",
+          "detection_method": "ML anomaly detection"
+        },
+        {
+          "name": "Consistency across behavioral modalities",
+          "detection_method": "ML anomaly detection"
+        },
+        {
+          "name": "Subtle deviations from user baseline",
+          "detection_method": "ML (behavioral biometrics)"
+        },
+        {
+          "name": "Too-perfect mimicry (unusually consistent)",
+          "detection_method": "ML anomaly detection"
+        },
+        {
+          "name": "Inconsistencies between behavioral types",
+          "detection_method": "ML anomaly detection"
+        },
+        {
+          "name": "Session anomalies (pattern changes)",
+          "detection_method": "ML anomaly detection"
+        },
+        {
+          "name": "Transaction anomalies",
+          "detection_method": "ML anomaly detection"
+        }
+      ],
+      "controls_targeted": [
+        "Behavioral biometrics systems (keystroke dynamics, mouse dynamics, touch dynamics, motion patterns)"
+      ],
+      "evidence_confidence": "VERIFIED"
+    },
+    {
+      "attack_id": "GP-001",
+      "name": "AI-Enhanced API Parameter Manipulation",
+      "variants": [
+        "Payment amount manipulation",
+        "Prompt injection for parameter changes",
+        "Currency manipulation",
+        "Merchant ID manipulation",
+        "Parameter injection via AI agents"
+      ],
+      "lifecycle_stage": "Gateway / Processor",
+      "genai_classification": "PARTIAL",
+      "simulation_type": "Hybrid",
+      "prerequisites": [
+        "Access to gateway API or AI agent workflow",
+        "Understanding of API parameter structure",
+        "Access to an AI agent's workflow (for agent variant)"
+      ],
+      "attack_flow": [
+        "Attacker identifies vulnerable API endpoint or AI agent workflow",
+        "(Agent variant) Injects prompt to manipulate agent reasoning",
+        "API request submitted with manipulated parameters",
+        "Gateway processes manipulated request (reduced amount, changed currency, etc.)",
+        "Transaction authorized at manipulated value",
+        "Attacker receives goods/services at reduced cost"
+      ],
+      "detection_signals": [
+        {
+          "name": "Amount deviations from merchant baseline",
+          "detection_method": "Supervised ML; anomaly detection"
+        },
+        {
+          "name": "Unusual parameter combinations",
+          "detection_method": "Rules; ML classification"
+        },
+        {
+          "name": "Order value vs. payment amount mismatch",
+          "detection_method": "Rule-based; ML"
+        },
+        {
+          "name": "Prompt injection patterns in agent inputs",
+          "detection_method": "NLP; LLM-based detection"
+        },
+        {
+          "name": "Agent reasoning anomalies",
+          "detection_method": "Anomaly detection"
+        },
+        {
+          "name": "Rapid parameter variation testing",
+          "detection_method": "Velocity rules; anomaly detection"
+        },
+        {
+          "name": "Similar parameter patterns across merchants",
+          "detection_method": "Graph analytics"
+        }
+      ],
+      "controls_targeted": [
+        "API parameter validation",
+        "amount/currency verification",
+        "AI agent permission boundaries"
+      ],
+      "evidence_confidence": "VERIFIED"
+    },
+    {
+      "attack_id": "GP-002",
+      "name": "AI-Enhanced Webhook / Callback Forgery",
+      "variants": [
+        "Stripe webhook signature bypass",
+        "PayPal IPN forgery",
+        "LLM gateway webhook exploitation",
+        "Quota fraud"
+      ],
+      "lifecycle_stage": "Gateway / Processor",
+      "genai_classification": "PARTIAL",
+      "simulation_type": "Algorithmic",
+      "prerequisites": [
+        "Knowledge of webhook endpoint and payload structure",
+        "Ability to send HTTP requests to the endpoint",
+        "Empty or weak webhook secret (for LLM gateway variant)"
+      ],
+      "attack_flow": [
+        "Attacker identifies webhook endpoint (standard or LLM gateway)",
+        "Crafts forged webhook payload (e.g., charge.succeeded event)",
+        "For LLM gateway: computes HMAC signature with empty key",
+        "Sends POST request to endpoint",
+        "Gateway processes forged event without proper validation",
+        "Account credited; quota granted; order marked paid"
+      ],
+      "detection_signals": [
+        {
+          "name": "Webhook signature validation failures",
+          "detection_method": "Rule-based; anomaly detection"
+        },
+        {
+          "name": "Webhook requests from unexpected IPs",
+          "detection_method": "Rules; threat intelligence"
+        },
+        {
+          "name": "Quota credits without corresponding payments",
+          "detection_method": "Rule-based; ML"
+        },
+        {
+          "name": "Order fulfillment without payment",
+          "detection_method": "Rule-based"
+        },
+        {
+          "name": "Webhook payload inconsistencies",
+          "detection_method": "ML anomaly detection"
+        },
+        {
+          "name": "Unusual webhook timing",
+          "detection_method": "Temporal anomaly detection"
+        },
+        {
+          "name": "Similar webhook forgery patterns across merchants",
+          "detection_method": "Graph analytics"
+        }
+      ],
+      "controls_targeted": [
+        "Webhook signature validation",
+        "event authenticity verification",
+        "quota/credit management"
+      ],
+      "evidence_confidence": "VERIFIED"
+    },
+    {
+      "attack_id": "GP-003",
+      "name": "AI-Powered Card Testing",
+      "variants": [
+        "BIN attacks",
+        "Authorization abuse",
+        "AI-powered validation platforms",
+        "Distributed card testing"
+      ],
+      "lifecycle_stage": "Gateway / Processor",
+      "genai_classification": "PARTIAL",
+      "simulation_type": "Algorithmic",
+      "prerequisites": [
+        "Access to gateway API (public checkout endpoints)",
+        "List of stolen card numbers",
+        "Access to AI-powered validation platform (for platform variant)"
+      ],
+      "attack_flow": [
+        "Attacker obtains list of stolen card numbers",
+        "Uses AI-powered platform or script to submit small-value authorization requests",
+        "Gateway attempts authorization for each card",
+        "Success/failure responses indicate card validity",
+        "Valid cards flagged for exploitation or sale"
+      ],
+      "detection_signals": [
+        {
+          "name": "High API request rate from single source",
+          "detection_method": "Velocity rules; anomaly detection"
+        },
+        {
+          "name": "Small, consistent transaction amounts",
+          "detection_method": "ML classification"
+        },
+        {
+          "name": "High decline rate",
+          "detection_method": "Rules; ML"
+        },
+        {
+          "name": "Multiple cards from same BIN range",
+          "detection_method": "BIN analysis"
+        },
+        {
+          "name": "Same device fingerprint across multiple cards",
+          "detection_method": "Device fingerprinting"
+        },
+        {
+          "name": "Unnatural checkout patterns",
+          "detection_method": "Behavioral analytics"
+        },
+        {
+          "name": "Card testing patterns across merchants",
+          "detection_method": "Graph analytics"
+        },
+        {
+          "name": "Rapid checkout attempts",
+          "detection_method": "Velocity rules; anomaly detection"
+        }
+      ],
+      "controls_targeted": [
+        "API rate limiting",
+        "Velocity rules",
+        "Fraud detection at checkout"
+      ],
+      "evidence_confidence": "VERIFIED"
+    },
+    {
+      "attack_id": "GP-004",
+      "name": "Agentic Payment Protocol Exploitation",
+      "variants": [
+        "x402 protocol attacks",
+        "AP2 protocol exploitation",
+        "Replay/idempotency attacks",
+        "Header/proxy confusion",
+        "Delegation chain attacks",
+        "Prompt injection in agentic payments"
+      ],
+      "lifecycle_stage": "Gateway / Processor",
+      "genai_classification": "PASS",
+      "simulation_type": "Agentic",
+      "prerequisites": [
+        "Access to agentic payment protocol",
+        "Ability to inject prompts or manipulate protocol messages",
+        "Understanding of protocol state machine"
+      ],
+      "attack_flow": [
+        "Attacker identifies vulnerable agentic payment protocol (x402, AP2)",
+        "Exploits protocol weakness (replay, header confusion, delegation chain)",
+        "Payment proof reused for multiple grants",
+        "Protocol state manipulated",
+        "Unauthorized payments executed; data exposed"
+      ],
+      "detection_signals": [
+        {
+          "name": "Protocol message anomalies",
+          "detection_method": "Protocol validation"
+        },
+        {
+          "name": "Prompt injection patterns",
+          "detection_method": "NLP; LLM-based detection"
+        },
+        {
+          "name": "Reused payment proofs",
+          "detection_method": "Idempotency tracking"
+        },
+        {
+          "name": "Multiple grants from single payment",
+          "detection_method": "Rule-based; ML"
+        },
+        {
+          "name": "Agent reasoning anomalies",
+          "detection_method": "Anomaly detection"
+        },
+        {
+          "name": "Protocol state inconsistencies",
+          "detection_method": "State consistency checking"
+        },
+        {
+          "name": "Similar attack patterns across protocols",
+          "detection_method": "Graph analytics"
+        }
+      ],
+      "controls_targeted": [
+        "Protocol authorization",
+        "Binding",
+        "Replay protection",
+        "Cross-layer security"
+      ],
+      "evidence_confidence": "VERIFIED"
+    },
+    {
+      "attack_id": "GP-005",
+      "name": "AI Agent Routing Manipulation",
+      "variants": [
+        "Payment redirection via AI agents",
+        "Processor selection manipulation",
+        "Malicious agent routing"
+      ],
+      "lifecycle_stage": "Gateway / Processor",
+      "genai_classification": "PARTIAL",
+      "simulation_type": "Hybrid",
+      "prerequisites": [
+        "Ability to interact with/manipulate AI agents",
+        "Understanding of routing logic",
+        "Access to AI agent workflow (for agent variant)"
+      ],
+      "attack_flow": [
+        "Attacker identifies AI agent with payment routing capabilities",
+        "Manipulates agent via prompt injection or malicious context",
+        "Agent routes payment to malicious destination",
+        "Payment processed through weak controls",
+        "Funds redirected to attacker"
+      ],
+      "detection_signals": [
+        {
+          "name": "Unusual routing patterns",
+          "detection_method": "Anomaly detection"
+        },
+        {
+          "name": "Unusual processor selection",
+          "detection_method": "Rules; ML"
+        },
+        {
+          "name": "Prompt injection patterns in agent inputs",
+          "detection_method": "NLP; LLM-based detection"
+        },
+        {
+          "name": "Payments to unexpected destinations",
+          "detection_method": "ML anomaly detection"
+        },
+        {
+          "name": "Similar routing patterns across agents",
+          "detection_method": "Graph analytics"
+        }
+      ],
+      "controls_targeted": [
+        "Routing logic",
+        "Processor selection",
+        "AI agent decision-making"
+      ],
+      "evidence_confidence": "VERIFIED"
+    },
+    {
+      "attack_id": "GP-006",
+      "name": "Agent Hacking for Token Abuse",
+      "variants": [
+        "AI assistant credential theft",
+        "Stored payment token abuse",
+        "Agent hacking via prompt injection",
+        "Malicious website poisoning"
+      ],
+      "lifecycle_stage": "Gateway / Processor",
+      "genai_classification": "PARTIAL",
+      "simulation_type": "Hybrid",
+      "prerequisites": [
+        "Access to AI assistant (via prompt injection, malicious websites)",
+        "Stored payment credentials in the agent",
+        "Ability to execute transactions through the agent"
+      ],
+      "attack_flow": [
+        "Attacker identifies AI assistant with stored payment credentials",
+        "Uses prompt injection or poisoned search results to hack agent",
+        "Agent executes transaction using stored credentials",
+        "Transaction appears legitimate (agent is authorized)",
+        "Unauthorized charges to victim; funds stolen"
+      ],
+      "detection_signals": [
+        {
+          "name": "Unauthorized token retrieval attempts",
+          "detection_method": "Rule-based; anomaly detection"
+        },
+        {
+          "name": "Tokens used from unexpected contexts",
+          "detection_method": "Contextual validation"
+        },
+        {
+          "name": "Agent reasoning anomalies",
+          "detection_method": "Anomaly detection; NLP"
+        },
+        {
+          "name": "Unauthorized token-based transactions",
+          "detection_method": "ML anomaly detection"
+        },
+        {
+          "name": "Agent session anomalies",
+          "detection_method": "Session anomaly detection"
+        },
+        {
+          "name": "Similar hacking patterns across agents",
+          "detection_method": "Graph analytics"
+        }
+      ],
+      "controls_targeted": [
+        "Token access control",
+        "Authorization checks",
+        "Payment credential storage"
+      ],
+      "evidence_confidence": "VERIFIED"
+    },
+    {
+      "attack_id": "GP-007",
+      "name": "AI Agent Velocity Evasion",
+      "variants": [
+        "Rapid agent shopping",
+        "High-velocity transaction bursts",
+        "Distributed AI agent fraud"
+      ],
+      "lifecycle_stage": "Gateway / Processor",
+      "genai_classification": "PARTIAL",
+      "simulation_type": "Hybrid",
+      "prerequisites": [
+        "AI agent infrastructure",
+        "Access to payment APIs",
+        "Ability to execute high-velocity transactions"
+      ],
+      "attack_flow": [
+        "Attacker deploys AI agents across payment infrastructure",
+        "Agents execute transactions at millisecond speeds",
+        "Velocity checks misread as legitimate high-velocity activity",
+        "Fraudulent transactions completed before detection",
+        "Agents adapt patterns based on detection feedback"
+      ],
+      "detection_signals": [
+        {
+          "name": "Superhuman request rates",
+          "detection_method": "Velocity rules; anomaly detection"
+        },
+        {
+          "name": "Checkout completion time anomaly",
+          "detection_method": "Temporal anomaly detection"
+        },
+        {
+          "name": "Bot-like transaction patterns",
+          "detection_method": "Behavioral analytics"
+        },
+        {
+          "name": "Consistent high-velocity patterns",
+          "detection_method": "Pattern analysis"
+        },
+        {
+          "name": "Coordinated velocity patterns",
+          "detection_method": "Graph analytics"
+        }
+      ],
+      "controls_targeted": [
+        "Velocity rules",
+        "Rate limiting",
+        "Anomaly detection"
+      ],
+      "evidence_confidence": "VERIFIED"
+    },
+    {
+      "attack_id": "SIF-001",
+      "name": "Synthetic Identity Fraud",
+      "variants": [
+        "Credit-building / Bust-out",
+        "Mule account creation",
+        "Synthetic identity farming"
+      ],
+      "lifecycle_stage": "Identity / KYC (Stage 1)",
+      "genai_classification": "PASS",
+      "simulation_type": "Algorithmic",
+      "prerequisites": [
+        "Access to GenAI tools (GANs, diffusion models, LLMs)",
+        "Breached PII datasets (real identity fragments)",
+        "Understanding of KYC verification logic",
+        "Patience for cultivation period (30\u2013365 days)"
+      ],
+      "attack_flow": [
+        "Synthetic identity creation (GenAI-generated persona + digital footprint)",
+        "KYC/onboarding submission (documents, biometrics, V-CIP)",
+        "Account creation (savings, credit card, digital wallet)",
+        "Dormancy period (building account age/credibility)",
+        "Normal-looking transaction activity (salary deposits, small purchases)",
+        "Credit building (small loans repaid, credit limit increases)",
+        "Bust-out (max out credit lines, take multiple loans)",
+        "Funds transferred to mule accounts",
+        "Layering (multiple transactions across accounts)",
+        "Cash-out"
+      ],
+      "detection_signals": [
+        {
+          "name": "Identity data inconsistencies (PII cross-check against CKYCR, DigiLocker)",
+          "detection_method": "Rule-based + ML"
+        },
+        {
+          "name": "Digital footprint credibility (too new, inconsistent, or fabricated)",
+          "detection_method": "ML"
+        },
+        {
+          "name": "Document verification anomalies",
+          "detection_method": "ML"
+        },
+        {
+          "name": "Multiple verification attempts across identities",
+          "detection_method": "ML"
+        },
+        {
+          "name": "Device emulation detection",
+          "detection_method": "Rule-based"
+        },
+        {
+          "name": "VPN/Proxy usage patterns",
+          "detection_method": "Rule-based + ML"
+        },
+        {
+          "name": "Inconsistent device fingerprints across applications",
+          "detection_method": "ML"
+        },
+        {
+          "name": "Unnatural typing/mouse patterns during onboarding",
+          "detection_method": "ML"
+        },
+        {
+          "name": "Application completion time anomalies",
+          "detection_method": "ML"
+        },
+        {
+          "name": "Inconsistent application behaviour",
+          "detection_method": "ML"
+        },
+        {
+          "name": "Too-rapid credit building (velocity anomalies)",
+          "detection_method": "ML"
+        },
+        {
+          "name": "Transaction patterns inconsistent with declared profile",
+          "detection_method": "ML"
+        },
+        {
+          "name": "Unusual transaction amounts/velocity",
+          "detection_method": "ML"
+        },
+        {
+          "name": "Bust-out transaction sequences",
+          "detection_method": "ML"
+        },
+        {
+          "name": "Funds movement to mule accounts",
+          "detection_method": "ML"
+        },
+        {
+          "name": "Shared phone numbers/addresses/email domains across unrelated accounts",
+          "detection_method": "ML (Graph analytics)"
+        },
+        {
+          "name": "Connected to known fraud rings",
+          "detection_method": "ML (Consortium intelligence)"
+        },
+        {
+          "name": "Entity resolution graph anomalies",
+          "detection_method": "ML"
+        },
+        {
+          "name": "Accounts with identical dormancy-to-activity patterns",
+          "detection_method": "ML (Temporal)"
+        },
+        {
+          "name": "Too-rapid credit building timeline",
+          "detection_method": "ML"
+        },
+        {
+          "name": "Unusual transaction timing",
+          "detection_method": "ML"
+        }
+      ],
+      "controls_targeted": [
+        "KYC/onboarding systems",
+        "Credit bureaus",
+        "Payment platforms"
+      ],
+      "evidence_confidence": "VERIFIED"
+    },
+    {
+      "attack_id": "GDF-001",
+      "name": "GenAI Document Forgery",
+      "variants": [
+        "Passport forgery",
+        "Driver's license forgery",
+        "National ID forgery",
+        "Utility bill forgery"
+      ],
+      "lifecycle_stage": "Identity / KYC (Stage 1)",
+      "genai_classification": "PASS",
+      "simulation_type": "Algorithmic",
+      "prerequisites": [
+        "Access to GenAI image generation tools",
+        "Template of legitimate document",
+        "Understanding of verification logic",
+        "Identity details to populate document"
+      ],
+      "attack_flow": [
+        "Obtain document template",
+        "Generate document with desired details using GenAI",
+        "Apply aging/noise effects to appear legitimate",
+        "Submit to KYC system",
+        "If detected, iterate and resubmit with modifications",
+        "Document verification passed",
+        "KYC completed under false identity"
+      ],
+      "detection_signals": [
+        {
+          "name": "Document pixel-level anomalies (compression artifacts, unnatural patterns)",
+          "detection_method": "ML (AI-driven forgery detection)"
+        },
+        {
+          "name": "Document metadata anomalies (creation date, software used)",
+          "detection_method": "Rule-based + ML"
+        },
+        {
+          "name": "Missing or inconsistent security features",
+          "detection_method": "ML"
+        },
+        {
+          "name": "Inconsistent fonts, layout, or formatting",
+          "detection_method": "ML"
+        },
+        {
+          "name": "Unnatural aging/wear patterns",
+          "detection_method": "ML"
+        },
+        {
+          "name": "OCR data inconsistencies",
+          "detection_method": "Rule-based"
+        },
+        {
+          "name": "Multiple document submissions from same device",
+          "detection_method": "Rule-based"
+        },
+        {
+          "name": "Rapid resubmission after rejection",
+          "detection_method": "Rule-based"
+        },
+        {
+          "name": "Unusual submission times",
+          "detection_method": "Rule-based"
+        },
+        {
+          "name": "Unnatural upload patterns",
+          "detection_method": "ML"
+        },
+        {
+          "name": "Same document template used across multiple applications",
+          "detection_method": "ML (Document fingerprinting)"
+        },
+        {
+          "name": "Same GenAI artifact patterns across documents",
+          "detection_method": "ML"
+        },
+        {
+          "name": "Too-rapid iteration between submission and resubmission",
+          "detection_method": "Rule-based"
+        }
+      ],
+      "controls_targeted": [
+        "Document verification systems (OCR, document forensics, manual review)"
+      ],
+      "evidence_confidence": "VERIFIED"
+    },
+    {
+      "attack_id": "DII-001",
+      "name": "Deepfake Injection / Impersonation",
+      "variants": [
+        "Camera injection (virtual camera)",
+        "Face-swap injection",
+        "Voice cloning",
+        "Synthetic biometric data (fingerprints, iris)"
+      ],
+      "lifecycle_stage": "Identity / KYC (Stage 1)",
+      "genai_classification": "PASS",
+      "simulation_type": "Hybrid",
+      "prerequisites": [
+        "Access to victim photos/videos",
+        "GenAI face-swap/deepfake tool",
+        "Camera injection capability (virtual camera application)",
+        "Knowledge of verification flow"
+      ],
+      "attack_flow": [
+        "Obtain victim photos/videos (social media, data breaches)",
+        "Generate real-time deepfake (face swap) using GenAI",
+        "Set up camera injection (virtual camera application)",
+        "Feed synthetic video into the verification pipeline",
+        "Complete biometric verification",
+        "Liveness check passed (system believes live person present)",
+        "KYC completed (identity verified)",
+        "Account created OR existing account accessed"
+      ],
+      "detection_signals": [
+        {
+          "name": "Biometric match anomalies",
+          "detection_method": "ML"
+        },
+        {
+          "name": "Liveness check failures/retries",
+          "detection_method": "Rule-based + ML"
+        },
+        {
+          "name": "Inconsistent facial features (lighting, skin texture, eye movement)",
+          "detection_method": "ML"
+        },
+        {
+          "name": "Synthetic artifact patterns in video",
+          "detection_method": "ML"
+        },
+        {
+          "name": "Audio-visual desynchronization",
+          "detection_method": "ML"
+        },
+        {
+          "name": "Virtual camera detection",
+          "detection_method": "Rule-based + ML"
+        },
+        {
+          "name": "Device emulation detection",
+          "detection_method": "Rule-based"
+        },
+        {
+          "name": "Unusual camera pipeline behavior",
+          "detection_method": "ML"
+        },
+        {
+          "name": "Non-rooted device with virtual camera app",
+          "detection_method": "ML"
+        },
+        {
+          "name": "Unnatural facial movements",
+          "detection_method": "ML (Behavioral biometrics)"
+        },
+        {
+          "name": "Lack of appropriate micro-expressions",
+          "detection_method": "ML"
+        },
+        {
+          "name": "Timing inconsistencies (response latency)",
+          "detection_method": "ML"
+        },
+        {
+          "name": "Unnatural speech patterns",
+          "detection_method": "ML"
+        },
+        {
+          "name": "Multiple biometric attempts from same device",
+          "detection_method": "ML"
+        },
+        {
+          "name": "Same deepfake pattern across accounts",
+          "detection_method": "ML (Deepfake fingerprinting)"
+        },
+        {
+          "name": "Biometric attempts at unusual times",
+          "detection_method": "Rule-based"
+        },
+        {
+          "name": "Rapid completion of verification",
+          "detection_method": "ML"
+        }
+      ],
+      "controls_targeted": [
+        "Biometric verification systems",
+        "Liveness detection",
+        "V-CIP agents",
+        "Human reviewers"
+      ],
+      "evidence_confidence": "VERIFIED"
+    },
+    {
+      "attack_id": "SEP-001",
+      "name": "GenAI-Powered Social Engineering / Person-Not-Present (PNP)",
+      "variants": [
+        "Phishing (email)",
+        "Vishing (voice)",
+        "Romance scams",
+        "Digital Arrest scams",
+        "Business Email Compromise (BEC)",
+        "Investment scams"
+      ],
+      "lifecycle_stage": "Identity / KYC (Stage 1) \u2014 post-verification exploitation",
+      "genai_classification": "PASS",
+      "simulation_type": "Agentic",
+      "prerequisites": [
+        "Access to GenAI tools (LLMs for script generation, voice cloning, deepfake video)",
+        "Target intelligence (social media, public data)",
+        "Communication channels (email, phone, SMS, video, social media)"
+      ],
+      "attack_flow": [
+        "Gather intelligence on target (social media, public data)",
+        "Generate personalized scam script using GenAI",
+        "Execute via appropriate channel (voice, email, video, messaging)",
+        "Manipulate victim into authorizing payment",
+        "Victim authorizes payment voluntarily (appears legitimate)",
+        "Funds transferred to mule accounts",
+        "Layering across multiple accounts",
+        "Cash-out"
+      ],
+      "detection_signals": [
+        {
+          "name": "Unusual login location/time for victim",
+          "detection_method": "Rule-based + ML"
+        },
+        {
+          "name": "New device detection",
+          "detection_method": "Rule-based"
+        },
+        {
+          "name": "Session anomalies",
+          "detection_method": "ML"
+        },
+        {
+          "name": "Unusual transaction behavior (new beneficiary, unusual amount, unusual timing)",
+          "detection_method": "ML"
+        },
+        {
+          "name": "Signs of coercion (rapid authentication, unusual navigation)",
+          "detection_method": "ML"
+        },
+        {
+          "name": "Unusual interaction patterns",
+          "detection_method": "ML"
+        },
+        {
+          "name": "New beneficiary addition",
+          "detection_method": "Rule-based + ML"
+        },
+        {
+          "name": "Unusual transaction amount (relative to victim's normal behavior)",
+          "detection_method": "ML"
+        },
+        {
+          "name": "Unusual transaction velocity",
+          "detection_method": "ML"
+        },
+        {
+          "name": "Transaction pattern inconsistent with normal behavior",
+          "detection_method": "ML"
+        },
+        {
+          "name": "Rapid transaction sequences",
+          "detection_method": "ML"
+        },
+        {
+          "name": "Beneficiary connected to known mule networks",
+          "detection_method": "ML (Graph analytics)"
+        },
+        {
+          "name": "Funds move to suspicious accounts",
+          "detection_method": "ML"
+        },
+        {
+          "name": "Beneficiary risk score",
+          "detection_method": "ML"
+        },
+        {
+          "name": "Transaction at unusual time",
+          "detection_method": "Rule-based + ML"
+        },
+        {
+          "name": "Time between scam contact and payment",
+          "detection_method": "ML"
+        }
+      ],
+      "controls_targeted": [
+        "Legitimate KYC-verified customers",
+        "Employees",
+        "Merchants",
+        "Payment authorization systems"
+      ],
+      "evidence_confidence": "VERIFIED"
+    },
+    {
+      "attack_id": "ATO-001",
+      "name": "Account Takeover via KYC Recovery Exploitation",
+      "variants": [
+        "Password reset impersonation",
+        "Security question bypass",
+        "Customer support impersonation",
+        "Document-based recovery fraud"
+      ],
+      "lifecycle_stage": "Identity / KYC (Stage 1) \u2014 recovery verification",
+      "genai_classification": "PASS",
+      "simulation_type": "Agentic",
+      "prerequisites": [
+        "Victim's PII (from data breaches)",
+        "Access to GenAI tools (document generation, voice cloning, deepfake video)",
+        "Knowledge of recovery verification process"
+      ],
+      "attack_flow": [
+        "Obtain victim's PII (data breach, social media, phishing)",
+        "Generate forged identity documents using GenAI",
+        "Create voice clone or deepfake of victim (if needed)",
+        "Initiate account recovery process",
+        "Submit forged documents / pass voice verification",
+        "Recovery KYC bypassed",
+        "Account access granted",
+        "Account takeover"
+      ],
+      "detection_signals": [
+        {
+          "name": "Document anomalies in recovery submissions",
+          "detection_method": "ML"
+        },
+        {
+          "name": "Biometric match anomalies",
+          "detection_method": "ML"
+        },
+        {
+          "name": "Inconsistent identity data",
+          "detection_method": "Rule-based + ML"
+        },
+        {
+          "name": "Unusual device for recovery request",
+          "detection_method": "Rule-based"
+        },
+        {
+          "name": "Unusual location/IP",
+          "detection_method": "Rule-based + ML"
+        },
+        {
+          "name": "Multiple recovery attempts",
+          "detection_method": "Rule-based"
+        },
+        {
+          "name": "Unusual interaction patterns",
+          "detection_method": "ML"
+        },
+        {
+          "name": "Signs of automated behaviour",
+          "detection_method": "ML"
+        },
+        {
+          "name": "Unauthorized transactions post-recovery",
+          "detection_method": "ML"
+        },
+        {
+          "name": "New beneficiary additions",
+          "detection_method": "ML"
+        },
+        {
+          "name": "Funds movement to mule accounts",
+          "detection_method": "ML"
+        },
+        {
+          "name": "Recovery attempts connected to known fraud patterns",
+          "detection_method": "ML"
+        },
+        {
+          "name": "Recovery at unusual times",
+          "detection_method": "Rule-based"
+        },
+        {
+          "name": "Rapid recovery completion",
+          "detection_method": "ML"
+        }
+      ],
+      "controls_targeted": [
+        "KYC recovery processes",
+        "Password reset flows",
+        "Customer support"
+      ],
+      "evidence_confidence": "VERIFIED"
+    },
+    {
+      "attack_id": "N-001",
+      "name": "Synthetic Identity Networks",
+      "variants": [
+        "Synthetic Identity Fabric (SIF)",
+        "AI-generated identity clusters",
+        "Account farming networks",
+        "Synthetic identity rings"
+      ],
+      "lifecycle_stage": "Cross-stage / Network",
+      "genai_classification": "PASS",
+      "simulation_type": "Hybrid",
+      "prerequisites": [
+        "Access to GenAI tools (LLMs, image generation, document generation)",
+        "Breached PII datasets or ability to fabricate complete personas",
+        "Understanding of KYC verification workflows",
+        "Infrastructure to manage thousands of accounts"
+      ],
+      "attack_flow": [
+        "Identity Generation (KYC Stage 1)",
+        "Document Generation (KYC Stage 1)",
+        "Account Opening (Account Creation Stage 2)",
+        "Device Registration (Device/Session Stage 3)",
+        "Seasoning (Authentication + Payment Initiation Stages 4\u20135)",
+        "Coordinated Activation (Payment Initiation Stage 5)",
+        "Bust-out / Cash-out (Cash-out/Mule Stage 16)"
+      ],
+      "detection_signals": [
+        {
+          "name": "Shared identity attributes across unrelated accounts",
+          "detection_method": "Entity resolution, graph clustering, attribute similarity scoring"
+        },
+        {
+          "name": "AI-generated document artifacts",
+          "detection_method": "CNN/Transformer document forensics"
+        },
+        {
+          "name": "Batch account creation patterns",
+          "detection_method": "Velocity rules, temporal clustering, attribute similarity"
+        },
+        {
+          "name": "Identical dormancy-to-activity patterns across accounts",
+          "detection_method": "Temporal pattern analysis, clustering"
+        },
+        {
+          "name": "Shared device fingerprints across multiple accounts",
+          "detection_method": "Device fingerprint correlation, graph analytics"
+        },
+        {
+          "name": "Superhuman form-filling speed during onboarding",
+          "detection_method": "Behavioral biometrics, timing analysis"
+        },
+        {
+          "name": "Unnatural credit-building velocity",
+          "detection_method": "Velocity rules, anomaly detection"
+        },
+        {
+          "name": "Coordinated bust-out transactions across accounts",
+          "detection_method": "Temporal correlation, graph analytics"
+        },
+        {
+          "name": "High clustering coefficient among accounts with no legitimate relationships",
+          "detection_method": "Graph Neural Network, community detection"
+        },
+        {
+          "name": "Shared infrastructure across accounts",
+          "detection_method": "Entity resolution, graph analytics"
+        }
+      ],
+      "controls_targeted": [
+        "KYC Identity Verification",
+        "Document Forensics Checks",
+        "Account Creation Monitoring",
+        "Behavioral Biometrics",
+        "Credit Monitoring & Velocity Limits",
+        "Cash-out / Mule Detection"
+      ],
+      "evidence_confidence": "VERIFIED"
+    },
+    {
+      "attack_id": "N-002",
+      "name": "AI-Orchestrated Fraud Rings",
+      "variants": [
+        "Human-assisted fraud rings with AI content",
+        "AI-agent orchestrated rings",
+        "Multi-scam rings (romance, investment, impersonation, gambling)"
+      ],
+      "lifecycle_stage": "Cross-stage / Network",
+      "genai_classification": "PASS",
+      "simulation_type": "Agentic",
+      "prerequisites": [
+        "Access to GenAI tools (LLMs, voice cloning, deepfake video)",
+        "Infrastructure for account creation and payment processing",
+        "Network of complicit or synthetic accounts",
+        "Understanding of payment systems and fraud detection"
+      ],
+      "attack_flow": [
+        "Reconnaissance (OSINT, AI-powered)",
+        "Identity Generation (KYC Stage 1)",
+        "Account Creation (Account Creation Stage 2)",
+        "Device Setup (Device/Session Stage 3)",
+        "Authentication (Authentication Stage 4)",
+        "Payment Initiation (Payment Initiation Stage 5)",
+        "Merchant/Acquirer Processing (Stages 6\u20137)",
+        "Gateway/Processor Infrastructure Exploitation (Stage 8)",
+        "Payment Rail Cross-Rail Movement (Stage 9)",
+        "Cash-out (Cash-out/Mule Stage 16)",
+        "Layering & Evasion (AML/Compliance Stage 17)"
+      ],
+      "detection_signals": [
+        {
+          "name": "Multiple identities linked to same facilitators or infrastructure",
+          "detection_method": "Entity resolution, graph analytics"
+        },
+        {
+          "name": "Accounts opened with similar patterns",
+          "detection_method": "Temporal clustering, attribute similarity"
+        },
+        {
+          "name": "Shared devices, IPs, or payment gateways across accounts",
+          "detection_method": "Device fingerprint correlation, graph analytics"
+        },
+        {
+          "name": "Small, consistent transactions just below thresholds",
+          "detection_method": "Velocity rules, anomaly detection"
+        },
+        {
+          "name": "Transactions across multiple accounts with similar patterns",
+          "detection_method": "Clustering, temporal correlation"
+        },
+        {
+          "name": "Shell merchant accounts with no physical presence",
+          "detection_method": "Entity resolution, document forensics"
+        },
+        {
+          "name": "Multiple accounts sending to same mule network",
+          "detection_method": "Graph analytics, beneficiary risk scoring"
+        },
+        {
+          "name": "Coordinated bursts of activity across accounts",
+          "detection_method": "Temporal correlation, velocity rules"
+        },
+        {
+          "name": "High betweenness centrality for key facilitator nodes",
+          "detection_method": "Centrality analysis, Graph Neural Network"
+        },
+        {
+          "name": "Unnatural patterns in administrative behavior",
+          "detection_method": "Behavioral biometrics"
+        }
+      ],
+      "controls_targeted": [
+        "KYC / Identity Verification",
+        "Device Fingerprinting",
+        "Transaction Monitoring Thresholds",
+        "Merchant Onboarding & Underwriting",
+        "Mule & Layering Detection",
+        "Administrative Access Controls"
+      ],
+      "evidence_confidence": "VERIFIED"
+    },
+    {
+      "attack_id": "N-003",
+      "name": "AI-Orchestrated Multi-Stage Fraud Campaigns",
+      "variants": [
+        "End-to-end autonomous campaigns",
+        "AI-planned bust-out campaigns",
+        "Agentic fraud operations"
+      ],
+      "lifecycle_stage": "Cross-stage / Network",
+      "genai_classification": "PASS",
+      "simulation_type": "Agentic",
+      "prerequisites": [
+        "Access to AI agent infrastructure",
+        "Integration with multiple financial systems and payment rails",
+        "Understanding of fraud detection systems (to evade)",
+        "Capability to generate synthetic identities, documents, and transaction patterns"
+      ],
+      "attack_flow": [
+        "Reconnaissance (OSINT, AI-powered)",
+        "Synthetic Identity Generation (KYC Stage 1)",
+        "Document Generation (KYC Stage 1)",
+        "Account Creation (Account Creation Stage 2)",
+        "Device Registration (Device/Session Stage 3)",
+        "Authentication (Authentication Stage 4)",
+        "Payment Initiation (Payment Initiation Stage 5)",
+        "Merchant/Acquirer Processing (Stages 6\u20137)",
+        "Gateway/Processor Exploitation (Stage 8)",
+        "Payment Rail Movement (Stage 9)",
+        "Cash-out (Cash-out/Mule Stage 16)",
+        "Layering (AML/Compliance Stage 17)"
+      ],
+      "detection_signals": [
+        {
+          "name": "Batch creation of synthetic identities at campaign start",
+          "detection_method": "Entity resolution, temporal clustering"
+        },
+        {
+          "name": "Accounts opened shortly after identity creation",
+          "detection_method": "Cross-stage temporal correlation"
+        },
+        {
+          "name": "Unusual device patterns during onboarding",
+          "detection_method": "Behavioral biometrics"
+        },
+        {
+          "name": "Coordinated transactions across accounts",
+          "detection_method": "Temporal correlation, graph analytics"
+        },
+        {
+          "name": "Shell merchant accounts used for laundering",
+          "detection_method": "Entity resolution, document forensics"
+        },
+        {
+          "name": "Funds movement to mule networks",
+          "detection_method": "Graph analytics, beneficiary risk scoring"
+        },
+        {
+          "name": "Temporal correlation across lifecycle stages",
+          "detection_method": "Cross-stage temporal analysis"
+        },
+        {
+          "name": "Directed chain of entities across stages",
+          "detection_method": "Graph path analysis, Graph Neural Network"
+        },
+        {
+          "name": "Unnatural patterns across stages",
+          "detection_method": "Behavioral analytics"
+        }
+      ],
+      "controls_targeted": [
+        "Identity Verification",
+        "Account Creation Controls",
+        "Session Behavioral Biometrics",
+        "Payment Fraud Detection Rules",
+        "Merchant Risk Scoring",
+        "AML Monitoring"
+      ],
+      "evidence_confidence": "VERIFIED"
+    },
+    {
+      "attack_id": "N-004",
+      "name": "Cross-Rail / Cross-Chain Fraud Networks",
+      "variants": [
+        "Banking-to-crypto laundering",
+        "Multi-blockchain routing",
+        "Cross-chain bridge exploitation",
+        "AI-optimized cross-rail movement"
+      ],
+      "lifecycle_stage": "Cross-stage / Network",
+      "genai_classification": "PARTIAL",
+      "simulation_type": "Hybrid",
+      "prerequisites": [
+        "Access to AI agent infrastructure",
+        "Crypto exchange accounts (weak KYC preferred)",
+        "Knowledge of cross-chain bridges and routing",
+        "Access to mule accounts with funds"
+      ],
+      "attack_flow": [
+        "Fraud Proceeds (from any fraud type)",
+        "Transfer to Crypto Exchange (Payment Initiation Stage 5)",
+        "Convert to Cryptocurrency (Payment Rail Stage 9)",
+        "Cross-Chain Movement via AI-selected optimal bridges (Payment Rail Stage 9)",
+        "Movement across Multiple Blockchains (Payment Rail Stage 9)",
+        "Mixers/Privacy Tools (Cash-out/Mule Stage 16)",
+        "Consolidation (Cash-out/Mule Stage 16)",
+        "Fiat Conversion (Cash-out/Mule Stage 16)",
+        "Distribution to Criminal Organization"
+      ],
+      "detection_signals": [
+        {
+          "name": "Funds moving from bank accounts to crypto exchanges",
+          "detection_method": "Transaction monitoring, exchange detection"
+        },
+        {
+          "name": "Rapid conversion of large amounts to stablecoins",
+          "detection_method": "Anomaly detection, velocity rules"
+        },
+        {
+          "name": "Multiple cross-chain bridge transactions in short sequence",
+          "detection_method": "Cross-chain analytics, bridge monitoring"
+        },
+        {
+          "name": "Use of privacy tools (mixers, tumblers)",
+          "detection_method": "Blockchain analytics, mixers detection"
+        },
+        {
+          "name": "Conversion and cross-chain movement within seconds/minutes",
+          "detection_method": "Temporal correlation, velocity rules"
+        },
+        {
+          "name": "Multi-hop graph from banking to multiple blockchains",
+          "detection_method": "Graph Neural Network, cross-system analysis"
+        },
+        {
+          "name": "Optimized routing patterns (low fees, fast confirmation)",
+          "detection_method": "Behavioral analytics, optimization detection"
+        }
+      ],
+      "controls_targeted": [
+        "Bank Fiat Outflow Controls",
+        "Exchange KYC / Transaction Monitoring",
+        "Cross-Chain Bridge Analytics",
+        "Blockchain Privacy Screening",
+        "AML / Travel Rule Controls"
+      ],
+      "evidence_confidence": "VERIFIED"
+    },
+    {
+      "attack_id": "SIA-001",
+      "name": "Synthetic Identity Account Opening",
+      "variants": [
+        "Credit-building / Bust-out accounts",
+        "Mule account creation",
+        "Synthetic identity farming (incentive abuse / resale)",
+        "Mass bot-driven account creation"
+      ],
+      "lifecycle_stage": "Account Creation / Onboarding (Stage 2)",
+      "genai_classification": "PASS",
+      "simulation_type": "Algorithmic",
+      "prerequisites": [
+        "Access to GenAI tools (LLMs, image generation models, document generators)",
+        "Breached PII datasets (real identity fragments) \u2014 or purely fabricated data",
+        "Understanding of target institution\u2019s onboarding logic",
+        "Access to account marketplaces (for farming)"
+      ],
+      "attack_flow": [
+        "Synthetic persona generation (GenAI)",
+        "Digital footprint creation (email, phone, social presence)",
+        "Identity document generation (passport, DL, utility bills)",
+        "Onboarding workflow navigation (form filling, verification)",
+        "Account provisioned (verified)",
+        "Variant-specific downstream actions (Credit-building bust-out, Mule layering, Farming resale, Incentive abuse harvest)"
+      ],
+      "detection_signals": [
+        {
+          "name": "Synthetic persona inconsistencies",
+          "detection_method": "ML anomaly detection"
+        },
+        {
+          "name": "Identity attributes shared across unrelated accounts",
+          "detection_method": "Graph analytics / Entity resolution"
+        },
+        {
+          "name": "Documents with GenAI artifact patterns",
+          "detection_method": "ML document forensics"
+        },
+        {
+          "name": "Inconsistent identity data across application fields",
+          "detection_method": "Rule-based + ML"
+        },
+        {
+          "name": "Device fingerprint anomalies / emulator detection",
+          "detection_method": "Rule-based + ML"
+        },
+        {
+          "name": "Multiple applications from same device/IP",
+          "detection_method": "Velocity rules"
+        },
+        {
+          "name": "Virtual camera or automated browser detection",
+          "detection_method": "Rule-based + ML"
+        },
+        {
+          "name": "Unnatural form-filling patterns",
+          "detection_method": "ML (behavioral biometrics)"
+        },
+        {
+          "name": "Identical dormancy-to-activity patterns across accounts",
+          "detection_method": "ML (temporal clustering)"
+        },
+        {
+          "name": "Too-rapid credit building timeline",
+          "detection_method": "ML (velocity analysis)"
+        },
+        {
+          "name": "Transaction amounts inconsistent with declared profile",
+          "detection_method": "ML"
+        },
+        {
+          "name": "Unusual transaction velocity / patterns",
+          "detection_method": "ML"
+        },
+        {
+          "name": "Funds movement to known mule accounts",
+          "detection_method": "Graph analytics"
+        },
+        {
+          "name": "Bust-out transaction sequences",
+          "detection_method": "ML"
+        },
+        {
+          "name": "Shared attributes across unrelated accounts",
+          "detection_method": "Graph Neural Network"
+        },
+        {
+          "name": "Connected to known fraud rings",
+          "detection_method": "Consortium intelligence"
+        },
+        {
+          "name": "Entity resolution graph anomalies",
+          "detection_method": "ML (Graph analytics)"
+        },
+        {
+          "name": "Unusual transaction timing (off-hours)",
+          "detection_method": "Rule-based + ML"
+        },
+        {
+          "name": "Too-rapid verification completion",
+          "detection_method": "ML"
+        }
+      ],
+      "controls_targeted": [
+        "Account opening systems",
+        "Onboarding workflows",
+        "KYC verification pipelines",
+        "Risk engines"
+      ],
+      "evidence_confidence": "VERIFIED"
+    },
+    {
+      "attack_id": "MDF-001",
+      "name": "Misrepresentation / Document Fabrication",
+      "variants": [
+        "Income misrepresentation",
+        "Employment fabrication",
+        "Address falsification",
+        "Occupation fraud",
+        "Synthetic financial history"
+      ],
+      "lifecycle_stage": "Account Creation / Onboarding (Stage 2)",
+      "genai_classification": "PARTIAL",
+      "simulation_type": "Algorithmic",
+      "prerequisites": [
+        "Access to GenAI tools (LLMs, image generation, document generation)",
+        "Basic knowledge of the target institution\u2019s underwriting requirements",
+        "No PII breach required \u2014 the applicant uses their own identity"
+      ],
+      "attack_flow": [
+        "Legitimate applicant determines product requirements",
+        "Applicant fabricates inflated financial details",
+        "GenAI generates supporting documents (paystubs, bank statements, tax returns)",
+        "Applicant submits application + fabricated documents",
+        "Underwriting / risk engine approves account or higher limits",
+        "Account provisioned with inflated credit / features",
+        "Applicant uses account (may default or abuse extended credit)"
+      ],
+      "detection_signals": [
+        {
+          "name": "Inconsistency between declared income and known identity profile",
+          "detection_method": "Rule-based + ML"
+        },
+        {
+          "name": "Document anomalies (font inconsistencies, logo artifacts, metadata)",
+          "detection_method": "ML document forensics"
+        },
+        {
+          "name": "Inconsistency across multiple documents",
+          "detection_method": "Rule-based + ML"
+        },
+        {
+          "name": "OCR data inconsistencies",
+          "detection_method": "Rule-based"
+        },
+        {
+          "name": "Multiple applications from same device",
+          "detection_method": "Rule-based"
+        },
+        {
+          "name": "Unusual submission timing",
+          "detection_method": "Rule-based"
+        },
+        {
+          "name": "Unnatural application flow",
+          "detection_method": "ML (behavioral biometrics)"
+        },
+        {
+          "name": "Subsequent transaction patterns inconsistent with declared profile",
+          "detection_method": "ML"
+        },
+        {
+          "name": "Rapid credit usage",
+          "detection_method": "ML"
+        },
+        {
+          "name": "Documents containing same GenAI artifact patterns",
+          "detection_method": "ML"
+        },
+        {
+          "name": "Shared fabricated document templates across applications",
+          "detection_method": "Document fingerprinting"
+        },
+        {
+          "name": "Suspiciously rapid verification / underwriting approval",
+          "detection_method": "Rule-based + ML"
+        }
+      ],
+      "controls_targeted": [
+        "Account opening systems",
+        "Underwriting engines",
+        "Credit decisioning",
+        "Risk scoring"
+      ],
+      "evidence_confidence": "VERIFIED"
+    },
+    {
+      "attack_id": "ATO-002",
+      "name": "Account Takeover via Onboarding Exploitation",
+      "variants": [
+        "Deepfake biometric bypass (liveness/activation)",
+        "AI-generated document recovery fraud",
+        "Customer support impersonation",
+        "OTP/SIM-swap assisted activation takeover"
+      ],
+      "lifecycle_stage": "Account Creation / Onboarding (Stage 2 \u2014 Activation / Recovery)",
+      "genai_classification": "PASS",
+      "simulation_type": "Agentic",
+      "prerequisites": [
+        "Victim's PII (from data breaches, social media, phishing)",
+        "Access to GenAI tools (document generation, voice cloning, deepfake video)",
+        "Knowledge of the target institution's recovery/activation verification process",
+        "Camera injection capability (for deepfake activation)"
+      ],
+      "attack_flow": [
+        "Obtain victim's PII (data breach, social media)",
+        "Generate forged identity documents using GenAI (matching victim)",
+        "Create voice clone or deepfake of victim (if needed)",
+        "Initiate account recovery / activation process",
+        "Submit forged documents / deepfake / voice clone",
+        "Recovery / activation verification bypassed",
+        "Account access granted to attacker",
+        "Credentials changed / victim locked out",
+        "Funds drained / fraudulent transactions initiated"
+      ],
+      "detection_signals": [
+        {
+          "name": "Document anomalies in recovery submissions",
+          "detection_method": "ML document forensics"
+        },
+        {
+          "name": "Biometric match anomalies",
+          "detection_method": "ML"
+        },
+        {
+          "name": "Inconsistent identity data (recovery details vs. original KYC)",
+          "detection_method": "Rule-based + ML"
+        },
+        {
+          "name": "Deepfake artifact patterns in video",
+          "detection_method": "ML (CNN/Transformer)"
+        },
+        {
+          "name": "Unusual device for recovery/activation request",
+          "detection_method": "Rule-based"
+        },
+        {
+          "name": "Unusual location/IP",
+          "detection_method": "Rule-based + ML"
+        },
+        {
+          "name": "Multiple recovery attempts in short time",
+          "detection_method": "Velocity rules"
+        },
+        {
+          "name": "Virtual camera detection",
+          "detection_method": "Hardware-level / ML"
+        },
+        {
+          "name": "Device emulation detection",
+          "detection_method": "Rule-based"
+        },
+        {
+          "name": "Unnatural interaction patterns",
+          "detection_method": "ML (behavioral biometrics)"
+        },
+        {
+          "name": "Signs of automated navigation",
+          "detection_method": "ML"
+        },
+        {
+          "name": "Lack of micro-expressions in video",
+          "detection_method": "ML"
+        },
+        {
+          "name": "Audio-visual desynchronization",
+          "detection_method": "ML"
+        },
+        {
+          "name": "Unauthorized transactions post-recovery",
+          "detection_method": "ML"
+        },
+        {
+          "name": "New beneficiary additions",
+          "detection_method": "Rule-based + ML"
+        },
+        {
+          "name": "Funds movement to mule accounts",
+          "detection_method": "Graph analytics"
+        },
+        {
+          "name": "Recovery attempts connected to known fraud patterns",
+          "detection_method": "ML"
+        },
+        {
+          "name": "Same deepfake artifact patterns across recovery attempts",
+          "detection_method": "Document/Video fingerprinting"
+        },
+        {
+          "name": "Recovery at unusual times (off-hours)",
+          "detection_method": "Rule-based"
+        },
+        {
+          "name": "Rapid completion of recovery flow",
+          "detection_method": "ML"
+        },
+        {
+          "name": "Short time between recovery and first fraudulent transaction",
+          "detection_method": "Rule-based"
+        }
+      ],
+      "controls_targeted": [
+        "Account activation flows",
+        "Password reset / recovery verification",
+        "Biometric verification during activation",
+        "Customer support identity verification"
+      ],
+      "evidence_confidence": "VERIFIED"
+    },
+    {
+      "attack_id": "OB-001",
+      "name": "Consent Abuse / Broad Consent Exploitation",
+      "variants": [
+        "Single consent exploitation",
+        "Broad scope abuse",
+        "Consent deception",
+        "Fine-print exploitation",
+        "Consent phishing"
+      ],
+      "lifecycle_stage": "Third-Party / Open Banking (Consent Granting)",
+      "genai_classification": "PASS",
+      "simulation_type": "Agentic",
+      "prerequisites": [
+        "Customer uses open banking / Account Aggregator framework",
+        "Consent is obtained electronically",
+        "Attacker can create convincing consent pages",
+        "GenAI tools for personalisation and social engineering"
+      ],
+      "attack_flow": [
+        "Attacker gathers OSINT on target customer (social media, public data)",
+        "AI generates personalised consent request (bank-branded, context-aware)",
+        "AI engages customer via appropriate channel (app, email, social media)",
+        "Customer authenticates legitimately but approves overly broad consent",
+        "Consent grants access to all accounts, full transaction histories, and/or payment initiation",
+        "Attacker accesses data or initiates payments beyond what customer intended",
+        "Data harvested for fraud or payments executed to mule accounts"
+      ],
+      "detection_signals": [
+        {
+          "name": "Consent granted for unusually broad scopes",
+          "detection_method": "Rules; Anomaly detection"
+        },
+        {
+          "name": "Consent granted for data types inconsistent with user's normal activity",
+          "detection_method": "ML (profile deviation)"
+        },
+        {
+          "name": "Consent granted at unusual hours",
+          "detection_method": "Rules; Temporal anomaly"
+        },
+        {
+          "name": "Rapid sequence of consents granted",
+          "detection_method": "Velocity rules"
+        },
+        {
+          "name": "New TPP with unusually high consent conversion rate",
+          "detection_method": "ML anomaly detection"
+        },
+        {
+          "name": "TPP requesting scopes inconsistent with declared service",
+          "detection_method": "Rules; ML"
+        },
+        {
+          "name": "Consent scope disproportionately broad for declared purpose",
+          "detection_method": "Rules; ML"
+        },
+        {
+          "name": "Consent revoked shortly after granting",
+          "detection_method": "Rules"
+        },
+        {
+          "name": "Permissions used beyond declared purpose",
+          "detection_method": "Anomaly detection"
+        },
+        {
+          "name": "Unusual API call patterns following consent",
+          "detection_method": "Sequence modeling"
+        },
+        {
+          "name": "API calls to endpoints not needed for declared service",
+          "detection_method": "Rules; Anomaly"
+        },
+        {
+          "name": "Access to accounts beyond what customer likely intended",
+          "detection_method": "Anomaly detection"
+        },
+        {
+          "name": "Data extraction of full transaction histories",
+          "detection_method": "Rules; Anomaly"
+        },
+        {
+          "name": "Unusual payment amounts/beneficiaries following consent",
+          "detection_method": "ML anomaly detection"
+        },
+        {
+          "name": "Consent from unusual device/location",
+          "detection_method": "Rules; ML"
+        },
+        {
+          "name": "Session anomalies during consent (rapid completion)",
+          "detection_method": "Behavioral biometrics"
+        },
+        {
+          "name": "Unusual navigation during consent (searching, hesitation)",
+          "detection_method": "Behavioral analytics"
+        },
+        {
+          "name": "Same TPP with broad consents across multiple customers",
+          "detection_method": "Graph Neural Network"
+        },
+        {
+          "name": "Consent-to-fraud time (short duration)",
+          "detection_method": "Temporal correlation"
+        }
+      ],
+      "controls_targeted": [
+        "Consent scope",
+        "Customer consent decision",
+        "Delegated authority",
+        "Consent duration and revocation"
+      ],
+      "evidence_confidence": "VERIFIED"
+    },
+    {
+      "attack_id": "OB-002",
+      "name": "Malicious / Fake TPP Applications",
+      "variants": [
+        "Counterfeit fintech apps",
+        "Fake aggregators",
+        "Brand impersonation",
+        "Front business TPPs",
+        "App store fraud"
+      ],
+      "lifecycle_stage": "Third-Party / Open Banking (TPP Onboarding / Customer Acquisition)",
+      "genai_classification": "PASS",
+      "simulation_type": "Agentic",
+      "prerequisites": [
+        "Customer uses open banking / Account Aggregator framework",
+        "Customer trusts app stores / fintech brands",
+        "Attacker can create convincing fake apps",
+        "GenAI tools for app generation"
+      ],
+      "attack_flow": [
+        "Attacker identifies target jurisdiction and bank",
+        "AI generates complete fake TPP presence (app, website, branding, content, reviews)",
+        "Fake app published on app store or promoted via social media",
+        "Customer downloads and connects bank via open banking",
+        "Customer grants consent (believing TPP is legitimate)",
+        "Fake TPP accesses financial data and/or initiates payments",
+        "Data harvested for fraud or payments executed to mule accounts"
+      ],
+      "detection_signals": [
+        {
+          "name": "Consent granted to previously unknown TPP",
+          "detection_method": "Rules; Risk scoring"
+        },
+        {
+          "name": "Consent granted to TPP with no digital footprint",
+          "detection_method": "Entity resolution"
+        },
+        {
+          "name": "TPP has no established reputation",
+          "detection_method": "Risk scoring; Threat intelligence"
+        },
+        {
+          "name": "TPP website/app shows AI-generated artifacts",
+          "detection_method": "ML (CNN/Transformer/NLP)"
+        },
+        {
+          "name": "TPP branding inconsistent with regulatory registration",
+          "detection_method": "Entity resolution; Rules"
+        },
+        {
+          "name": "TPP has unusually rapid customer acquisition",
+          "detection_method": "Velocity rules; Anomaly"
+        },
+        {
+          "name": "Consent granted to TPP with broad scopes",
+          "detection_method": "Rules; ML"
+        },
+        {
+          "name": "API calls from TPP with no prior legitimate relationship",
+          "detection_method": "Anomaly detection"
+        },
+        {
+          "name": "Data access by TPP with no legitimate purpose",
+          "detection_method": "Anomaly detection"
+        },
+        {
+          "name": "Payments to unusual beneficiaries from TPP users",
+          "detection_method": "ML anomaly detection"
+        },
+        {
+          "name": "Multiple customers granting consent to same suspicious TPP",
+          "detection_method": "Graph Neural Network"
+        },
+        {
+          "name": "TPP connected to known fraud patterns",
+          "detection_method": "Threat intelligence"
+        }
+      ],
+      "controls_targeted": [
+        "TPP-customer trust relationship",
+        "TPP onboarding",
+        "TPP reputation",
+        "Consent flow"
+      ],
+      "evidence_confidence": "VERIFIED"
+    },
+    {
+      "attack_id": "OB-003",
+      "name": "Compromised TPP / API Endpoint",
+      "variants": [
+        "TPP credential theft",
+        "TPP API key compromise",
+        "Insider TPP compromise",
+        "Third-party breach",
+        "API endpoint exploitation"
+      ],
+      "lifecycle_stage": "Third-Party / Open Banking (TPP Operations / API Usage)",
+      "genai_classification": "PARTIAL",
+      "simulation_type": "Hybrid",
+      "prerequisites": [
+        "TPP has API access to banks",
+        "TPP has security vulnerabilities",
+        "Attacker can compromise TPP credentials/API keys",
+        "GenAI tools for phishing and vulnerability discovery"
+      ],
+      "attack_flow": [
+        "Attacker identifies vulnerable TPP",
+        "AI generates hyper-personalised phishing targeting TPP employees",
+        "Employee credentials compromised (or insider access obtained)",
+        "Attacker uses TPP's API credentials to access customer data",
+        "AI autonomously explores API endpoints and extracts data",
+        "Data harvested for fraud or payments initiated to mule accounts",
+        "Compromised TPP activity appears legitimate (mimics normal operations)"
+      ],
+      "detection_signals": [
+        {
+          "name": "TPP API keys used from unusual IP addresses",
+          "detection_method": "Rules; Anomaly detection"
+        },
+        {
+          "name": "TPP API calls at unusual hours",
+          "detection_method": "Temporal anomaly"
+        },
+        {
+          "name": "TPP API call volume surges beyond normal range",
+          "detection_method": "Anomaly detection"
+        },
+        {
+          "name": "TPP accessing data it normally doesn't access",
+          "detection_method": "Anomaly detection"
+        },
+        {
+          "name": "TPP behaviour deviates from historical pattern",
+          "detection_method": "Behavioral analytics"
+        },
+        {
+          "name": "TPP employee credential anomalies (login time, location)",
+          "detection_method": "Rules; Anomaly"
+        },
+        {
+          "name": "Rapid sequence of API calls",
+          "detection_method": "Velocity rules; Anomaly"
+        },
+        {
+          "name": "API calls to unexpected endpoints",
+          "detection_method": "Rules; Anomaly"
+        },
+        {
+          "name": "Customer data accessed by TPP without business need",
+          "detection_method": "Anomaly detection"
+        },
+        {
+          "name": "Unusual payments via compromised TPP",
+          "detection_method": "ML anomaly detection"
+        },
+        {
+          "name": "Multiple TPPs showing similar compromise patterns",
+          "detection_method": "Graph Neural Network"
+        },
+        {
+          "name": "Compromise-to-fraud time (short duration)",
+          "detection_method": "Temporal correlation"
+        }
+      ],
+      "controls_targeted": [
+        "TPP API credentials",
+        "Delegated access",
+        "Customer consents held by TPP",
+        "API trust relationship"
+      ],
+      "evidence_confidence": "VERIFIED"
+    },
+    {
+      "attack_id": "OB-004",
+      "name": "Consent / Token Theft and Replay",
+      "variants": [
+        "OAuth token theft",
+        "Refresh token abuse",
+        "Access token replay",
+        "Man-in-the-middle token interception",
+        "Credential replay"
+      ],
+      "lifecycle_stage": "Third-Party / Open Banking (API Authorisation / Token Usage)",
+      "genai_classification": "PARTIAL",
+      "simulation_type": "Hybrid",
+      "prerequisites": [
+        "Token theft vector (phishing, MITM, compromised device)",
+        "Token not sender-constrained",
+        "GenAI tools for personalised phishing"
+      ],
+      "attack_flow": [
+        "Attacker identifies target (TPP or customer)",
+        "AI generates personalised phishing page that harvests OAuth tokens",
+        "Customer/TPP authenticates and token is issued (or existing token is intercepted)",
+        "Attacker steals token",
+        "AI replays token to bank API in contextually appropriate way",
+        "Bank API accepts token as legitimate",
+        "Attacker accesses data or initiates payment",
+        "Token usage appears legitimate (correct timing, context, patterns)"
+      ],
+      "detection_signals": [
+        {
+          "name": "Token used from unusual IP address",
+          "detection_method": "Rules; Anomaly"
+        },
+        {
+          "name": "Token used at unusual times",
+          "detection_method": "Temporal anomaly"
+        },
+        {
+          "name": "Token used for scopes beyond normal",
+          "detection_method": "Rules; ML"
+        },
+        {
+          "name": "Token used to access data not normally accessed",
+          "detection_method": "Anomaly"
+        },
+        {
+          "name": "Rapid sequence of token usage",
+          "detection_method": "Velocity rules"
+        },
+        {
+          "name": "Token usage patterns deviate from baseline",
+          "detection_method": "Behavioral analytics"
+        },
+        {
+          "name": "Token used after expiry or before issued",
+          "detection_method": "Rules"
+        },
+        {
+          "name": "Token used multiple times (replay)",
+          "detection_method": "Idempotency tracking"
+        },
+        {
+          "name": "Customer data accessed by token with no business need",
+          "detection_method": "Anomaly detection"
+        },
+        {
+          "name": "Unusual transactions via stolen token",
+          "detection_method": "ML anomaly detection"
+        },
+        {
+          "name": "Multiple tokens showing similar abuse patterns",
+          "detection_method": "Graph Neural Network"
+        }
+      ],
+      "controls_targeted": [
+        "OAuth token integrity",
+        "Consent token security",
+        "Access token lifespan",
+        "Sender-constrained tokens"
+      ],
+      "evidence_confidence": "VERIFIED"
+    },
+    {
+      "attack_id": "OB-005",
+      "name": "Delegated Access / Scope Abuse",
+      "variants": [
+        "Scope creep",
+        "Permission misuse",
+        "Broad scope exploitation",
+        "Unauthorised data access",
+        "Permission escalation"
+      ],
+      "lifecycle_stage": "Third-Party / Open Banking (Consent Scope Enforcement)",
+      "genai_classification": "PARTIAL",
+      "simulation_type": "Hybrid",
+      "prerequisites": [
+        "Customer granted broad consent",
+        "TPP has access to multiple scopes",
+        "Scope enforcement is weak",
+        "GenAI tools for scope exploration and data extraction"
+      ],
+      "attack_flow": [
+        "Customer grants broad consent (all accounts, full histories)",
+        "TPP (malicious or compromised) has access to multiple data types",
+        "AI systematically explores scope boundaries",
+        "AI identifies data not needed for declared purpose but accessible",
+        "AI extracts data across scopes (full histories, all accounts)",
+        "Data harvested for fraud or payment consent exploited",
+        "Activity appears legitimate (consent validates the access)"
+      ],
+      "detection_signals": [
+        {
+          "name": "Consent scope disproportionately broad for declared purpose",
+          "detection_method": "Rules; ML"
+        },
+        {
+          "name": "Consent includes data types not needed for declared service",
+          "detection_method": "Rules; ML"
+        },
+        {
+          "name": "API calls to endpoints beyond those needed for declared service",
+          "detection_method": "Anomaly detection"
+        },
+        {
+          "name": "Data access patterns inconsistent with declared purpose",
+          "detection_method": "ML"
+        },
+        {
+          "name": "Scopes used beyond what customer likely intended",
+          "detection_method": "Anomaly detection"
+        },
+        {
+          "name": "Access to data not needed for declared service",
+          "detection_method": "Rules; ML"
+        },
+        {
+          "name": "Access to accounts beyond those needed for declared service",
+          "detection_method": "Anomaly detection"
+        },
+        {
+          "name": "Requests for full transaction histories when only balances needed",
+          "detection_method": "Rules; ML"
+        },
+        {
+          "name": "Requests for all accounts when only specific accounts needed",
+          "detection_method": "Rules; ML"
+        },
+        {
+          "name": "TPP data access patterns inconsistent with its business purpose",
+          "detection_method": "Anomaly detection"
+        },
+        {
+          "name": "Multiple TPPs showing similar scope abuse patterns",
+          "detection_method": "Graph Neural Network"
+        }
+      ],
+      "controls_targeted": [
+        "Consent scope boundaries",
+        "Permission model",
+        "Delegated authority",
+        "Least-privilege controls"
+      ],
+      "evidence_confidence": "VERIFIED"
+    },
+    {
+      "attack_id": "OB-006",
+      "name": "Account Information Harvesting",
+      "variants": [
+        "Financial data harvesting",
+        "Transaction history exfiltration",
+        "Balance monitoring",
+        "Account aggregation abuse",
+        "Financial profiling"
+      ],
+      "lifecycle_stage": "Third-Party / Open Banking (AISP Data Access)",
+      "genai_classification": "PARTIAL",
+      "simulation_type": "Hybrid",
+      "prerequisites": [
+        "AISP access granted",
+        "TPP has access to customer data",
+        "TPP can extract and exfiltrate data",
+        "GenAI tools for data extraction and analysis"
+      ],
+      "attack_flow": [
+        "Customer grants AISP consent (legitimate)",
+        "TPP (malicious or compromised) has access to customer data",
+        "AI systematically extracts data (balances, transactions, account details)",
+        "AI analyses data to build detailed financial profiles",
+        "Data sold on fraud marketplaces or used for targeted fraud",
+        "Profiles used for social engineering, synthetic identity creation, or credit fraud",
+        "Access appears legitimate (TPP has valid consent)"
+      ],
+      "detection_signals": [
+        {
+          "name": "High volume of data access calls",
+          "detection_method": "Anomaly detection; Velocity rules"
+        },
+        {
+          "name": "Data access at unusual hours",
+          "detection_method": "Temporal anomaly"
+        },
+        {
+          "name": "Access to full transaction histories",
+          "detection_method": "Rules; ML"
+        },
+        {
+          "name": "Access to all accounts (not just specific ones)",
+          "detection_method": "Rules; ML"
+        },
+        {
+          "name": "Repeated data access (same data multiple times)",
+          "detection_method": "Anomaly detection"
+        },
+        {
+          "name": "Data extracted for accounts with no business need",
+          "detection_method": "Anomaly detection"
+        },
+        {
+          "name": "Transaction history requests beyond business need",
+          "detection_method": "Rules; ML"
+        },
+        {
+          "name": "Balance requests at unusual frequency",
+          "detection_method": "Velocity rules"
+        },
+        {
+          "name": "TPP data access inconsistent with its business purpose",
+          "detection_method": "Risk scoring; ML"
+        },
+        {
+          "name": "TPP with no legitimate need for broad data access",
+          "detection_method": "Rules; Risk scoring"
+        },
+        {
+          "name": "Multiple TPPs showing similar data harvesting patterns",
+          "detection_method": "Graph Neural Network"
+        }
+      ],
+      "controls_targeted": [
+        "AISP data access",
+        "Financial data privacy",
+        "Data extraction patterns",
+        "Data exfiltration"
+      ],
+      "evidence_confidence": "VERIFIED"
+    },
+    {
+      "attack_id": "R-001",
+      "name": "GenAI-Enhanced Payment Network Message Forgery",
+      "variants": [
+        "AI-generated SWIFT MT/MX message injection",
+        "Hyper-personalized phishing for payment operator credentials",
+        "Deepfake voice verification bypass",
+        "AI-generated bank correspondence for fraudulent payment instructions",
+        "Compromised operator credential abuse"
+      ],
+      "lifecycle_stage": "Payment Rail",
+      "genai_classification": "PARTIAL",
+      "simulation_type": "Hybrid",
+      "prerequisites": [
+        "Access to a bank's internal SWIFT environment (via compromised credentials or insider access)",
+        "Knowledge of SWIFT message formats (MT/MX) and institutional BIC codes",
+        "Ability to submit messages to the SWIFT network through the bank's interface",
+        "Access to LLMs for phishing generation; voice samples for cloning (3 seconds sufficient)"
+      ],
+      "attack_flow": [
+        "1. Attacker conducts reconnaissance on target bank (OSINT, AI-powered analysis)",
+        "2. Attacker uses GenAI to generate hyper-personalized phishing emails targeting SWIFT operators",
+        "3. Operator credentials compromised via phishing (or via insider access)",
+        "4. Attacker uses GenAI to craft fraudulent SWIFT payment messages (MT103, MT202, MT760)",
+        "5. Attacker logs into compromised SWIFT environment (Alliance Access/SWIFTNet)",
+        "6. Attacker submits fraudulent payment instruction during normal business hours (to avoid timing flags)",
+        "7. SWIFT network processes message as legitimate (authenticated participant)",
+        "8. Message routed to receiving financial institution",
+        "9. Receiving institution processes payment; funds credited to attacker-controlled account",
+        "10. Funds moved through mule accounts -> crypto -> cash-out",
+        "11. Detection occurs days later during reconciliation (if at all)"
+      ],
+      "detection_signals": [
+        {
+          "name": "Amount deviation from historical pattern; urgent payment flags; narrative field anomalies",
+          "detection_method": "Rules; ML anomaly detection; LLM-based NLP"
+        },
+        {
+          "name": "New or unusual beneficiary BIC/account; beneficiary in high-risk jurisdiction",
+          "detection_method": "Entity resolution; threat intelligence; ML risk scoring"
+        },
+        {
+          "name": "Unusual message volume from specific participant",
+          "detection_method": "Network-level analytics"
+        },
+        {
+          "name": "Unusual routing paths; multiple intermediary correspondents",
+          "detection_method": "Graph analytics"
+        },
+        {
+          "name": "Operator credential usage at unusual times; login from unusual location",
+          "detection_method": "Rules; temporal anomaly detection"
+        },
+        {
+          "name": "Rapid sequence of messages from same operator",
+          "detection_method": "Velocity rules; anomaly detection"
+        },
+        {
+          "name": "Unusual BIC combinations; routing through non-preferred correspondents",
+          "detection_method": "Rules; supervised ML"
+        },
+        {
+          "name": "Off-hours or holiday submissions; rapid succession of large payments",
+          "detection_method": "Rules; temporal anomaly"
+        },
+        {
+          "name": "Unnatural navigation in SWIFT interface; superhuman speed",
+          "detection_method": "Behavioral biometrics"
+        },
+        {
+          "name": "Beneficiary connections to known mule/crypto networks; rapid onward movement",
+          "detection_method": "Graph Neural Network; Entity resolution"
+        },
+        {
+          "name": "SWIFT message format anomalies; narrative field unnatural phrasing",
+          "detection_method": "NLP; LLM-based detection (perplexity, stylometry)"
+        },
+        {
+          "name": "Missing or inconsistent regulatory references",
+          "detection_method": "Rules"
+        },
+        {
+          "name": "Payment to jurisdiction with no prior relationship; unusual corridor",
+          "detection_method": "Rules; anomaly detection"
+        },
+        {
+          "name": "Rapid crypto conversion following receipt",
+          "detection_method": "Graph analytics; threat intelligence"
+        }
+      ],
+      "controls_targeted": [
+        "Participant Authentication",
+        "Message Integrity",
+        "Payment Operator Trust",
+        "Settlement Messaging"
+      ],
+      "evidence_confidence": "VERIFIED"
+    }
+  ]
+}

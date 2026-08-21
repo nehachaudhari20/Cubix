@@ -11,7 +11,11 @@ import re
 from datetime import datetime
 from typing import List, Dict, Any
 import pandas as pd
+import os
+from dotenv import load_dotenv
+import google.generativeai as genai
 
+load_dotenv()
 # ============================================================
 # STEP 1: Extract Text from PDFs
 # ============================================================
@@ -58,7 +62,7 @@ def extract_structured_data_with_llm(doc_text: str, doc_name: str) -> Dict[str, 
     
     # Configure your LLM (example uses Gemini)
     genai.configure(api_key=os.environ.get("GEMINI_API_KEY"))
-    model = genai.GenerativeModel("gemini-2.0-flash")
+    model = genai.GenerativeModel("gemini-3.6-flash")
     
     prompt = f"""
 You are a fraud taxonomy extraction expert. Given the text of a payment fraud taxonomy document, extract ALL structured information into the following JSON schema.
