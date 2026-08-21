@@ -24,14 +24,20 @@ class SyntheticCustomer:
     
     def get_avg_amount_7d(self) -> float:
         cutoff = datetime.now() - timedelta(days=7)
-        recent = [t for t in self.transactions if t.get("timestamp") > cutoff]
+        recent = [
+            t for t in self.transactions
+            if (ts := t.get("timestamp")) is not None and ts > cutoff
+        ]
         if not recent:
             return 0.0
         return sum(t.get("amount", 0) for t in recent) / len(recent)
     
     def get_tx_count_24h(self) -> int:
         cutoff = datetime.now() - timedelta(hours=24)
-        return len([t for t in self.transactions if t.get("timestamp") > cutoff])
+        return len([
+            t for t in self.transactions
+            if (ts := t.get("timestamp")) is not None and ts > cutoff
+        ])
 
 @dataclass
 class SyntheticDevice:
@@ -90,6 +96,8 @@ class SandboxState:
     
     def add_transaction(self, transaction: Dict):
         """Add a transaction to the log and update customer history."""
+        if transaction.get("timestamp") is None:
+            transaction = {**transaction, "timestamp": datetime.now()}
         self.transaction_log.append(transaction)
         customer_id = transaction.get("customer_id")
         if customer_id and customer_id in self.customers:

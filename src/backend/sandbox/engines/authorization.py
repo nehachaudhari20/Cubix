@@ -29,7 +29,7 @@ class AuthorizationEngine:
         customer_id = transaction.get("customer_id")
         if customer_id:
             customer = self.state.get_customer(customer_id)
-            if customer and customer.get_tx_count_24h() > 5:
+            if customer and customer.get_tx_count_24h() >= 5:
                 decision = "BLOCK"
                 reason = "velocity_exceeded"
         
