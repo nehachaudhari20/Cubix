@@ -168,8 +168,8 @@ reports/
 *.jpg
 
 
-echo "master_dataset.json" >> .gitignore
-echo "data/baseline/*.csv" >> .gitignore
-echo "data/known_fraud/*.csv" >> .gitignore
-echo "data/models/*.pkl" >> .gitignore
-echo "data/synthetic_generated/*" >> .gitignore
+master_dataset.json
+data/baseline/*.csv
+data/known_fraud/*.csv
+data/models/*.pkl
+data/synthetic_generated/*
