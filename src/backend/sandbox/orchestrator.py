@@ -305,6 +305,7 @@ class SandboxOrchestrator:
         journey.append(JourneyStep(step="Payment Initiation", result=pi_result))
         if pi_result.get("flags"):
             control_triggers.extend(pi_result["flags"])
+            transaction["payment_initiation_flags"] = pi_result["flags"]
         if pi_result["status"] == "FAIL":
             return self._payment_observation(
                 action_id, transaction_id, "BLOCK", "payment_initiation_failed",

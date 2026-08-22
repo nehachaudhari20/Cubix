@@ -8,7 +8,7 @@ class MerchantRules(BaseRule):
     """Rules based on merchant characteristics."""
     
     def __init__(self):
-        super().__init__("Merchant")
+        super().__init__("Merchant (Stage 6)")
     
     def _get_default_controls(self) -> Dict[str, Any]:
         return {

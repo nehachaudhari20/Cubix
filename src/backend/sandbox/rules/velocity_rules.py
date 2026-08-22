@@ -8,7 +8,7 @@ class VelocityRules(BaseRule):
     """Rules based on transaction velocity."""
     
     def __init__(self):
-        super().__init__("Payment_Initiation")
+        super().__init__("Payment Initiation")
     
     def _get_default_controls(self) -> Dict[str, Any]:
         return {

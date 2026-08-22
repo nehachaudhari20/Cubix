@@ -137,3 +137,11 @@ class SandboxState:
         customer_id = transaction.get("customer_id")
         if customer_id and customer_id in self.customers:
             self.customers[customer_id].transactions.append(transaction)
+
+    def count_distinct_payers_to_beneficiary(self, beneficiary_id: str) -> int:
+        """Count distinct customers who paid a given beneficiary."""
+        payers = set()
+        for tx in self.transaction_log:
+            if tx.get("beneficiary_id") == beneficiary_id and tx.get("customer_id"):
+                payers.add(tx["customer_id"])
+        return len(payers)

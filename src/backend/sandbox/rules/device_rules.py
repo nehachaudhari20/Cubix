@@ -8,7 +8,7 @@ class DeviceRules(BaseRule):
     """Rules based on device characteristics."""
     
     def __init__(self):
-        super().__init__("Device_Session")
+        super().__init__("Device / Session (Stage 3)")
     
     def _get_default_controls(self) -> Dict[str, Any]:
         return {

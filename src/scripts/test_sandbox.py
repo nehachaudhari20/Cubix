@@ -395,6 +395,115 @@ def test_invalid_payment_amount():
     return result
 
 
+def test_low_trust_identity_risk():
+    """Test 10: Low-trust unverified customer triggers identity rules."""
+    print("\n" + "="*60)
+    print("TEST 10: IDENTITY / LOW TRUST")
+    print("="*60)
+
+    sandbox = PaymentSandbox()
+    sandbox.add_customer(
+        "C010", "Suspicious User", "SYN0001111", "1990-01-01", "Unknown",
+        trust_score=0.32,
+    )
+    # KYC requires verified=True; identity risk comes from low trust + synthetic PAN
+
+    sandbox.add_device("D010", "C010")
+
+    result = sandbox.process_transaction({
+        "transaction_id": "T010",
+        "customer_id": "C010",
+        "device_id": "D010",
+        "amount": 15000,
+        "payment_rail": "upi",
+        "authentication_method": "otp",
+    })
+
+    print(f"Decision: {result['decision']}")
+    print(f"Risk Score: {result['state'].get('risk_score')}")
+    risk_step = next(s for s in result["journey"] if s["step"] == "Risk")
+    identity_rule = next(r for r in risk_step["result"]["rule_details"] if r["rule_set"] == "identity_rules")
+    print(f"Identity triggers: {identity_rule['triggered_rules']}")
+
+    assert identity_rule["triggered_rules"], "Identity rules should trigger"
+    assert result["decision"] in ("BLOCK", "CHALLENGE")
+    print("[PASS] Test 10: Identity rules elevated risk for low-trust customer")
+    return result
+
+
+def test_aml_structuring_detection():
+    """Test 11: Structuring pattern (multiple sub-threshold txns) triggers AML rules."""
+    print("\n" + "="*60)
+    print("TEST 11: AML STRUCTURING")
+    print("="*60)
+
+    sandbox = PaymentSandbox()
+    sandbox.add_customer("C011", "Structurer", "AML011", "1988-01-01", "Mumbai", trust_score=0.6)
+    sandbox.add_device("D011", "C011")
+
+    for i in range(3):
+        sandbox.process_transaction({
+            "transaction_id": f"T011_{i}",
+            "customer_id": "C011",
+            "device_id": "D011",
+            "amount": 22000,
+            "payment_rail": "upi",
+            "authentication_method": "otp",
+            "merchant_risk_score": 0.2,
+        })
+
+    result = sandbox.process_transaction({
+        "transaction_id": "T011_final",
+        "customer_id": "C011",
+        "device_id": "D011",
+        "amount": 5000,
+        "payment_rail": "upi",
+        "authentication_method": "otp",
+        "merchant_risk_score": 0.2,
+    })
+
+    risk_step = next(s for s in result["journey"] if s["step"] == "Risk")
+    aml_rule = next(r for r in risk_step["result"]["rule_details"] if r["rule_set"] == "aml_rules")
+    print(f"AML triggers: {aml_rule['triggered_rules']}")
+
+    assert any("structuring" in t for t in aml_rule["triggered_rules"])
+    print("[PASS] Test 11: AML structuring pattern detected")
+    return result
+
+
+def test_mule_new_beneficiary():
+    """Test 12: New beneficiary + high amount triggers mule rules."""
+    print("\n" + "="*60)
+    print("TEST 12: MULE / NEW BENEFICIARY")
+    print("="*60)
+
+    sandbox = PaymentSandbox()
+    sandbox.add_customer("C012", "Mule Payer", "MUL012", "1990-01-01", "Delhi", trust_score=0.7)
+    sandbox.add_device("D012", "C012")
+    sandbox.link_beneficiary("BEN012", "C012", name="Fresh Mule Account", account_ref="MULE-ACC")
+
+    result = sandbox.process_transaction({
+        "transaction_id": "T012",
+        "customer_id": "C012",
+        "device_id": "D012",
+        "beneficiary_id": "BEN012",
+        "amount": 35000,
+        "payment_rail": "neft",
+        "authentication_method": "otp",
+        "merchant_risk_score": 0.2,
+    })
+
+    print(f"Decision: {result['decision']}")
+    risk_step = next(s for s in result["journey"] if s["step"] == "Risk")
+    mule_rule = next(r for r in risk_step["result"]["rule_details"] if r["rule_set"] == "mule_rules")
+    print(f"Mule triggers: {mule_rule['triggered_rules']}")
+
+    assert "new_beneficiary_high_amount" in mule_rule["triggered_rules"]
+    assert result["decision"] in ("BLOCK", "CHALLENGE")
+    print("[PASS] Test 12: Mule rules triggered for new beneficiary high amount")
+    return result
+
+
 def run_all_tests():
     """Run all sandbox tests."""
     print("\n" + "="*70)
@@ -411,6 +520,9 @@ def run_all_tests():
         test_multi_step_merchant_payment()
         test_mcc_misrepresentation_blocks()
         test_invalid_payment_amount()
+        test_low_trust_identity_risk()
+        test_aml_structuring_detection()
+        test_mule_new_beneficiary()
         
         print("\n" + "="*70)
         print("ALL SANDBOX TESTS PASSED")
@@ -425,6 +537,9 @@ def run_all_tests():
         print("  - Multi-step merchant/beneficiary payments work")
         print("  - MCC misrepresentation detected")
         print("  - Invalid payments blocked at initiation")
+        print("  - Identity rules flag low-trust customers")
+        print("  - AML structuring patterns detected")
+        print("  - Mule rules flag new beneficiary high-value transfers")
         
     except AssertionError as e:
         print(f"\n[FAIL] Test failed: {e}")
