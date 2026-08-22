@@ -7,6 +7,9 @@ import sys
 import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
+# Rule-only tests — disable FraudShield so decisions stay deterministic
+os.environ.setdefault("FRAUDSHIELD_ENABLED", "false")
+
 from backend.sandbox import PaymentSandbox
 
 

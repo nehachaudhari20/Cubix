@@ -74,12 +74,18 @@ class RiskEngine:
         ml_score = 0.3
         if self.ml_model:
             try:
-                ml_score = self.ml_model.predict_proba([[
-                    features["amount"] / 1000,
-                    features["device_age_days"],
-                    int(features["is_new_device"]),
-                    features["merchant_risk"],
-                ]])[0][1]
+                if hasattr(self.ml_model, "predict_proba_from_transaction"):
+                    ml_score = self.ml_model.predict_proba_from_transaction(
+                        transaction, self.state
+                    )
+                else:
+                    # Legacy sklearn-style 4-feature fallback
+                    ml_score = self.ml_model.predict_proba([[
+                        features["amount"] / 1000,
+                        features["device_age_days"],
+                        int(features["is_new_device"]),
+                        features["merchant_risk"],
+                    ]])[0][1]
             except Exception:
                 pass
 

@@ -3,6 +3,7 @@ Payment Sandbox - Main entry point
 Delegates action execution to the Orchestrator.
 """
 
+import os
 from typing import Dict, Any, Optional
 
 from .state import (
@@ -40,8 +41,10 @@ class PaymentSandbox:
         self.authz_engine = AuthorizationEngine(self.state)
         self.settlement_engine = SettlementEngine(self.state)
 
-        if ml_model:
+        if ml_model is not None:
             self.risk_engine.set_ml_model(ml_model)
+        elif os.environ.get("FRAUDSHIELD_ENABLED", "true").lower() in ("1", "true", "yes"):
+            self._try_load_fraudshield()
 
         self.orchestrator = SandboxOrchestrator(
             state=self.state,
@@ -58,6 +61,16 @@ class PaymentSandbox:
     def execute(self, action_type: str, payload: Dict[str, Any]) -> SandboxObservation:
         """Execute a single action via the Orchestrator."""
         return self.orchestrator.execute(action_type, payload)
+
+    def _try_load_fraudshield(self):
+        """Auto-load FraudShield from data/models if artifacts exist."""
+        try:
+            from backend.blue_team.fraudshield import load_fraudshield
+            model = load_fraudshield()
+            if model:
+                self.risk_engine.set_ml_model(model)
+        except Exception:
+            pass
 
     def process_transaction(self, transaction: Dict[str, Any]) -> Dict[str, Any]:
         """

@@ -73,6 +73,7 @@ warnings.filterwarnings("ignore")
 # ============================================================
 
 DATA_PATH = "master_dataset.json"
+MODEL_DIR = os.environ.get("FRAUDSHIELD_MODEL_DIR", os.path.join("data", "models"))
 
 # Features available BEFORE the current transaction is authorised. Historical
 # aggregates are included now because the generator computes them from strictly
@@ -612,28 +613,27 @@ def main():
 
     # ---------- save ----------
     banner("11. SAVING ARTIFACTS")
-    if best_name == "XGBoost":
-        best_model.save_model("fraud_detection_model.json")
-        model_path, stale = "fraud_detection_model.json", "fraud_detection_model.txt"
-    else:
-        best_model.booster_.save_model("fraud_detection_model.txt")
-        model_path, stale = "fraud_detection_model.txt", "fraud_detection_model.json"
+    os.makedirs(MODEL_DIR, exist_ok=True)
 
-    # Only the winner is saved, so a file left by a previous run where the other
-    # library won would sit there looking current while features.json points
-    # elsewhere. Remove it.
+    if best_name == "XGBoost":
+        model_path = os.path.join(MODEL_DIR, "fraudshield_v1.json")
+        best_model.save_model(model_path)
+        stale = os.path.join(MODEL_DIR, "fraudshield_v1.txt")
+    else:
+        model_path = os.path.join(MODEL_DIR, "fraudshield_v1.txt")
+        best_model.booster_.save_model(model_path)
+        stale = os.path.join(MODEL_DIR, "fraudshield_v1.json")
+
     if os.path.exists(stale):
         os.remove(stale)
         print(f"  removed stale {stale} from a previous run")
 
-    # The feature spec carries everything needed to score a new transaction:
-    # column order, categorical encodings and the chosen threshold. The old
-    # features.json was just a name list, so the saved model was unusable - the
-    # LabelEncoders were never persisted.
-    with open("features.json", "w") as f:
+    features_path = os.path.join(MODEL_DIR, "features.json")
+    with open(features_path, "w") as f:
         json.dump({
-            "model_file": model_path,
+            "model_file": os.path.basename(model_path),
             "model_type": best_name,
+            "version": "v1",
             "feature_order": list(X_tr.columns),
             "categorical_features": cats,
             "categorical_mappings": mappings,
@@ -643,7 +643,8 @@ def main():
             "leakage_audit_passed": bool(audit_passed),
         }, f, indent=2)
 
-    with open("model_metrics.json", "w") as f:
+    metrics_path = os.path.join(MODEL_DIR, "model_metrics.json")
+    with open(metrics_path, "w") as f:
         json.dump({
             "leakage_audit_passed": bool(audit_passed),
             "test_fraud_rate": float(y_te.mean()),
@@ -655,8 +656,8 @@ def main():
         }, f, indent=2)
 
     print(f"  {model_path}          - trained model")
-    print("  features.json                  - feature order, encodings, threshold")
-    print("  model_metrics.json             - full metric set")
+    print(f"  {features_path}       - feature order, encodings, threshold")
+    print(f"  {metrics_path}        - full metric set")
 
     # ---------- plots ----------
     fig, axes = plt.subplots(2, 2, figsize=(13, 10))
