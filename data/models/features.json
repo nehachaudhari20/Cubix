@@ -1,7 +1,20 @@
 {
-  "model_file": "fraudshield_v1.txt",
+  "model_file": "fraudshield_v2.txt",
   "model_type": "LightGBM",
-  "version": "v1",
+  "version": "v2",
+  "parent_version": "v1",
+  "trained_at": "2026-08-22T20:18:55.950429+00:00",
+  "training_sources": {
+    "baseline_rows": 8000,
+    "buffer_rows": 17,
+    "buffer_families": [
+      "AML-001",
+      "AML-002",
+      "AML-003",
+      "AML-004",
+      "AML-006"
+    ]
+  },
   "feature_order": [
     "amount",
     "payment_rail",
@@ -118,7 +131,8 @@
       "5732.0": 2,
       "5812.0": 3,
       "5814.0": 4,
-      "nan": 5
+      "nan": 5,
+      "5411": 6
     },
     "location_country": {
       "AE": 0,
@@ -145,11 +159,15 @@
       "TG": 8,
       "TN": 9,
       "UP": 10,
-      "WB": 11
+      "WB": 11,
+      "unknown": 12
     }
   },
   "unseen_category_code": -1,
-  "decision_threshold": 0.47786778592194806,
-  "threshold_tuned_on": "validation split (chronological)",
-  "leakage_audit_passed": true
+  "decision_threshold": 0.4369874707843704,
+  "threshold_tuned_on": "hardening validation split",
+  "metrics": {
+    "pr_auc": 0.9089126720074397,
+    "roc_auc": 0.9069382421421867
+  }
 }
