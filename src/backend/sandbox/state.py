@@ -63,6 +63,33 @@ class SyntheticAccount:
     daily_limit: float = 100000.0
     monthly_limit: float = 1000000.0
 
+
+@dataclass
+class SyntheticMerchant:
+    """A synthetic merchant in the sandbox."""
+    merchant_id: str
+    name: str
+    mcc: str
+    declared_mcc: str
+    risk_score: float
+    kyb_verified: bool
+    created_at: datetime
+    owner_customer_id: Optional[str] = None
+    is_active: bool = True
+
+
+@dataclass
+class SyntheticBeneficiary:
+    """A payee linked to a customer."""
+    beneficiary_id: str
+    customer_id: str
+    name: str
+    account_ref: str
+    created_at: datetime
+    is_verified: bool = True
+    risk_score: float = 0.2
+
+
 class SandboxState:
     """Manages all state in the payment sandbox."""
     
@@ -70,6 +97,8 @@ class SandboxState:
         self.customers: Dict[str, SyntheticCustomer] = {}
         self.devices: Dict[str, SyntheticDevice] = {}
         self.accounts: Dict[str, SyntheticAccount] = {}
+        self.merchants: Dict[str, SyntheticMerchant] = {}
+        self.beneficiaries: Dict[str, SyntheticBeneficiary] = {}
         self.transaction_log: List[Dict] = []
         
     def get_customer(self, customer_id: str) -> Optional[SyntheticCustomer]:
@@ -80,6 +109,12 @@ class SandboxState:
     
     def get_account(self, account_id: str) -> Optional[SyntheticAccount]:
         return self.accounts.get(account_id)
+
+    def get_merchant(self, merchant_id: str) -> Optional[SyntheticMerchant]:
+        return self.merchants.get(merchant_id)
+
+    def get_beneficiary(self, beneficiary_id: str) -> Optional[SyntheticBeneficiary]:
+        return self.beneficiaries.get(beneficiary_id)
     
     def register_device(self, customer_id: str, fingerprint: Dict) -> SyntheticDevice:
         device_id = f"dev_{uuid.uuid4().hex[:8]}"

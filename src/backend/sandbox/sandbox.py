@@ -5,12 +5,21 @@ Delegates action execution to the Orchestrator.
 
 from typing import Dict, Any, Optional
 
-from .state import SandboxState, SyntheticCustomer, SyntheticDevice
+from .state import (
+    SandboxState,
+    SyntheticCustomer,
+    SyntheticDevice,
+    SyntheticMerchant,
+    SyntheticBeneficiary,
+    SyntheticAccount,
+)
 from .schemas import ActionType, SandboxObservation
 from .orchestrator import SandboxOrchestrator
 from .engines.kyc import KYCStateEngine
 from .engines.device import DeviceEngine
 from .engines.auth import AuthenticationEngine
+from .engines.account_merchant import AccountMerchantEngine
+from .engines.payment_initiation import PaymentInitiationEngine
 from .engines.risk import RiskEngine
 from .engines.authorization import AuthorizationEngine
 from .engines.settlement import SettlementEngine
@@ -25,6 +34,8 @@ class PaymentSandbox:
         self.kyc_engine = KYCStateEngine(self.state)
         self.device_engine = DeviceEngine(self.state)
         self.auth_engine = AuthenticationEngine(self.state)
+        self.account_merchant_engine = AccountMerchantEngine(self.state)
+        self.payment_initiation_engine = PaymentInitiationEngine(self.state)
         self.risk_engine = RiskEngine(self.state)
         self.authz_engine = AuthorizationEngine(self.state)
         self.settlement_engine = SettlementEngine(self.state)
@@ -37,6 +48,8 @@ class PaymentSandbox:
             kyc_engine=self.kyc_engine,
             device_engine=self.device_engine,
             auth_engine=self.auth_engine,
+            account_merchant_engine=self.account_merchant_engine,
+            payment_initiation_engine=self.payment_initiation_engine,
             risk_engine=self.risk_engine,
             authz_engine=self.authz_engine,
             settlement_engine=self.settlement_engine,
@@ -60,7 +73,7 @@ class PaymentSandbox:
 
     def add_customer(self, customer_id: str, name: str, pan: str, dob: str,
                      address: str, trust_score: float = 0.5) -> SyntheticCustomer:
-        observation = self.execute(ActionType.REGISTER_CUSTOMER.value, {
+        self.execute(ActionType.REGISTER_CUSTOMER.value, {
             "customer_id": customer_id,
             "name": name,
             "pan": pan,
@@ -78,6 +91,39 @@ class PaymentSandbox:
             "fingerprint": fingerprint or {},
         })
         return self.state.devices[device_id]
+
+    def open_account(self, account_id: str, customer_id: str,
+                     balance: float = 50000.0) -> SyntheticAccount:
+        self.execute(ActionType.OPEN_ACCOUNT.value, {
+            "account_id": account_id,
+            "customer_id": customer_id,
+            "balance": balance,
+        })
+        return self.state.accounts[account_id]
+
+    def onboard_merchant(self, merchant_id: str, name: str, mcc: str = "5411",
+                         declared_mcc: str = None, kyb_verified: bool = True,
+                         risk_score: float = 0.3, owner_customer_id: str = None) -> SyntheticMerchant:
+        self.execute(ActionType.ONBOARD_MERCHANT.value, {
+            "merchant_id": merchant_id,
+            "name": name,
+            "mcc": mcc,
+            "declared_mcc": declared_mcc or mcc,
+            "kyb_verified": kyb_verified,
+            "risk_score": risk_score,
+            "owner_customer_id": owner_customer_id,
+        })
+        return self.state.merchants[merchant_id]
+
+    def link_beneficiary(self, beneficiary_id: str, customer_id: str,
+                         name: str = "Payee", account_ref: str = None) -> SyntheticBeneficiary:
+        self.execute(ActionType.LINK_BENEFICIARY.value, {
+            "beneficiary_id": beneficiary_id,
+            "customer_id": customer_id,
+            "name": name,
+            "account_ref": account_ref or f"ACC-{beneficiary_id}",
+        })
+        return self.state.beneficiaries[beneficiary_id]
 
     def get_state(self) -> SandboxState:
         """Return the current state for inspection."""

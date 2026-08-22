@@ -3,7 +3,14 @@
 from .sandbox import PaymentSandbox
 from .orchestrator import SandboxOrchestrator
 from .schemas import ActionType, SandboxObservation, JourneyStep
-from .state import SandboxState, SyntheticCustomer, SyntheticDevice, SyntheticAccount
+from .state import (
+    SandboxState,
+    SyntheticCustomer,
+    SyntheticDevice,
+    SyntheticAccount,
+    SyntheticMerchant,
+    SyntheticBeneficiary,
+)
 
 __all__ = [
     "PaymentSandbox",
@@ -15,4 +22,6 @@ __all__ = [
     "SyntheticCustomer",
     "SyntheticDevice",
     "SyntheticAccount",
+    "SyntheticMerchant",
+    "SyntheticBeneficiary",
 ]

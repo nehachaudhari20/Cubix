@@ -18,6 +18,9 @@ class ActionType(str, Enum):
     REGISTER_DEVICE = "register_device"
     VERIFY_KYC = "verify_kyc"
     AUTHENTICATE = "authenticate"
+    OPEN_ACCOUNT = "open_account"
+    ONBOARD_MERCHANT = "onboard_merchant"
+    LINK_BENEFICIARY = "link_beneficiary"
     INITIATE_PAYMENT = "initiate_payment"
 
 

@@ -217,7 +217,7 @@ def test_journey_tracking():
         print(f"  → {step['step']}: {step['result'].get('status', step['result'].get('decision', 'N/A'))}")
     
     # Verify all expected steps are present
-    expected_steps = ["KYC", "Device", "Authentication", "Risk", "Authorization"]
+    expected_steps = ["KYC", "Device", "Authentication", "Payment Initiation", "Risk", "Authorization"]
     if result["decision"] == "ALLOW":
         expected_steps.append("Settlement")
     
@@ -290,6 +290,111 @@ def test_state_persistence():
     return result1, result2
 
 
+def test_multi_step_merchant_payment():
+    """Test 7: Multi-step flow — register, merchant, beneficiary, pay."""
+    print("\n" + "="*60)
+    print("TEST 7: MULTI-STEP MERCHANT PAYMENT")
+    print("="*60)
+
+    sandbox = PaymentSandbox()
+
+    sandbox.add_customer("C007", "Arjun Mehta", "JKL111", "1991-01-01", "Pune", trust_score=0.8)
+    sandbox.add_device("D007", "C007")
+    sandbox.open_account("ACC007", "C007", balance=100000)
+    sandbox.onboard_merchant("M007", "Honest Grocery", mcc="5411", kyb_verified=True, risk_score=0.2)
+    sandbox.link_beneficiary("BEN007", "C007", name="Supplier Co")
+
+    result = sandbox.process_transaction({
+        "transaction_id": "T007",
+        "customer_id": "C007",
+        "device_id": "D007",
+        "account_id": "ACC007",
+        "merchant_id": "M007",
+        "beneficiary_id": "BEN007",
+        "amount": 8000,
+        "payment_rail": "upi",
+        "authentication_method": "otp",
+    })
+
+    print(f"Decision: {result['decision']}")
+    steps = [s["step"] for s in result["journey"]]
+    print(f"Journey: {steps}")
+
+    assert result["decision"] == "ALLOW", f"Expected ALLOW, got {result['decision']}"
+    assert "Payment Initiation" in steps
+    assert sandbox.get_state().get_merchant("M007") is not None
+    assert sandbox.get_state().get_beneficiary("BEN007") is not None
+
+    print("[PASS] Test 7: Multi-step merchant payment succeeded")
+    return result
+
+
+def test_mcc_misrepresentation_blocks():
+    """Test 8: MCC misrepresentation raises merchant risk and can block high-value tx."""
+    print("\n" + "="*60)
+    print("TEST 8: MCC MISREPRESENTATION")
+    print("="*60)
+
+    sandbox = PaymentSandbox()
+
+    sandbox.add_customer("C008", "Fraud Merchant Owner", "MCC999", "1985-01-01", "Delhi", trust_score=0.6)
+    sandbox.add_device("D008", "C008")
+    sandbox.onboard_merchant(
+        "M008", "Fake Retail", mcc="7995", declared_mcc="5411",
+        kyb_verified=True, risk_score=0.3,
+    )
+
+    result = sandbox.process_transaction({
+        "transaction_id": "T008",
+        "customer_id": "C008",
+        "device_id": "D008",
+        "merchant_id": "M008",
+        "amount": 45000,
+        "payment_rail": "card",
+        "authentication_method": "otp",
+    })
+
+    print(f"Decision: {result['decision']}")
+    print(f"Reason: {result['reason']}")
+    print(f"Risk Score: {result['state'].get('risk_score')}")
+
+    assert result["decision"] in ("BLOCK", "CHALLENGE"), f"Expected BLOCK/CHALLENGE, got {result['decision']}"
+    pi_step = next(s for s in result["journey"] if s["step"] == "Payment Initiation")
+    assert "mcc_misrepresentation" in pi_step["result"].get("flags", [])
+
+    print("[PASS] Test 8: MCC misrepresentation detected and blocked/challenged")
+    return result
+
+
+def test_invalid_payment_amount():
+    """Test 9: Zero amount fails at payment initiation."""
+    print("\n" + "="*60)
+    print("TEST 9: INVALID PAYMENT AMOUNT")
+    print("="*60)
+
+    sandbox = PaymentSandbox()
+    sandbox.add_customer("C009", "Test User", "INV009", "1990-01-01", "Chennai", trust_score=0.8)
+    sandbox.add_device("D009", "C009")
+
+    result = sandbox.process_transaction({
+        "transaction_id": "T009",
+        "customer_id": "C009",
+        "device_id": "D009",
+        "amount": 0,
+        "payment_rail": "upi",
+        "authentication_method": "otp",
+    })
+
+    print(f"Decision: {result['decision']}")
+    print(f"Reason: {result['reason']}")
+
+    assert result["decision"] == "BLOCK"
+    assert result["reason"] == "payment_initiation_failed"
+
+    print("[PASS] Test 9: Invalid amount blocked at payment initiation")
+    return result
+
+
 def run_all_tests():
     """Run all sandbox tests."""
     print("\n" + "="*70)
@@ -303,6 +408,9 @@ def run_all_tests():
         test_unknown_customer()
         test_journey_tracking()
         test_state_persistence()
+        test_multi_step_merchant_payment()
+        test_mcc_misrepresentation_blocks()
+        test_invalid_payment_amount()
         
         print("\n" + "="*70)
         print("ALL SANDBOX TESTS PASSED")
@@ -314,6 +422,9 @@ def run_all_tests():
         print("  - Unknown customers blocked")
         print("  - Full journey tracked")
         print("  - State persists across transactions")
+        print("  - Multi-step merchant/beneficiary payments work")
+        print("  - MCC misrepresentation detected")
+        print("  - Invalid payments blocked at initiation")
         
     except AssertionError as e:
         print(f"\n[FAIL] Test failed: {e}")

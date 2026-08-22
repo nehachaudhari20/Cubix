@@ -12,6 +12,8 @@ from .state import SandboxState, SyntheticCustomer, SyntheticDevice
 from .engines.kyc import KYCStateEngine
 from .engines.device import DeviceEngine
 from .engines.auth import AuthenticationEngine
+from .engines.account_merchant import AccountMerchantEngine
+from .engines.payment_initiation import PaymentInitiationEngine
 from .engines.risk import RiskEngine
 from .engines.authorization import AuthorizationEngine
 from .engines.settlement import SettlementEngine
@@ -26,6 +28,8 @@ class SandboxOrchestrator:
         kyc_engine: KYCStateEngine,
         device_engine: DeviceEngine,
         auth_engine: AuthenticationEngine,
+        account_merchant_engine: AccountMerchantEngine,
+        payment_initiation_engine: PaymentInitiationEngine,
         risk_engine: RiskEngine,
         authz_engine: AuthorizationEngine,
         settlement_engine: SettlementEngine,
@@ -34,6 +38,8 @@ class SandboxOrchestrator:
         self.kyc_engine = kyc_engine
         self.device_engine = device_engine
         self.auth_engine = auth_engine
+        self.account_merchant_engine = account_merchant_engine
+        self.payment_initiation_engine = payment_initiation_engine
         self.risk_engine = risk_engine
         self.authz_engine = authz_engine
         self.settlement_engine = settlement_engine
@@ -49,6 +55,9 @@ class SandboxOrchestrator:
             ActionType.REGISTER_DEVICE.value: self._register_device,
             ActionType.VERIFY_KYC.value: self._verify_kyc,
             ActionType.AUTHENTICATE.value: self._authenticate,
+            ActionType.OPEN_ACCOUNT.value: self._open_account,
+            ActionType.ONBOARD_MERCHANT.value: self._onboard_merchant,
+            ActionType.LINK_BENEFICIARY.value: self._link_beneficiary,
             ActionType.INITIATE_PAYMENT.value: self._initiate_payment,
         }
 
@@ -208,10 +217,59 @@ class SandboxOrchestrator:
             timestamp=timestamp,
         )
 
+    def _open_account(self, action_id: str, payload: Dict[str, Any], timestamp: str) -> SandboxObservation:
+        result = self.account_merchant_engine.open_account(payload)
+        passed = result.get("status") == "PASS"
+        return SandboxObservation(
+            action_id=action_id,
+            action_type=ActionType.OPEN_ACCOUNT.value,
+            decision="PASS" if passed else "FAIL",
+            reason=result.get("reason", "account_opened" if passed else "account_failed"),
+            message=result.get("message", ""),
+            journey=[JourneyStep(step="Account", result=result)],
+            state_snapshot={"account_id": payload.get("account_id"), "customer_id": payload.get("customer_id")},
+            timestamp=timestamp,
+        )
+
+    def _onboard_merchant(self, action_id: str, payload: Dict[str, Any], timestamp: str) -> SandboxObservation:
+        result = self.account_merchant_engine.onboard_merchant(payload)
+        passed = result.get("status") == "PASS"
+        return SandboxObservation(
+            action_id=action_id,
+            action_type=ActionType.ONBOARD_MERCHANT.value,
+            decision="PASS" if passed else "FAIL",
+            reason=result.get("reason", "merchant_onboarded" if passed else "merchant_failed"),
+            message=result.get("message", ""),
+            journey=[JourneyStep(step="Account/Merchant", result=result)],
+            state_snapshot={
+                "merchant_id": payload.get("merchant_id"),
+                "mcc": result.get("mcc"),
+                "risk_score": result.get("risk_score"),
+            },
+            timestamp=timestamp,
+        )
+
+    def _link_beneficiary(self, action_id: str, payload: Dict[str, Any], timestamp: str) -> SandboxObservation:
+        result = self.account_merchant_engine.link_beneficiary(payload)
+        passed = result.get("status") == "PASS"
+        return SandboxObservation(
+            action_id=action_id,
+            action_type=ActionType.LINK_BENEFICIARY.value,
+            decision="PASS" if passed else "FAIL",
+            reason=result.get("reason", "beneficiary_linked" if passed else "beneficiary_failed"),
+            message=result.get("message", ""),
+            journey=[JourneyStep(step="Beneficiary", result=result)],
+            state_snapshot={
+                "beneficiary_id": payload.get("beneficiary_id"),
+                "customer_id": payload.get("customer_id"),
+            },
+            timestamp=timestamp,
+        )
+
     def _initiate_payment(
         self, action_id: str, payload: Dict[str, Any], timestamp: str
     ) -> SandboxObservation:
-        """Run full payment lifecycle: KYC → Device → Auth → Risk → Authz → Settlement."""
+        """Run full payment lifecycle: KYC → Device → Auth → Payment Initiation → Risk → Authz → Settlement."""
         transaction = dict(payload)
         transaction_id = transaction.get("transaction_id", action_id)
         customer_id = transaction.get("customer_id")
@@ -240,6 +298,16 @@ class SandboxOrchestrator:
         if auth_result["status"] == "FAIL":
             return self._payment_observation(
                 action_id, transaction_id, "BLOCK", "auth_failed",
+                journey, control_triggers, timestamp,
+            )
+
+        pi_result = self.payment_initiation_engine.validate(transaction)
+        journey.append(JourneyStep(step="Payment Initiation", result=pi_result))
+        if pi_result.get("flags"):
+            control_triggers.extend(pi_result["flags"])
+        if pi_result["status"] == "FAIL":
+            return self._payment_observation(
+                action_id, transaction_id, "BLOCK", "payment_initiation_failed",
                 journey, control_triggers, timestamp,
             )
 
