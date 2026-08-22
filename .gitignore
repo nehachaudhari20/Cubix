@@ -97,6 +97,10 @@ data/models/*.onnx
 # Keep directory structure
 !data/models/.gitkeep
 
+# Adversarial evidence buffer (runtime JSONL from Red Team)
+data/adversarial_buffer/*.jsonl
+!data/adversarial_buffer/.gitkeep
+
 # ==========================================
 # MLflow
 # ==========================================
