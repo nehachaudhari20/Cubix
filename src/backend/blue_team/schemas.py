@@ -36,3 +36,18 @@ class EvidenceRecord(BaseModel):
     step: Optional[int] = None
     source: str = "red_team"
     timestamp: str
+
+
+class HardeningReport(BaseModel):
+    """Before/after comparison for Loop B hardening."""
+    v1_version: str = "v1"
+    v2_version: str = "v2"
+    buffer_records: int = 0
+    v1_buffer_mean_score: float = 0.0
+    v2_buffer_mean_score: float = 0.0
+    buffer_score_lift: float = 0.0
+    v1_baseline_fraud_recall: float = 0.0
+    v2_baseline_fraud_recall: float = 0.0
+    bypassed_attacks: int = 0
+    recommend_swap: bool = False
+    details: Dict[str, Any] = Field(default_factory=dict)

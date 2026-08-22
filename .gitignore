@@ -93,6 +93,9 @@ data/generated/*
 data/models/*.pkl
 data/models/*.joblib
 data/models/*.onnx
+data/models/*.txt
+data/models/*.json
+data/models/hardening_report.json
 
 # Keep directory structure
 !data/models/.gitkeep
