@@ -13,15 +13,16 @@ class AuthenticationEngine:
     
     def authenticate(self, customer_id: str, method: str = "otp") -> Dict[str, Any]:
         """Simulate authentication."""
-        # 95% success rate for legitimate auth, 60% for suspicious
-        success_rate = 0.95
         customer = self.state.get_customer(customer_id)
-        
-        if customer and customer.trust_score < 0.3:
-            success_rate = 0.60  # Low trust = harder to auth
-        
-        success = random.random() < success_rate
-        
+
+        # Deterministic for trusted customers; stochastic for low-trust (attack scenarios)
+        if customer and customer.trust_score >= 0.5:
+            success = True
+        elif customer and customer.trust_score < 0.3:
+            success = random.random() < 0.60
+        else:
+            success = random.random() < 0.95
+
         return {
             "status": "PASS" if success else "FAIL",
             "method": method,

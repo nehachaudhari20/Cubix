@@ -30,6 +30,7 @@ class RiskEngine:
             "customer_id": transaction.get("customer_id"),
             "device_id": transaction.get("device_id"),
             "is_new_device": transaction.get("is_new_device", True),
+            "is_unknown_device": transaction.get("is_unknown_device", False),
             "device_age_days": transaction.get("device_age_days", 0),
             "merchant_risk": transaction.get("merchant_risk_score", 0.3),
             "merchant_id": transaction.get("merchant_id"),

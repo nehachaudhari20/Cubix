@@ -38,7 +38,7 @@ class AuthorizationEngine:
             if customer:
                 # Fetch velocity limit from KB
                 velocity_limit = self.kb_rule.get_control_value("velocity_limit_24h", 5)
-                if customer.get_tx_count_24h() > velocity_limit:
+                if customer.get_tx_count_24h() >= velocity_limit:
                     decision = "BLOCK"
                     reason = "velocity_exceeded"
         

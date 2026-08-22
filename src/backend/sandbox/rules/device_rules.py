@@ -33,10 +33,11 @@ class DeviceRules(BaseRule):
         unknown_risk = self.get_control_value("unknown_device_risk", 0.30)
         
         # Unknown device (device not found in registry)
-        if is_new_device and device_age_days == 0:
+        is_unknown = features.get("is_unknown_device", False)
+        if is_unknown:
             risk_contribution += unknown_risk
             triggered_rules.append("unknown_device")
-        
+
         # New device (registered but less than 7 days old)
         elif is_new_device:
             risk_contribution += new_device_risk

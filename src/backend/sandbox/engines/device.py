@@ -20,6 +20,7 @@ class DeviceEngine:
                 "reason": "unknown_device",
                 "message": "Device not registered",
                 "is_new": True,
+                "is_unknown_device": True,
                 "device_age_days": 0
             }
         
@@ -29,6 +30,7 @@ class DeviceEngine:
                 "reason": "device_customer_mismatch",
                 "message": "Device belongs to different customer",
                 "is_new": False,
+                "is_unknown_device": False,
                 "device_age_days": device.get_age_days()
             }
         
@@ -40,5 +42,6 @@ class DeviceEngine:
             "device_id": device_id,
             "device_age_days": age_days,
             "is_new": is_new,
+            "is_unknown_device": False,
             "customer_id": device.customer_id
         }

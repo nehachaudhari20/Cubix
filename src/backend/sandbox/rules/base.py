@@ -9,6 +9,7 @@ from typing import Dict, Any, Optional
 
 # KB API URL (from environment or default)
 KB_API_URL = os.environ.get("KB_API_URL", "http://localhost:8000")
+USE_KB_API = os.environ.get("USE_KB_API", "false").lower() in ("1", "true", "yes")
 
 
 class BaseRule:
@@ -24,14 +25,19 @@ class BaseRule:
         """Fetch controls for this stage from KB API."""
         import time
         
+        defaults = self._get_default_controls()
+
+        if not USE_KB_API:
+            return defaults
+
         # Check cache
         current_time = time.time()
         if self._controls_cache and (current_time - self._cache_time) < self._cache_ttl:
-            return self._controls_cache
+            return {**defaults, **self._controls_cache}
         
         try:
             url = f"{KB_API_URL}/stages/{self.stage}/controls"
-            response = requests.get(url, timeout=5)
+            response = requests.get(url, timeout=(0.3, 0.5))
             
             if response.status_code == 200:
                 data = response.json()
@@ -42,20 +48,20 @@ class BaseRule:
                 for control in controls:
                     if isinstance(control, str):
                         controls_dict[control.lower().replace(" ", "_")] = control
-                    else:
-                        # If control is an object, handle accordingly
-                        pass
+                    elif isinstance(control, dict):
+                        name = control.get("control_name") or control.get("name")
+                        if name:
+                            key = name.lower().replace(" ", "_")
+                            controls_dict[key] = control.get("value", control)
                 
                 self._controls_cache = controls_dict
                 self._cache_time = current_time
-                return controls_dict
+                return {**defaults, **controls_dict}
             else:
-                # Fallback to default controls
-                return self._get_default_controls()
+                return defaults
                 
         except requests.exceptions.RequestException:
-            # If API is down, use default controls
-            return self._get_default_controls()
+            return defaults
     
     def _get_default_controls(self) -> Dict[str, Any]:
         """Fallback default controls if KB API is unavailable."""
