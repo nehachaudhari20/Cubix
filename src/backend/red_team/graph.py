@@ -42,6 +42,7 @@ class RedTeamGraph:
         self.memory_agent = MemoryAgent()
         self.strategy_layer = StrategyLayer(self.memory_agent)
         self.sandbox_client = sandbox_client or SandboxClient()
+        self.evidence_collector = self._init_evidence_collector()
 
         self.state = RedTeamState()
         self.graph = self._build_graph()
@@ -79,6 +80,13 @@ class RedTeamGraph:
         )
 
         return graph
+
+    def _init_evidence_collector(self):
+        try:
+            from backend.blue_team.collector import EvidenceCollector
+            return EvidenceCollector.from_env()
+        except Exception:
+            return None
 
     def _after_remember(self, state: RedTeamGraphState) -> str:
         """Continue executing remaining payloads before starting a new campaign."""
@@ -174,6 +182,23 @@ class RedTeamGraph:
 
         if hypothesis:
             self.memory_agent.store_analysis(analysis=analysis, hypothesis=hypothesis, context=state)
+
+        # Feed Blue Team adversarial buffer (Loop B input)
+        if self.evidence_collector and state.get("payloads") and state.get("sandbox_response"):
+            try:
+                payload = ActionPayload(**state["payloads"][state["current_payload_index"]])
+                plan = AttackPlan(**state["plan"]) if state.get("plan") else None
+                if plan:
+                    self.evidence_collector.collect(
+                        sandbox_response=state["sandbox_response"],
+                        payload=payload,
+                        plan=plan,
+                        hypothesis=hypothesis,
+                        analysis=analysis,
+                        sandbox=self.sandbox_client.get_sandbox(),
+                    )
+            except Exception:
+                pass
 
         if analysis.outcome == "success":
             self.state.successful_attacks += 1

@@ -22,10 +22,17 @@ class EvidenceRecord(BaseModel):
     attack_family: str
     action_type: str
     sandbox_decision: str
+    evasion_outcome: str = "unknown"  # bypassed | challenged | blocked
+    analysis_outcome: Optional[str] = None
+    blocking_control: Optional[str] = None
+    attack_variant: Optional[str] = None
     control_triggers: List[str] = Field(default_factory=list)
     ml_score: Optional[float] = None
     rule_risk: Optional[float] = None
     risk_score: Optional[float] = None
     label: Optional[int] = None  # 1=fraud attempt, 0=legit
     features: Dict[str, Any] = Field(default_factory=dict)
+    amount: Optional[float] = None
+    step: Optional[int] = None
+    source: str = "red_team"
     timestamp: str
