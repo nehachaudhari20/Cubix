@@ -1,149 +1,135 @@
 """
-Attack Generator Agent
-INPUT: AttackPlan + KB API + Baseline CSV + LLM
-OUTPUT: Sequence of Payloads
+Attack Generator Agent — builds executable sandbox action sequences.
 """
 
 import uuid
-import random
-from datetime import datetime, timedelta
-from typing import List, Dict, Any
-from langchain_google_genai import ChatGoogleGenerativeAI
-from langchain.prompts import PromptTemplate
-from langchain.schema import HumanMessage
+from datetime import datetime
+from typing import Any, Dict, List
 
-from ..schemas import AttackPlan, Payload, GeneratedSequence
-from ..utils import KnowledgeBaseClient, BaselineLoader
+from ..schemas import AttackPlan, ActionPayload, GeneratedSequence
+from ..agent_helpers import new_campaign_ids
+from ..utils import BaselineLoader
 
 
 class AttackGenerator:
-    """
-    Attack Generator Agent.
-    Hybrid: KB for structure, LLM for narrative, Baseline for statistics.
-    """
-    
-    def __init__(self, model_name: str = "gemini-3.6-flash"):
-        self.llm = ChatGoogleGenerativeAI(model=model_name, temperature=0.8)
-        self.kb = KnowledgeBaseClient()
+    """Generates concrete sandbox actions from attack plans."""
+
+    def __init__(self, model_name: str = None):
         self.baseline = BaselineLoader()
-        
-        self.narrative_prompt = PromptTemplate(
-            input_variables=["family", "variant", "step", "total_steps", "amount", "target_control"],
-            template="""
-Generate a realistic, short transaction narrative for a payment fraud attack.
 
-Attack Family: {family}
-Variant: {variant}
-Step: {step}/{total_steps}
-Amount: ₹{amount}
-Target Control: {target_control}
-
-Return a 1-2 sentence narrative that would appear in a payment system log.
-Example: "Payment to vendor for procurement of IT services" or "Subscription renewal for software license".
-Be realistic and varied.
-"""
-        )
-    
     def generate_sequence(self, plan: AttackPlan) -> GeneratedSequence:
-        """
-        Generate a complete sequence of payloads from a plan.
-        INPUT: AttackPlan
-        OUTPUT: GeneratedSequence
-        """
-        family_id = plan.primary_family
-        variant = plan.selected_variant
-        
-        # Fetch family details from KB for context
-        family_detail = self.kb.get_family(family_id) if family_id != "COMPOSITE" else None
-        
-        payloads = []
-        base_customer_id = f"C_{uuid.uuid4().hex[:8]}"
-        base_device_id = f"D_{uuid.uuid4().hex[:8]}"
-        
+        ids = new_campaign_ids(plan.campaign_name.replace(" ", "_").lower()[:8])
+        payloads: List[ActionPayload] = []
         num_steps = len(plan.steps)
-        
+
         for idx, step in enumerate(plan.steps):
-            # 1. Sample amount from baseline
-            base_amount = self.baseline.sample_amount()
-            # Apply escalation based on step
-            escalation_factor = 1 + (idx / num_steps) * 5
-            amount = base_amount * escalation_factor
-            
-            # If plan has specific amount, override
-            if "amount" in step.payload_template:
-                amount = step.payload_template.get("amount", amount)
-            
-            # 2. Sample rail from baseline
-            rail = self.baseline.sample_rail()
-            
-            # 3. Sample merchant risk from baseline
-            merchant_risk = self.baseline.sample_merchant_risk()
-            if idx > num_steps // 2:
-                merchant_risk = min(1.0, merchant_risk + 0.3)
-            
-            # 4. Device: first step = new, subsequent = known
-            is_new_device = idx == 0
-            
-            # 5. Beneficiary: final step = new beneficiary
-            is_new_beneficiary = idx == num_steps - 1
-            
-            # 6. Generate narrative using LLM
-            narrative = self._generate_narrative(
-                family=family_id,
-                variant=variant,
-                step=idx+1,
-                total_steps=num_steps,
-                amount=amount,
-                target_control=step.target_control
-            )
-            
-            # 7. Build payload
-            payload = Payload(
-                transaction_id=f"txn_attack_{uuid.uuid4().hex[:8]}",
-                timestamp=(datetime.now() + timedelta(hours=idx * 3 + random.randint(0, 60))).isoformat(),
-                customer_id=base_customer_id,
-                device_id=base_device_id,
-                amount=round(amount, 2),
-                currency="INR",
-                payment_rail=rail,
-                transaction_type=self.baseline.sample_transaction_type(),
-                authentication_method="otp",
-                merchant_id=f"MCH_{uuid.uuid4().hex[:8]}",
-                merchant_risk_score=round(merchant_risk, 3),
-                is_new_device=is_new_device,
-                is_new_beneficiary=is_new_beneficiary,
-                beneficiary_account_id=f"BEN_{uuid.uuid4().hex[:8]}" if is_new_beneficiary else None,
-                narrative=narrative,
-                step=idx+1,
+            action_payload = self._build_action_payload(step, ids, idx, plan)
+            narrative = self._build_narrative(step, plan, action_payload)
+
+            payloads.append(ActionPayload(
+                action_type=step.action_type,
+                action_payload=action_payload,
+                step=step.step,
                 total_steps=num_steps,
                 is_final=idx == num_steps - 1,
-                campaign_id=plan.campaign_name.replace(" ", "_").lower(),
-                attack_family=family_id,
-                attack_variant=variant,
+                campaign_id=ids["campaign_id"],
+                attack_family=plan.primary_family,
+                attack_variant=plan.selected_variant,
                 target_control=step.target_control,
-                expected_outcome=step.expected_outcome
-            )
-            payloads.append(payload)
-        
+                expected_outcome=step.expected_outcome,
+                narrative=narrative,
+            ))
+
         return GeneratedSequence(
-            campaign_id=plan.campaign_name.replace(" ", "_").lower(),
+            campaign_id=ids["campaign_id"],
             payloads=payloads,
-            total_payloads=len(payloads)
+            total_payloads=len(payloads),
         )
-    
-    def _generate_narrative(self, family: str, variant: str, step: int, total_steps: int, amount: float, target_control: str) -> str:
-        """Generate narrative using LLM."""
-        prompt = self.narrative_prompt.format(
-            family=family,
-            variant=variant,
-            step=step,
-            total_steps=total_steps,
-            amount=round(amount, 2),
-            target_control=target_control
-        )
-        
-        try:
-            response = self.llm.invoke([HumanMessage(content=prompt)])
-            return response.content.strip()
-        except Exception:
-            return f"Step {step} of {total_steps}: {family} attack targeting {target_control}"
+
+    def _build_action_payload(self, step, ids: Dict[str, str], idx: int, plan: AttackPlan) -> Dict[str, Any]:
+        tpl = dict(step.payload_template or {})
+        action_type = step.action_type
+
+        if action_type == "register_customer":
+            return {
+                "customer_id": ids["customer_id"],
+                "name": tpl.get("name", f"Customer {ids['customer_id']}"),
+                "pan": tpl.get("pan", "SYN0000001"),
+                "dob": tpl.get("dob", "1990-01-01"),
+                "address": tpl.get("address", "Synthetic City"),
+                "trust_score": float(tpl.get("trust_score", 0.65)),
+                "verified": tpl.get("verified", True),
+            }
+
+        if action_type == "register_device":
+            return {
+                "device_id": ids["device_id"],
+                "customer_id": ids["customer_id"],
+                "fingerprint": tpl.get("fingerprint", {"browser": "Chrome", "os": "Windows"}),
+            }
+
+        if action_type == "open_account":
+            return {
+                "account_id": ids["account_id"],
+                "customer_id": ids["customer_id"],
+                "balance": float(tpl.get("balance", 75000)),
+            }
+
+        if action_type == "onboard_merchant":
+            return {
+                "merchant_id": ids["merchant_id"],
+                "name": tpl.get("name", f"Merchant {ids['merchant_id']}"),
+                "mcc": str(tpl.get("mcc", "5411")),
+                "declared_mcc": str(tpl.get("declared_mcc", tpl.get("mcc", "5411"))),
+                "kyb_verified": tpl.get("kyb_verified", True),
+                "risk_score": float(tpl.get("risk_score", 0.3)),
+                "owner_customer_id": ids["customer_id"],
+            }
+
+        if action_type == "link_beneficiary":
+            return {
+                "beneficiary_id": ids["beneficiary_id"],
+                "customer_id": ids["customer_id"],
+                "name": tpl.get("name", "External Payee"),
+                "account_ref": tpl.get("account_ref", f"EXT-{ids['beneficiary_id']}"),
+                "risk_score": float(tpl.get("risk_score", 0.25)),
+            }
+
+        # initiate_payment
+        amount = tpl.get("amount")
+        if amount is None:
+            base = self.baseline.sample_amount()
+            amount = base * (1 + idx * 0.8)
+
+        payment = {
+            "transaction_id": f"txn_{uuid.uuid4().hex[:8]}",
+            "customer_id": ids["customer_id"],
+            "device_id": ids["device_id"],
+            "amount": round(float(amount), 2),
+            "payment_rail": tpl.get("payment_rail", self.baseline.sample_rail()),
+            "authentication_method": tpl.get("authentication_method", "otp"),
+            "merchant_risk_score": float(tpl.get("merchant_risk_score", self.baseline.sample_merchant_risk())),
+        }
+
+        if any(s.action_type == "onboard_merchant" for s in plan.steps):
+            payment["merchant_id"] = ids.get("merchant_id")
+        elif tpl.get("merchant_id"):
+            payment["merchant_id"] = tpl["merchant_id"]
+
+        if any(s.action_type == "link_beneficiary" for s in plan.steps):
+            payment["beneficiary_id"] = ids.get("beneficiary_id")
+        elif tpl.get("beneficiary_id"):
+            payment["beneficiary_id"] = tpl["beneficiary_id"]
+
+        if any(s.action_type == "open_account" for s in plan.steps):
+            payment["account_id"] = tpl.get("account_id", ids.get("account_id"))
+
+        return payment
+
+    def _build_narrative(self, step, plan: AttackPlan, action_payload: Dict[str, Any]) -> str:
+        if step.action_type == "initiate_payment":
+            return (
+                f"Step {step.step}/{len(plan.steps)}: {plan.primary_family} payment of "
+                f"₹{action_payload.get('amount', 0)} targeting {step.target_control}"
+            )
+        return f"Step {step.step}: {step.action} ({step.action_type})"

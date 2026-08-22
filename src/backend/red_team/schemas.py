@@ -37,10 +37,11 @@ class ThreatHunterOutput(BaseModel):
 class PlanStep(BaseModel):
     """A single step in an attack campaign."""
     step: int = Field(description="Step number")
+    action_type: str = Field(default="initiate_payment", description="Sandbox action type")
     action: str = Field(description="Action description")
     target_control: str = Field(description="Control being targeted")
-    payload_template: Dict[str, Any] = Field(description="Payload template with placeholder values")
-    expected_outcome: str = Field(description="Expected outcome: PASS, FLAG, BLOCK")
+    payload_template: Dict[str, Any] = Field(default_factory=dict, description="Template values for payload")
+    expected_outcome: str = Field(description="Expected outcome: PASS, ALLOW, FLAG, BLOCK")
     rationale: str = Field(description="Why this step is necessary")
 
 class AttackPlan(BaseModel):
@@ -60,8 +61,23 @@ class AttackPlan(BaseModel):
 # ATTACK GENERATOR OUTPUT
 # ============================================================
 
+class ActionPayload(BaseModel):
+    """Executable sandbox action in a Red Team campaign."""
+    action_type: str
+    action_payload: Dict[str, Any]
+    step: int
+    total_steps: int
+    is_final: bool
+    campaign_id: str
+    attack_family: str
+    attack_variant: str = "default"
+    target_control: str
+    expected_outcome: str = "PASS"
+    narrative: Optional[str] = None
+
+
 class Payload(BaseModel):
-    """A single transaction payload for the Sandbox."""
+    """Legacy payment payload (kept for compatibility)."""
     transaction_id: str
     timestamp: str
     customer_id: str
@@ -85,11 +101,13 @@ class Payload(BaseModel):
     attack_variant: str
     target_control: str
     expected_outcome: str
+    action_type: str = "initiate_payment"
+    action_payload: Optional[Dict[str, Any]] = None
 
 class GeneratedSequence(BaseModel):
-    """Full sequence of payloads for a campaign."""
+    """Full sequence of actions for a campaign."""
     campaign_id: str
-    payloads: List[Payload]
+    payloads: List[ActionPayload]
     total_payloads: int
 
 
@@ -106,7 +124,7 @@ class AnalysisResult(BaseModel):
     learnings: List[str] = Field(description="Key learnings for future attacks")
     mutation_suggestions: List[str] = Field(description="How to mutate this attack")
     confidence: float = Field(ge=0, le=1, description="Confidence in analysis")
-    journey_trace: List[Dict[str, Any]] = Field(description="Full journey trace from Sandbox")
+    journey_trace: List[Dict[str, Any]] = Field(default_factory=list, description="Full journey trace from Sandbox")
 
 
 # ============================================================

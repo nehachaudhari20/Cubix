@@ -14,10 +14,12 @@ from .schemas import (
     Hypothesis,
     AttackPlan,
     Payload,
+    ActionPayload,
     AnalysisResult,
     MemoryEntry,
     StrategyDecision
 )
+from .sandbox_client import SandboxClient
 
 __all__ = [
     "RedTeamGraph",
@@ -28,9 +30,11 @@ __all__ = [
     "FailureAnalyzer",
     "MemoryAgent",
     "StrategyLayer",
+    "SandboxClient",
     "Hypothesis",
     "AttackPlan",
     "Payload",
+    "ActionPayload",
     "AnalysisResult",
     "MemoryEntry",
     "StrategyDecision"

@@ -1,173 +1,138 @@
 """
-Threat Hunter Agent
-INPUT: KB API + Memory Context
-OUTPUT: List of Hypotheses
+Threat Hunter Agent — discovers attack hypotheses dynamically from all three KB JSON files.
 """
 
-import json
-import requests
-from typing import List, Dict, Any, Optional
-from langchain_google_genai import ChatGoogleGenerativeAI
-from langchain.prompts import PromptTemplate
-from langchain.schema import HumanMessage, SystemMessage
-from langchain.output_parsers import PydanticOutputParser
+from typing import List, Optional
 
 from ..schemas import Hypothesis, ThreatHunterOutput
-from ..utils import KnowledgeBaseClient
+from ..agent_helpers import OfflineKnowledge, get_llm, USE_LLM
+from ..kb_campaign_builder import (
+    build_hypothesis_from_family,
+    classify_family,
+    is_simulatable,
+)
 
 
 class ThreatHunter:
-    """
-    Threat Hunter Agent.
-    Discovers novel attack hypotheses using KB API and memory context.
-    """
-    
-    def __init__(self, model_name: str = "gemini-3.6-flash"):
-        self.llm = ChatGoogleGenerativeAI(model=model_name, temperature=0.7)
-        self.kb = KnowledgeBaseClient()
-        self.parser = PydanticOutputParser(pydantic_object=ThreatHunterOutput)
-        
-        self.prompt_template = PromptTemplate(
-            input_variables=["available_families", "family_details", "memory_context", "format_instructions"],
-            template="""
-You are a Threat Hunter for a payment fraud red team. Your goal is to discover NOVEL, UNTESTED attack hypotheses.
+    """Discovers novel attack hypotheses using full KB intelligence and experiment memory."""
 
-## Context:
-- You are testing a synthetic payment system with controls at every stage (KYC, Device, Auth, Risk, Authorization, Settlement).
-- The system has an ML-based fraud detector (FraudShield).
-- You must find attacks that the system hasn't seen before.
-- COMPOSITE attacks (combining multiple families) are highly valuable.
+    def __init__(self, model_name: str = None):
+        self.kb = OfflineKnowledge()
+        self.llm = get_llm()
+        self._family_queue: List[str] = []
 
-## Available Attack Families (from Knowledge Base):
-{available_families}
+    def discover(
+        self,
+        memory_context: Optional[str] = None,
+        tested_families: Optional[List[str]] = None,
+    ) -> ThreatHunterOutput:
+        tested = set(tested_families or [])
+        if self.llm and USE_LLM:
+            result = self._discover_with_llm(memory_context, list(tested))
+            if result:
+                return result
+        return self._discover_from_kb(memory_context, tested)
 
-## Detailed Family Information:
-{family_details}
+    def hypothesis_from_family(self, family: dict) -> Hypothesis:
+        """Build hypothesis directly from a KB family record."""
+        return build_hypothesis_from_family(family)
 
-## Recent Memory (what has been tried and what worked/failed):
-{memory_context}
+    def next_untested_family(self, tested_ids: List[str]) -> Optional[dict]:
+        """Return the next simulatable KB family not yet tested."""
+        untested = self.kb.get_untested_families(tested_ids, limit=1)
+        return untested[0] if untested else None
 
-## Chain-of-Thought Instructions:
-1. Which families are UNTESTED or have LOW coverage?
-2. Which COMPOSITE combinations could create novel behavior?
-3. Are the prerequisites feasible in this environment?
-4. What is the attack flow through the payment lifecycle?
-5. Assign a novelty score (0-1) and success probability (0-1).
+    def _discover_from_kb(
+        self, memory_context: Optional[str], tested: set
+    ) -> ThreatHunterOutput:
+        simulatable = self.kb.get_simulatable_families()
+        memory_lower = (memory_context or "").lower()
 
-## Examples of Strong Hypotheses:
-- "Trust Farming + Velocity Evasion": Build trust with low-value transactions, then execute high-value transfer.
-- "Synthetic Identity + Merchant MCC Misrepresentation": Create fake merchant, misrepresent MCC, process high-risk transactions.
-- "Prompt Injection + Agent Routing Manipulation": Inject hidden prompts into AI agent to route payments maliciously.
+        candidates: List[Hypothesis] = []
+        for family in simulatable:
+            fid = family.get("attack_id")
+            if fid in tested:
+                continue
 
-## Return Format (JSON only, matching schema):
-{format_instructions}
+            pattern = classify_family(family)
+            # Skip families recently succeeded in memory (same pattern)
+            if pattern.replace("_", " ") in memory_lower and "success" in memory_lower:
+                continue
 
-## Rules:
-- Return ONLY valid JSON that matches the schema.
-- Do NOT include markdown, code blocks, or extra text.
-- The `primary_family` must be a real family ID from the available list (or "COMPOSITE").
-- For composite attacks, list all family IDs in `composite_families`.
-- Provide clear chain-of-thought reasoning.
-"""
+            h = build_hypothesis_from_family(family)
+            h.reasoning = self._enrich_reasoning(family, pattern, memory_context)
+            candidates.append(h)
+
+        if not candidates:
+            # All simulatable families tested — pick first simulatable for re-probe
+            if simulatable:
+                candidates = [build_hypothesis_from_family(simulatable[0])]
+            else:
+                return ThreatHunterOutput(hypotheses=[], confidence=0.0)
+
+        # Prioritize diverse patterns: mule, merchant, velocity, identity, aml first
+        priority = ["mule", "merchant", "velocity", "identity", "aml", "account", "auth", "payment_probe"]
+        candidates.sort(
+            key=lambda h: (
+                priority.index(classify_family(self.kb.get_family(h.primary_family) or {}))
+                if classify_family(self.kb.get_family(h.primary_family) or {}) in priority
+                else 99,
+                -h.novelty_score,
+            )
         )
-    
-    def discover(self, memory_context: Optional[str] = None) -> ThreatHunterOutput:
-        """
-        Discover attack hypotheses.
-        INPUT: Memory context (optional)
-        OUTPUT: ThreatHunterOutput with list of hypotheses
-        """
-        # 1. Fetch families from KB
-        families = self.kb.get_families()
-        if not families:
-            return self._get_fallback_output()
-        
-        # 2. Format for prompt
-        available_ids = [f.get("attack_id", "") for f in families if f.get("attack_id")]
-        available_str = "\n".join([f"  - {fid}" for fid in available_ids[:15]])
-        
-        # 3. Get details for key families
-        family_details = []
-        for fid in available_ids[:8]:
-            detail = self.kb.get_family(fid)
-            if detail:
-                family_details.append(
-                    f"  {fid}: {detail.get('name', fid)} — Stage: {detail.get('lifecycle_stage', 'Unknown')} — "
-                    f"Variants: {detail.get('variants', [])[:3]}"
-                )
-        family_details_str = "\n".join(family_details) if family_details else "  (No details available)"
-        
-        # 4. Memory context
-        memory = memory_context or """
-Recent experiments:
-- SIF-001 (Synthetic Identity): SUCCESS — bypassed KYC
-- AUTH-001 (Phishing): PARTIAL — OTP captured but MFA blocked
-- AML-001 (Evasion): FAILED — ML model detected pattern
-- MCH-002 (Shell Merchant): SUCCESS — website passed verification
-"""
-        
-        # 5. Format instructions
-        format_instructions = self.parser.get_format_instructions()
-        
-        # 6. Build prompt
-        prompt = self.prompt_template.format(
-            available_families=available_str,
-            family_details=family_details_str,
-            memory_context=memory,
-            format_instructions=format_instructions
+
+        return ThreatHunterOutput(hypotheses=candidates[:3], confidence=0.9)
+
+    def _enrich_reasoning(self, family: dict, pattern: str, memory: Optional[str]) -> str:
+        stage = family.get("lifecycle_stage", "")
+        controls = (family.get("controls_targeted") or [])[:2]
+        signals = (family.get("detection_signals") or [])[:2]
+        signal_names = [s.get("name", "") for s in signals]
+        base = (
+            f"KB family {family.get('attack_id')} ({pattern}) at stage '{stage}'. "
+            f"Targets controls: {', '.join(controls) or 'stage defaults'}. "
+            f"Key signals: {', '.join(signal_names) or 'derived from pattern'}."
         )
-        
-        # 7. Invoke LLM
-        messages = [
-            SystemMessage(content="You are a Threat Hunter. Return ONLY valid JSON matching the schema."),
-            HumanMessage(content=prompt)
-        ]
-        
+        if memory and "failure" in memory.lower():
+            return base + " Prior attempt failed — mutate amounts/timing."
+        return base
+
+    def _discover_with_llm(
+        self, memory_context: Optional[str], tested: List[str]
+    ) -> Optional[ThreatHunterOutput]:
         try:
-            response = self.llm.invoke(messages)
-            output = self.parser.parse(response.content)
-            return output
-        except Exception as e:
-            print(f"⚠️ Threat Hunter LLM parsing failed: {e}")
-            return self._get_fallback_output()
-    
-    def _get_fallback_output(self) -> ThreatHunterOutput:
-        """Fallback hypotheses if KB or LLM fails."""
-        return ThreatHunterOutput(
-            hypotheses=[
-                Hypothesis(
-                    name="Velocity Evasion via Time Spreading",
-                    primary_family="AML-001",
-                    composite_families=[],
-                    target_stages=["Authorization"],
-                    novelty_score=0.6,
-                    success_probability=0.65,
-                    prerequisites=["Existing merchant account", "Control over transaction timing"],
-                    attack_flow_summary="Spread transactions over 48 hours to bypass velocity limits",
-                    reasoning="Velocity limits are time-window based; spreading may evade detection."
-                ),
-                Hypothesis(
-                    name="Synthetic Merchant + MCC Misrepresentation",
-                    primary_family="COMPOSITE",
-                    composite_families=["MCH-001", "ACQ-004"],
-                    target_stages=["Merchant", "Acquirer"],
-                    novelty_score=0.85,
-                    success_probability=0.55,
-                    prerequisites=["GenAI for website generation", "Understanding of MCC risk tiers"],
-                    attack_flow_summary="Create synthetic merchant with AI-generated front, misrepresent MCC",
-                    reasoning="Combining merchant creation with MCC manipulation bypasses onboarding and monitoring."
-                ),
-                Hypothesis(
-                    name="Agent Memory Poisoning for Unauthorized Transfers",
-                    primary_family="AG-003",
-                    composite_families=[],
-                    target_stages=["AI_Agent_Commerce"],
-                    novelty_score=0.9,
-                    success_probability=0.4,
-                    prerequisites=["Agent with stored payment credentials", "Access to external content"],
-                    attack_flow_summary="Inject fabricated memories into agent to trigger unauthorized transfers",
-                    reasoning="Memory poisoning exploits agent's trust in stored context."
-                )
-            ],
-            confidence=0.8
-        )
+            from langchain.schema import HumanMessage, SystemMessage
+            from langchain.output_parsers import PydanticOutputParser
+
+            parser = PydanticOutputParser(pydantic_object=ThreatHunterOutput)
+            families = self.kb.get_simulatable_families()[:20]
+            family_lines = "\n".join(self.kb.format_family_summary(f) for f in families)
+            stage_lines = "\n".join(
+                f"- {s.get('stage_name')}: {', '.join((s.get('controls') or [])[:3])}"
+                for s in self.kb.stages[:15]
+            )
+
+            prompt = f"""You are a payment fraud Threat Hunter. Propose 2-3 hypotheses from the KB.
+
+Simulatable families ({len(families)} shown):
+{family_lines}
+
+Lifecycle stages (sample):
+{stage_lines}
+
+KB stats: {self.kb.kb_stats()}
+Already tested: {tested}
+Memory: {memory_context or 'None'}
+
+{parser.get_format_instructions()}
+
+Use ONLY real attack_id values from the family list."""
+
+            response = self.llm.invoke([
+                SystemMessage(content="Return only valid JSON."),
+                HumanMessage(content=prompt),
+            ])
+            return parser.parse(response.content)
+        except Exception as exc:
+            print(f"[ThreatHunter] LLM fallback: {exc}")
+            return None
