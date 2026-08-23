@@ -19,6 +19,17 @@ from .evidence_buffer import EvidenceBuffer, DEFAULT_BUFFER_PATH
 DEFAULT_MODEL_DIR = os.environ.get("FRAUDSHIELD_MODEL_DIR", os.path.join("data", "models"))
 BASELINE_DATA = os.environ.get("FRAUDSHIELD_BASELINE_DATA", "master_dataset.json")
 
+# master_dataset.json is stored in Git LFS. When it has not been fetched, the
+# repo still ships the split CSVs it was built from, so train on those instead
+# of failing the whole hardening loop.
+BASELINE_CSV = os.environ.get(
+    "FRAUDSHIELD_BASELINE_CSV", os.path.join("data", "baseline", "baseline_transactions.csv")
+)
+KNOWN_FRAUD_CSV = os.environ.get(
+    "FRAUDSHIELD_KNOWN_FRAUD_CSV", os.path.join("data", "known_fraud", "known_fraud.csv")
+)
+LFS_POINTER_PREFIX = "version https://git-lfs.github.com/spec/v1"
+
 # Defaults for features present in v1 spec but missing from sandbox buffer rows
 FEATURE_DEFAULTS = {
     "location_country": "IN",
@@ -58,16 +69,34 @@ class HardeningTrainer:
         n_legit: int = 4000,
         n_fraud: int = 4000,
     ) -> pd.DataFrame:
-        """Sample balanced baseline rows from master_dataset.json."""
-        with open(self.baseline_path, "r") as f:
-            payload = json.load(f)
-        df = pd.DataFrame(payload["transactions"])
+        """Sample balanced baseline rows from master_dataset.json, or the CSV split."""
+        df = self._load_baseline_frame()
 
         legit = df[df["is_fraud"] == 0].sample(n=min(n_legit, (df["is_fraud"] == 0).sum()), random_state=42)
         fraud = df[df["is_fraud"] == 1].sample(n=min(n_fraud, (df["is_fraud"] == 1).sum()), random_state=42)
         sample = pd.concat([legit, fraud], ignore_index=True)
         sample["source"] = "baseline"
         return sample
+
+    def _load_baseline_frame(self) -> pd.DataFrame:
+        """Return the labelled baseline corpus from whichever source is available."""
+        path = Path(self.baseline_path)
+        if path.exists():
+            with open(path, "r") as f:
+                head = f.read(len(LFS_POINTER_PREFIX))
+                if head != LFS_POINTER_PREFIX:
+                    f.seek(0)
+                    return pd.DataFrame(json.load(f)["transactions"])
+
+        legit_path, fraud_path = Path(BASELINE_CSV), Path(KNOWN_FRAUD_CSV)
+        if not legit_path.exists() or not fraud_path.exists():
+            raise FileNotFoundError(
+                f"No baseline corpus available. Fetch {self.baseline_path} with 'git lfs pull', "
+                f"or provide {BASELINE_CSV} and {KNOWN_FRAUD_CSV}."
+            )
+
+        frames = [pd.read_csv(legit_path), pd.read_csv(fraud_path)]
+        return pd.concat(frames, ignore_index=True)
 
     def buffer_to_dataframe(self) -> pd.DataFrame:
         """Convert adversarial buffer export to dataframe aligned with training schema."""

@@ -158,12 +158,33 @@ class LoopRunner:
         loop_row.log_summary = result.log[-4000:] if result.log else None
 
         buffer_stats = hardening.get("buffer_stats", {}) or {}
+
+        # The trainer always writes its artifact as "v2"; lineage in the UI needs a
+        # monotonic label, so number rounds from the pre-hardening baseline (v1).
+        rounds = session.query(ModelVersion).count()
+        if rounds == 0:
+            session.add(
+                ModelVersion(
+                    loop_run_id=loop_row.id,
+                    version="v1",
+                    model_type="LightGBM",
+                    parent_version=None,
+                    baseline_rows=hardening.get("baseline_sample", 0),
+                    buffer_rows=0,
+                    buffer_mean_score=comp.get("v1_buffer_mean_score"),
+                    baseline_fraud_recall=comp.get("v1_baseline_fraud_recall"),
+                    promoted=False,
+                    report_json=json.dumps({"note": "pre-hardening baseline"}),
+                )
+            )
+            rounds = 1
+
         session.add(
             ModelVersion(
                 loop_run_id=loop_row.id,
-                version=hardening.get("version", "v2"),
+                version=f"v{rounds + 1}",
                 model_type="LightGBM",
-                parent_version=comp.get("v1_version"),
+                parent_version=f"v{rounds}",
                 baseline_rows=hardening.get("baseline_sample", 0),
                 buffer_rows=hardening.get("buffer_rows", 0),
                 buffer_families=", ".join(buffer_stats.get("families", []) or []),
