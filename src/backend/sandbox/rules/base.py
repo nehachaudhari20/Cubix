@@ -17,17 +17,29 @@ USE_KB_API = os.environ.get("USE_KB_API", "false").lower() in ("1", "true", "yes
 class BaseRule:
     """Base class for sandbox rules with KB-aware executable controls."""
 
+    # Counterfactual overrides applied on top of every resolved control set.
+    # Used by the Labs replay to answer "what if this threshold were different?".
+    OVERRIDES: Dict[str, Any] = {}
+
     def __init__(self, stage: str):
         self.stage = stage
         self._controls_cache: Dict[str, Any] | None = None
         self._cache_ttl = 60
         self._cache_time = 0.0
 
+    @classmethod
+    def set_overrides(cls, overrides: Dict[str, Any] | None) -> None:
+        cls.OVERRIDES = dict(overrides or {})
+
+    @classmethod
+    def clear_overrides(cls) -> None:
+        cls.OVERRIDES = {}
+
     def get_controls(self) -> Dict[str, Any]:
         """Fetch merged executable controls (registry defaults + optional KB names)."""
         registry_defaults = get_registry_defaults(self.stage)
         subclass_defaults = self._get_default_controls()
-        defaults = {**registry_defaults, **subclass_defaults}
+        defaults = {**registry_defaults, **subclass_defaults, **self.OVERRIDES}
 
         if not USE_KB_API:
             return defaults
@@ -47,6 +59,7 @@ class BaseRule:
                 if isinstance(kb_controls, dict):
                     kb_controls = list(kb_controls.values())
                 merged = merge_kb_control_names(defaults, kb_controls if isinstance(kb_controls, list) else [])
+                merged.update(self.OVERRIDES)
                 self._controls_cache = merged
                 self._cache_time = current_time
                 return merged

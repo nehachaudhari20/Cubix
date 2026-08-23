@@ -17,6 +17,9 @@ DEFAULT_MODEL_DIR = os.environ.get(
     os.path.join("data", "models"),
 )
 
+# Surfaced in the UI so "no model" is distinguishable from "model failed to load".
+LOAD_ERROR: Dict[str, Optional[str]] = {"reason": None}
+
 
 class FraudShieldModel:
     """Runtime FraudShield v1 classifier."""
@@ -48,6 +51,7 @@ class FraudShieldModel:
         if not spec_path.exists():
             return None
 
+        LOAD_ERROR["reason"] = None
         with open(spec_path, "r") as f:
             spec = json.load(f)
 
@@ -55,7 +59,13 @@ class FraudShieldModel:
         model_path = path / model_file
         if not model_path.exists():
             # Fallback to common names
-            for candidate in ("fraudshield_v1.json", "fraud_detection_model.json", "fraud_detection_model.txt"):
+            for candidate in (
+                "fraudshield_v2.txt",
+                "fraudshield_v1.txt",
+                "fraudshield_v1.json",
+                "fraud_detection_model.json",
+                "fraud_detection_model.txt",
+            ):
                 alt = path / candidate
                 if alt.exists():
                     model_path = alt
@@ -64,16 +74,22 @@ class FraudShieldModel:
             else:
                 return None
 
+        # A missing native runtime (e.g. libomp for LightGBM) must degrade the
+        # sandbox to rules-only scoring rather than take down the API.
         model_type = spec.get("model_type", "XGBoost")
-        if model_type == "LightGBM" or str(model_path).endswith(".txt"):
-            import lightgbm as lgb
-            model = lgb.Booster(model_file=str(model_path))
-        elif model_type == "XGBoost" or str(model_path).endswith(".json"):
-            import xgboost as xgb
-            booster = xgb.Booster()
-            booster.load_model(str(model_path))
-            model = booster
-        else:
+        try:
+            if model_type == "LightGBM" or str(model_path).endswith(".txt"):
+                import lightgbm as lgb
+                model = lgb.Booster(model_file=str(model_path))
+            elif model_type == "XGBoost" or str(model_path).endswith(".json"):
+                import xgboost as xgb
+                booster = xgb.Booster()
+                booster.load_model(str(model_path))
+                model = booster
+            else:
+                return None
+        except (ImportError, OSError) as exc:
+            LOAD_ERROR["reason"] = f"{type(exc).__name__}: {exc}"
             return None
 
         spec["model_file"] = model_file

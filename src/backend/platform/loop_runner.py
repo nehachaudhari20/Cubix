@@ -5,6 +5,7 @@ Full Red↔Blue loop runner — reusable service for CLI, API, and scheduler.
 from __future__ import annotations
 
 import io
+import json
 import os
 import sys
 import uuid
@@ -15,7 +16,8 @@ from typing import Any, Callable, Dict, List, Optional
 
 from .config import get_settings
 from .database import SessionLocal, init_db
-from .models import CampaignEvent, LoopRun
+from .journey import snapshot_state
+from .models import Campaign, CampaignEvent, LoopRun, ModelVersion, Observation
 
 
 @dataclass
@@ -39,6 +41,8 @@ class LoopRunResult:
     comparison: Dict[str, Any] = field(default_factory=dict)
     verify: Dict[str, Any] = field(default_factory=dict)
     events: List[Dict[str, Any]] = field(default_factory=list)
+    campaigns: List[Dict[str, Any]] = field(default_factory=list)
+    observations: List[Dict[str, Any]] = field(default_factory=list)
     log: str = ""
     error: Optional[str] = None
 
@@ -48,6 +52,8 @@ class LoopRunner:
 
     def __init__(self):
         self.settings = get_settings()
+        self._last_campaigns: List[Dict[str, Any]] = []
+        self._last_observations: List[Dict[str, Any]] = []
         self._configure_env()
 
     def _configure_env(self) -> None:
@@ -90,6 +96,8 @@ class LoopRunner:
                 )
                 result.buffer_stats = buffer_stats
                 events = campaign_events
+                result.campaigns = self._last_campaigns
+                result.observations = self._last_observations
                 hardening, comparison = self._step_harden(swap=config.swap_model)
                 result.hardening = hardening
                 result.comparison = comparison
@@ -103,10 +111,18 @@ class LoopRunner:
             result.status = "failed"
             result.error = str(exc)
             result.log = log_buffer.getvalue()
+            result.campaigns = self._last_campaigns
+            result.observations = self._last_observations
+            result.events = events
             loop_row.status = "failed"
             loop_row.error_message = str(exc)
             loop_row.finished_at = datetime.now(timezone.utc)
             loop_row.log_summary = result.log[-4000:] if result.log else None
+            loop_row.buffer_payments = result.buffer_stats.get("payment_records", 0)
+            loop_row.buffer_bypassed = result.buffer_stats.get("bypassed", 0)
+            loop_row.buffer_blocked = result.buffer_stats.get("blocked", 0)
+            # Attack evidence is still valid even when hardening fails.
+            self._persist_evidence(session, loop_row, result, events)
             session.commit()
         finally:
             session.close()
@@ -140,6 +156,93 @@ class LoopRunner:
         loop_row.verify_decision = verify.get("decision")
         loop_row.verify_ml_score = verify.get("ml_score")
         loop_row.log_summary = result.log[-4000:] if result.log else None
+
+        buffer_stats = hardening.get("buffer_stats", {}) or {}
+        session.add(
+            ModelVersion(
+                loop_run_id=loop_row.id,
+                version=hardening.get("version", "v2"),
+                model_type="LightGBM",
+                parent_version=comp.get("v1_version"),
+                baseline_rows=hardening.get("baseline_sample", 0),
+                buffer_rows=hardening.get("buffer_rows", 0),
+                buffer_families=", ".join(buffer_stats.get("families", []) or []),
+                feature_count=self._spec_feature_count(hardening.get("spec_path")),
+                decision_threshold=hardening.get("decision_threshold"),
+                val_pr_auc=hardening.get("val_pr_auc"),
+                val_roc_auc=hardening.get("val_roc_auc"),
+                buffer_mean_score=comp.get("v2_buffer_mean_score"),
+                score_lift=comp.get("buffer_score_lift"),
+                baseline_fraud_recall=comp.get("v2_baseline_fraud_recall"),
+                promoted=bool(loop_row.swap_model),
+                report_json=json.dumps({"hardening": hardening, "comparison": comp}, default=str),
+            )
+        )
+
+        self._persist_evidence(session, loop_row, result, events)
+
+    def _persist_evidence(
+        self,
+        session,
+        loop_row: LoopRun,
+        result: LoopRunResult,
+        events: List[Dict[str, Any]],
+    ) -> None:
+        """Write campaigns, observations and events. Safe to call on failure paths."""
+        for c in result.campaigns:
+            session.merge(
+                Campaign(
+                    id=c["id"],
+                    loop_run_id=c["loop_run_id"],
+                    family_id=c["family_id"],
+                    family_name=c["family_name"],
+                    lifecycle_stage=c["lifecycle_stage"],
+                    objective=c["objective"],
+                    selected_variant=c["selected_variant"],
+                    novelty_score=c["novelty_score"],
+                    success_probability=c["success_probability"],
+                    hypothesis_json=json.dumps(c["hypothesis"], default=str),
+                    plan_json=json.dumps(c["plan"], default=str),
+                    payloads_json=json.dumps(c["payloads"], default=str),
+                    memory_json=json.dumps(c["memory"], default=str),
+                    steps_total=c["steps_total"],
+                    steps_bypassed=c["steps_bypassed"],
+                    steps_blocked=c["steps_blocked"],
+                    outcome=c["outcome"],
+                )
+            )
+
+        for o in result.observations:
+            session.add(
+                Observation(
+                    loop_run_id=o["loop_run_id"],
+                    campaign_id=o["campaign_id"],
+                    family_id=o["family_id"],
+                    family_name=o["family_name"],
+                    transaction_id=o["transaction_id"],
+                    step=o["step"],
+                    action_type=o["action_type"],
+                    target_control=o["target_control"],
+                    expected_outcome=o["expected_outcome"],
+                    decision=o["decision"],
+                    reason=o["reason"],
+                    evasion_outcome=o["evasion_outcome"],
+                    blocking_control=o["blocking_control"],
+                    ml_score=o["ml_score"],
+                    rule_risk=o["rule_risk"],
+                    risk_score=o["risk_score"],
+                    amount=o["amount"],
+                    payment_rail=o["payment_rail"],
+                    location_region=o["location_region"],
+                    control_triggers_json=json.dumps(o["control_triggers"], default=str),
+                    journey_json=json.dumps(o["journey"], default=str),
+                    state_before_json=json.dumps(o["state_before"], default=str),
+                    state_after_json=json.dumps(o["state_after"], default=str),
+                    payload_json=json.dumps(o["payload"], default=str),
+                    features_json=json.dumps(o["features"], default=str),
+                    analysis_json=json.dumps(o["analysis"], default=str),
+                )
+            )
 
         for ev in events:
             session.add(
@@ -207,8 +310,14 @@ class LoopRunner:
         generator = AttackGenerator()
         analyzer = FailureAnalyzer()
 
+        from backend.red_team.agents.memory_agent import MemoryAgent
+
+        memory_agent = MemoryAgent()
+
         simulatable = kb.get_simulatable_families()[:families]
         campaign_events: List[Dict[str, Any]] = []
+        campaign_rows: List[Dict[str, Any]] = []
+        observation_rows: List[Dict[str, Any]] = []
 
         for i, family in enumerate(simulatable, 1):
             family_id = family["attack_id"]
@@ -219,14 +328,73 @@ class LoopRunner:
             plan = planner.plan(hypothesis)
             sequence = generator.generate_sequence(plan)
 
+            campaign_id = sequence.campaign_id
+            memories_before = len(memory_agent.memories)
+            bypassed = blocked = 0
+
             for payload in sequence.payloads:
-                response = client.execute_payload(payload.model_dump())
+                payload_dict = payload.model_dump()
+                action_payload = payload_dict.get("action_payload") or {}
+
+                sandbox = client.get_sandbox()
+                state_before = snapshot_state(sandbox, action_payload)
+                response = client.execute_payload(payload_dict)
+                state_after = snapshot_state(sandbox, action_payload)
+
                 analysis = analyzer.analyze(response, payload, plan)
+                memory_agent.store_analysis(analysis, hypothesis, {"campaign_id": campaign_id})
                 record = collector.collect(
-                    response, payload, plan, hypothesis, analysis, client.get_sandbox()
+                    response, payload, plan, hypothesis, analysis, sandbox
                 )
+
+                decision = response.get("decision", "UNKNOWN")
+                evasion = (
+                    record.evasion_outcome
+                    if record
+                    else {"ALLOW": "bypassed", "CHALLENGE": "challenged", "BLOCK": "blocked"}.get(
+                        decision, "unknown"
+                    )
+                )
+                sandbox_state = response.get("state") or {}
+
+                observation_rows.append({
+                    "loop_run_id": run_id,
+                    "campaign_id": campaign_id,
+                    "family_id": family_id,
+                    "family_name": family_name,
+                    "transaction_id": response.get("transaction_id"),
+                    "step": payload_dict.get("step"),
+                    "action_type": payload_dict.get("action_type", ""),
+                    "target_control": payload_dict.get("target_control", ""),
+                    "expected_outcome": payload_dict.get("expected_outcome", ""),
+                    "decision": decision,
+                    "reason": response.get("reason", ""),
+                    "evasion_outcome": evasion,
+                    "blocking_control": getattr(analysis, "blocking_control", None),
+                    "ml_score": sandbox_state.get("ml_score"),
+                    "rule_risk": sandbox_state.get("rule_risk"),
+                    "risk_score": sandbox_state.get("risk_score"),
+                    "amount": action_payload.get("amount"),
+                    "payment_rail": action_payload.get("payment_rail", ""),
+                    "location_region": action_payload.get("location_region")
+                    or (record.features.get("location_region", "") if record else ""),
+                    "control_triggers": response.get("control_triggers") or [],
+                    "journey": response.get("journey") or [],
+                    "state_before": state_before,
+                    "state_after": state_after,
+                    "payload": payload_dict,
+                    "features": (record.features if record else {}),
+                    "analysis": analysis.model_dump() if hasattr(analysis, "model_dump") else {},
+                })
+
                 if not record:
                     continue
+
+                if record.evasion_outcome == "bypassed":
+                    bypassed += 1
+                else:
+                    blocked += 1
+
                 event = {
                     "loop_run_id": run_id,
                     "family_id": family_id,
@@ -244,6 +412,31 @@ class LoopRunner:
                     f"    payment step {record.step}: {record.sandbox_decision} "
                     f"({record.evasion_outcome}) ml={record.ml_score}"
                 )
+
+            campaign_rows.append({
+                "id": campaign_id,
+                "loop_run_id": run_id,
+                "family_id": family_id,
+                "family_name": family_name,
+                "lifecycle_stage": family.get("lifecycle_stage", ""),
+                "objective": plan.objective,
+                "selected_variant": plan.selected_variant,
+                "novelty_score": hypothesis.novelty_score,
+                "success_probability": hypothesis.success_probability,
+                "hypothesis": hypothesis.model_dump(),
+                "plan": plan.model_dump(),
+                "payloads": [p.model_dump() for p in sequence.payloads],
+                "memory": [
+                    m.model_dump() for m in memory_agent.memories[memories_before:]
+                ],
+                "steps_total": len(sequence.payloads),
+                "steps_bypassed": bypassed,
+                "steps_blocked": blocked,
+                "outcome": "bypassed" if bypassed else "contained",
+            })
+
+        self._last_campaigns = campaign_rows
+        self._last_observations = observation_rows
 
         return buffer.stats(), campaign_events
 
@@ -292,6 +485,16 @@ class LoopRunner:
             "control_triggers": state.get("control_triggers") or result.get("control_triggers") or [],
             "journey": [s.get("step") for s in result.get("journey", [])],
         }
+
+    @staticmethod
+    def _spec_feature_count(spec_path: Optional[str]) -> int:
+        if not spec_path or not os.path.exists(spec_path):
+            return 0
+        try:
+            with open(spec_path) as f:
+                return len(json.load(f).get("feature_order", []))
+        except Exception:
+            return 0
 
     @staticmethod
     def _project_root() -> str:

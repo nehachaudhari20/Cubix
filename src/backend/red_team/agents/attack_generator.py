@@ -109,6 +109,8 @@ class AttackGenerator:
             "payment_rail": tpl.get("payment_rail", self.baseline.sample_rail()),
             "authentication_method": tpl.get("authentication_method", "otp"),
             "merchant_risk_score": float(tpl.get("merchant_risk_score", self.baseline.sample_merchant_risk())),
+            "location_country": tpl.get("location_country", self.baseline.sample_country()),
+            "location_region": tpl.get("location_region", self.baseline.sample_region()),
         }
 
         if any(s.action_type == "onboard_merchant" for s in plan.steps):

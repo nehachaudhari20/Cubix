@@ -105,6 +105,10 @@ def get_model_status() -> Dict[str, Any]:
             "model_type": model.model_type,
             "threshold": model.threshold,
         })
+    else:
+        from backend.blue_team.fraudshield import LOAD_ERROR
+
+        status["load_error"] = LOAD_ERROR.get("reason")
     metrics_path = Path(model_dir) / "model_metrics.json"
     if metrics_path.exists():
         with open(metrics_path) as f:

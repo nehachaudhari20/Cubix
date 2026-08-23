@@ -21,7 +21,14 @@ os.chdir(ROOT)
 
 load_dotenv(ROOT / ".env")
 
-from backend.api.routes import knowledge, platform  # noqa: E402
+from backend.api.routes import (  # noqa: E402
+    blue_team,
+    knowledge,
+    labs,
+    platform,
+    red_team,
+    sandbox_routes,
+)
 from backend.platform.database import init_db  # noqa: E402
 from backend.platform.scheduler import LoopScheduler  # noqa: E402
 
@@ -47,6 +54,10 @@ app = FastAPI(
 
 app.include_router(knowledge.router)
 app.include_router(platform.router)
+app.include_router(red_team.router)
+app.include_router(sandbox_routes.router)
+app.include_router(blue_team.router)
+app.include_router(labs.router)
 
 if STATIC_DIR.exists():
     app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")

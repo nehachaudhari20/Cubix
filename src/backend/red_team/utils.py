@@ -97,6 +97,21 @@ class BaselineLoader:
             return float(np.random.choice(self.df["merchant_risk_score"].dropna().values))
         return np.random.uniform(0.1, 0.5)
     
+    def sample_region(self) -> str:
+        """Sample a region from legitimate traffic so attacks are not geographically odd."""
+        if self.df is not None and "location_region" in self.df.columns:
+            values = self.df["location_region"].dropna().values
+            if len(values):
+                return str(np.random.choice(values))
+        return str(np.random.choice(["MH", "KA", "TN", "DL", "UP", "GJ", "RJ", "WB"]))
+
+    def sample_country(self) -> str:
+        if self.df is not None and "location_country" in self.df.columns:
+            values = self.df["location_country"].dropna().values
+            if len(values):
+                return str(np.random.choice(values))
+        return "IN"
+
     def sample_transaction_type(self) -> str:
         if self.df is not None and len(self.df) > 0:
             return np.random.choice(self.df["transaction_type"].dropna().values)

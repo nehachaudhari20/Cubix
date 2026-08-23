@@ -58,6 +58,91 @@ class CampaignEvent(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_utcnow)
 
 
+class Campaign(Base):
+    """One Red Team campaign: the reasoning behind an attack, not just its result."""
+
+    __tablename__ = "campaigns"
+
+    id: Mapped[str] = mapped_column(String(64), primary_key=True)
+    loop_run_id: Mapped[str] = mapped_column(String(36), index=True)
+    family_id: Mapped[str] = mapped_column(String(32))
+    family_name: Mapped[str] = mapped_column(String(200), default="")
+    lifecycle_stage: Mapped[str] = mapped_column(String(120), default="")
+    objective: Mapped[str] = mapped_column(Text, default="")
+    selected_variant: Mapped[str] = mapped_column(String(200), default="")
+    novelty_score: Mapped[float | None] = mapped_column(Float, nullable=True)
+    success_probability: Mapped[float | None] = mapped_column(Float, nullable=True)
+    hypothesis_json: Mapped[str] = mapped_column(Text, default="{}")
+    plan_json: Mapped[str] = mapped_column(Text, default="{}")
+    payloads_json: Mapped[str] = mapped_column(Text, default="[]")
+    memory_json: Mapped[str] = mapped_column(Text, default="[]")
+    steps_total: Mapped[int] = mapped_column(Integer, default=0)
+    steps_bypassed: Mapped[int] = mapped_column(Integer, default=0)
+    steps_blocked: Mapped[int] = mapped_column(Integer, default=0)
+    outcome: Mapped[str] = mapped_column(String(20), default="pending")
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_utcnow)
+
+
+class Observation(Base):
+    """Full sandbox observation contract for one executed action."""
+
+    __tablename__ = "observations"
+
+    id: Mapped[str] = mapped_column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    loop_run_id: Mapped[str] = mapped_column(String(36), index=True)
+    campaign_id: Mapped[str] = mapped_column(String(64), index=True)
+    family_id: Mapped[str] = mapped_column(String(32), default="")
+    family_name: Mapped[str] = mapped_column(String(200), default="")
+    transaction_id: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    step: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    action_type: Mapped[str] = mapped_column(String(40), default="")
+    target_control: Mapped[str] = mapped_column(String(200), default="")
+    expected_outcome: Mapped[str] = mapped_column(String(40), default="")
+    decision: Mapped[str] = mapped_column(String(20), default="")
+    reason: Mapped[str] = mapped_column(String(120), default="")
+    evasion_outcome: Mapped[str] = mapped_column(String(20), default="")
+    blocking_control: Mapped[str | None] = mapped_column(String(200), nullable=True)
+    ml_score: Mapped[float | None] = mapped_column(Float, nullable=True)
+    rule_risk: Mapped[float | None] = mapped_column(Float, nullable=True)
+    risk_score: Mapped[float | None] = mapped_column(Float, nullable=True)
+    amount: Mapped[float | None] = mapped_column(Float, nullable=True)
+    payment_rail: Mapped[str] = mapped_column(String(40), default="")
+    location_region: Mapped[str] = mapped_column(String(40), default="")
+    control_triggers_json: Mapped[str] = mapped_column(Text, default="[]")
+    journey_json: Mapped[str] = mapped_column(Text, default="[]")
+    state_before_json: Mapped[str] = mapped_column(Text, default="{}")
+    state_after_json: Mapped[str] = mapped_column(Text, default="{}")
+    payload_json: Mapped[str] = mapped_column(Text, default="{}")
+    features_json: Mapped[str] = mapped_column(Text, default="{}")
+    analysis_json: Mapped[str] = mapped_column(Text, default="{}")
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_utcnow)
+
+
+class ModelVersion(Base):
+    """FraudShield lineage: one row per trained model version."""
+
+    __tablename__ = "model_versions"
+
+    id: Mapped[str] = mapped_column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    loop_run_id: Mapped[str | None] = mapped_column(String(36), index=True, nullable=True)
+    version: Mapped[str] = mapped_column(String(20), default="v1")
+    model_type: Mapped[str] = mapped_column(String(40), default="")
+    parent_version: Mapped[str | None] = mapped_column(String(20), nullable=True)
+    trained_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_utcnow)
+    baseline_rows: Mapped[int] = mapped_column(Integer, default=0)
+    buffer_rows: Mapped[int] = mapped_column(Integer, default=0)
+    buffer_families: Mapped[str] = mapped_column(Text, default="")
+    feature_count: Mapped[int] = mapped_column(Integer, default=0)
+    decision_threshold: Mapped[float | None] = mapped_column(Float, nullable=True)
+    val_pr_auc: Mapped[float | None] = mapped_column(Float, nullable=True)
+    val_roc_auc: Mapped[float | None] = mapped_column(Float, nullable=True)
+    buffer_mean_score: Mapped[float | None] = mapped_column(Float, nullable=True)
+    score_lift: Mapped[float | None] = mapped_column(Float, nullable=True)
+    baseline_fraud_recall: Mapped[float | None] = mapped_column(Float, nullable=True)
+    promoted: Mapped[bool] = mapped_column(Boolean, default=False)
+    report_json: Mapped[str] = mapped_column(Text, default="{}")
+
+
 class SchedulerConfig(Base):
     __tablename__ = "scheduler_config"
 

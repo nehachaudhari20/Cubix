@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Payment Defense Twin — Adversarial Security Workbench</title>
+<link rel="stylesheet" href="/static/css/app.css" />
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <div class="brand-mark"></div>
+    <div>
+      <h1>Payment Defense Twin</h1>
+      <p>Adversarial payment laboratory &middot; synthetic &amp; isolated</p>
+    </div>
+  </div>
+
+  <nav class="mainnav" id="mainnav">
+    <a href="#/overview" data-page="overview">Overview</a>
+    <a href="#/red" data-page="red">Red Team</a>
+    <a href="#/sandbox" data-page="sandbox">Sandbox</a>
+    <a href="#/blue" data-page="blue">Blue Team</a>
+    <a href="#/labs" data-page="labs">Labs</a>
+  </nav>
+
+  <div class="topbar-actions">
+    <span class="badge live hidden" id="running-badge">campaign running</span>
+    <button class="btn secondary" id="refresh-btn">Refresh</button>
+  </div>
+</header>
+
+<main class="layout">
+
+  <!-- ══════════════════════════ OVERVIEW ══════════════════════════ -->
+  <section class="page" id="page-overview">
+
+    <div class="kpi-strip" id="kpi-strip">
+      <div class="kpi" data-kpi="f1">
+        <span class="kpi-label">FraudShield F1</span>
+        <span class="kpi-value" id="kpi-f1">—</span>
+        <span class="kpi-sub" id="kpi-f1-sub">precision / recall</span>
+      </div>
+      <div class="kpi" data-kpi="asr">
+        <span class="kpi-label">Attack success rate</span>
+        <span class="kpi-value danger" id="kpi-asr">—</span>
+        <span class="kpi-sub" id="kpi-asr-sub">of executed payments</span>
+      </div>
+      <div class="kpi" data-kpi="model">
+        <span class="kpi-label">Active model</span>
+        <span class="kpi-value" id="kpi-model">—</span>
+        <span class="kpi-sub" id="kpi-model-sub">threshold</span>
+      </div>
+      <div class="kpi" data-kpi="campaigns">
+        <span class="kpi-label">Campaigns 24h</span>
+        <span class="kpi-value" id="kpi-campaigns">—</span>
+        <span class="kpi-sub" id="kpi-campaigns-sub">total run</span>
+      </div>
+      <div class="kpi" data-kpi="gaps">
+        <span class="kpi-label">Control gaps</span>
+        <span class="kpi-value warn" id="kpi-gaps">—</span>
+        <span class="kpi-sub">allowed with no objection</span>
+      </div>
+      <div class="kpi" data-kpi="coverage">
+        <span class="kpi-label">Family coverage</span>
+        <span class="kpi-value" id="kpi-coverage">—</span>
+        <span class="kpi-sub" id="kpi-coverage-sub">of KB families</span>
+      </div>
+    </div>
+
+    <div class="overview-grid">
+
+      <!-- the money shot -->
+      <section class="panel loop-panel">
+        <div class="panel-head">
+          <div>
+            <h2>Closed adversarial loop</h2>
+            <p class="hint">Red creates the attack &middot; the Sandbox executes it &middot; Blue learns from the same evidence</p>
+          </div>
+          <div class="loop-controls">
+            <button class="btn ghost" id="loop-pause">Pause</button>
+            <button class="btn primary" id="run-loop-btn">Run campaign</button>
+          </div>
+        </div>
+
+        <div class="loop-stage">
+          <svg id="loop-svg" viewBox="0 0 900 400" preserveAspectRatio="xMidYMid meet"></svg>
+        </div>
+
+        <div class="loop-readout">
+          <div class="readout-node" id="readout-node">Idle</div>
+          <div class="readout-detail" id="readout-detail">Run a campaign to watch the loop execute.</div>
+        </div>
+        <div class="message hidden" id="loop-message"></div>
+      </section>
+
+      <!-- secondary: geo -->
+      <section class="panel geo-panel">
+        <div class="panel-head compact">
+          <h2>Synthetic transaction geography</h2>
+        </div>
+        <svg id="geo-svg" viewBox="0 0 320 340" preserveAspectRatio="xMidYMid meet"></svg>
+        <div class="geo-legend">
+          <span><i class="dot allow"></i>Allow</span>
+          <span><i class="dot challenge"></i>Challenge</span>
+          <span><i class="dot block"></i>Block</span>
+        </div>
+        <p class="footnote">Synthetic regions only. No real payment data.</p>
+      </section>
+    </div>
+
+    <!-- live ticker -->
+    <section class="panel ticker-panel">
+      <div class="panel-head compact">
+        <h2>Live sandbox observations</h2>
+        <span class="hint" id="ticker-count"></span>
+      </div>
+      <div class="ticker" id="ticker">
+        <div class="empty">No observations yet — run a campaign.</div>
+      </div>
+    </section>
+  </section>
+
+  <!-- ══════════════════════════ RED TEAM ══════════════════════════ -->
+  <section class="page hidden" id="page-red">
+    <div class="page-head">
+      <h2>Red Team</h2>
+      <p>How the system discovers, plans, generates and adapts attacks. Select a campaign to see why it chose that attack.</p>
+    </div>
+
+    <div class="split">
+      <aside class="panel list-panel">
+        <div class="panel-head compact">
+          <h2>Campaigns</h2>
+          <select id="red-filter" class="select">
+            <option value="">All outcomes</option>
+            <option value="bypassed">Bypassed defense</option>
+            <option value="contained">Contained</option>
+          </select>
+        </div>
+        <div class="scroll-list" id="campaign-list">
+          <div class="empty">No campaigns yet.</div>
+        </div>
+      </aside>
+
+      <div class="detail-col" id="campaign-detail">
+        <div class="panel placeholder">Select a campaign to inspect its reasoning.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════ SANDBOX ══════════════════════════ -->
+  <section class="page hidden" id="page-sandbox">
+    <div class="page-head">
+      <h2>Sandbox</h2>
+      <p>What actually happened inside the payment environment. Only the engines an action invoked are shown, not a fixed linear pipeline.</p>
+    </div>
+
+    <div class="split">
+      <aside class="panel list-panel">
+        <div class="panel-head compact">
+          <h2>Actions</h2>
+          <select id="sandbox-filter" class="select">
+            <option value="">All decisions</option>
+            <option value="ALLOW">ALLOW</option>
+            <option value="CHALLENGE">CHALLENGE</option>
+            <option value="BLOCK">BLOCK</option>
+            <option value="PASS">PASS</option>
+          </select>
+        </div>
+        <div class="scroll-list" id="observation-list">
+          <div class="empty">No observations yet.</div>
+        </div>
+      </aside>
+
+      <div class="detail-col" id="observation-detail">
+        <div class="panel placeholder">Select an action to replay its journey.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════ BLUE TEAM ══════════════════════════ -->
+  <section class="page hidden" id="page-blue">
+    <div class="page-head">
+      <h2>Blue Team</h2>
+      <p>How FraudShield scores and hardens. Versions are recorded per training round with the evidence that produced them.</p>
+    </div>
+
+    <div class="cards" id="blue-cards"></div>
+
+    <section class="panel">
+      <div class="panel-head compact">
+        <h2>Model version history</h2>
+        <span class="hint">metric deltas vs previous version</span>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Version</th><th>Trained</th><th>Training mix</th>
+              <th>PR-AUC</th><th>ROC-AUC</th><th>Buffer lift</th>
+              <th>Threshold</th><th>Active</th>
+            </tr>
+          </thead>
+          <tbody id="model-history-body">
+            <tr><td colspan="8" class="empty">No training rounds recorded yet.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <div class="grid-2">
+      <section class="panel">
+        <div class="panel-head compact">
+          <h2>Feature importance</h2>
+          <span class="hint">gain, active booster</span>
+        </div>
+        <div id="feature-importance"><div class="empty">Loading…</div></div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head compact">
+          <h2>Before / after hardening</h2>
+          <span class="hint">v1 vs v2 on adversarial buffer</span>
+        </div>
+        <div id="hardening-compare"><div class="empty">Loading…</div></div>
+      </section>
+    </div>
+
+    <section class="panel">
+      <div class="panel-head compact">
+        <h2>Adversarial buffer</h2>
+        <select id="buffer-filter" class="select">
+          <option value="">All outcomes</option>
+          <option value="bypassed">Bypassed</option>
+          <option value="challenged">Challenged</option>
+          <option value="blocked">Blocked</option>
+        </select>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Evidence</th><th>Family</th><th>Step</th><th>Decision</th>
+              <th>Outcome</th><th>ML</th><th>Rule</th><th>Amount</th>
+            </tr>
+          </thead>
+          <tbody id="buffer-body">
+            <tr><td colspan="8" class="empty">Buffer is empty.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </section>
+
+  <!-- ══════════════════════════ LABS ══════════════════════════ -->
+  <section class="page hidden" id="page-labs">
+    <div class="page-head">
+      <h2>Labs</h2>
+      <p>Why the attack succeeded, which control was missing, and what would have stopped it. Replays run against the real sandbox.</p>
+    </div>
+    <div id="gap-cards">
+      <div class="panel placeholder">Loading control gap findings…</div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  Synthetic research environment for the Mastercard Innovation Challenge 2026.
+  No connection to real banking, card or payment networks.
+  <a href="/docs">API docs</a>
+</footer>
+
+<script src="/static/js/app.js"></script>
+<script src="/static/js/overview.js"></script>
+<script src="/static/js/redteam.js"></script>
+<script src="/static/js/sandbox.js"></script>
+<script src="/static/js/blueteam.js"></script>
+<script src="/static/js/labs.js"></script>
+<script>window.PDT.start();</script>
+</body>
+</html>
