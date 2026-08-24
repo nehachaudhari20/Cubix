@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "red_memory.schema.json",
+  "title": "Environment-specific Red Team learning (not taxonomy KB)",
+  "type": "object",
+  "required": ["memory_id", "context"],
+  "properties": {
+    "memory_id": {"type": "string"},
+    "environment_version": {"type": ["string", "null"]},
+    "model_version": {"type": ["string", "null"]},
+    "vector_id": {"type": ["string", "null"]},
+    "family_id": {"type": ["string", "null"]},
+    "context": {"type": "string"},
+    "observed_control": {"type": ["string", "null"]},
+    "response": {"type": ["string", "null"]},
+    "attack_attempted": {"type": ["string", "null"]},
+    "evidence_count": {"type": "integer"},
+    "confidence": {"type": "number"},
+    "last_validated": {"type": ["string", "null"]}
+  },
+  "additionalProperties": true
+}

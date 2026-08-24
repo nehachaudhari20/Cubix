@@ -1,0 +1,307 @@
+{
+  "registry_version": "2.0",
+  "built_at": "2026-08-24T21:28:54.840341+00:00",
+  "simulation_templates": [
+    {
+      "template_id": "TPL-MULE",
+      "name": "New-beneficiary cash-out / mule journey",
+      "campaign_pattern": "mule",
+      "required_entities": [
+        "customer",
+        "device",
+        "beneficiary",
+        "payment"
+      ],
+      "supported_action_types": [
+        "register_customer",
+        "register_device",
+        "link_beneficiary",
+        "initiate_payment"
+      ],
+      "required_state_keys": [
+        "customer_id",
+        "device_id",
+        "beneficiary_id"
+      ],
+      "parameter_ids": [
+        "PAR-AMOUNT",
+        "PAR-BENEFICIARY-NOVELTY",
+        "PAR-VELOCITY",
+        "PAR-DEVICE-AGE",
+        "PAR-TIMING"
+      ],
+      "state_requirement_id": "SRQ-MULE",
+      "parameter_schema_ref": null,
+      "constraints": [
+        "Do not independently randomize amount, device, merchant, beneficiary, geo, and velocity.",
+        "Sample legitimate baseline first, then mutate attacker-controllable parameters."
+      ],
+      "origin": "implementation_derived",
+      "evidence": []
+    },
+    {
+      "template_id": "TPL-MERCHANT",
+      "name": "Merchant onboarding + MCC misrepresentation journey",
+      "campaign_pattern": "merchant",
+      "required_entities": [
+        "customer",
+        "device",
+        "merchant",
+        "payment"
+      ],
+      "supported_action_types": [
+        "register_customer",
+        "register_device",
+        "onboard_merchant",
+        "initiate_payment"
+      ],
+      "required_state_keys": [
+        "customer_id",
+        "device_id",
+        "merchant_id"
+      ],
+      "parameter_ids": [
+        "PAR-AMOUNT",
+        "PAR-MERCHANT-FAMILIARITY",
+        "PAR-MCC",
+        "PAR-TIMING"
+      ],
+      "state_requirement_id": "SRQ-MERCHANT",
+      "parameter_schema_ref": null,
+      "constraints": [
+        "Do not independently randomize amount, device, merchant, beneficiary, geo, and velocity.",
+        "Sample legitimate baseline first, then mutate attacker-controllable parameters."
+      ],
+      "origin": "implementation_derived",
+      "evidence": []
+    },
+    {
+      "template_id": "TPL-IDENTITY",
+      "name": "Synthetic / low-trust identity provisioning journey",
+      "campaign_pattern": "identity",
+      "required_entities": [
+        "customer",
+        "device",
+        "account",
+        "payment"
+      ],
+      "supported_action_types": [
+        "register_customer",
+        "register_device",
+        "open_account",
+        "initiate_payment"
+      ],
+      "required_state_keys": [
+        "customer_id",
+        "device_id",
+        "trust_score"
+      ],
+      "parameter_ids": [
+        "PAR-TRUST-SCORE",
+        "PAR-ACCOUNT-AGE",
+        "PAR-AMOUNT",
+        "PAR-DEVICE-AGE"
+      ],
+      "state_requirement_id": "SRQ-IDENTITY",
+      "parameter_schema_ref": null,
+      "constraints": [
+        "Do not independently randomize amount, device, merchant, beneficiary, geo, and velocity.",
+        "Sample legitimate baseline first, then mutate attacker-controllable parameters."
+      ],
+      "origin": "implementation_derived",
+      "evidence": []
+    },
+    {
+      "template_id": "TPL-AML",
+      "name": "Structuring / threshold-hugging payment sequence",
+      "campaign_pattern": "aml",
+      "required_entities": [
+        "customer",
+        "device",
+        "account",
+        "payment"
+      ],
+      "supported_action_types": [
+        "register_customer",
+        "register_device",
+        "open_account",
+        "initiate_payment"
+      ],
+      "required_state_keys": [
+        "customer_id",
+        "device_id",
+        "account_id"
+      ],
+      "parameter_ids": [
+        "PAR-AMOUNT",
+        "PAR-VELOCITY",
+        "PAR-SEQUENCE-GAP",
+        "PAR-TIMING"
+      ],
+      "state_requirement_id": "SRQ-AML",
+      "parameter_schema_ref": null,
+      "constraints": [
+        "Do not independently randomize amount, device, merchant, beneficiary, geo, and velocity.",
+        "Sample legitimate baseline first, then mutate attacker-controllable parameters."
+      ],
+      "origin": "implementation_derived",
+      "evidence": []
+    },
+    {
+      "template_id": "TPL-VELOCITY",
+      "name": "Burst / low-and-slow velocity evasion sequence",
+      "campaign_pattern": "velocity",
+      "required_entities": [
+        "customer",
+        "device",
+        "payment"
+      ],
+      "supported_action_types": [
+        "register_customer",
+        "register_device",
+        "initiate_payment"
+      ],
+      "required_state_keys": [
+        "customer_id",
+        "device_id"
+      ],
+      "parameter_ids": [
+        "PAR-AMOUNT",
+        "PAR-VELOCITY",
+        "PAR-SEQUENCE-GAP",
+        "PAR-RETRY-COUNT"
+      ],
+      "state_requirement_id": "SRQ-VELOCITY",
+      "parameter_schema_ref": null,
+      "constraints": [
+        "Do not independently randomize amount, device, merchant, beneficiary, geo, and velocity.",
+        "Sample legitimate baseline first, then mutate attacker-controllable parameters."
+      ],
+      "origin": "implementation_derived",
+      "evidence": []
+    },
+    {
+      "template_id": "TPL-ACCOUNT",
+      "name": "Account opening then first-payment journey",
+      "campaign_pattern": "account",
+      "required_entities": [
+        "customer",
+        "device",
+        "account",
+        "payment"
+      ],
+      "supported_action_types": [
+        "register_customer",
+        "register_device",
+        "open_account",
+        "initiate_payment"
+      ],
+      "required_state_keys": [
+        "customer_id",
+        "account_id"
+      ],
+      "parameter_ids": [
+        "PAR-ACCOUNT-AGE",
+        "PAR-AMOUNT",
+        "PAR-TRUST-SCORE"
+      ],
+      "state_requirement_id": "SRQ-ACCOUNT",
+      "parameter_schema_ref": null,
+      "constraints": [
+        "Do not independently randomize amount, device, merchant, beneficiary, geo, and velocity.",
+        "Sample legitimate baseline first, then mutate attacker-controllable parameters."
+      ],
+      "origin": "implementation_derived",
+      "evidence": []
+    },
+    {
+      "template_id": "TPL-AUTH",
+      "name": "Authentication / ATO then payment journey",
+      "campaign_pattern": "auth",
+      "required_entities": [
+        "customer",
+        "device",
+        "payment"
+      ],
+      "supported_action_types": [
+        "register_customer",
+        "register_device",
+        "authenticate",
+        "initiate_payment"
+      ],
+      "required_state_keys": [
+        "customer_id",
+        "device_id"
+      ],
+      "parameter_ids": [
+        "PAR-DEVICE-AGE",
+        "PAR-AMOUNT",
+        "PAR-SESSION-DURATION",
+        "PAR-TIMING"
+      ],
+      "state_requirement_id": "SRQ-AUTH",
+      "parameter_schema_ref": null,
+      "constraints": [
+        "Do not independently randomize amount, device, merchant, beneficiary, geo, and velocity.",
+        "Sample legitimate baseline first, then mutate attacker-controllable parameters."
+      ],
+      "origin": "implementation_derived",
+      "evidence": []
+    },
+    {
+      "template_id": "TPL-PAYMENT-PROBE",
+      "name": "Generic payment-probe journey",
+      "campaign_pattern": "payment_probe",
+      "required_entities": [
+        "customer",
+        "device",
+        "payment"
+      ],
+      "supported_action_types": [
+        "register_customer",
+        "register_device",
+        "initiate_payment"
+      ],
+      "required_state_keys": [
+        "customer_id",
+        "device_id"
+      ],
+      "parameter_ids": [
+        "PAR-AMOUNT",
+        "PAR-RAIL",
+        "PAR-TIMING"
+      ],
+      "state_requirement_id": "SRQ-PAYMENT-PROBE",
+      "parameter_schema_ref": null,
+      "constraints": [
+        "Do not independently randomize amount, device, merchant, beneficiary, geo, and velocity.",
+        "Sample legitimate baseline first, then mutate attacker-controllable parameters."
+      ],
+      "origin": "implementation_derived",
+      "evidence": []
+    },
+    {
+      "template_id": "TPL-AGENTIC-NONEXEC",
+      "name": "Agentic specification (not currently sandbox-executable)",
+      "campaign_pattern": "agentic",
+      "required_entities": [
+        "customer",
+        "agent",
+        "payment"
+      ],
+      "supported_action_types": [],
+      "required_state_keys": [],
+      "parameter_ids": [
+        "PAR-AMOUNT"
+      ],
+      "state_requirement_id": "SRQ-AGENTIC-NONEXEC",
+      "parameter_schema_ref": null,
+      "constraints": [
+        "Do not independently randomize amount, device, merchant, beneficiary, geo, and velocity.",
+        "Sample legitimate baseline first, then mutate attacker-controllable parameters."
+      ],
+      "origin": "implementation_derived",
+      "evidence": []
+    }
+  ]
+}

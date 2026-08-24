@@ -1,0 +1,66 @@
+{
+  "registry_version": "2.0",
+  "built_at": "2026-08-24T21:28:54.840341+00:00",
+  "layout": {
+    "attacks": [
+      "attack_families.json",
+      "attack_variants.json",
+      "attack_vectors.json",
+      "attack_relationships.json"
+    ],
+    "defense": [
+      "signals.json",
+      "controls.json",
+      "signal_feature_mappings.json"
+    ],
+    "lifecycle": [
+      "lifecycle_stages.json",
+      "lifecycle_aliases.json"
+    ],
+    "simulation": [
+      "simulation_templates.json",
+      "parameters.json",
+      "state_requirements.json",
+      "legitimate_counterparts.json"
+    ],
+    "genai": [
+      "capabilities.json"
+    ],
+    "evidence": [
+      "evidence.json"
+    ]
+  },
+  "counts": {
+    "attack_families": 57,
+    "attack_variants": 363,
+    "attack_vectors": 363,
+    "signals": 276,
+    "controls": 342,
+    "lifecycle_stages": 49,
+    "relationships": 2096,
+    "evidence": 388,
+    "simulation_templates": 9,
+    "simulation_parameters": 14,
+    "state_requirements": 9,
+    "legitimate_counterparts": 5,
+    "genai_capabilities": 15,
+    "signal_feature_mappings": 151,
+    "dataset_only_family_ids": 10
+  },
+  "domain_law": [
+    "KB is not a transaction database.",
+    "KB is not generated attack rows.",
+    "KB is not model training data.",
+    "Vectors are specifications; instances are generated at runtime.",
+    "Sandbox state, experiments, Red memory, buffer, training datasets, and model registry are separate domains."
+  ],
+  "compat": {
+    "legacy_runtime_files": [
+      "data/knowledge/attack_families.json",
+      "data/knowledge/attack_signals.json",
+      "data/knowledge/lifecycle_stages.json"
+    ],
+    "flat_canonical_copies": false,
+    "enriched_families_not_promoted": true
+  }
+}

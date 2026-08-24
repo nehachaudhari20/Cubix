@@ -1,0 +1,1937 @@
+{
+  "registry_version": "2.0",
+  "built_at": "2026-08-24T21:28:54.840341+00:00",
+  "signal_feature_mappings": [
+    {
+      "mapping_id": "SFM-0002",
+      "signal_id": "SIG-0002",
+      "feature_names": [
+        "is_new_device",
+        "device_age_days",
+        "distinct_devices_last_7d",
+        "authentication_method",
+        "auth_success"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0004",
+      "signal_id": "SIG-0004",
+      "feature_names": [
+        "authentication_method",
+        "auth_success"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0005",
+      "signal_id": "SIG-0005",
+      "feature_names": [
+        "is_new_beneficiary",
+        "distinct_beneficiaries_last_24h"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0006",
+      "signal_id": "SIG-0006",
+      "feature_names": [
+        "velocity_score",
+        "transaction_count_last_1h",
+        "transaction_count_last_24h",
+        "hour_of_day",
+        "is_night",
+        "day_of_week"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0007",
+      "signal_id": "SIG-0007",
+      "feature_names": [
+        "velocity_score",
+        "transaction_count_last_1h",
+        "transaction_count_last_24h"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0008",
+      "signal_id": "SIG-0008",
+      "feature_names": [
+        "merchant_category_code",
+        "merchant_risk_score",
+        "merchant_familiarity_score"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0013",
+      "signal_id": "SIG-0013",
+      "feature_names": [
+        "velocity_score",
+        "transaction_count_last_1h",
+        "transaction_count_last_24h"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0015",
+      "signal_id": "SIG-0015",
+      "feature_names": [
+        "authentication_method",
+        "auth_success"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0016",
+      "signal_id": "SIG-0016",
+      "feature_names": [
+        "hour_of_day",
+        "is_night",
+        "day_of_week"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0017",
+      "signal_id": "SIG-0017",
+      "feature_names": [
+        "amount",
+        "amount_to_avg_7d_ratio",
+        "amount_zscore_account",
+        "avg_amount_last_7d"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0019",
+      "signal_id": "SIG-0019",
+      "feature_names": [
+        "is_new_beneficiary",
+        "distinct_beneficiaries_last_24h"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0025",
+      "signal_id": "SIG-0025",
+      "feature_names": [
+        "hour_of_day",
+        "is_night",
+        "day_of_week"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0026",
+      "signal_id": "SIG-0026",
+      "feature_names": [
+        "hour_of_day",
+        "is_night",
+        "day_of_week"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0033",
+      "signal_id": "SIG-0033",
+      "feature_names": [
+        "hour_of_day",
+        "is_night",
+        "day_of_week"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0040",
+      "signal_id": "SIG-0040",
+      "feature_names": [
+        "hour_of_day",
+        "is_night",
+        "day_of_week"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0050",
+      "signal_id": "SIG-0050",
+      "feature_names": [
+        "velocity_score",
+        "transaction_count_last_1h",
+        "transaction_count_last_24h",
+        "hour_of_day",
+        "is_night",
+        "day_of_week"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0054",
+      "signal_id": "SIG-0054",
+      "feature_names": [
+        "hour_of_day",
+        "is_night",
+        "day_of_week"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0061",
+      "signal_id": "SIG-0061",
+      "feature_names": [
+        "merchant_category_code",
+        "merchant_risk_score",
+        "merchant_familiarity_score"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0062",
+      "signal_id": "SIG-0062",
+      "feature_names": [
+        "merchant_category_code",
+        "merchant_risk_score",
+        "merchant_familiarity_score"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0065",
+      "signal_id": "SIG-0065",
+      "feature_names": [
+        "merchant_category_code",
+        "merchant_risk_score",
+        "merchant_familiarity_score"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0066",
+      "signal_id": "SIG-0066",
+      "feature_names": [
+        "is_new_device",
+        "device_age_days",
+        "distinct_devices_last_7d",
+        "merchant_category_code",
+        "merchant_risk_score",
+        "merchant_familiarity_score"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0067",
+      "signal_id": "SIG-0067",
+      "feature_names": [
+        "merchant_category_code",
+        "merchant_risk_score",
+        "merchant_familiarity_score"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0068",
+      "signal_id": "SIG-0068",
+      "feature_names": [
+        "velocity_score",
+        "transaction_count_last_1h",
+        "transaction_count_last_24h",
+        "merchant_category_code",
+        "merchant_risk_score",
+        "merchant_familiarity_score",
+        "authentication_method",
+        "auth_success"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0069",
+      "signal_id": "SIG-0069",
+      "feature_names": [
+        "velocity_score",
+        "transaction_count_last_1h",
+        "transaction_count_last_24h",
+        "hour_of_day",
+        "is_night",
+        "day_of_week",
+        "authentication_method",
+        "auth_success"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0070",
+      "signal_id": "SIG-0070",
+      "feature_names": [
+        "is_new_device",
+        "device_age_days",
+        "distinct_devices_last_7d",
+        "authentication_method",
+        "auth_success"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0071",
+      "signal_id": "SIG-0071",
+      "feature_names": [
+        "is_new_device",
+        "device_age_days",
+        "distinct_devices_last_7d"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0072",
+      "signal_id": "SIG-0072",
+      "feature_names": [
+        "velocity_score",
+        "transaction_count_last_1h",
+        "transaction_count_last_24h",
+        "hour_of_day",
+        "is_night",
+        "day_of_week",
+        "authentication_method",
+        "auth_success"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0073",
+      "signal_id": "SIG-0073",
+      "feature_names": [
+        "authentication_method",
+        "auth_success"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0075",
+      "signal_id": "SIG-0075",
+      "feature_names": [
+        "authentication_method",
+        "auth_success"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0078",
+      "signal_id": "SIG-0078",
+      "feature_names": [
+        "is_new_device",
+        "device_age_days",
+        "distinct_devices_last_7d",
+        "authentication_method",
+        "auth_success"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0079",
+      "signal_id": "SIG-0079",
+      "feature_names": [
+        "authentication_method",
+        "auth_success"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0080",
+      "signal_id": "SIG-0080",
+      "feature_names": [
+        "hour_of_day",
+        "is_night",
+        "day_of_week",
+        "authentication_method",
+        "auth_success"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0081",
+      "signal_id": "SIG-0081",
+      "feature_names": [
+        "amount",
+        "amount_to_avg_7d_ratio",
+        "amount_zscore_account",
+        "avg_amount_last_7d"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0082",
+      "signal_id": "SIG-0082",
+      "feature_names": [
+        "amount",
+        "amount_to_avg_7d_ratio",
+        "amount_zscore_account",
+        "avg_amount_last_7d"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0083",
+      "signal_id": "SIG-0083",
+      "feature_names": [
+        "hour_of_day",
+        "is_night",
+        "day_of_week"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0084",
+      "signal_id": "SIG-0084",
+      "feature_names": [
+        "velocity_score",
+        "transaction_count_last_1h",
+        "transaction_count_last_24h",
+        "hour_of_day",
+        "is_night",
+        "day_of_week"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0085",
+      "signal_id": "SIG-0085",
+      "feature_names": [
+        "amount",
+        "amount_to_avg_7d_ratio",
+        "amount_zscore_account",
+        "avg_amount_last_7d",
+        "hour_of_day",
+        "is_night",
+        "day_of_week"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0087",
+      "signal_id": "SIG-0087",
+      "feature_names": [
+        "amount",
+        "amount_to_avg_7d_ratio",
+        "amount_zscore_account",
+        "avg_amount_last_7d",
+        "merchant_category_code",
+        "merchant_risk_score",
+        "merchant_familiarity_score"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0088",
+      "signal_id": "SIG-0088",
+      "feature_names": [
+        "amount",
+        "amount_to_avg_7d_ratio",
+        "amount_zscore_account",
+        "avg_amount_last_7d"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0091",
+      "signal_id": "SIG-0091",
+      "feature_names": [
+        "hour_of_day",
+        "is_night",
+        "day_of_week"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0092",
+      "signal_id": "SIG-0092",
+      "feature_names": [
+        "amount",
+        "amount_to_avg_7d_ratio",
+        "amount_zscore_account",
+        "avg_amount_last_7d",
+        "authentication_method",
+        "auth_success"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0095",
+      "signal_id": "SIG-0095",
+      "feature_names": [
+        "is_new_device",
+        "device_age_days",
+        "distinct_devices_last_7d"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0096",
+      "signal_id": "SIG-0096",
+      "feature_names": [
+        "hour_of_day",
+        "is_night",
+        "day_of_week"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0097",
+      "signal_id": "SIG-0097",
+      "feature_names": [
+        "hour_of_day",
+        "is_night",
+        "day_of_week"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0099",
+      "signal_id": "SIG-0099",
+      "feature_names": [
+        "hour_of_day",
+        "is_night",
+        "day_of_week"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0100",
+      "signal_id": "SIG-0100",
+      "feature_names": [
+        "hour_of_day",
+        "is_night",
+        "day_of_week"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0101",
+      "signal_id": "SIG-0101",
+      "feature_names": [
+        "amount",
+        "amount_to_avg_7d_ratio",
+        "amount_zscore_account",
+        "avg_amount_last_7d",
+        "merchant_category_code",
+        "merchant_risk_score",
+        "merchant_familiarity_score"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0102",
+      "signal_id": "SIG-0102",
+      "feature_names": [
+        "authentication_method",
+        "auth_success"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0104",
+      "signal_id": "SIG-0104",
+      "feature_names": [
+        "is_new_beneficiary",
+        "distinct_beneficiaries_last_24h"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0105",
+      "signal_id": "SIG-0105",
+      "feature_names": [
+        "velocity_score",
+        "transaction_count_last_1h",
+        "transaction_count_last_24h",
+        "is_new_beneficiary",
+        "distinct_beneficiaries_last_24h",
+        "hour_of_day",
+        "is_night",
+        "day_of_week"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0109",
+      "signal_id": "SIG-0109",
+      "feature_names": [
+        "velocity_score",
+        "transaction_count_last_1h",
+        "transaction_count_last_24h",
+        "hour_of_day",
+        "is_night",
+        "day_of_week"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0111",
+      "signal_id": "SIG-0111",
+      "feature_names": [
+        "is_new_device",
+        "device_age_days",
+        "distinct_devices_last_7d"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0112",
+      "signal_id": "SIG-0112",
+      "feature_names": [
+        "is_new_beneficiary",
+        "distinct_beneficiaries_last_24h"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0113",
+      "signal_id": "SIG-0113",
+      "feature_names": [
+        "is_new_beneficiary",
+        "distinct_beneficiaries_last_24h"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0114",
+      "signal_id": "SIG-0114",
+      "feature_names": [
+        "velocity_score",
+        "transaction_count_last_1h",
+        "transaction_count_last_24h"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0116",
+      "signal_id": "SIG-0116",
+      "feature_names": [
+        "hour_of_day",
+        "is_night",
+        "day_of_week"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0119",
+      "signal_id": "SIG-0119",
+      "feature_names": [
+        "is_new_beneficiary",
+        "distinct_beneficiaries_last_24h"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0120",
+      "signal_id": "SIG-0120",
+      "feature_names": [
+        "is_new_device",
+        "device_age_days",
+        "distinct_devices_last_7d"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0121",
+      "signal_id": "SIG-0121",
+      "feature_names": [
+        "is_new_device",
+        "device_age_days",
+        "distinct_devices_last_7d",
+        "account_age_days",
+        "account_tx_count_to_date",
+        "authentication_method",
+        "auth_success"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0124",
+      "signal_id": "SIG-0124",
+      "feature_names": [
+        "amount",
+        "amount_to_avg_7d_ratio",
+        "amount_zscore_account",
+        "avg_amount_last_7d",
+        "velocity_score",
+        "transaction_count_last_1h",
+        "transaction_count_last_24h"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0126",
+      "signal_id": "SIG-0126",
+      "feature_names": [
+        "velocity_score",
+        "transaction_count_last_1h",
+        "transaction_count_last_24h"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0127",
+      "signal_id": "SIG-0127",
+      "feature_names": [
+        "hour_of_day",
+        "is_night",
+        "day_of_week"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0132",
+      "signal_id": "SIG-0132",
+      "feature_names": [
+        "payment_rail"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0133",
+      "signal_id": "SIG-0133",
+      "feature_names": [
+        "velocity_score",
+        "transaction_count_last_1h",
+        "transaction_count_last_24h",
+        "hour_of_day",
+        "is_night",
+        "day_of_week"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0137",
+      "signal_id": "SIG-0137",
+      "feature_names": [
+        "amount",
+        "amount_to_avg_7d_ratio",
+        "amount_zscore_account",
+        "avg_amount_last_7d"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0138",
+      "signal_id": "SIG-0138",
+      "feature_names": [
+        "velocity_score",
+        "transaction_count_last_1h",
+        "transaction_count_last_24h",
+        "hour_of_day",
+        "is_night",
+        "day_of_week"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0140",
+      "signal_id": "SIG-0140",
+      "feature_names": [
+        "is_new_beneficiary",
+        "distinct_beneficiaries_last_24h"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0142",
+      "signal_id": "SIG-0142",
+      "feature_names": [
+        "is_new_device",
+        "device_age_days",
+        "distinct_devices_last_7d"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0143",
+      "signal_id": "SIG-0143",
+      "feature_names": [
+        "is_new_device",
+        "device_age_days",
+        "distinct_devices_last_7d"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0144",
+      "signal_id": "SIG-0144",
+      "feature_names": [
+        "is_new_device",
+        "device_age_days",
+        "distinct_devices_last_7d"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0145",
+      "signal_id": "SIG-0145",
+      "feature_names": [
+        "is_new_device",
+        "device_age_days",
+        "distinct_devices_last_7d"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0146",
+      "signal_id": "SIG-0146",
+      "feature_names": [
+        "is_new_device",
+        "device_age_days",
+        "distinct_devices_last_7d"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0147",
+      "signal_id": "SIG-0147",
+      "feature_names": [
+        "is_new_device",
+        "device_age_days",
+        "distinct_devices_last_7d"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0148",
+      "signal_id": "SIG-0148",
+      "feature_names": [
+        "is_new_device",
+        "device_age_days",
+        "distinct_devices_last_7d"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0149",
+      "signal_id": "SIG-0149",
+      "feature_names": [
+        "is_new_device",
+        "device_age_days",
+        "distinct_devices_last_7d"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0150",
+      "signal_id": "SIG-0150",
+      "feature_names": [
+        "is_new_device",
+        "device_age_days",
+        "distinct_devices_last_7d"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0151",
+      "signal_id": "SIG-0151",
+      "feature_names": [
+        "velocity_score",
+        "transaction_count_last_1h",
+        "transaction_count_last_24h",
+        "is_new_device",
+        "device_age_days",
+        "distinct_devices_last_7d"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0152",
+      "signal_id": "SIG-0152",
+      "feature_names": [
+        "is_new_device",
+        "device_age_days",
+        "distinct_devices_last_7d"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0153",
+      "signal_id": "SIG-0153",
+      "feature_names": [
+        "is_new_device",
+        "device_age_days",
+        "distinct_devices_last_7d"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0154",
+      "signal_id": "SIG-0154",
+      "feature_names": [
+        "velocity_score",
+        "transaction_count_last_1h",
+        "transaction_count_last_24h",
+        "is_new_device",
+        "device_age_days",
+        "distinct_devices_last_7d",
+        "hour_of_day",
+        "is_night",
+        "day_of_week"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0155",
+      "signal_id": "SIG-0155",
+      "feature_names": [
+        "is_new_device",
+        "device_age_days",
+        "distinct_devices_last_7d",
+        "hour_of_day",
+        "is_night",
+        "day_of_week"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0156",
+      "signal_id": "SIG-0156",
+      "feature_names": [
+        "is_new_device",
+        "device_age_days",
+        "distinct_devices_last_7d"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0157",
+      "signal_id": "SIG-0157",
+      "feature_names": [
+        "is_new_device",
+        "device_age_days",
+        "distinct_devices_last_7d"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0158",
+      "signal_id": "SIG-0158",
+      "feature_names": [
+        "hour_of_day",
+        "is_night",
+        "day_of_week"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0159",
+      "signal_id": "SIG-0159",
+      "feature_names": [
+        "hour_of_day",
+        "is_night",
+        "day_of_week"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0160",
+      "signal_id": "SIG-0160",
+      "feature_names": [
+        "is_new_device",
+        "device_age_days",
+        "distinct_devices_last_7d"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0161",
+      "signal_id": "SIG-0161",
+      "feature_names": [
+        "authentication_method",
+        "auth_success"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0163",
+      "signal_id": "SIG-0163",
+      "feature_names": [
+        "hour_of_day",
+        "is_night",
+        "day_of_week",
+        "authentication_method",
+        "auth_success"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0164",
+      "signal_id": "SIG-0164",
+      "feature_names": [
+        "authentication_method",
+        "auth_success"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0166",
+      "signal_id": "SIG-0166",
+      "feature_names": [
+        "amount",
+        "amount_to_avg_7d_ratio",
+        "amount_zscore_account",
+        "avg_amount_last_7d",
+        "merchant_category_code",
+        "merchant_risk_score",
+        "merchant_familiarity_score"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0168",
+      "signal_id": "SIG-0168",
+      "feature_names": [
+        "amount",
+        "amount_to_avg_7d_ratio",
+        "amount_zscore_account",
+        "avg_amount_last_7d"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0170",
+      "signal_id": "SIG-0170",
+      "feature_names": [
+        "authentication_method",
+        "auth_success"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0171",
+      "signal_id": "SIG-0171",
+      "feature_names": [
+        "velocity_score",
+        "transaction_count_last_1h",
+        "transaction_count_last_24h",
+        "hour_of_day",
+        "is_night",
+        "day_of_week"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0172",
+      "signal_id": "SIG-0172",
+      "feature_names": [
+        "merchant_category_code",
+        "merchant_risk_score",
+        "merchant_familiarity_score"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0178",
+      "signal_id": "SIG-0178",
+      "feature_names": [
+        "hour_of_day",
+        "is_night",
+        "day_of_week"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0179",
+      "signal_id": "SIG-0179",
+      "feature_names": [
+        "merchant_category_code",
+        "merchant_risk_score",
+        "merchant_familiarity_score"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0180",
+      "signal_id": "SIG-0180",
+      "feature_names": [
+        "velocity_score",
+        "transaction_count_last_1h",
+        "transaction_count_last_24h",
+        "payment_rail"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0181",
+      "signal_id": "SIG-0181",
+      "feature_names": [
+        "amount",
+        "amount_to_avg_7d_ratio",
+        "amount_zscore_account",
+        "avg_amount_last_7d",
+        "payment_rail"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0182",
+      "signal_id": "SIG-0182",
+      "feature_names": [
+        "payment_rail"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0183",
+      "signal_id": "SIG-0183",
+      "feature_names": [
+        "payment_rail"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0184",
+      "signal_id": "SIG-0184",
+      "feature_names": [
+        "is_new_device",
+        "device_age_days",
+        "distinct_devices_last_7d",
+        "payment_rail"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0185",
+      "signal_id": "SIG-0185",
+      "feature_names": [
+        "is_new_device",
+        "device_age_days",
+        "distinct_devices_last_7d"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0186",
+      "signal_id": "SIG-0186",
+      "feature_names": [
+        "merchant_category_code",
+        "merchant_risk_score",
+        "merchant_familiarity_score",
+        "payment_rail"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0187",
+      "signal_id": "SIG-0187",
+      "feature_names": [
+        "velocity_score",
+        "transaction_count_last_1h",
+        "transaction_count_last_24h",
+        "hour_of_day",
+        "is_night",
+        "day_of_week"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0195",
+      "signal_id": "SIG-0195",
+      "feature_names": [
+        "is_new_beneficiary",
+        "distinct_beneficiaries_last_24h"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0197",
+      "signal_id": "SIG-0197",
+      "feature_names": [
+        "authentication_method",
+        "auth_success"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0199",
+      "signal_id": "SIG-0199",
+      "feature_names": [
+        "authentication_method",
+        "auth_success"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0202",
+      "signal_id": "SIG-0202",
+      "feature_names": [
+        "velocity_score",
+        "transaction_count_last_1h",
+        "transaction_count_last_24h"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0203",
+      "signal_id": "SIG-0203",
+      "feature_names": [
+        "is_new_device",
+        "device_age_days",
+        "distinct_devices_last_7d",
+        "hour_of_day",
+        "is_night",
+        "day_of_week"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0204",
+      "signal_id": "SIG-0204",
+      "feature_names": [
+        "is_new_device",
+        "device_age_days",
+        "distinct_devices_last_7d"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0205",
+      "signal_id": "SIG-0205",
+      "feature_names": [
+        "velocity_score",
+        "transaction_count_last_1h",
+        "transaction_count_last_24h",
+        "hour_of_day",
+        "is_night",
+        "day_of_week"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0206",
+      "signal_id": "SIG-0206",
+      "feature_names": [
+        "velocity_score",
+        "transaction_count_last_1h",
+        "transaction_count_last_24h"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0208",
+      "signal_id": "SIG-0208",
+      "feature_names": [
+        "authentication_method",
+        "auth_success"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0211",
+      "signal_id": "SIG-0211",
+      "feature_names": [
+        "is_new_device",
+        "device_age_days",
+        "distinct_devices_last_7d"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0213",
+      "signal_id": "SIG-0213",
+      "feature_names": [
+        "hour_of_day",
+        "is_night",
+        "day_of_week"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0214",
+      "signal_id": "SIG-0214",
+      "feature_names": [
+        "account_age_days",
+        "account_tx_count_to_date"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0216",
+      "signal_id": "SIG-0216",
+      "feature_names": [
+        "is_new_device",
+        "device_age_days",
+        "distinct_devices_last_7d"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0217",
+      "signal_id": "SIG-0217",
+      "feature_names": [
+        "velocity_score",
+        "transaction_count_last_1h",
+        "transaction_count_last_24h",
+        "account_age_days",
+        "account_tx_count_to_date"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0218",
+      "signal_id": "SIG-0218",
+      "feature_names": [
+        "amount",
+        "amount_to_avg_7d_ratio",
+        "amount_zscore_account",
+        "avg_amount_last_7d",
+        "velocity_score",
+        "transaction_count_last_1h",
+        "transaction_count_last_24h"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0219",
+      "signal_id": "SIG-0219",
+      "feature_names": [
+        "is_new_beneficiary",
+        "distinct_beneficiaries_last_24h"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0220",
+      "signal_id": "SIG-0220",
+      "feature_names": [
+        "velocity_score",
+        "transaction_count_last_1h",
+        "transaction_count_last_24h",
+        "hour_of_day",
+        "is_night",
+        "day_of_week"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0222",
+      "signal_id": "SIG-0222",
+      "feature_names": [
+        "hour_of_day",
+        "is_night",
+        "day_of_week"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0223",
+      "signal_id": "SIG-0223",
+      "feature_names": [
+        "is_new_device",
+        "device_age_days",
+        "distinct_devices_last_7d"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0224",
+      "signal_id": "SIG-0224",
+      "feature_names": [
+        "is_new_device",
+        "device_age_days",
+        "distinct_devices_last_7d",
+        "account_age_days",
+        "account_tx_count_to_date"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0225",
+      "signal_id": "SIG-0225",
+      "feature_names": [
+        "velocity_score",
+        "transaction_count_last_1h",
+        "transaction_count_last_24h"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0228",
+      "signal_id": "SIG-0228",
+      "feature_names": [
+        "is_new_device",
+        "device_age_days",
+        "distinct_devices_last_7d"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0229",
+      "signal_id": "SIG-0229",
+      "feature_names": [
+        "amount",
+        "amount_to_avg_7d_ratio",
+        "amount_zscore_account",
+        "avg_amount_last_7d"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0230",
+      "signal_id": "SIG-0230",
+      "feature_names": [
+        "merchant_category_code",
+        "merchant_risk_score",
+        "merchant_familiarity_score"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0231",
+      "signal_id": "SIG-0231",
+      "feature_names": [
+        "is_new_beneficiary",
+        "distinct_beneficiaries_last_24h",
+        "payment_rail"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0233",
+      "signal_id": "SIG-0233",
+      "feature_names": [
+        "hour_of_day",
+        "is_night",
+        "day_of_week"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0234",
+      "signal_id": "SIG-0234",
+      "feature_names": [
+        "velocity_score",
+        "transaction_count_last_1h",
+        "transaction_count_last_24h",
+        "hour_of_day",
+        "is_night",
+        "day_of_week",
+        "payment_rail"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0238",
+      "signal_id": "SIG-0238",
+      "feature_names": [
+        "is_new_device",
+        "device_age_days",
+        "distinct_devices_last_7d"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0239",
+      "signal_id": "SIG-0239",
+      "feature_names": [
+        "velocity_score",
+        "transaction_count_last_1h",
+        "transaction_count_last_24h",
+        "is_new_device",
+        "device_age_days",
+        "distinct_devices_last_7d"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0240",
+      "signal_id": "SIG-0240",
+      "feature_names": [
+        "is_new_device",
+        "device_age_days",
+        "distinct_devices_last_7d",
+        "account_age_days",
+        "account_tx_count_to_date"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0241",
+      "signal_id": "SIG-0241",
+      "feature_names": [
+        "authentication_method",
+        "auth_success"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0242",
+      "signal_id": "SIG-0242",
+      "feature_names": [
+        "hour_of_day",
+        "is_night",
+        "day_of_week"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0245",
+      "signal_id": "SIG-0245",
+      "feature_names": [
+        "velocity_score",
+        "transaction_count_last_1h",
+        "transaction_count_last_24h"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0246",
+      "signal_id": "SIG-0246",
+      "feature_names": [
+        "is_new_device",
+        "device_age_days",
+        "distinct_devices_last_7d"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0249",
+      "signal_id": "SIG-0249",
+      "feature_names": [
+        "hour_of_day",
+        "is_night",
+        "day_of_week"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0250",
+      "signal_id": "SIG-0250",
+      "feature_names": [
+        "velocity_score",
+        "transaction_count_last_1h",
+        "transaction_count_last_24h"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0260",
+      "signal_id": "SIG-0260",
+      "feature_names": [
+        "authentication_method",
+        "auth_success"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0262",
+      "signal_id": "SIG-0262",
+      "feature_names": [
+        "velocity_score",
+        "transaction_count_last_1h",
+        "transaction_count_last_24h"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0263",
+      "signal_id": "SIG-0263",
+      "feature_names": [
+        "amount",
+        "amount_to_avg_7d_ratio",
+        "amount_zscore_account",
+        "avg_amount_last_7d"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0264",
+      "signal_id": "SIG-0264",
+      "feature_names": [
+        "is_new_beneficiary",
+        "distinct_beneficiaries_last_24h"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0267",
+      "signal_id": "SIG-0267",
+      "feature_names": [
+        "hour_of_day",
+        "is_night",
+        "day_of_week",
+        "authentication_method",
+        "auth_success"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0268",
+      "signal_id": "SIG-0268",
+      "feature_names": [
+        "velocity_score",
+        "transaction_count_last_1h",
+        "transaction_count_last_24h",
+        "is_new_device",
+        "device_age_days",
+        "distinct_devices_last_7d"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0269",
+      "signal_id": "SIG-0269",
+      "feature_names": [
+        "authentication_method",
+        "auth_success"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0270",
+      "signal_id": "SIG-0270",
+      "feature_names": [
+        "velocity_score",
+        "transaction_count_last_1h",
+        "transaction_count_last_24h",
+        "hour_of_day",
+        "is_night",
+        "day_of_week"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0271",
+      "signal_id": "SIG-0271",
+      "feature_names": [
+        "is_new_device",
+        "device_age_days",
+        "distinct_devices_last_7d",
+        "authentication_method",
+        "auth_success"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0272",
+      "signal_id": "SIG-0272",
+      "feature_names": [
+        "velocity_score",
+        "transaction_count_last_1h",
+        "transaction_count_last_24h",
+        "is_new_beneficiary",
+        "distinct_beneficiaries_last_24h",
+        "payment_rail"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    },
+    {
+      "mapping_id": "SFM-0276",
+      "signal_id": "SIG-0276",
+      "feature_names": [
+        "velocity_score",
+        "transaction_count_last_1h",
+        "transaction_count_last_24h",
+        "is_new_beneficiary",
+        "distinct_beneficiaries_last_24h",
+        "payment_rail"
+      ],
+      "rationale": "Keyword overlap between signal text and FraudShield / sandbox feature names.",
+      "origin": "implementation_derived",
+      "confidence": "INFERRED"
+    }
+  ]
+}

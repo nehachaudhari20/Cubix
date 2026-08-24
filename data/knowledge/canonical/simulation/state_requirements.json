@@ -1,0 +1,147 @@
+{
+  "registry_version": "2.0",
+  "built_at": "2026-08-24T21:28:54.840341+00:00",
+  "state_requirements": [
+    {
+      "requirement_id": "SRQ-MULE",
+      "name": "New-beneficiary cash-out / mule journey required state",
+      "required_entities": [
+        "customer",
+        "device",
+        "beneficiary",
+        "payment"
+      ],
+      "required_state": {
+        "customer_id": true,
+        "device_id": true,
+        "beneficiary_id": true
+      },
+      "notes": "Copied from current sandbox campaign-builder patterns. Not PDF-invented thresholds.",
+      "origin": "implementation_derived"
+    },
+    {
+      "requirement_id": "SRQ-MERCHANT",
+      "name": "Merchant onboarding + MCC misrepresentation journey required state",
+      "required_entities": [
+        "customer",
+        "device",
+        "merchant",
+        "payment"
+      ],
+      "required_state": {
+        "customer_id": true,
+        "device_id": true,
+        "merchant_id": true
+      },
+      "notes": "Copied from current sandbox campaign-builder patterns. Not PDF-invented thresholds.",
+      "origin": "implementation_derived"
+    },
+    {
+      "requirement_id": "SRQ-IDENTITY",
+      "name": "Synthetic / low-trust identity provisioning journey required state",
+      "required_entities": [
+        "customer",
+        "device",
+        "account",
+        "payment"
+      ],
+      "required_state": {
+        "customer_id": true,
+        "device_id": true,
+        "trust_score": true
+      },
+      "notes": "Copied from current sandbox campaign-builder patterns. Not PDF-invented thresholds.",
+      "origin": "implementation_derived"
+    },
+    {
+      "requirement_id": "SRQ-AML",
+      "name": "Structuring / threshold-hugging payment sequence required state",
+      "required_entities": [
+        "customer",
+        "device",
+        "account",
+        "payment"
+      ],
+      "required_state": {
+        "customer_id": true,
+        "device_id": true,
+        "account_id": true
+      },
+      "notes": "Copied from current sandbox campaign-builder patterns. Not PDF-invented thresholds.",
+      "origin": "implementation_derived"
+    },
+    {
+      "requirement_id": "SRQ-VELOCITY",
+      "name": "Burst / low-and-slow velocity evasion sequence required state",
+      "required_entities": [
+        "customer",
+        "device",
+        "payment"
+      ],
+      "required_state": {
+        "customer_id": true,
+        "device_id": true
+      },
+      "notes": "Copied from current sandbox campaign-builder patterns. Not PDF-invented thresholds.",
+      "origin": "implementation_derived"
+    },
+    {
+      "requirement_id": "SRQ-ACCOUNT",
+      "name": "Account opening then first-payment journey required state",
+      "required_entities": [
+        "customer",
+        "device",
+        "account",
+        "payment"
+      ],
+      "required_state": {
+        "customer_id": true,
+        "account_id": true
+      },
+      "notes": "Copied from current sandbox campaign-builder patterns. Not PDF-invented thresholds.",
+      "origin": "implementation_derived"
+    },
+    {
+      "requirement_id": "SRQ-AUTH",
+      "name": "Authentication / ATO then payment journey required state",
+      "required_entities": [
+        "customer",
+        "device",
+        "payment"
+      ],
+      "required_state": {
+        "customer_id": true,
+        "device_id": true
+      },
+      "notes": "Copied from current sandbox campaign-builder patterns. Not PDF-invented thresholds.",
+      "origin": "implementation_derived"
+    },
+    {
+      "requirement_id": "SRQ-PAYMENT-PROBE",
+      "name": "Generic payment-probe journey required state",
+      "required_entities": [
+        "customer",
+        "device",
+        "payment"
+      ],
+      "required_state": {
+        "customer_id": true,
+        "device_id": true
+      },
+      "notes": "Copied from current sandbox campaign-builder patterns. Not PDF-invented thresholds.",
+      "origin": "implementation_derived"
+    },
+    {
+      "requirement_id": "SRQ-AGENTIC-NONEXEC",
+      "name": "Agentic specification (not currently sandbox-executable) required state",
+      "required_entities": [
+        "customer",
+        "agent",
+        "payment"
+      ],
+      "required_state": {},
+      "notes": "Copied from current sandbox campaign-builder patterns. Not PDF-invented thresholds.",
+      "origin": "implementation_derived"
+    }
+  ]
+}

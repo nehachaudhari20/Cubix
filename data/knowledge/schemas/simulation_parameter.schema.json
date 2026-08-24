@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "simulation_parameter.schema.json",
+  "title": "Reusable simulation parameter definition (not a concrete instance value)",
+  "type": "object",
+  "required": ["parameter_id", "name", "value_type"],
+  "properties": {
+    "parameter_id": {"type": "string", "minLength": 1},
+    "name": {"type": "string", "minLength": 1},
+    "value_type": {"type": "string", "enum": ["number", "integer", "boolean", "string", "enum", "duration"]},
+    "unit": {"type": ["string", "null"]},
+    "description": {"type": ["string", "null"]},
+    "legitimate_source": {"type": ["string", "null"], "description": "Where legitimate values are sampled from (e.g. baseline distribution reference)."},
+    "mutation_strategies": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "attacker_controllable": {"type": ["boolean", "null"]},
+    "constraints": {"type": "object"},
+    "related_signal_ids": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "related_feature_ids": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "sandbox_config_ref": {"type": ["string", "null"], "description": "Optional pointer to Sandbox executable config; never a production Mastercard threshold."},
+    "origin": {"type": "string", "enum": ["source_backed", "implementation_derived"]}
+  },
+  "additionalProperties": false
+}

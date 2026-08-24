@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "signal_feature_mapping.schema.json",
+  "title": "Bridge from KB signal to FraudShield feature names",
+  "type": "object",
+  "required": ["mapping_id", "signal_id", "feature_names"],
+  "properties": {
+    "mapping_id": {"type": "string", "minLength": 1},
+    "signal_id": {"type": "string", "minLength": 1},
+    "feature_names": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+    "rationale": {"type": ["string", "null"]},
+    "origin": {"type": "string", "enum": ["source_backed", "implementation_derived"]},
+    "confidence": {"type": ["string", "null"], "enum": ["VERIFIED", "SUPPORTED", "INFERRED", "UNVERIFIED", null]}
+  },
+  "additionalProperties": false
+}

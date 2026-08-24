@@ -7,7 +7,8 @@
   "properties": {
     "vector_id": {"type": "string", "minLength": 1, "description": "Implementation extension; no vectors are created in this phase."},
     "family_id": {"type": "string", "minLength": 1},
-    "variant_ref": {"type": ["string", "null"]},
+    "variant_id": {"type": ["string", "null"]},
+    "variant_ref": {"type": ["string", "null"], "description": "Deprecated alias of variant_id."},
     "objective": {"type": ["string", "null"]},
     "lifecycle_stage_ids": {"type": "array", "items": {"type": "string", "minLength": 1}},
     "rails": {"type": "array", "items": {"type": "string", "minLength": 1}},
@@ -24,7 +25,12 @@
     "failure_conditions": {"type": "array", "items": {"type": "string", "minLength": 1}},
     "legitimate_counterpart_ids": {"type": "array", "items": {"type": "string", "minLength": 1}},
     "edge_cases": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "simulation_template_id": {"type": ["string", "null"]},
     "simulation_template_ref": {"type": ["string", "null"]},
+    "state_requirement_id": {"type": ["string", "null"]},
+    "sandbox_executable": {"type": ["boolean", "null"]},
+    "origin": {"type": "string", "enum": ["source_backed", "implementation_derived"]},
+    "evidence_ids": {"type": "array", "items": {"type": "string", "minLength": 1}},
     "evidence": {"type": "array", "items": {"$ref": "evidence.schema.json"}}
   },
   "additionalProperties": false

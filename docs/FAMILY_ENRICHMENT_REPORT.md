@@ -1,19 +1,30 @@
-# Family enrichment report
+# Family Enrichment Report
 
-- Families processed: 57
-- Source-backed field enrichments: 331
-- Families requiring human review: 42
-- Page-level evidence records: 331
-- GenAI classifications: {'genai_load_bearing': 37, 'genai_amplified': 20}
+- total families: 57
+- families with objective: 57
+- families without objective: 0
+- families with attacker: 53
+- families without attacker: 4
+- families with target: 53
+- families without target: 4
+- families with traditional mechanism: 52
+- families with GenAI transformation: 51
+- families with explicit GenAI evidence: 32
+- families classified traditional: 0
+- families classified genai_amplified: 20
+- families classified genai_load_bearing: 37
+- families classified unknown: 0
+- families mapped to source pages: 57
+- families enriched: 6
+- fields still null: 24
+- conflicts: 346
+- requiring human review: 346
 
-## Fields still null
+## Fields Still Null
 
-- objective: 4
-- attacker: 7
-- target: 7
-- traditional_mechanism: 7
-- genai_transformation: 7
-
-## Source coverage and conflicts
-
-All 15 PDFs were enumerated. The review queue records insufficient extraction, lifecycle conflicts, unresolved cross-stage labels, and classification conflicts. No legacy file was modified; nulls remain where a labeled source field was not reliable.
+Null or empty values remain where the PDFs did not yield a reliable labeled value; no values were inferred.
+- attacker: 4
+- genai_transformation: 6
+- observable_signal_ids: 5
+- target: 4
+- traditional_mechanism: 5

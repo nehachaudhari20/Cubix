@@ -1,0 +1,139 @@
+{
+  "status": "review",
+  "built_at": "2026-08-24T21:28:54.840341+00:00",
+  "families": [
+    {
+      "family_id": "MCH-001",
+      "document_key": "merchant",
+      "dataset_filename": "merchant_dataset.json",
+      "variant_slugs": [
+        "Synthetic_Business_Fraud",
+        "Merchant_Impersonation",
+        "MCC_Fraud",
+        "Synthetic_UBO_Director_Fraud",
+        "Hybrid_Synthetic"
+      ],
+      "status": "review",
+      "reason": "Present in generate_dataset.py (and possibly known_fraud.csv) but not in the 57-family KB. merchant-6.pdf / payment-inititation-5.pdf did not yield family IDs in page extraction. Not promoted into the Knowledge Base."
+    },
+    {
+      "family_id": "MCH-002",
+      "document_key": "merchant",
+      "dataset_filename": "merchant_dataset.json",
+      "variant_slugs": [
+        "Front_Merchant_Fraud",
+        "Transaction_Laundering_Fronts",
+        "Shell_Company_Networks",
+        "Commercial_Laundering"
+      ],
+      "status": "review",
+      "reason": "Present in generate_dataset.py (and possibly known_fraud.csv) but not in the 57-family KB. merchant-6.pdf / payment-inititation-5.pdf did not yield family IDs in page extraction. Not promoted into the Knowledge Base."
+    },
+    {
+      "family_id": "MCH-003",
+      "document_key": "merchant",
+      "dataset_filename": "merchant_dataset.json",
+      "variant_slugs": [
+        "Scam_Merchant_Storefronts",
+        "Brand_Impersonation_Stores",
+        "Fake_Ecommerce_Stores",
+        "Triangulation_Fraud"
+      ],
+      "status": "review",
+      "reason": "Present in generate_dataset.py (and possibly known_fraud.csv) but not in the 57-family KB. merchant-6.pdf / payment-inititation-5.pdf did not yield family IDs in page extraction. Not promoted into the Knowledge Base."
+    },
+    {
+      "family_id": "MCH-004",
+      "document_key": "merchant",
+      "dataset_filename": "merchant_dataset.json",
+      "variant_slugs": [
+        "Commercial_Laundering",
+        "Network_Laundering",
+        "Front_Merchant_Laundering"
+      ],
+      "status": "review",
+      "reason": "Present in generate_dataset.py (and possibly known_fraud.csv) but not in the 57-family KB. merchant-6.pdf / payment-inititation-5.pdf did not yield family IDs in page extraction. Not promoted into the Knowledge Base."
+    },
+    {
+      "family_id": "MCH-005",
+      "document_key": "merchant",
+      "dataset_filename": "merchant_dataset.json",
+      "variant_slugs": [
+        "Fake_Damage_Images",
+        "Fake_Damage_Videos",
+        "Product_Defect_Fabrication",
+        "Organized_Refund_Rings"
+      ],
+      "status": "review",
+      "reason": "Present in generate_dataset.py (and possibly known_fraud.csv) but not in the 57-family KB. merchant-6.pdf / payment-inititation-5.pdf did not yield family IDs in page extraction. Not promoted into the Knowledge Base."
+    },
+    {
+      "family_id": "MCH-006",
+      "document_key": "merchant",
+      "dataset_filename": "merchant_dataset.json",
+      "variant_slugs": [
+        "Merchant_Phishing",
+        "Deepfake_Impersonation",
+        "Voice_Cloning_Attacks",
+        "Customer_Impersonation"
+      ],
+      "status": "review",
+      "reason": "Present in generate_dataset.py (and possibly known_fraud.csv) but not in the 57-family KB. merchant-6.pdf / payment-inititation-5.pdf did not yield family IDs in page extraction. Not promoted into the Knowledge Base."
+    },
+    {
+      "family_id": "PI-F001",
+      "document_key": "payment_initiation",
+      "dataset_filename": "payment_initiation_dataset.json",
+      "variant_slugs": [
+        "Payment_Redirection",
+        "BEC_Payment_Fraud",
+        "Invoice_Fraud",
+        "QR_Code_Manipulation",
+        "Beneficiary_Substitution"
+      ],
+      "status": "review",
+      "reason": "Present in generate_dataset.py (and possibly known_fraud.csv) but not in the 57-family KB. merchant-6.pdf / payment-inititation-5.pdf did not yield family IDs in page extraction. Not promoted into the Knowledge Base."
+    },
+    {
+      "family_id": "PI-F002",
+      "document_key": "payment_initiation",
+      "dataset_filename": "payment_initiation_dataset.json",
+      "variant_slugs": [
+        "Investment_Scam",
+        "Romance_Scam",
+        "Impersonation_Scam",
+        "Digital_Arrest_Scam",
+        "Purchase_Scam",
+        "Advance_Fee_Fraud"
+      ],
+      "status": "review",
+      "reason": "Present in generate_dataset.py (and possibly known_fraud.csv) but not in the 57-family KB. merchant-6.pdf / payment-inititation-5.pdf did not yield family IDs in page extraction. Not promoted into the Knowledge Base."
+    },
+    {
+      "family_id": "PI-F003",
+      "document_key": "payment_initiation",
+      "dataset_filename": "payment_initiation_dataset.json",
+      "variant_slugs": [
+        "Fake_Damage_Images",
+        "Fake_Damage_Videos",
+        "Wardrobing",
+        "Receipt_Manipulation"
+      ],
+      "status": "review",
+      "reason": "Present in generate_dataset.py (and possibly known_fraud.csv) but not in the 57-family KB. merchant-6.pdf / payment-inititation-5.pdf did not yield family IDs in page extraction. Not promoted into the Knowledge Base."
+    },
+    {
+      "family_id": "PI-F004",
+      "document_key": "payment_initiation",
+      "dataset_filename": "payment_initiation_dataset.json",
+      "variant_slugs": [
+        "Synthetic_Merchant_Storefront",
+        "Fake_Merchant_Onboarding",
+        "AI_Generated_Merchant_Website",
+        "Merchant_Collusion"
+      ],
+      "status": "review",
+      "reason": "Present in generate_dataset.py (and possibly known_fraud.csv) but not in the 57-family KB. merchant-6.pdf / payment-inititation-5.pdf did not yield family IDs in page extraction. Not promoted into the Knowledge Base."
+    }
+  ]
+}

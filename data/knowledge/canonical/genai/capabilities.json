@@ -1,0 +1,165 @@
+{
+  "registry_version": "2.0",
+  "built_at": "2026-08-24T21:28:54.840341+00:00",
+  "capabilities": [
+    {
+      "capability_id": "CAP-0001",
+      "name": "synthetic_content_generation",
+      "role": "amplification",
+      "description": "Generate realistic text, images, or documents at scale.",
+      "examples": [
+        "synthetic narratives",
+        "fake websites",
+        "generated invoices"
+      ]
+    },
+    {
+      "capability_id": "CAP-0002",
+      "name": "personalization",
+      "role": "amplification",
+      "description": "Adapt lures or payloads to a specific victim or institution.",
+      "examples": [
+        "spear phishing",
+        "hyper-personalized correspondence"
+      ]
+    },
+    {
+      "capability_id": "CAP-0003",
+      "name": "scale_automation",
+      "role": "amplification",
+      "description": "Run many parallel identities, accounts, or probes.",
+      "examples": [
+        "account farming",
+        "bulk creation",
+        "distributed testing"
+      ]
+    },
+    {
+      "capability_id": "CAP-0004",
+      "name": "adaptive_evasion",
+      "role": "amplification",
+      "description": "Change patterns in response to controls or model scores.",
+      "examples": [
+        "threshold hugging",
+        "behavioral camouflage",
+        "strategy adaptation"
+      ]
+    },
+    {
+      "capability_id": "CAP-0005",
+      "name": "deepfake_identity",
+      "role": "load_bearing",
+      "description": "Synthesize a biometric or visual identity that is not a real person.",
+      "examples": [
+        "face swap",
+        "synthetic biometrics",
+        "deepfake video KYC"
+      ]
+    },
+    {
+      "capability_id": "CAP-0006",
+      "name": "voice_cloning",
+      "role": "load_bearing",
+      "description": "Clone or synthesize a voice for vishing or recovery.",
+      "examples": [
+        "vishing",
+        "voice-based recovery"
+      ]
+    },
+    {
+      "capability_id": "CAP-0007",
+      "name": "document_forgery",
+      "role": "load_bearing",
+      "description": "Forge identity or supporting documents with generative models.",
+      "examples": [
+        "passport forgery",
+        "utility bill forgery"
+      ]
+    },
+    {
+      "capability_id": "CAP-0008",
+      "name": "agentic_planning",
+      "role": "load_bearing",
+      "description": "An agent plans multi-step fraud without a human in the loop.",
+      "examples": [
+        "autonomous campaign planning",
+        "self-evolving fraud"
+      ]
+    },
+    {
+      "capability_id": "CAP-0009",
+      "name": "agentic_tool_use",
+      "role": "load_bearing",
+      "description": "An agent uses payment/KYC/API tools to execute actions.",
+      "examples": [
+        "unauthorized tool calls",
+        "agent shopping",
+        "API manipulation"
+      ]
+    },
+    {
+      "capability_id": "CAP-0010",
+      "name": "prompt_injection",
+      "role": "load_bearing",
+      "description": "Hidden instructions steer an agent away from the user goal.",
+      "examples": [
+        "visual prompt injection",
+        "goal hacking"
+      ]
+    },
+    {
+      "capability_id": "CAP-0011",
+      "name": "memory_poisoning",
+      "role": "load_bearing",
+      "description": "Corrupt agent memory or context so future actions are attacker-aligned.",
+      "examples": [
+        "sleeper memory",
+        "cross-session injection"
+      ]
+    },
+    {
+      "capability_id": "CAP-0012",
+      "name": "social_engineering_generation",
+      "role": "either",
+      "description": "Generate social-engineering content (phishing, BEC, romance, digital arrest).",
+      "examples": [
+        "BEC",
+        "romance scam",
+        "digital arrest"
+      ]
+    },
+    {
+      "capability_id": "CAP-0013",
+      "name": "model_evasion",
+      "role": "amplification",
+      "description": "Probe or manipulate ML decision boundaries, labels, or training data.",
+      "examples": [
+        "boundary exploration",
+        "label flipping",
+        "AML model poisoning"
+      ]
+    },
+    {
+      "capability_id": "CAP-0014",
+      "name": "network_orchestration",
+      "role": "either",
+      "description": "Coordinate multiple identities, merchants, or mules as one operation.",
+      "examples": [
+        "fraud rings",
+        "mule networks",
+        "multi-account bust-out"
+      ]
+    },
+    {
+      "capability_id": "CAP-0015",
+      "name": "biometric_synthesis",
+      "role": "load_bearing",
+      "description": "Synthesize behavioral or physiological biometrics.",
+      "examples": [
+        "keystroke injection",
+        "motion forecasting",
+        "fingerprint/iris synthesis"
+      ]
+    }
+  ]
+}

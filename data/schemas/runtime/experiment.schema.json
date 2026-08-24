@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "experiment.schema.json",
+  "title": "Auditable experiment / campaign execution grouping",
+  "type": "object",
+  "required": ["experiment_id"],
+  "properties": {
+    "experiment_id": {"type": "string"},
+    "campaign_id": {"type": ["string", "null"]},
+    "loop_run_id": {"type": ["string", "null"]},
+    "environment_version": {"type": ["string", "null"]},
+    "model_version": {"type": ["string", "null"]},
+    "sandbox_state_ref": {"type": ["string", "null"]},
+    "vector_ids": {"type": "array", "items": {"type": "string"}},
+    "status": {"type": ["string", "null"]},
+    "started_at": {"type": ["string", "null"]},
+    "finished_at": {"type": ["string", "null"]}
+  },
+  "additionalProperties": true
+}

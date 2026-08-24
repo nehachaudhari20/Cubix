@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""Merge only page-evidenced source extraction values into canonical families."""
+"""Create an enriched family registry without overwriting the canonical source."""
 from __future__ import annotations
 
+import copy
 import json
-import re
 from collections import Counter
 from pathlib import Path
 from typing import Any
@@ -12,134 +12,62 @@ ROOT = Path(__file__).resolve().parents[1]
 CANONICAL = ROOT / "data" / "knowledge" / "canonical"
 EXTRACTIONS = ROOT / "data" / "knowledge" / "source_extractions"
 REVIEW = ROOT / "data" / "knowledge" / "review"
-DOCS = ROOT / "docs"
+ENRICHABLE = ("objective", "attacker", "target", "traditional_mechanism", "genai_transformation", "variants", "prerequisites", "attack_flow", "simulation_type")
 
 
-def norm(value: str) -> str:
-    return re.sub(r"[^a-z0-9]+", " ", value.casefold()).strip()
-
-
-def read(path: Path) -> dict[str, Any]:
+def load(path: Path) -> dict[str, Any]:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
-def write(path: Path, data: Any) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(data, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
-
-
 def main() -> None:
-    family_doc = read(CANONICAL / "attack_families.json")
-    evidence_doc = read(CANONICAL / "evidence.json")
-    extractions = {item["attack_id"]: item for item in read(EXTRACTIONS / "families.json")["families"]}
-    candidates = read(EXTRACTIONS / "evidence_candidates.json")["evidence_candidates"]
-    candidate_index = {(item["attack_id"], item["field"]): item for item in candidates}
-    aliases = read(CANONICAL / "lifecycle_aliases.json")
-    alias_ids = {norm(name): identifier for name, identifier in aliases.items()}
-    review: list[dict[str, Any]] = []
-    enriched: Counter[str] = Counter()
-    evidence_by_id = {item["evidence_id"]: item for item in evidence_doc["evidence"]}
-
-    for family in family_doc["attack_families"]:
-        attack_id = family["attack_id"]
-        extracted = extractions.get(attack_id)
-        if not extracted:
-            review.append({"attack_id": attack_id, "reasons": ["insufficient source evidence: no extracted family section"]})
-            continue
-        raw = extracted["raw_fields"]
-        reasons: list[str] = []
-        for field in ("objective", "attacker", "target", "traditional_mechanism", "genai_transformation"):
-            value = raw.get(field)
-            candidate = candidate_index.get((attack_id, field))
-            # Very short wrapped-table fragments are not safely useful values.
-            if isinstance(value, str) and len(value.strip()) >= 20 and candidate:
-                if family.get(field) in (None, "", []):
-                    family[field] = value
-                    enriched[field] += 1
-                    evidence_id = f"EVD-SRC-{attack_id}-{field.upper()}"
-                    evidence_by_id[evidence_id] = {"evidence_id": evidence_id, "source": candidate["source"],
-                        "locator": f"page {candidate['page']}; {candidate['section']}", "excerpt": candidate["evidence_note"],
-                        "confidence": "SUPPORTED", "maturity": None}
-                    if evidence_id not in family["evidence"]:
-                        family["evidence"].append(evidence_id)
-            elif value is None:
-                reasons.append(f"insufficient {field} evidence")
-        lifecycle = raw.get("lifecycle_stage")
-        if lifecycle:
-            source_stage = alias_ids.get(norm(lifecycle))
-            if source_stage and source_stage != family.get("lifecycle_stage_id"):
-                reasons.append(f"primary lifecycle conflict: PDF {lifecycle!r} vs canonical {family.get('lifecycle_stage_id')}")
-            elif not source_stage:
-                reasons.append(f"unresolved PDF primary lifecycle: {lifecycle!r}")
-        cross = raw.get("cross_stage")
-        if cross:
-            stage_ids: list[str] = []
-            unresolved: list[str] = []
-            for part in cross.split(";"):
-                label = re.sub(r"\s*\(.*?\)", "", part).strip()
-                identifier = alias_ids.get(norm(label))
-                if identifier and identifier not in stage_ids:
-                    stage_ids.append(identifier)
-                elif label:
-                    unresolved.append(label)
-            if stage_ids:
-                family["cross_stage_lifecycle_stage_ids"] = stage_ids
-                enriched["cross_stage_lifecycle_stage_ids"] += 1
-                candidate = candidate_index.get((attack_id, "cross_stage"))
-                if candidate:
-                    evidence_id = f"EVD-SRC-{attack_id}-CROSS-STAGE"
-                    evidence_by_id[evidence_id] = {"evidence_id": evidence_id, "source": candidate["source"],
-                        "locator": f"page {candidate['page']}; cross stage", "excerpt": candidate["evidence_note"],
-                        "confidence": "SUPPORTED", "maturity": None}
-                    if evidence_id not in family["evidence"]:
-                        family["evidence"].append(evidence_id)
-            if unresolved:
-                reasons.append(f"unresolved/ambiguous cross-stage values: {unresolved}")
-        classification = raw.get("genai_classification")
-        candidate = candidate_index.get((attack_id, "genai_classification"))
-        if classification in {"traditional", "genai_amplified", "genai_load_bearing"} and candidate:
-            if family.get("genai_classification") != classification:
-                reasons.append(f"GenAI classification conflict: canonical {family.get('genai_classification')} vs PDF {classification}")
-            family["genai_classification"] = classification
-            family["genai_load_bearing"] = classification == "genai_load_bearing"
-            enriched["genai_classification"] += 1
-            evidence_id = f"EVD-SRC-{attack_id}-GENAI-CLASSIFICATION"
-            evidence_by_id[evidence_id] = {"evidence_id": evidence_id, "source": candidate["source"],
-                "locator": f"page {candidate['page']}; GenAI classification", "excerpt": candidate["evidence_note"],
-                "confidence": "SUPPORTED", "maturity": None}
-            if evidence_id not in family["evidence"]:
-                family["evidence"].append(evidence_id)
-        if reasons:
-            review.append({"attack_id": attack_id, "reasons": reasons})
-
-    evidence_doc["evidence"] = list(evidence_by_id.values())
-    write(CANONICAL / "attack_families.json", family_doc)
-    write(CANONICAL / "evidence.json", evidence_doc)
-    write(REVIEW / "family_review_queue.json", {"review_queue": review})
-    classifications = Counter(item["genai_classification"] for item in family_doc["attack_families"])
-    nulls = {field: sum(item.get(field) in (None, "", []) for item in family_doc["attack_families"])
-             for field in ("objective", "attacker", "target", "traditional_mechanism", "genai_transformation")}
-    source_evidence_count = sum(identifier.startswith("EVD-SRC-") for identifier in evidence_by_id)
-    (DOCS / "FAMILY_ENRICHMENT_REPORT.md").write_text(
-        "# Family enrichment report\n\n"
-        f"- Families processed: {len(family_doc['attack_families'])}\n"
-        f"- Source-backed field enrichments: {source_evidence_count}\n"
-        f"- Families requiring human review: {len(review)}\n"
-        f"- Page-level evidence records: {source_evidence_count}\n"
-        f"- GenAI classifications: {dict(classifications)}\n\n"
-        "## Fields still null\n\n" + "\n".join(f"- {field}: {count}" for field, count in nulls.items()) +
-        "\n\n## Source coverage and conflicts\n\nAll 15 PDFs were enumerated. The review queue records insufficient extraction, lifecycle conflicts, "
-        "unresolved cross-stage labels, and classification conflicts. No legacy file was modified; nulls remain where a labeled source field was not reliable.\n",
-        encoding="utf-8")
-    rows = ["# GenAI classification report", "", "| Family | Name | Classification | Load-bearing | Evidence page | Reasoning summary | Confidence |", "| --- | --- | --- | --- | ---: | --- | --- |"]
-    for item in family_doc["attack_families"]:
-        candidate = candidate_index.get((item["attack_id"], "genai_classification"))
-        page = candidate["page"] if candidate else "—"
-        confidence = "SUPPORTED" if candidate else "UNVERIFIED"
-        reasoning = (candidate["evidence_note"] if candidate else "No section-local classification evidence extracted.").replace("|", "/")
-        rows.append(f"| {item['attack_id']} | {item['name']} | {item['genai_classification']} | {item.get('genai_load_bearing')} | {page} | {reasoning} | {confidence} |")
-    (DOCS / "GENAI_CLASSIFICATION_REPORT.md").write_text("\n".join(rows) + "\n", encoding="utf-8")
-    print(f"Enriched {sum(enriched.values())} fields; {len(review)} families queued for review")
+    legacy = load(CANONICAL / "attack_families.json")
+    family_sources = {item["attack_id"]: item["sources"] for item in load(EXTRACTIONS / "family_evidence.json")["families"]}
+    candidates = {(item["attack_id"], item["field"]): item for item in load(EXTRACTIONS / "evidence_candidates.json")["evidence_candidates"]}
+    classifications = {item["attack_id"]: item for item in load(EXTRACTIONS / "genai_classifications.json")["classifications"]}
+    enriched = copy.deepcopy(legacy)
+    conflicts: list[dict[str, Any]] = []
+    changes: Counter[str] = Counter()
+    for family in enriched["attack_families"]:
+        identifier = family["attack_id"]
+        for field in ENRICHABLE:
+            candidate = candidates.get((identifier, field))
+            if not candidate:
+                continue
+            source_value, legacy_value = candidate["value"], family.get(field)
+            if legacy_value in (None, "", []):
+                family[field] = source_value
+                changes[field] += 1
+            elif legacy_value != source_value:
+                conflicts.append({"attack_id": identifier, "field": field, "legacy_value": legacy_value, "source_value": source_value, "source": candidate["source"], "page": candidate["page"], "reason": "Existing canonical value differs from the source-labeled value; legacy value was preserved."})
+        classification = classifications.get(identifier)
+        if classification and classification["classification"] != "unknown":
+            source_value, legacy_value = classification["classification"], family.get("genai_classification")
+            if legacy_value not in (None, "", "unknown", source_value):
+                evidence = classification.get("evidence", [{}])[0]
+                conflicts.append({"attack_id": identifier, "field": "genai_classification", "legacy_value": legacy_value, "source_value": source_value, "source": evidence.get("source"), "page": evidence.get("page"), "reason": "Classification differs; legacy classification was preserved."})
+            elif legacy_value in (None, "", "unknown"):
+                family["genai_classification"], family["genai_load_bearing"] = source_value, classification["load_bearing"]
+                changes["genai_classification"] += 1
+    review = [{"attack_id": item["attack_id"], "field": None, "reason": "No source family pages were mapped."} for item in enriched["attack_families"] if not family_sources.get(item["attack_id"])]
+    review.extend(conflicts)
+    REVIEW.mkdir(parents=True, exist_ok=True)
+    (REVIEW / "family_review_queue.json").write_text(json.dumps({"review_queue": review}, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    (CANONICAL / "attack_families_enriched.json").write_text(json.dumps(enriched, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    fields = ("objective", "attacker", "target", "traditional_mechanism", "genai_transformation", "genai_classification", "simulation_type", "variants", "prerequisites", "attack_flow", "observable_signal_ids", "targeted_control_ids")
+    nulls = Counter(field for family in enriched["attack_families"] for field in fields if family.get(field) in (None, "", []))
+    counts = Counter(family.get("genai_classification", "unknown") for family in enriched["attack_families"])
+    families = enriched["attack_families"]
+    coverage = {field: sum(bool(item.get(field)) for item in families) for field in ("objective", "attacker", "target", "traditional_mechanism", "genai_transformation")}
+    report = ["# Family Enrichment Report", "", f"- total families: {len(families)}", f"- families with objective: {coverage['objective']}", f"- families without objective: {len(families) - coverage['objective']}", f"- families with attacker: {coverage['attacker']}", f"- families without attacker: {len(families) - coverage['attacker']}", f"- families with target: {coverage['target']}", f"- families without target: {len(families) - coverage['target']}", f"- families with traditional mechanism: {coverage['traditional_mechanism']}", f"- families with GenAI transformation: {coverage['genai_transformation']}", f"- families with explicit GenAI evidence: {sum(x['attack_id'] in classifications and classifications[x['attack_id']]['classification'] != 'unknown' for x in families)}", f"- families classified traditional: {counts['traditional']}", f"- families classified genai_amplified: {counts['genai_amplified']}", f"- families classified genai_load_bearing: {counts['genai_load_bearing']}", f"- families classified unknown: {counts['unknown']}", f"- families mapped to source pages: {sum(bool(family_sources.get(x['attack_id'])) for x in families)}", f"- families enriched: {sum(any(x.get(field) != legacy_family.get(field) for field in fields) for x, legacy_family in zip(families, legacy['attack_families']))}", f"- fields still null: {sum(nulls.values())}", f"- conflicts: {len(conflicts)}", f"- requiring human review: {len(review)}", "", "## Fields Still Null", "", "Null or empty values remain where the PDFs did not yield a reliable labeled value; no values were inferred."]
+    report.extend(f"- {field}: {count}" for field, count in sorted(nulls.items()))
+    (ROOT / "docs" / "FAMILY_ENRICHMENT_REPORT.md").write_text("\n".join(report) + "\n", encoding="utf-8")
+    rows = ["# GenAI Classification Report", "", "| ID | Family | Classification | Load-bearing | Evidence | Confidence |", "| --- | --- | --- | --- | --- | --- |"]
+    names = {x["attack_id"]: x["name"] for x in families}
+    for identifier, item in sorted(classifications.items()):
+        evidence = "; ".join(f"{e.get('source')} p.{e.get('page')} {e.get('section')}" for e in item.get("evidence", [])) or "No explicit source locator"
+        rows.append(f"| {identifier} | {names.get(identifier, '')} | {item['classification']} | {item['load_bearing']} | {evidence} | {'SUPPORTED' if item['classification'] != 'unknown' else 'UNKNOWN'} |")
+    (ROOT / "docs" / "GENAI_CLASSIFICATION_REPORT.md").write_text("\n".join(rows) + "\n", encoding="utf-8")
+    print(f"Created enriched registry: {len(families)} families, {sum(changes.values())} field changes, {len(conflicts)} conflicts, {len(review)} review items")
 
 
 if __name__ == "__main__":

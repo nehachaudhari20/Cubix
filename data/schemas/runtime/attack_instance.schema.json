@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "attack_instance.schema.json",
+  "title": "Concrete generated attack instance (not a KB vector)",
+  "type": "object",
+  "required": ["instance_id", "vector_id", "family_id"],
+  "properties": {
+    "instance_id": {"type": "string"},
+    "vector_id": {"type": "string"},
+    "family_id": {"type": "string"},
+    "variant_id": {"type": ["string", "null"]},
+    "experiment_id": {"type": ["string", "null"]},
+    "campaign_id": {"type": ["string", "null"]},
+    "concrete_entities": {"type": "object"},
+    "concrete_parameters": {"type": "object"},
+    "actions": {"type": "array"},
+    "generated_at": {"type": ["string", "null"]}
+  },
+  "additionalProperties": true
+}

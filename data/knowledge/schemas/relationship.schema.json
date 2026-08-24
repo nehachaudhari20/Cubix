@@ -7,7 +7,7 @@
   "properties": {
     "relationship_id": {"type": "string", "minLength": 1, "description": "Implementation extension for explicit graph edges."},
     "from_ref": {"type": "string", "minLength": 1},
-    "relationship_type": {"type": "string", "enum": ["targets", "observes", "mitigates", "occurs_at", "crosses", "has_counterpart", "implemented_by"]},
+    "relationship_type": {"type": "string", "enum": ["targets", "observes", "mitigates", "occurs_at", "crosses", "has_counterpart", "implemented_by", "variant_of", "instantiates", "uses_template", "parameterizes", "maps_to_feature", "precedes", "enables", "composes_with", "bypasses", "escalates_to"]},
     "to_ref": {"type": "string", "minLength": 1},
     "evidence": {"type": "array", "items": {"anyOf": [{"$ref": "evidence.schema.json"}, {"type": "string", "pattern": "^EVD-"}]}}
   },

@@ -8,7 +8,8 @@
     "attack_id": {"type": "string", "minLength": 1},
     "name": {"type": "string", "minLength": 1},
     "objective": {"type": ["string", "null"]},
-    "variants": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "variants": {"type": "array", "items": {"type": "string", "minLength": 1}, "description": "Legacy string list retained for compatibility. Prefer variant_ids."},
+    "variant_ids": {"type": "array", "items": {"type": "string", "minLength": 1}},
     "lifecycle_stage_id": {"type": ["string", "null"], "description": "Implementation extension: stable normalized primary-stage reference."},
     "cross_stage_lifecycle_stage_ids": {"type": "array", "items": {"type": "string", "minLength": 1}},
     "attacker": {"type": ["string", "array", "null"], "items": {"type": "string"}},
@@ -16,8 +17,20 @@
     "prerequisites": {"type": "array", "items": {"type": "string", "minLength": 1}},
     "traditional_mechanism": {"type": ["string", "null"]},
     "genai_transformation": {"type": ["string", "null"]},
-    "genai_classification": {"type": ["string", "null"], "enum": ["traditional", "genai_amplified", "genai_load_bearing", "unknown", null], "description": "Canonical replacement for opaque legacy PASS/PARTIAL labels."},
+    "genai_classification": {"type": ["string", "null"], "enum": ["traditional", "genai_amplified", "genai_load_bearing", "unknown", null], "description": "Canonical replacement for opaque legacy PASS/PARTIAL labels. Kept flat for compatibility; prefer genai.classification."},
     "genai_load_bearing": {"type": ["boolean", "null"]},
+    "genai": {
+      "type": ["object", "null"],
+      "properties": {
+        "classification": {"type": ["string", "null"], "enum": ["traditional", "genai_amplified", "genai_load_bearing", "unknown", null]},
+        "load_bearing": {"type": ["boolean", "null"]},
+        "transformation": {"type": ["string", "null"]},
+        "capability_ids": {"type": "array", "items": {"type": "string", "minLength": 1}}
+      },
+      "additionalProperties": false
+    },
+    "sandbox_executable": {"type": ["boolean", "null"], "description": "Implementation extension: whether the current payment sandbox can execute this family."},
+    "simulation_template_id": {"type": ["string", "null"]},
     "simulation_type": {"type": ["string", "null"]},
     "attack_flow": {"type": "array", "items": {"type": "string", "minLength": 1}},
     "observable_signal_ids": {"type": "array", "items": {"type": "string", "minLength": 1}, "description": "Implementation extension: references replace inline signal copies."},

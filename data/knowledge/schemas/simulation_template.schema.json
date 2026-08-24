@@ -7,9 +7,15 @@
   "properties": {
     "template_id": {"type": "string", "minLength": 1, "description": "Implementation extension: extracts executable configuration from code."},
     "name": {"type": "string", "minLength": 1},
+    "campaign_pattern": {"type": ["string", "null"]},
+    "required_entities": {"type": "array", "items": {"type": "string", "minLength": 1}},
     "supported_action_types": {"type": "array", "items": {"type": "string", "minLength": 1}},
     "required_state_keys": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "parameter_ids": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "state_requirement_id": {"type": ["string", "null"]},
     "parameter_schema_ref": {"type": ["string", "null"], "description": "Implementation extension; points to parameter contract, not generated values."},
+    "constraints": {"type": "array", "items": {"type": "string"}},
+    "origin": {"type": "string", "enum": ["source_backed", "implementation_derived"]},
     "evidence": {"type": "array", "items": {"$ref": "evidence.schema.json"}}
   },
   "additionalProperties": false

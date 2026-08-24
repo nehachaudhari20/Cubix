@@ -1,0 +1,1052 @@
+{
+  "families": [
+    {
+      "attack_id": "AG-001",
+      "sources": [
+        {
+          "source": "agent-commerce-11.pdf",
+          "pages": [
+            1,
+            13,
+            16,
+            17,
+            18
+          ],
+          "sections": []
+        },
+        {
+          "source": "open-banking-12.pdf",
+          "pages": [
+            17,
+            22
+          ],
+          "sections": []
+        }
+      ]
+    },
+    {
+      "attack_id": "AG-002",
+      "sources": [
+        {
+          "source": "agent-commerce-11.pdf",
+          "pages": [
+            3,
+            14,
+            16,
+            17,
+            18
+          ],
+          "sections": []
+        },
+        {
+          "source": "open-banking-12.pdf",
+          "pages": [
+            17,
+            22
+          ],
+          "sections": []
+        }
+      ]
+    },
+    {
+      "attack_id": "AG-003",
+      "sources": [
+        {
+          "source": "agent-commerce-11.pdf",
+          "pages": [
+            6,
+            14,
+            16,
+            17,
+            18
+          ],
+          "sections": []
+        }
+      ]
+    },
+    {
+      "attack_id": "AG-004",
+      "sources": [
+        {
+          "source": "agent-commerce-11.pdf",
+          "pages": [
+            8,
+            14,
+            16,
+            17,
+            18
+          ],
+          "sections": []
+        }
+      ]
+    },
+    {
+      "attack_id": "AG-005",
+      "sources": [
+        {
+          "source": "agent-commerce-11.pdf",
+          "pages": [
+            11,
+            14,
+            16,
+            17,
+            18
+          ],
+          "sections": []
+        },
+        {
+          "source": "open-banking-12.pdf",
+          "pages": [
+            17,
+            22
+          ],
+          "sections": []
+        }
+      ]
+    },
+    {
+      "attack_id": "AML-001",
+      "sources": [
+        {
+          "source": "aml-14.pdf",
+          "pages": [
+            1,
+            13,
+            15,
+            16,
+            17,
+            18,
+            19
+          ],
+          "sections": []
+        }
+      ]
+    },
+    {
+      "attack_id": "AML-002",
+      "sources": [
+        {
+          "source": "aml-14.pdf",
+          "pages": [
+            3,
+            13,
+            16,
+            17,
+            18,
+            19
+          ],
+          "sections": []
+        }
+      ]
+    },
+    {
+      "attack_id": "AML-003",
+      "sources": [
+        {
+          "source": "aml-14.pdf",
+          "pages": [
+            5,
+            13,
+            16,
+            17,
+            18,
+            19
+          ],
+          "sections": []
+        }
+      ]
+    },
+    {
+      "attack_id": "AML-004",
+      "sources": [
+        {
+          "source": "aml-14.pdf",
+          "pages": [
+            7,
+            13,
+            16,
+            17,
+            18,
+            19
+          ],
+          "sections": []
+        }
+      ]
+    },
+    {
+      "attack_id": "AML-005",
+      "sources": [
+        {
+          "source": "aml-14.pdf",
+          "pages": [
+            9,
+            13,
+            16,
+            17,
+            18,
+            19
+          ],
+          "sections": []
+        }
+      ]
+    },
+    {
+      "attack_id": "AML-006",
+      "sources": [
+        {
+          "source": "aml-14.pdf",
+          "pages": [
+            11,
+            13,
+            16,
+            17,
+            18,
+            19
+          ],
+          "sections": []
+        }
+      ]
+    },
+    {
+      "attack_id": "ACQ-001",
+      "sources": [
+        {
+          "source": "aquirer-7.pdf",
+          "pages": [
+            1,
+            17,
+            18,
+            19,
+            20
+          ],
+          "sections": []
+        }
+      ]
+    },
+    {
+      "attack_id": "ACQ-002",
+      "sources": [
+        {
+          "source": "aquirer-7.pdf",
+          "pages": [
+            5,
+            17,
+            18,
+            19,
+            20
+          ],
+          "sections": []
+        }
+      ]
+    },
+    {
+      "attack_id": "ACQ-003",
+      "sources": [
+        {
+          "source": "aquirer-7.pdf",
+          "pages": [
+            9,
+            17,
+            18,
+            19,
+            20
+          ],
+          "sections": []
+        }
+      ]
+    },
+    {
+      "attack_id": "ACQ-004",
+      "sources": [
+        {
+          "source": "aquirer-7.pdf",
+          "pages": [
+            13,
+            17,
+            18,
+            19
+          ],
+          "sections": []
+        },
+        {
+          "source": "authorization-10.pdf",
+          "pages": [
+            12,
+            14
+          ],
+          "sections": []
+        }
+      ]
+    },
+    {
+      "attack_id": "AUTH-001",
+      "sources": [
+        {
+          "source": "authentication-4.pdf",
+          "pages": [
+            1,
+            13,
+            14,
+            15
+          ],
+          "sections": []
+        },
+        {
+          "source": "open-banking-12.pdf",
+          "pages": [
+            17,
+            22
+          ],
+          "sections": []
+        },
+        {
+          "source": "payment-rail-9.pdf",
+          "pages": [
+            7
+          ],
+          "sections": []
+        }
+      ]
+    },
+    {
+      "attack_id": "AUTH-002",
+      "sources": [
+        {
+          "source": "authentication-4.pdf",
+          "pages": [
+            4,
+            13,
+            14,
+            15
+          ],
+          "sections": []
+        },
+        {
+          "source": "open-banking-12.pdf",
+          "pages": [
+            17,
+            22
+          ],
+          "sections": []
+        },
+        {
+          "source": "payment-rail-9.pdf",
+          "pages": [
+            7
+          ],
+          "sections": []
+        }
+      ]
+    },
+    {
+      "attack_id": "AUTH-003",
+      "sources": [
+        {
+          "source": "authentication-4.pdf",
+          "pages": [
+            7,
+            13,
+            14,
+            15
+          ],
+          "sections": []
+        },
+        {
+          "source": "open-banking-12.pdf",
+          "pages": [
+            17,
+            22
+          ],
+          "sections": []
+        },
+        {
+          "source": "payment-rail-9.pdf",
+          "pages": [
+            7
+          ],
+          "sections": []
+        }
+      ]
+    },
+    {
+      "attack_id": "AUTH-004",
+      "sources": [
+        {
+          "source": "authentication-4.pdf",
+          "pages": [
+            10,
+            13,
+            14,
+            15
+          ],
+          "sections": []
+        }
+      ]
+    },
+    {
+      "attack_id": "AUT-001",
+      "sources": [
+        {
+          "source": "authorization-10.pdf",
+          "pages": [
+            1,
+            11,
+            12,
+            13,
+            14
+          ],
+          "sections": []
+        }
+      ]
+    },
+    {
+      "attack_id": "AUT-002",
+      "sources": [
+        {
+          "source": "authorization-10.pdf",
+          "pages": [
+            4,
+            11,
+            12,
+            13,
+            14
+          ],
+          "sections": []
+        }
+      ]
+    },
+    {
+      "attack_id": "AUT-003",
+      "sources": [
+        {
+          "source": "authorization-10.pdf",
+          "pages": [
+            8,
+            11,
+            12,
+            13,
+            14
+          ],
+          "sections": []
+        }
+      ]
+    },
+    {
+      "attack_id": "CM-001",
+      "sources": [
+        {
+          "source": "cash-out-13.pdf",
+          "pages": [
+            1,
+            11,
+            12,
+            14,
+            15,
+            16
+          ],
+          "sections": []
+        }
+      ]
+    },
+    {
+      "attack_id": "CM-002",
+      "sources": [
+        {
+          "source": "cash-out-13.pdf",
+          "pages": [
+            3,
+            11,
+            12,
+            14,
+            15,
+            16
+          ],
+          "sections": []
+        }
+      ]
+    },
+    {
+      "attack_id": "CM-003",
+      "sources": [
+        {
+          "source": "cash-out-13.pdf",
+          "pages": [
+            6,
+            11,
+            12,
+            14,
+            15,
+            16
+          ],
+          "sections": []
+        },
+        {
+          "source": "network-15.pdf",
+          "pages": [
+            11,
+            15
+          ],
+          "sections": []
+        }
+      ]
+    },
+    {
+      "attack_id": "CM-004",
+      "sources": [
+        {
+          "source": "cash-out-13.pdf",
+          "pages": [
+            8,
+            11,
+            12,
+            14,
+            15,
+            16
+          ],
+          "sections": []
+        }
+      ]
+    },
+    {
+      "attack_id": "DFS-001",
+      "sources": [
+        {
+          "source": "authorization-10.pdf",
+          "pages": [
+            10
+          ],
+          "sections": []
+        },
+        {
+          "source": "device-session-3.pdf",
+          "pages": [
+            1,
+            19,
+            20
+          ],
+          "sections": []
+        }
+      ]
+    },
+    {
+      "attack_id": "EFF-001",
+      "sources": [
+        {
+          "source": "device-session-3.pdf",
+          "pages": [
+            4,
+            19,
+            20
+          ],
+          "sections": []
+        },
+        {
+          "source": "network-15.pdf",
+          "pages": [
+            11,
+            15
+          ],
+          "sections": []
+        }
+      ]
+    },
+    {
+      "attack_id": "RAT-001",
+      "sources": [
+        {
+          "source": "device-session-3.pdf",
+          "pages": [
+            8,
+            18,
+            19,
+            20
+          ],
+          "sections": []
+        }
+      ]
+    },
+    {
+      "attack_id": "BOT-001",
+      "sources": [
+        {
+          "source": "device-session-3.pdf",
+          "pages": [
+            11,
+            18,
+            19,
+            20
+          ],
+          "sections": []
+        },
+        {
+          "source": "network-15.pdf",
+          "pages": [
+            11,
+            15
+          ],
+          "sections": []
+        }
+      ]
+    },
+    {
+      "attack_id": "BBE-001",
+      "sources": [
+        {
+          "source": "authentication-4.pdf",
+          "pages": [
+            13,
+            15
+          ],
+          "sections": []
+        },
+        {
+          "source": "authorization-10.pdf",
+          "pages": [
+            12,
+            14
+          ],
+          "sections": []
+        },
+        {
+          "source": "device-session-3.pdf",
+          "pages": [
+            15,
+            18,
+            19,
+            20
+          ],
+          "sections": []
+        }
+      ]
+    },
+    {
+      "attack_id": "GP-001",
+      "sources": [
+        {
+          "source": "agent-commerce-11.pdf",
+          "pages": [
+            1
+          ],
+          "sections": []
+        },
+        {
+          "source": "authorization-10.pdf",
+          "pages": [
+            12,
+            14
+          ],
+          "sections": []
+        },
+        {
+          "source": "gateway-processor-8.pdf",
+          "pages": [
+            1,
+            17,
+            18,
+            19,
+            20
+          ],
+          "sections": []
+        },
+        {
+          "source": "open-banking-12.pdf",
+          "pages": [
+            17,
+            21,
+            22
+          ],
+          "sections": []
+        }
+      ]
+    },
+    {
+      "attack_id": "GP-002",
+      "sources": [
+        {
+          "source": "gateway-processor-8.pdf",
+          "pages": [
+            3,
+            17,
+            18,
+            19,
+            20
+          ],
+          "sections": []
+        }
+      ]
+    },
+    {
+      "attack_id": "GP-003",
+      "sources": [
+        {
+          "source": "authorization-10.pdf",
+          "pages": [
+            12,
+            14
+          ],
+          "sections": []
+        },
+        {
+          "source": "gateway-processor-8.pdf",
+          "pages": [
+            6,
+            17,
+            18,
+            19,
+            20
+          ],
+          "sections": []
+        }
+      ]
+    },
+    {
+      "attack_id": "GP-004",
+      "sources": [
+        {
+          "source": "gateway-processor-8.pdf",
+          "pages": [
+            8,
+            17,
+            18,
+            19,
+            20
+          ],
+          "sections": []
+        }
+      ]
+    },
+    {
+      "attack_id": "GP-005",
+      "sources": [
+        {
+          "source": "gateway-processor-8.pdf",
+          "pages": [
+            10,
+            17,
+            18,
+            19,
+            20
+          ],
+          "sections": []
+        },
+        {
+          "source": "payment-rail-9.pdf",
+          "pages": [
+            7,
+            8,
+            9,
+            10
+          ],
+          "sections": []
+        }
+      ]
+    },
+    {
+      "attack_id": "GP-006",
+      "sources": [
+        {
+          "source": "gateway-processor-8.pdf",
+          "pages": [
+            13,
+            17,
+            18,
+            19,
+            20
+          ],
+          "sections": []
+        }
+      ]
+    },
+    {
+      "attack_id": "GP-007",
+      "sources": [
+        {
+          "source": "gateway-processor-8.pdf",
+          "pages": [
+            15,
+            17,
+            18,
+            19,
+            20
+          ],
+          "sections": []
+        }
+      ]
+    },
+    {
+      "attack_id": "SIF-001",
+      "sources": [
+        {
+          "source": "KYC-1.pdf",
+          "pages": [
+            1
+          ],
+          "sections": []
+        },
+        {
+          "source": "agent-commerce-11.pdf",
+          "pages": [
+            4
+          ],
+          "sections": []
+        }
+      ]
+    },
+    {
+      "attack_id": "GDF-001",
+      "sources": [
+        {
+          "source": "KYC-1.pdf",
+          "pages": [
+            6
+          ],
+          "sections": []
+        }
+      ]
+    },
+    {
+      "attack_id": "DII-001",
+      "sources": [
+        {
+          "source": "KYC-1.pdf",
+          "pages": [
+            11
+          ],
+          "sections": []
+        }
+      ]
+    },
+    {
+      "attack_id": "SEP-001",
+      "sources": [
+        {
+          "source": "KYC-1.pdf",
+          "pages": [
+            16
+          ],
+          "sections": []
+        }
+      ]
+    },
+    {
+      "attack_id": "ATO-001",
+      "sources": [
+        {
+          "source": "KYC-1.pdf",
+          "pages": [
+            21
+          ],
+          "sections": []
+        }
+      ]
+    },
+    {
+      "attack_id": "N-001",
+      "sources": [
+        {
+          "source": "network-15.pdf",
+          "pages": [
+            1,
+            11,
+            13,
+            14,
+            15
+          ],
+          "sections": []
+        }
+      ]
+    },
+    {
+      "attack_id": "N-002",
+      "sources": [
+        {
+          "source": "network-15.pdf",
+          "pages": [
+            3,
+            11,
+            13,
+            14
+          ],
+          "sections": []
+        }
+      ]
+    },
+    {
+      "attack_id": "N-003",
+      "sources": [
+        {
+          "source": "network-15.pdf",
+          "pages": [
+            6,
+            11,
+            13,
+            14
+          ],
+          "sections": []
+        }
+      ]
+    },
+    {
+      "attack_id": "N-004",
+      "sources": [
+        {
+          "source": "network-15.pdf",
+          "pages": [
+            8,
+            9,
+            11,
+            14
+          ],
+          "sections": []
+        }
+      ]
+    },
+    {
+      "attack_id": "SIA-001",
+      "sources": [
+        {
+          "source": "onboarding-2.pdf",
+          "pages": [
+            1
+          ],
+          "sections": []
+        }
+      ]
+    },
+    {
+      "attack_id": "MDF-001",
+      "sources": [
+        {
+          "source": "onboarding-2.pdf",
+          "pages": [
+            4
+          ],
+          "sections": []
+        }
+      ]
+    },
+    {
+      "attack_id": "ATO-002",
+      "sources": [
+        {
+          "source": "onboarding-2.pdf",
+          "pages": [
+            6
+          ],
+          "sections": []
+        }
+      ]
+    },
+    {
+      "attack_id": "OB-001",
+      "sources": [
+        {
+          "source": "open-banking-12.pdf",
+          "pages": [
+            1,
+            16,
+            17,
+            19,
+            20,
+            21
+          ],
+          "sections": []
+        }
+      ]
+    },
+    {
+      "attack_id": "OB-002",
+      "sources": [
+        {
+          "source": "open-banking-12.pdf",
+          "pages": [
+            4,
+            16,
+            17,
+            19,
+            20,
+            21
+          ],
+          "sections": []
+        }
+      ]
+    },
+    {
+      "attack_id": "OB-003",
+      "sources": [
+        {
+          "source": "open-banking-12.pdf",
+          "pages": [
+            6,
+            17,
+            19,
+            20,
+            21
+          ],
+          "sections": []
+        }
+      ]
+    },
+    {
+      "attack_id": "OB-004",
+      "sources": [
+        {
+          "source": "open-banking-12.pdf",
+          "pages": [
+            9,
+            17,
+            20,
+            21
+          ],
+          "sections": []
+        }
+      ]
+    },
+    {
+      "attack_id": "OB-005",
+      "sources": [
+        {
+          "source": "open-banking-12.pdf",
+          "pages": [
+            11,
+            16,
+            17,
+            20,
+            21
+          ],
+          "sections": []
+        }
+      ]
+    },
+    {
+      "attack_id": "OB-006",
+      "sources": [
+        {
+          "source": "open-banking-12.pdf",
+          "pages": [
+            14,
+            17,
+            20,
+            21
+          ],
+          "sections": []
+        }
+      ]
+    },
+    {
+      "attack_id": "R-001",
+      "sources": [
+        {
+          "source": "payment-rail-9.pdf",
+          "pages": [
+            1,
+            7,
+            8,
+            9
+          ],
+          "sections": []
+        }
+      ]
+    }
+  ]
+}

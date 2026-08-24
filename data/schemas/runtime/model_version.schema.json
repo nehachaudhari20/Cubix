@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "model_version.schema.json",
+  "title": "Model registry metadata (the artifact file is separate)",
+  "type": "object",
+  "required": ["model_version", "artifact_path"],
+  "properties": {
+    "model_version": {"type": "string"},
+    "parent_model_version": {"type": ["string", "null"]},
+    "dataset_version": {"type": ["string", "null"]},
+    "feature_version": {"type": ["string", "null"]},
+    "algorithm": {"type": ["string", "null"]},
+    "training_config": {"type": "object"},
+    "metrics": {"type": "object"},
+    "evaluation_run_id": {"type": ["string", "null"]},
+    "deployment_status": {"type": "string", "enum": ["candidate", "active", "retired", "rejected"]},
+    "artifact_path": {"type": "string"},
+    "created_at": {"type": ["string", "null"]}
+  },
+  "additionalProperties": true
+}

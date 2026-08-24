@@ -1,0 +1,311 @@
+{
+  "registry_version": "2.0",
+  "built_at": "2026-08-24T21:28:54.840341+00:00",
+  "parameters": [
+    {
+      "parameter_id": "PAR-AMOUNT",
+      "name": "amount",
+      "value_type": "number",
+      "unit": "INR",
+      "description": "Payment amount. Sample from the customer baseline, then apply an attacker mutation. Never store a concrete rupee value on a vector.",
+      "legitimate_source": "data/baseline/baseline_transactions.csv amount distribution, conditioned on customer/rail",
+      "mutation_strategies": [
+        "threshold_hug",
+        "gradual_escalation",
+        "burst_spike",
+        "baseline_preserve"
+      ],
+      "attacker_controllable": true,
+      "constraints": {
+        "must_condition_on": [
+          "customer_baseline",
+          "rail"
+        ]
+      },
+      "related_feature_ids": [
+        "amount",
+        "amount_to_avg_7d_ratio",
+        "amount_zscore_account",
+        "avg_amount_last_7d"
+      ],
+      "sandbox_config_ref": "EXECUTABLE_DEFAULTS.payment_initiation.amount_limit_*",
+      "origin": "implementation_derived"
+    },
+    {
+      "parameter_id": "PAR-TIMING",
+      "name": "transaction_time",
+      "value_type": "duration",
+      "unit": null,
+      "description": "Hour/day placement relative to the customer's legitimate activity, not a free random timestamp.",
+      "legitimate_source": "baseline hour_of_day / day_of_week / is_night",
+      "mutation_strategies": [
+        "night_shift",
+        "preserve_customer_hours",
+        "off_cycle"
+      ],
+      "attacker_controllable": true,
+      "constraints": {},
+      "related_feature_ids": [
+        "hour_of_day",
+        "day_of_week",
+        "is_night"
+      ],
+      "sandbox_config_ref": null,
+      "origin": "implementation_derived"
+    },
+    {
+      "parameter_id": "PAR-DEVICE-AGE",
+      "name": "device_age",
+      "value_type": "integer",
+      "unit": "days",
+      "description": "Age of the device used for the action. New-device attacks mutate this; legitimate counterparts keep a known device.",
+      "legitimate_source": "sandbox device.first_seen / baseline device_age_days",
+      "mutation_strategies": [
+        "new_device",
+        "seasoned_device",
+        "device_switch"
+      ],
+      "attacker_controllable": true,
+      "constraints": {},
+      "related_feature_ids": [
+        "device_age_days",
+        "is_new_device",
+        "distinct_devices_last_7d"
+      ],
+      "sandbox_config_ref": "EXECUTABLE_DEFAULTS.device_session",
+      "origin": "implementation_derived"
+    },
+    {
+      "parameter_id": "PAR-BENEFICIARY-NOVELTY",
+      "name": "beneficiary_novelty",
+      "value_type": "boolean",
+      "unit": null,
+      "description": "Whether the payee is new to the customer. Attacker-controllable via link_beneficiary; legitimate counterparts use known family/rent payees.",
+      "legitimate_source": "sandbox beneficiary.created_at / baseline is_new_beneficiary",
+      "mutation_strategies": [
+        "new_beneficiary",
+        "known_beneficiary",
+        "mule_reuse"
+      ],
+      "attacker_controllable": true,
+      "constraints": {},
+      "related_feature_ids": [
+        "is_new_beneficiary",
+        "distinct_beneficiaries_last_24h"
+      ],
+      "sandbox_config_ref": "EXECUTABLE_DEFAULTS.mule_cashout",
+      "origin": "implementation_derived"
+    },
+    {
+      "parameter_id": "PAR-VELOCITY",
+      "name": "transaction_velocity",
+      "value_type": "integer",
+      "unit": "count",
+      "description": "Number of payments in the attack sequence window. Mutation strategies change spacing, not independent randomization of every field.",
+      "legitimate_source": "baseline transaction_count_last_1h / last_24h",
+      "mutation_strategies": [
+        "burst",
+        "low_and_slow",
+        "just_under_limit"
+      ],
+      "attacker_controllable": true,
+      "constraints": {},
+      "related_feature_ids": [
+        "velocity_score",
+        "transaction_count_last_1h",
+        "transaction_count_last_24h"
+      ],
+      "sandbox_config_ref": "EXECUTABLE_DEFAULTS.payment_initiation.velocity_*",
+      "origin": "implementation_derived"
+    },
+    {
+      "parameter_id": "PAR-SEQUENCE-GAP",
+      "name": "sequence_gap",
+      "value_type": "integer",
+      "unit": "seconds",
+      "description": "Gap between successive actions in a multi-step vector.",
+      "legitimate_source": "baseline seconds_since_prev_tx",
+      "mutation_strategies": [
+        "compress",
+        "stretch",
+        "preserve"
+      ],
+      "attacker_controllable": true,
+      "constraints": {},
+      "related_feature_ids": [
+        "seconds_since_prev_tx",
+        "campaign_step"
+      ],
+      "sandbox_config_ref": null,
+      "origin": "implementation_derived"
+    },
+    {
+      "parameter_id": "PAR-ACCOUNT-AGE",
+      "name": "account_age",
+      "value_type": "integer",
+      "unit": "days",
+      "description": "Tenure of the paying account.",
+      "legitimate_source": "sandbox customer.created_at / baseline account_age_days",
+      "mutation_strategies": [
+        "fresh_account",
+        "seasoned_account"
+      ],
+      "attacker_controllable": false,
+      "constraints": {
+        "typically_prerequisite": true
+      },
+      "related_feature_ids": [
+        "account_age_days",
+        "account_tx_count_to_date"
+      ],
+      "sandbox_config_ref": "EXECUTABLE_DEFAULTS.identity_kyc.young_account_days",
+      "origin": "implementation_derived"
+    },
+    {
+      "parameter_id": "PAR-MERCHANT-FAMILIARITY",
+      "name": "merchant_familiarity",
+      "value_type": "number",
+      "unit": null,
+      "description": "How often this customer has paid this merchant.",
+      "legitimate_source": "baseline merchant_familiarity_score",
+      "mutation_strategies": [
+        "novel_merchant",
+        "known_merchant"
+      ],
+      "attacker_controllable": true,
+      "constraints": {},
+      "related_feature_ids": [
+        "merchant_familiarity_score",
+        "merchant_risk_score",
+        "merchant_category_code"
+      ],
+      "sandbox_config_ref": "EXECUTABLE_DEFAULTS.merchant",
+      "origin": "implementation_derived"
+    },
+    {
+      "parameter_id": "PAR-MCC",
+      "name": "merchant_category_code",
+      "value_type": "enum",
+      "unit": null,
+      "description": "Declared vs actual MCC. Vector stores the *dimension*, not a concrete MCC like 7995 as if it were an instance.",
+      "legitimate_source": "baseline merchant_category_code",
+      "mutation_strategies": [
+        "declare_grocery_actual_gambling",
+        "preserve_declared"
+      ],
+      "attacker_controllable": true,
+      "constraints": {
+        "do_not_treat_as_production_mcc_policy": true
+      },
+      "related_feature_ids": [
+        "merchant_category_code"
+      ],
+      "sandbox_config_ref": null,
+      "origin": "implementation_derived"
+    },
+    {
+      "parameter_id": "PAR-RAIL",
+      "name": "payment_rail",
+      "value_type": "enum",
+      "unit": null,
+      "description": "Allowed rails for instantiation. Sample from the family-allowed set; do not invent a rail the family cannot use.",
+      "legitimate_source": "baseline payment_rail",
+      "mutation_strategies": [
+        "keep_customer_rail",
+        "cross_rail"
+      ],
+      "attacker_controllable": true,
+      "constraints": {
+        "allowed_values_ref": "vector.rails"
+      },
+      "related_feature_ids": [
+        "payment_rail"
+      ],
+      "sandbox_config_ref": null,
+      "origin": "implementation_derived"
+    },
+    {
+      "parameter_id": "PAR-TRUST-SCORE",
+      "name": "trust_score",
+      "value_type": "number",
+      "unit": null,
+      "description": "Synthetic KYC/trust prior used by identity journeys. Sandbox-local, not a production Mastercard score.",
+      "legitimate_source": "sandbox customer.trust_score",
+      "mutation_strategies": [
+        "low_trust",
+        "high_trust_camouflage"
+      ],
+      "attacker_controllable": false,
+      "constraints": {
+        "range": [
+          0,
+          1
+        ]
+      },
+      "related_feature_ids": [
+        "account_age_days"
+      ],
+      "sandbox_config_ref": "EXECUTABLE_DEFAULTS.identity_kyc.low_trust_threshold",
+      "origin": "implementation_derived"
+    },
+    {
+      "parameter_id": "PAR-SESSION-DURATION",
+      "name": "session_duration",
+      "value_type": "integer",
+      "unit": "seconds",
+      "description": "Session length before payment. Used by ATO/device vectors.",
+      "legitimate_source": null,
+      "mutation_strategies": [
+        "short_session",
+        "normal_session"
+      ],
+      "attacker_controllable": true,
+      "constraints": {},
+      "related_feature_ids": [
+        "seconds_since_prev_tx"
+      ],
+      "sandbox_config_ref": null,
+      "origin": "implementation_derived"
+    },
+    {
+      "parameter_id": "PAR-RETRY-COUNT",
+      "name": "retry_count",
+      "value_type": "integer",
+      "unit": "count",
+      "description": "Authorization retries or repeated probes in a velocity vector.",
+      "legitimate_source": null,
+      "mutation_strategies": [
+        "single_shot",
+        "retry_burst"
+      ],
+      "attacker_controllable": true,
+      "constraints": {},
+      "related_feature_ids": [
+        "transaction_count_last_1h",
+        "velocity_score"
+      ],
+      "sandbox_config_ref": null,
+      "origin": "implementation_derived"
+    },
+    {
+      "parameter_id": "PAR-GEO-DISTANCE",
+      "name": "geo_distance",
+      "value_type": "string",
+      "unit": null,
+      "description": "Location region relative to the customer baseline. Feature exists in training; sandbox fill is currently limited.",
+      "legitimate_source": "baseline location_region / location_country",
+      "mutation_strategies": [
+        "preserve_region",
+        "distant_region"
+      ],
+      "attacker_controllable": true,
+      "constraints": {},
+      "related_feature_ids": [
+        "location_region",
+        "location_country"
+      ],
+      "sandbox_config_ref": null,
+      "origin": "implementation_derived"
+    }
+  ]
+}

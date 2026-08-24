@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "training_dataset.schema.json",
+  "title": "Versioned training dataset manifest (exact mix used to train a model)",
+  "type": "object",
+  "required": ["dataset_version"],
+  "properties": {
+    "dataset_version": {"type": "string"},
+    "parent_dataset_version": {"type": ["string", "null"]},
+    "created_at": {"type": ["string", "null"]},
+    "sources": {
+      "type": "object",
+      "properties": {
+        "baseline_path": {"type": ["string", "null"]},
+        "baseline_rows": {"type": ["integer", "null"]},
+        "known_fraud_path": {"type": ["string", "null"]},
+        "known_fraud_rows": {"type": ["integer", "null"]},
+        "adversarial_buffer_path": {"type": ["string", "null"]},
+        "adversarial_rows": {"type": ["integer", "null"]},
+        "hard_negative_path": {"type": ["string", "null"]},
+        "hard_negative_rows": {"type": ["integer", "null"]}
+      }
+    },
+    "selection_policy": {"type": ["string", "null"]},
+    "feature_version": {"type": ["string", "null"]},
+    "row_manifest_path": {"type": ["string", "null"]},
+    "notes": {"type": ["string", "null"]}
+  },
+  "additionalProperties": true
+}

@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "state_requirement.schema.json",
+  "title": "Sandbox state required before a vector can be instantiated",
+  "type": "object",
+  "required": ["requirement_id", "name"],
+  "properties": {
+    "requirement_id": {"type": "string", "minLength": 1},
+    "name": {"type": "string", "minLength": 1},
+    "required_entities": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "required_state": {"type": "object"},
+    "notes": {"type": ["string", "null"]},
+    "origin": {"type": "string", "enum": ["source_backed", "implementation_derived"]}
+  },
+  "additionalProperties": false
+}

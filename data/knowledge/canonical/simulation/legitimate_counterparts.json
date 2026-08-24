@@ -1,0 +1,72 @@
+{
+  "registry_version": "2.0",
+  "built_at": "2026-08-24T21:28:54.840341+00:00",
+  "legitimate_counterparts": [
+    {
+      "counterpart_id": "LCP-0001",
+      "name": "New phone + family beneficiary + rent at night",
+      "description": "Looks like new-device + new-beneficiary + high-value night payment; is a customer replacing a phone and paying monthly rent to family.",
+      "suspicious_pattern": "new device + new beneficiary + high-value + night",
+      "legitimate_lookalike": "new phone + family beneficiary + monthly rent + night",
+      "related_feature_names": [
+        "is_new_device",
+        "is_new_beneficiary",
+        "amount",
+        "is_night"
+      ],
+      "origin": "implementation_derived"
+    },
+    {
+      "counterpart_id": "LCP-0002",
+      "name": "Salary split just under a round threshold",
+      "description": "Several sub-threshold credits/debits that resemble structuring but are payroll or vendor splits.",
+      "suspicious_pattern": "multiple just-under-threshold payments",
+      "legitimate_lookalike": "salary disbursement or vendor invoice split",
+      "related_feature_names": [
+        "amount",
+        "transaction_count_last_24h",
+        "velocity_score"
+      ],
+      "origin": "implementation_derived"
+    },
+    {
+      "counterpart_id": "LCP-0003",
+      "name": "First payment to a new school / hospital merchant",
+      "description": "Novel merchant + uncommon MCC that is a real first-time education or medical payment.",
+      "suspicious_pattern": "new merchant + unusual MCC + large first payment",
+      "legitimate_lookalike": "first tuition or hospital bill at a genuine merchant",
+      "related_feature_names": [
+        "merchant_familiarity_score",
+        "merchant_category_code",
+        "amount"
+      ],
+      "origin": "implementation_derived"
+    },
+    {
+      "counterpart_id": "LCP-0004",
+      "name": "Travel burst on a known device",
+      "description": "Several payments in one hour that trip velocity rules during legitimate travel or festival shopping.",
+      "suspicious_pattern": "high 1h velocity + elevated amount ratio",
+      "legitimate_lookalike": "travel booking cluster or festival shopping on a known device",
+      "related_feature_names": [
+        "transaction_count_last_1h",
+        "velocity_score",
+        "is_new_device"
+      ],
+      "origin": "implementation_derived"
+    },
+    {
+      "counterpart_id": "LCP-0005",
+      "name": "Young account used by a newly onboarded genuine customer",
+      "description": "Low tenure + first payments that resemble synthetic bust-out but follow a real KYC pass.",
+      "suspicious_pattern": "young account + immediate payment",
+      "legitimate_lookalike": "newly verified customer making a first legitimate transfer",
+      "related_feature_names": [
+        "account_age_days",
+        "account_tx_count_to_date",
+        "amount"
+      ],
+      "origin": "implementation_derived"
+    }
+  ]
+}

@@ -8,7 +8,11 @@
     "counterpart_id": {"type": "string", "minLength": 1, "description": "Implementation extension for vector evaluation."},
     "name": {"type": "string", "minLength": 1},
     "description": {"type": ["string", "null"]},
+    "suspicious_pattern": {"type": ["string", "null"]},
+    "legitimate_lookalike": {"type": ["string", "null"]},
     "distinguishing_signal_ids": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "related_feature_names": {"type": "array", "items": {"type": "string"}},
+    "origin": {"type": "string", "enum": ["source_backed", "implementation_derived"]},
     "evidence": {"type": "array", "items": {"$ref": "evidence.schema.json"}}
   },
   "additionalProperties": false

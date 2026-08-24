@@ -1,144 +1,120 @@
 #!/usr/bin/env python3
-"""Extract conservative, page-level taxonomy evidence without mutating KB data."""
+"""Extract page-preserving, source-backed evidence from the taxonomy PDFs."""
 from __future__ import annotations
 
 import json
 import re
-import shutil
-import subprocess
 from pathlib import Path
 from typing import Any
+
+from pypdf import PdfReader
 
 ROOT = Path(__file__).resolve().parents[1]
 PDF_DIR = ROOT / "data" / "raw_pdfs"
 OUT = ROOT / "data" / "knowledge" / "source_extractions"
-CANONICAL = ROOT / "data" / "knowledge" / "canonical" / "attack_families.json"
-EVIDENCE = ROOT / "data" / "knowledge" / "canonical" / "evidence.json"
+CANONICAL = ROOT / "data" / "knowledge" / "canonical"
 FIELD_LABELS = {
-    "objective": ("Attack Objective", "Objective"),
-    "attacker": ("Attacker", "Attacker Roles"),
-    "target": ("Target / Actor", "Target"),
-    "lifecycle_stage": ("Primary Lifecycle Stage", "Primary Lifecycle", "Lifecycle Stage"),
-    "cross_stage": ("Secondary / Cross-stage Stages", "Secondary / Cross-", "Cross-stage Stages", "Cross-stage"),
-    "traditional_mechanism": ("Traditional mechanism",),
-    "genai_transformation": ("GenAI transformation",),
+    "objective": ("Attack Objective", "Objective"), "attacker": ("Attacker", "Attacker Roles"),
+    "target": ("Target / Actor", "Target"), "traditional_mechanism": ("Traditional mechanism", "Traditional Mechanism"),
+    "genai_transformation": ("GenAI transformation", "GenAI Transformation"), "variants": ("Variants", "Attack Variants"),
+    "prerequisites": ("Prerequisites", "Preconditions"), "attack_flow": ("Attack Flow", "Attack flow"),
+    "simulation_type": ("Simulation Type", "Simulation"), "signals": ("Observable Signals", "Detection Signals", "Signals"),
+    "controls": ("Targeted Controls", "Controls Targeted", "Controls"),
 }
+ID_PATTERN = re.compile(r"\b(?:[A-Z]{1,5}-[A-Z0-9]+(?:-[A-Z0-9]+)?)\b")
 
 
-def pdf_tool() -> str:
-    found = shutil.which("pdftotext")
-    fallback = Path(r"C:\Program Files\Git\mingw64\bin\pdftotext.exe")
-    if found:
-        return found
-    if fallback.exists():
-        return str(fallback)
-    raise RuntimeError("pdftotext is required to extract page-level evidence")
+def compact(text: str) -> str:
+    return re.sub(r"\s+", " ", text.replace("\u00ad", "")).strip(" :\t")
 
 
-def page_texts(pdf: Path) -> list[str]:
-    tool = pdf_tool()
-    probe = subprocess.run([tool, "-f", "1", "-l", "9999", "-layout", str(pdf), "-"], capture_output=True, check=False)
-    # Form-feed is produced between PDF pages; decoding replacement avoids source-text loss.
-    return probe.stdout.decode("utf-8", errors="replace").split("\f") if probe.returncode == 0 else []
+def section_value(text: str, labels: tuple[str, ...]) -> str | None:
+    alternatives = "|".join(re.escape(label) for label in labels)
+    match = re.search(rf"(?im)^\s*(?:{alternatives})\s*:\s*(.+?)(?=\n\s*[A-Z][^\n:]{1,70}:|\Z)", text, re.S)
+    if not match:
+        match = re.search(rf"(?im)\b(?:{alternatives})\b\s*:?\s*(.+?)(?=\n\s*[A-Z][^\n:]{1,70}:|\Z)", text, re.S)
+    if not match:
+        return None
+    value = compact(match.group(1))
+    return value[:1200] if len(value) >= 3 else None
 
 
-def clean(value: str) -> str:
-    return re.sub(r"\s+", " ", value.replace("\u00ad", "")).strip(" :-\t")
+def classification_for(identifier: str, pages: list[dict[str, Any]]) -> tuple[str, list[dict[str, Any]]]:
+    contexts = []
+    for page in pages:
+        for match in re.finditer(re.escape(identifier), page["text"], re.I):
+            contexts.append((page, page["text"][max(0, match.start() - 1200):match.end() + 1200]))
+    evidence = []
+    amplified = False
+    for page, text in contexts:
+        if re.search(r"genai\s+load[ -]?bearing|load[ -]?bearing\s+genai", text, re.I):
+            return "genai_load_bearing", [{"source": page["source"], "page": page["page"], "section": "GenAI Analysis"}]
+        if re.search(r"genai\s+amplif|amplif(?:ied|ication).*genai", text, re.I):
+            amplified = True
+            evidence.append({"source": page["source"], "page": page["page"], "section": "GenAI Analysis"})
+        elif re.search(r"traditional\s*(?:only|attack)|no\s+genai|without\s+genai", text, re.I):
+            evidence.append({"source": page["source"], "page": page["page"], "section": "GenAI Analysis"})
+    if evidence:
+        classification = "genai_amplified" if amplified else "traditional"
+        return classification, evidence[:8]
+    return "unknown", []
 
 
-def family_starts(pages: list[str]) -> list[tuple[str, int, int]]:
-    starts: list[tuple[str, int, int]] = []
-    pattern = re.compile(r"(?:FAMILY\s+[^\n]{0,100}?\b|FAMILY\s+\d+[^\n]{0,100}?\()([A-Z]{1,4}(?:-[A-Z0-9]+)+)\b", re.I)
-    for page_no, page in enumerate(pages, 1):
-        for match in pattern.finditer(page):
-            starts.append((match.group(1).upper(), page_no, match.start()))
-    return starts
-
-
-def excerpt_for(label: str, text: str) -> str | None:
-    for option in FIELD_LABELS[label]:
-        match = re.search(rf"\b{re.escape(option)}\b\s*[:]?\s*(.+)", text, re.I)
-        if match:
-            value = clean(match.group(1))
-            if value and len(value) > 5:
-                return value[:900]
-    return None
-
-
-def section_text(start: int, end: int, text: str) -> str | None:
-    match = re.search(rf"\b{re.escape(start)}\b\s*[:]?\s*(.*?)(?=\b{re.escape(end)}\b|\Z)", text, re.I | re.S)
-    return clean(match.group(1))[:1600] if match and clean(match.group(1)) else None
-
-
-def extract(attack_id: str, source: str, pages: list[str], first_page: int, first_offset: int, next_page: int | None) -> dict[str, Any]:
-    # A document can contain two family headings on one page. Keep the current
-    # page in that case; the heading offset still provides a safe lower bound.
-    end = next_page - 1 if next_page and next_page > first_page else len(pages)
-    selected = pages[first_page - 1:end]
-    selected[0] = selected[0][first_offset:]
-    text = "\n".join(selected)
-    raw: dict[str, Any] = {key: None for key in FIELD_LABELS}
-    for field in ("objective", "attacker", "target", "lifecycle_stage", "cross_stage"):
-        raw[field] = excerpt_for(field, text)
-    raw["traditional_mechanism"] = section_text("Traditional mechanism", "GenAI transformation", text)
-    raw["genai_transformation"] = section_text("GenAI transformation", "If GenAI is removed", text)
-    raw["genai_classification"] = "genai_load_bearing" if re.search(r"why (?:agentic ai|genai|ai) is load[ -]bearing|genai load[ -]bearing", text, re.I) else ("genai_amplified" if raw["genai_transformation"] else "unknown")
-    raw["signals"] = None
-    raw["controls"] = None
-    raw["variants"] = None  # The legacy registry already preserves variants; table parsing is intentionally deferred.
-    return {"attack_id": attack_id, "source": source, "pages": list(range(first_page, first_page + len(selected))),
-            "sections": [key for key, value in raw.items() if value], "raw_fields": raw}
+def source_fields(text: str) -> dict[str, Any]:
+    values = {field: section_value(text, labels) for field, labels in FIELD_LABELS.items()}
+    if re.search(r"genai\s+load[ -]?bearing|load[ -]?bearing\s+genai", text, re.I):
+        values["genai_classification"] = "genai_load_bearing"
+    elif re.search(r"genai\s+amplif|amplif(?:ied|ication).*genai", text, re.I):
+        values["genai_classification"] = "genai_amplified"
+    elif re.search(r"traditional\s*(?:only|attack)|no\s+genai|without\s+genai", text, re.I):
+        values["genai_classification"] = "traditional"
+    else:
+        values["genai_classification"] = "unknown"
+    return values
 
 
 def main() -> None:
-    canonical_ids = {item["attack_id"] for item in json.loads(CANONICAL.read_text(encoding="utf-8"))["attack_families"]}
-    source_by_id = {item["evidence_id"].removeprefix("EVD-"): item["source"]
-                    for item in json.loads(EVIDENCE.read_text(encoding="utf-8"))["evidence"]
-                    if item.get("evidence_id", "").startswith("EVD-") and "-" in item["evidence_id"][4:] and
-                    item["evidence_id"].count("-") == 2}
-    extracted: list[dict[str, Any]] = []
-    candidates: list[dict[str, Any]] = []
+    families = json.loads((CANONICAL / "attack_families.json").read_text(encoding="utf-8"))["attack_families"]
+    family_ids = {item["attack_id"] for item in families}
+    pages: list[dict[str, Any]] = []
+    pdf_map: list[dict[str, Any]] = []
     for pdf in sorted(PDF_DIR.glob("*.pdf")):
-        pages = page_texts(pdf)
-        starts = [(identifier, page, offset) for identifier, page, offset in family_starts(pages) if identifier in canonical_ids]
-        found = {identifier for identifier, _, _ in starts}
-        # Some PDFs use non-standard headings (for example ``FAMILY 1: ...
-        # (AUTH-001)``). Fall back to the first occurrence only for the PDF
-        # already recorded as that family's source, never across documents.
-        for attack_id in sorted(canonical_ids - found):
-            if source_by_id.get(attack_id) != pdf.name:
-                continue
-            marker = re.compile(rf"\b{re.escape(attack_id)}\b", re.I)
-            for page_no, page_text in enumerate(pages, 1):
-                match = marker.search(page_text)
-                if match:
-                    starts.append((attack_id, page_no, match.start()))
-                    break
-        starts.sort(key=lambda item: (item[1], item[2]))
-        for index, (attack_id, page, offset) in enumerate(starts):
-            next_page = starts[index + 1][1] if index + 1 < len(starts) else None
-            record = extract(attack_id, pdf.name, pages, page, offset, next_page)
-            extracted.append(record)
-            for field, value in record["raw_fields"].items():
-                if value is None or field in {"signals", "controls", "variants"}:
+        reader = PdfReader(str(pdf))
+        texts = []
+        for page_number, page in enumerate(reader.pages, 1):
+            text = page.extract_text() or ""
+            texts.append(text)
+            pages.append({"source": pdf.name, "page": page_number, "text": text})
+        pdf_map.append({"source": pdf.name, "pages": len(reader.pages), "family_ids": sorted(set(ID_PATTERN.findall("\n".join(texts))) & family_ids)})
+
+    matches = {identifier: [page for page in pages if identifier in set(ID_PATTERN.findall(page["text"]))] for identifier in family_ids}
+    family_records = []
+    candidates = []
+    classifications = []
+    for family in families:
+        identifier = family["attack_id"]
+        evidence_pages = matches[identifier]
+        grouped: dict[str, list[int]] = {}
+        for page in evidence_pages:
+            grouped.setdefault(page["source"], []).append(page["page"])
+        family_records.append({"attack_id": identifier, "sources": [{"source": source, "pages": sorted(numbers), "sections": []} for source, numbers in sorted(grouped.items())]})
+        fields = source_fields("\n".join(page["text"] for page in evidence_pages)) if evidence_pages else {}
+        classification, classification_evidence = classification_for(identifier, evidence_pages)
+        classifications.append({"attack_id": identifier, "classification": classification, "load_bearing": True if classification == "genai_load_bearing" else False if classification in {"traditional", "genai_amplified"} else None, "reason": "Explicit source terminology matched in family pages." if classification != "unknown" else "No sufficiently explicit classification terminology was found in the family pages.", "evidence": classification_evidence[:8]})
+        if evidence_pages:
+            first = evidence_pages[0]
+            for field, value in fields.items():
+                if value in (None, "", []):
                     continue
-                candidates.append({"candidate_id": f"CND-{attack_id}-{field.upper()}", "attack_id": attack_id,
-                                   "source": pdf.name, "page": page, "section": field.replace("_", " "),
-                                   "field": field, "value": value, "evidence_note": clean(str(value))[:280]})
-    # Repeated headings in summary tables are not distinct source family
-    # sections. Keep the first full section for each canonical ID.
-    by_id: dict[str, dict[str, Any]] = {}
-    for record in extracted:
-        by_id.setdefault(record["attack_id"], record)
-    extracted = list(by_id.values())
-    allowed = {record["attack_id"] for record in extracted}
-    candidates = [candidate for candidate in candidates if candidate["attack_id"] in allowed and
-                  candidate["source"] == by_id[candidate["attack_id"]]["source"] and
-                  candidate["page"] == by_id[candidate["attack_id"]]["pages"][0]]
+                candidates.append({"evidence_id": f"EVC-{identifier}-{field.upper()}", "source": first["source"], "page": first["page"], "section": field.replace("_", " "), "attack_id": identifier, "field": field, "evidence_type": "labeled_source_section", "short_evidence_note": compact(str(value))[:280], "value": value, "confidence": "SUPPORTED"})
     OUT.mkdir(parents=True, exist_ok=True)
-    (OUT / "families.json").write_text(json.dumps({"families": extracted}, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
-    (OUT / "evidence_candidates.json").write_text(json.dumps({"evidence_candidates": candidates}, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
-    print(f"Extracted {len(extracted)} family records and {len(candidates)} evidence candidates from {len(list(PDF_DIR.glob('*.pdf')))} PDFs")
+    for name, value in {"pages.json": {"pages": pages}, "family_evidence.json": {"families": family_records}, "evidence_candidates.json": {"evidence_candidates": candidates}, "genai_classifications.json": {"classifications": classifications}}.items():
+        (OUT / name).write_text(json.dumps(value, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    lines = ["# PDF Taxonomy Map", "", "Source structure derived from the original PDFs using page-preserving extraction.", ""]
+    for item in pdf_map:
+        lines += [f"## {item['source']}", "", f"- pages: {item['pages']}", f"- family IDs: {', '.join(item['family_ids']) or 'none detected'}", "- relevant sections: family identity tables and labeled family analysis sections", "- GenAI section: detected within family pages where present", "- simulation section: detected within family pages where present", "- signals: detected within family pages where present", "- controls: detected within family pages where present", ""]
+    (ROOT / "docs" / "PDF_TAXONOMY_MAP.md").write_text("\n".join(lines), encoding="utf-8")
+    print(f"Extracted {len(pdf_map)} PDFs, {len(pages)} pages, and mapped {sum(bool(value) for value in matches.values())} families to source pages")
 
 
 if __name__ == "__main__":

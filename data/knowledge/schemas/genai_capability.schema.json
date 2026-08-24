@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "genai_capability.schema.json",
+  "title": "GenAI / agent capability used by attacks (not a boolean is_genai flag)",
+  "type": "object",
+  "required": ["capability_id", "name", "role"],
+  "properties": {
+    "capability_id": {"type": "string", "minLength": 1},
+    "name": {"type": "string", "minLength": 1},
+    "role": {"type": "string", "enum": ["traditional_support", "amplification", "load_bearing", "either"]},
+    "description": {"type": ["string", "null"]},
+    "examples": {"type": "array", "items": {"type": "string", "minLength": 1}}
+  },
+  "additionalProperties": false
+}
