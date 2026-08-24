@@ -1,2214 +1,3942 @@
 {
-  "generated_at": "2026-08-21T14:26:09.125229",
+  "registry_version": "2.0",
+  "built_at": "2026-08-24T21:33:25.607473+00:00",
+  "source": "data/knowledge/canonical/defense/signals.json",
   "total_signals": 276,
   "signals": [
     {
-      "signal_name": "Discrepancy between user goal and agent actions",
+      "signal_id": "SIG-0001",
+      "name": "Discrepancy between user goal and agent actions",
       "category": "Human Intent",
       "description": "Agent acting outside explicit or implicit user intent or policy boundaries.",
-      "detection_method": "Policy violation detection; Goal-action consistency scoring",
+      "detection_methods": [
+        "Policy violation detection",
+        "Goal-action consistency scoring"
+      ],
       "false_positive_risk": "Legitimate agent autonomy in executing complex multi-step tasks",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Discrepancy between user goal and agent actions",
+      "detection_method": "Policy violation detection; Goal-action consistency scoring"
     },
     {
-      "signal_name": "Agent credentials used from unexpected contexts",
+      "signal_id": "SIG-0002",
+      "name": "Agent credentials used from unexpected contexts",
       "category": "Agent Identity",
       "description": "Agent credentials or tokens presented from novel locations, contexts, or devices.",
-      "detection_method": "Contextual anomaly detection",
+      "detection_methods": [
+        "Contextual anomaly detection"
+      ],
       "false_positive_risk": "Legitimate multi-context usage or infrastructure migration",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Agent credentials used from unexpected contexts",
+      "detection_method": "Contextual anomaly detection"
     },
     {
-      "signal_name": "Unexpected permission usage",
+      "signal_id": "SIG-0003",
+      "name": "Unexpected permission usage",
       "category": "Agent Permissions",
       "description": "Agent exercising granted permissions in abnormal or non-standard ways.",
-      "detection_method": "Policy monitoring; Permission usage anomaly",
+      "detection_methods": [
+        "Policy monitoring",
+        "Permission usage anomaly"
+      ],
       "false_positive_risk": "Legitimate complex or novel tasks requested by user",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Unexpected permission usage",
+      "detection_method": "Policy monitoring; Permission usage anomaly"
     },
     {
-      "signal_name": "Unauthorized tool use",
+      "signal_id": "SIG-0004",
+      "name": "Unauthorized tool use",
       "category": "Agent Actions",
       "description": "Agent initiating tool or API calls without explicit or implied user authorization.",
-      "detection_method": "Tool call monitoring; Action sequence anomaly",
+      "detection_methods": [
+        "Tool call monitoring",
+        "Action sequence anomaly"
+      ],
       "false_positive_risk": "Agent has broad default payment permissions",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Unauthorized tool use",
+      "detection_method": "Tool call monitoring; Action sequence anomaly"
     },
     {
-      "signal_name": "Tool calls to unexpected endpoints",
+      "signal_id": "SIG-0005",
+      "name": "Tool calls to unexpected endpoints",
       "category": "Tool Calls",
       "description": "Payment API calls directed to unknown or unverified beneficiary endpoints.",
-      "detection_method": "Endpoint validation; Rules",
+      "detection_methods": [
+        "Endpoint validation",
+        "Rules"
+      ],
       "false_positive_risk": "Legitimate new vendor or service provider",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Tool calls to unexpected endpoints",
+      "detection_method": "Endpoint validation; Rules"
     },
     {
-      "signal_name": "Unusual API call patterns",
+      "signal_id": "SIG-0006",
+      "name": "Unusual API call patterns",
       "category": "API Calls",
       "description": "API call volume, frequency, parameter variations, or timing deviating from baseline.",
-      "detection_method": "Anomaly detection (frequency, timing, parameters)",
+      "detection_methods": [
+        "Anomaly detection (frequency, timing, parameters)"
+      ],
       "false_positive_risk": "Legitimate automated batch operations",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Unusual API call patterns",
+      "detection_method": "Anomaly detection (frequency, timing, parameters)"
     },
     {
-      "signal_name": "Fraudulent payment patterns / Novel beneficiaries",
+      "signal_id": "SIG-0007",
+      "name": "Fraudulent payment patterns / Novel beneficiaries",
       "category": "Transaction Sequences",
       "description": "Payments routed to novel beneficiaries or executed in rapid sequences.",
-      "detection_method": "ML anomaly detection; Graph analytics",
+      "detection_methods": [
+        "ML anomaly detection",
+        "Graph analytics"
+      ],
       "false_positive_risk": "Legitimate new business relationships or shopping events",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Fraudulent payment patterns / Novel beneficiaries",
+      "detection_method": "ML anomaly detection; Graph analytics"
     },
     {
-      "signal_name": "Unverified merchant interactions",
+      "signal_id": "SIG-0008",
+      "name": "Unverified merchant interactions",
       "category": "Merchant Interaction",
       "description": "Agent interacting with unverified, newly registered, or untrusted merchants.",
-      "detection_method": "Merchant reputation scoring; Entity resolution",
+      "detection_methods": [
+        "Merchant reputation scoring",
+        "Entity resolution"
+      ],
       "false_positive_risk": "Legitimate new merchant interaction",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Unverified merchant interactions",
+      "detection_method": "Merchant reputation scoring; Entity resolution"
     },
     {
-      "signal_name": "Behavioral inconsistency with history",
+      "signal_id": "SIG-0009",
+      "name": "Behavioral inconsistency with history",
       "category": "Behavioral Patterns",
       "description": "Agent interaction patterns shifting significantly from established historical baseline.",
-      "detection_method": "Behavioral analytics; Sequence modeling",
+      "detection_methods": [
+        "Behavioral analytics",
+        "Sequence modeling"
+      ],
       "false_positive_risk": "Legitimate user behavior change or preference update",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Behavioral inconsistency with history",
+      "detection_method": "Behavioral analytics; Sequence modeling"
     },
     {
-      "signal_name": "Coordinated multi-agent patterns",
+      "signal_id": "SIG-0010",
+      "name": "Coordinated multi-agent patterns",
       "category": "Cross-Agent",
       "description": "Multiple agents exhibiting synchronized or structurally similar attack patterns.",
-      "detection_method": "Graph analytics; Clustering",
+      "detection_methods": [
+        "Graph analytics",
+        "Clustering"
+      ],
       "false_positive_risk": "Legitimate multi-agent orchestration or framework coordination",
-      "cross_account_needed": true
+      "cross_account_needed": true,
+      "evidence": [],
+      "signal_name": "Coordinated multi-agent patterns",
+      "detection_method": "Graph analytics; Clustering"
     },
     {
-      "signal_name": "Synthetic identity attributes",
+      "signal_id": "SIG-0011",
+      "name": "Synthetic identity attributes",
       "category": "Agent Identity",
       "description": "Agent identity parameters synthesized programmatically or generated at scale.",
-      "detection_method": "Entity resolution; Graph analytics",
+      "detection_methods": [
+        "Entity resolution",
+        "Graph analytics"
+      ],
       "false_positive_risk": "Synthetic test data generation",
-      "cross_account_needed": true
+      "cross_account_needed": true,
+      "evidence": [],
+      "signal_name": "Synthetic identity attributes",
+      "detection_method": "Entity resolution; Graph analytics"
     },
     {
-      "signal_name": "Email APIs used for phishing",
+      "signal_id": "SIG-0012",
+      "name": "Email APIs used for phishing",
       "category": "Tool Calls",
       "description": "Agent utilizing communications APIs to transmit deceptive or phishing content.",
-      "detection_method": "Content analysis (NLP); Threat intelligence",
+      "detection_methods": [
+        "Content analysis (NLP)",
+        "Threat intelligence"
+      ],
       "false_positive_risk": "Legitimate automated marketing or outreach campaigns",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Email APIs used for phishing",
+      "detection_method": "Content analysis (NLP); Threat intelligence"
     },
     {
-      "signal_name": "Multiple account creation API calls",
+      "signal_id": "SIG-0013",
+      "name": "Multiple account creation API calls",
       "category": "API Calls",
       "description": "High velocity account creation calls originating from agent environment.",
-      "detection_method": "Velocity rules; Anomaly detection",
+      "detection_methods": [
+        "Velocity rules",
+        "Anomaly detection"
+      ],
       "false_positive_risk": "Legitimate bulk account management or enterprise provisioning",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Multiple account creation API calls",
+      "detection_method": "Velocity rules; Anomaly detection"
     },
     {
-      "signal_name": "Agent referencing non-existent conversations",
+      "signal_id": "SIG-0014",
+      "name": "Agent referencing non-existent conversations",
       "category": "Behavioral Patterns",
       "description": "Agent making decision citations or referencing past context not found in actual interaction logs.",
-      "detection_method": "Context consistency checking",
+      "detection_methods": [
+        "Context consistency checking"
+      ],
       "false_positive_risk": "Agent hallucination without malicious context",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Agent referencing non-existent conversations",
+      "detection_method": "Context consistency checking"
     },
     {
-      "signal_name": "Unusual inter-agent communication patterns",
+      "signal_id": "SIG-0015",
+      "name": "Unusual inter-agent communication patterns",
       "category": "Cross-Agent",
       "description": "Abnormal, unexpected, or unauthorized protocol messages between separate AI agents.",
-      "detection_method": "Graph analytics; A2A protocol monitoring",
+      "detection_methods": [
+        "Graph analytics",
+        "A2A protocol monitoring"
+      ],
       "false_positive_risk": "Legitimate agent delegation or complex workflow coordination",
-      "cross_account_needed": true
+      "cross_account_needed": true,
+      "evidence": [],
+      "signal_name": "Unusual inter-agent communication patterns",
+      "detection_method": "Graph analytics; A2A protocol monitoring"
     },
     {
-      "signal_name": "Real-time adaptive fraud patterns",
+      "signal_id": "SIG-0016",
+      "name": "Real-time adaptive fraud patterns",
       "category": "Behavioral Patterns",
       "description": "Agent dynamically mutating payloads, timing, or parameters based on control responses.",
-      "detection_method": "Sequence modeling; Behavioral analytics",
+      "detection_methods": [
+        "Sequence modeling",
+        "Behavioral analytics"
+      ],
       "false_positive_risk": "Legitimate adaptive learning or client retry mechanisms",
-      "cross_account_needed": true
+      "cross_account_needed": true,
+      "evidence": [],
+      "signal_name": "Real-time adaptive fraud patterns",
+      "detection_method": "Sequence modeling; Behavioral analytics"
     },
     {
-      "signal_name": "Amounts just below thresholds with unnatural consistency",
+      "signal_id": "SIG-0017",
+      "name": "Amounts just below thresholds with unnatural consistency",
       "category": "Transaction",
       "description": "Indicates threshold-conscious optimization",
-      "detection_method": "Rules (tolerance bands); ML anomaly detection",
+      "detection_methods": [
+        "Rules (tolerance bands)",
+        "ML anomaly detection"
+      ],
       "false_positive_risk": "Moderate",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Amounts just below thresholds with unnatural consistency",
+      "detection_method": "Rules (tolerance bands); ML anomaly detection"
     },
     {
-      "signal_name": "Transaction Volume unnatural smoothness",
+      "signal_id": "SIG-0018",
+      "name": "Transaction Volume unnatural smoothness",
       "category": "Transaction",
       "description": "Optimization creates unnatural patterns with unnatural smoothness",
-      "detection_method": "Anomaly detection (Isolation Forest, Autoencoder)",
+      "detection_methods": [
+        "Anomaly detection (Isolation Forest, Autoencoder)"
+      ],
       "false_positive_risk": "Moderate",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Transaction Volume unnatural smoothness",
+      "detection_method": "Anomaly detection (Isolation Forest, Autoencoder)"
     },
     {
-      "signal_name": "Transaction Beneficiary patterns unnatural rotation",
+      "signal_id": "SIG-0019",
+      "name": "Transaction Beneficiary patterns unnatural rotation",
       "category": "Transaction",
       "description": "Optimization creates unnatural patterns with unnatural rotation",
-      "detection_method": "Pattern analysis; Graph analytics",
+      "detection_methods": [
+        "Pattern analysis",
+        "Graph analytics"
+      ],
       "false_positive_risk": "Moderate",
-      "cross_account_needed": true
+      "cross_account_needed": true,
+      "evidence": [],
+      "signal_name": "Transaction Beneficiary patterns unnatural rotation",
+      "detection_method": "Pattern analysis; Graph analytics"
     },
     {
-      "signal_name": "Account Behavioral consistency",
+      "signal_id": "SIG-0020",
+      "name": "Account Behavioral consistency",
       "category": "Account",
       "description": "Optimization creates unnatural patterns that are 'too perfect'",
-      "detection_method": "Behavioral analytics",
+      "detection_methods": [
+        "Behavioral analytics"
+      ],
       "false_positive_risk": "High",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Account Behavioral consistency",
+      "detection_method": "Behavioral analytics"
     },
     {
-      "signal_name": "Lack of natural behavioral drift",
+      "signal_id": "SIG-0021",
+      "name": "Lack of natural behavioral drift",
       "category": "Account",
       "description": "Absence of natural variation indicates optimization",
-      "detection_method": "Sequence modeling (LSTM/Transformer)",
+      "detection_methods": [
+        "Sequence modeling (LSTM/Transformer)"
+      ],
       "false_positive_risk": "High",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Lack of natural behavioral drift",
+      "detection_method": "Sequence modeling (LSTM/Transformer)"
     },
     {
-      "signal_name": "Business profiles with perfect consistency",
+      "signal_id": "SIG-0022",
+      "name": "Business profiles with perfect consistency",
       "category": "Entity",
       "description": "Too-perfect alignment indicates optimization",
-      "detection_method": "Rules + ML",
+      "detection_methods": [
+        "Rules + ML"
+      ],
       "false_positive_risk": "High",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Business profiles with perfect consistency",
+      "detection_method": "Rules + ML"
     },
     {
-      "signal_name": "Coordinated patterns across accounts",
+      "signal_id": "SIG-0023",
+      "name": "Coordinated patterns across accounts",
       "category": "Network",
       "description": "Indicates shared optimization strategy",
-      "detection_method": "Graph Neural Network; Clustering",
+      "detection_methods": [
+        "Graph Neural Network",
+        "Clustering"
+      ],
       "false_positive_risk": "Low",
-      "cross_account_needed": true
+      "cross_account_needed": true,
+      "evidence": [],
+      "signal_name": "Coordinated patterns across accounts",
+      "detection_method": "Graph Neural Network; Clustering"
     },
     {
-      "signal_name": "Risk score unnatural stability",
+      "signal_id": "SIG-0024",
+      "name": "Risk score unnatural stability",
       "category": "Risk",
       "description": "Successful evasion keeps scores consistently low",
-      "detection_method": "ML anomaly detection",
+      "detection_methods": [
+        "ML anomaly detection"
+      ],
       "false_positive_risk": "Moderate",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Risk score unnatural stability",
+      "detection_method": "ML anomaly detection"
     },
     {
-      "signal_name": "Growth patterns with unnatural smoothness",
+      "signal_id": "SIG-0025",
+      "name": "Growth patterns with unnatural smoothness",
       "category": "Temporal",
       "description": "Unnatural smoothness in growth",
-      "detection_method": "Temporal analysis",
+      "detection_methods": [
+        "Temporal analysis"
+      ],
       "false_positive_risk": "Moderate",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Growth patterns with unnatural smoothness",
+      "detection_method": "Temporal analysis"
     },
     {
-      "signal_name": "Evolving behavioral patterns in response to detection",
+      "signal_id": "SIG-0026",
+      "name": "Evolving behavioral patterns in response to detection",
       "category": "Behavioral",
       "description": "Patterns that evolve in response to detection changes indicate feedback-driven optimization",
-      "detection_method": "Temporal pattern analysis",
+      "detection_methods": [
+        "Temporal pattern analysis"
+      ],
       "false_positive_risk": "Low",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Evolving behavioral patterns in response to detection",
+      "detection_method": "Temporal pattern analysis"
     },
     {
-      "signal_name": "Sudden spike in alert volume",
+      "signal_id": "SIG-0027",
+      "name": "Sudden spike in alert volume",
       "category": "Alert",
       "description": "Indicates flooding attack",
-      "detection_method": "Volume anomaly detection",
+      "detection_methods": [
+        "Volume anomaly detection"
+      ],
       "false_positive_risk": "Moderate",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Sudden spike in alert volume",
+      "detection_method": "Volume anomaly detection"
     },
     {
-      "signal_name": "High ratio of false positives",
+      "signal_id": "SIG-0028",
+      "name": "High ratio of false positives",
       "category": "Alert",
       "description": "Indicates synthetic generation",
-      "detection_method": "Alert outcome analysis",
+      "detection_methods": [
+        "Alert outcome analysis"
+      ],
       "false_positive_risk": "Low",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "High ratio of false positives",
+      "detection_method": "Alert outcome analysis"
     },
     {
-      "signal_name": "Multiple accounts generating similar alert patterns",
+      "signal_id": "SIG-0029",
+      "name": "Multiple accounts generating similar alert patterns",
       "category": "Alert",
       "description": "Indicates coordinated flooding",
-      "detection_method": "Clustering; Graph analytics",
+      "detection_methods": [
+        "Clustering",
+        "Graph analytics"
+      ],
       "false_positive_risk": "Low",
-      "cross_account_needed": true
+      "cross_account_needed": true,
+      "evidence": [],
+      "signal_name": "Multiple accounts generating similar alert patterns",
+      "detection_method": "Clustering; Graph analytics"
     },
     {
-      "signal_name": "Transaction patterns that exactly match alert rules",
+      "signal_id": "SIG-0030",
+      "name": "Transaction patterns that exactly match alert rules",
       "category": "Transaction",
       "description": "Indicates intentional triggering",
-      "detection_method": "Rules + ML",
+      "detection_methods": [
+        "Rules + ML"
+      ],
       "false_positive_risk": "Moderate",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Transaction patterns that exactly match alert rules",
+      "detection_method": "Rules + ML"
     },
     {
-      "signal_name": "Unnatural pattern variety",
+      "signal_id": "SIG-0031",
+      "name": "Unnatural pattern variety",
       "category": "Transaction",
       "description": "Indicates AI generation",
-      "detection_method": "ML anomaly detection",
+      "detection_methods": [
+        "ML anomaly detection"
+      ],
       "false_positive_risk": "Moderate",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Unnatural pattern variety",
+      "detection_method": "ML anomaly detection"
     },
     {
-      "signal_name": "Account relationships in flooding campaign",
+      "signal_id": "SIG-0032",
+      "name": "Account relationships in flooding campaign",
       "category": "Network",
       "description": "Indicates coordinated attack",
-      "detection_method": "Graph Neural Network",
+      "detection_methods": [
+        "Graph Neural Network"
+      ],
       "false_positive_risk": "Low",
-      "cross_account_needed": true
+      "cross_account_needed": true,
+      "evidence": [],
+      "signal_name": "Account relationships in flooding campaign",
+      "detection_method": "Graph Neural Network"
     },
     {
-      "signal_name": "Coordinated alert timing across accounts",
+      "signal_id": "SIG-0033",
+      "name": "Coordinated alert timing across accounts",
       "category": "Temporal",
       "description": "Indicates orchestrated attack",
-      "detection_method": "Temporal correlation",
+      "detection_methods": [
+        "Temporal correlation"
+      ],
       "false_positive_risk": "Low",
-      "cross_account_needed": true
+      "cross_account_needed": true,
+      "evidence": [],
+      "signal_name": "Coordinated alert timing across accounts",
+      "detection_method": "Temporal correlation"
     },
     {
-      "signal_name": "Decreasing investigation quality metrics",
+      "signal_id": "SIG-0034",
+      "name": "Decreasing investigation quality metrics",
       "category": "Investigation",
       "description": "Alert fatigue indicator",
-      "detection_method": "Operational analytics",
+      "detection_methods": [
+        "Operational analytics"
+      ],
       "false_positive_risk": "Low",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Decreasing investigation quality metrics",
+      "detection_method": "Operational analytics"
     },
     {
-      "signal_name": "Increasing time-to-investigate",
+      "signal_id": "SIG-0035",
+      "name": "Increasing time-to-investigate",
       "category": "Investigation",
       "description": "System overload indicator",
-      "detection_method": "Operational analytics",
+      "detection_methods": [
+        "Operational analytics"
+      ],
       "false_positive_risk": "Low",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Increasing time-to-investigate",
+      "detection_method": "Operational analytics"
     },
     {
-      "signal_name": "AI-generated text patterns in explanations",
+      "signal_id": "SIG-0036",
+      "name": "AI-generated text patterns in explanations",
       "category": "Documentation",
       "description": "Indicates synthetic generation",
-      "detection_method": "NLP; LLM-based detection; Perplexity analysis",
+      "detection_methods": [
+        "NLP",
+        "LLM-based detection",
+        "Perplexity analysis"
+      ],
       "false_positive_risk": "High",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "AI-generated text patterns in explanations",
+      "detection_method": "NLP; LLM-based detection; Perplexity analysis"
     },
     {
-      "signal_name": "Unnatural consistency across documents",
+      "signal_id": "SIG-0037",
+      "name": "Unnatural consistency across documents",
       "category": "Documentation",
       "description": "Indicates AI generation",
-      "detection_method": "Cross-document consistency scoring",
+      "detection_methods": [
+        "Cross-document consistency scoring"
+      ],
       "false_positive_risk": "High",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Unnatural consistency across documents",
+      "detection_method": "Cross-document consistency scoring"
     },
     {
-      "signal_name": "Metadata anomalies",
+      "signal_id": "SIG-0038",
+      "name": "Metadata anomalies",
       "category": "Documentation",
       "description": "Indicates fabrication",
-      "detection_method": "Metadata analysis",
+      "detection_methods": [
+        "Metadata analysis"
+      ],
       "false_positive_risk": "Moderate",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Metadata anomalies",
+      "detection_method": "Metadata analysis"
     },
     {
-      "signal_name": "Missing or inconsistent security features",
+      "signal_id": "SIG-0039",
+      "name": "Missing or inconsistent security features",
       "category": "Documentation",
       "description": "Indicates forgery",
-      "detection_method": "Document forensics",
+      "detection_methods": [
+        "Document forensics"
+      ],
       "false_positive_risk": "Moderate",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Missing or inconsistent security features",
+      "detection_method": "Document forensics"
     },
     {
-      "signal_name": "Unnatural response timing",
+      "signal_id": "SIG-0040",
+      "name": "Unnatural response timing",
       "category": "Behavioral",
       "description": "Indicates automated generation",
-      "detection_method": "Temporal analysis",
+      "detection_methods": [
+        "Temporal analysis"
+      ],
       "false_positive_risk": "Low",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Unnatural response timing",
+      "detection_method": "Temporal analysis"
     },
     {
-      "signal_name": "Too-perfect responses",
+      "signal_id": "SIG-0041",
+      "name": "Too-perfect responses",
       "category": "Behavioral",
       "description": "Indicates AI generation",
-      "detection_method": "NLP analysis",
+      "detection_methods": [
+        "NLP analysis"
+      ],
       "false_positive_risk": "High",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Too-perfect responses",
+      "detection_method": "NLP analysis"
     },
     {
-      "signal_name": "Similar narrative patterns across accounts",
+      "signal_id": "SIG-0042",
+      "name": "Similar narrative patterns across accounts",
       "category": "Network",
       "description": "Indicates coordinated fabrication",
-      "detection_method": "Clustering",
+      "detection_methods": [
+        "Clustering"
+      ],
       "false_positive_risk": "Low",
-      "cross_account_needed": true
+      "cross_account_needed": true,
+      "evidence": [],
+      "signal_name": "Similar narrative patterns across accounts",
+      "detection_method": "Clustering"
     },
     {
-      "signal_name": "Unnatural name variations",
+      "signal_id": "SIG-0043",
+      "name": "Unnatural name variations",
       "category": "Identity",
       "description": "Indicates evasion attempt",
-      "detection_method": "ML anomaly detection; Fuzzy matching",
+      "detection_methods": [
+        "ML anomaly detection",
+        "Fuzzy matching"
+      ],
       "false_positive_risk": "High",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Unnatural name variations",
+      "detection_method": "ML anomaly detection; Fuzzy matching"
     },
     {
-      "signal_name": "Inconsistent identity details",
+      "signal_id": "SIG-0044",
+      "name": "Inconsistent identity details",
       "category": "Identity",
       "description": "Indicates synthetic generation",
-      "detection_method": "Entity resolution",
+      "detection_methods": [
+        "Entity resolution"
+      ],
       "false_positive_risk": "Moderate",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Inconsistent identity details",
+      "detection_method": "Entity resolution"
     },
     {
-      "signal_name": "Unnatural corporate structure",
+      "signal_id": "SIG-0045",
+      "name": "Unnatural corporate structure",
       "category": "Entity",
       "description": "Indicates evasion attempt",
-      "detection_method": "Graph analytics",
+      "detection_methods": [
+        "Graph analytics"
+      ],
       "false_positive_risk": "High",
-      "cross_account_needed": true
+      "cross_account_needed": true,
+      "evidence": [],
+      "signal_name": "Unnatural corporate structure",
+      "detection_method": "Graph analytics"
     },
     {
-      "signal_name": "Jurisdictional patterns",
+      "signal_id": "SIG-0046",
+      "name": "Jurisdictional patterns",
       "category": "Entity",
       "description": "Indicates evasion attempt",
-      "detection_method": "Geographic analysis",
+      "detection_methods": [
+        "Geographic analysis"
+      ],
       "false_positive_risk": "Moderate",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Jurisdictional patterns",
+      "detection_method": "Geographic analysis"
     },
     {
-      "signal_name": "AI-generated document artifacts",
+      "signal_id": "SIG-0047",
+      "name": "AI-generated document artifacts",
       "category": "Documentation",
       "description": "Indicates fabrication",
-      "detection_method": "Document forensics",
+      "detection_methods": [
+        "Document forensics"
+      ],
       "false_positive_risk": "Moderate",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "AI-generated document artifacts",
+      "detection_method": "Document forensics"
     },
     {
-      "signal_name": "Connections to known sanctioned entities",
+      "signal_id": "SIG-0048",
+      "name": "Connections to known sanctioned entities",
       "category": "Network",
       "description": "Indicates evasion",
-      "detection_method": "Graph Neural Network",
+      "detection_methods": [
+        "Graph Neural Network"
+      ],
       "false_positive_risk": "Low",
-      "cross_account_needed": true
+      "cross_account_needed": true,
+      "evidence": [],
+      "signal_name": "Connections to known sanctioned entities",
+      "detection_method": "Graph Neural Network"
     },
     {
-      "signal_name": "Entity relationship patterns",
+      "signal_id": "SIG-0049",
+      "name": "Entity relationship patterns",
       "category": "Network",
       "description": "Indicates beneficial ownership concealment",
-      "detection_method": "Graph analytics",
+      "detection_methods": [
+        "Graph analytics"
+      ],
       "false_positive_risk": "Low",
-      "cross_account_needed": true
+      "cross_account_needed": true,
+      "evidence": [],
+      "signal_name": "Entity relationship patterns",
+      "detection_method": "Graph analytics"
     },
     {
-      "signal_name": "Rapid entity creation patterns",
+      "signal_id": "SIG-0050",
+      "name": "Rapid entity creation patterns",
       "category": "Temporal",
       "description": "Indicates industrial-scale evasion",
-      "detection_method": "Velocity rules",
+      "detection_methods": [
+        "Velocity rules"
+      ],
       "false_positive_risk": "Moderate",
-      "cross_account_needed": true
+      "cross_account_needed": true,
+      "evidence": [],
+      "signal_name": "Rapid entity creation patterns",
+      "detection_method": "Velocity rules"
     },
     {
-      "signal_name": "External communication with unusual tone",
+      "signal_id": "SIG-0051",
+      "name": "External communication with unusual tone",
       "category": "Documentation",
       "description": "Indicates impersonation",
-      "detection_method": "Anomaly detection",
+      "detection_methods": [
+        "Anomaly detection"
+      ],
       "false_positive_risk": "Moderate",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "External communication with unusual tone",
+      "detection_method": "Anomaly detection"
     },
     {
+      "signal_id": "SIG-0052",
+      "name": "Unusual case closure patterns",
+      "category": "Case",
+      "description": "Indicates manipulation",
+      "detection_methods": [
+        "Case pattern analysis"
+      ],
+      "false_positive_risk": "Low",
+      "cross_account_needed": false,
+      "evidence": [],
       "signal_name": "Unusual case closure patterns",
-      "category": "Case",
-      "description": "Indicates manipulation",
-      "detection_method": "Case pattern analysis",
-      "false_positive_risk": "Low",
-      "cross_account_needed": false
+      "detection_method": "Case pattern analysis"
     },
     {
+      "signal_id": "SIG-0053",
+      "name": "Downgraded risk assessments",
+      "category": "Case",
+      "description": "Indicates manipulation",
+      "detection_methods": [
+        "Risk pattern analysis"
+      ],
+      "false_positive_risk": "Low",
+      "cross_account_needed": false,
+      "evidence": [],
       "signal_name": "Downgraded risk assessments",
-      "category": "Case",
-      "description": "Indicates manipulation",
-      "detection_method": "Risk pattern analysis",
-      "false_positive_risk": "Low",
-      "cross_account_needed": false
+      "detection_method": "Risk pattern analysis"
     },
     {
-      "signal_name": "Unusual case processing speed",
+      "signal_id": "SIG-0054",
+      "name": "Unusual case processing speed",
       "category": "Temporal",
       "description": "Indicates urgency manipulation",
-      "detection_method": "Temporal analysis",
+      "detection_methods": [
+        "Temporal analysis"
+      ],
       "false_positive_risk": "Moderate",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Unusual case processing speed",
+      "detection_method": "Temporal analysis"
     },
     {
-      "signal_name": "Investigator behavior anomalies",
+      "signal_id": "SIG-0055",
+      "name": "Investigator behavior anomalies",
       "category": "Investigator",
       "description": "Indicates compromise",
-      "detection_method": "Behavioral analytics",
+      "detection_methods": [
+        "Behavioral analytics"
+      ],
       "false_positive_risk": "Moderate",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Investigator behavior anomalies",
+      "detection_method": "Behavioral analytics"
     },
     {
-      "signal_name": "Model performance degradation",
+      "signal_id": "SIG-0056",
+      "name": "Model performance degradation",
       "category": "Model",
       "description": "Indicates poisoning",
-      "detection_method": "Model performance monitoring",
+      "detection_methods": [
+        "Model performance monitoring"
+      ],
       "false_positive_risk": "Low",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Model performance degradation",
+      "detection_method": "Model performance monitoring"
     },
     {
-      "signal_name": "Feature distribution shifts",
+      "signal_id": "SIG-0057",
+      "name": "Feature distribution shifts",
       "category": "Model",
       "description": "Indicates data manipulation",
-      "detection_method": "Distribution monitoring",
+      "detection_methods": [
+        "Distribution monitoring"
+      ],
       "false_positive_risk": "Moderate",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Feature distribution shifts",
+      "detection_method": "Distribution monitoring"
     },
     {
-      "signal_name": "Unnatural label patterns",
+      "signal_id": "SIG-0058",
+      "name": "Unnatural label patterns",
       "category": "Model",
       "description": "Indicates label flipping",
-      "detection_method": "Label distribution analysis",
+      "detection_methods": [
+        "Label distribution analysis"
+      ],
       "false_positive_risk": "Low",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Unnatural label patterns",
+      "detection_method": "Label distribution analysis"
     },
     {
-      "signal_name": "Anomalous training data patterns",
+      "signal_id": "SIG-0059",
+      "name": "Anomalous training data patterns",
       "category": "Data",
       "description": "Indicates poisoning",
-      "detection_method": "Data quality monitoring",
+      "detection_methods": [
+        "Data quality monitoring"
+      ],
       "false_positive_risk": "Moderate",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Anomalous training data patterns",
+      "detection_method": "Data quality monitoring"
     },
     {
-      "signal_name": "Unnatural feature relationships",
+      "signal_id": "SIG-0060",
+      "name": "Unnatural feature relationships",
       "category": "Data",
       "description": "Indicates adversarial inputs",
-      "detection_method": "Feature correlation analysis",
+      "detection_methods": [
+        "Feature correlation analysis"
+      ],
       "false_positive_risk": "Moderate",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Unnatural feature relationships",
+      "detection_method": "Feature correlation analysis"
     },
     {
-      "signal_name": "Synthetic UBO / entity registration details",
+      "signal_id": "SIG-0061",
+      "name": "Synthetic UBO / entity registration details",
       "category": "Merchant",
       "description": "Synthetic business entities have fabricated or inconsistent UBO, business name, or registration details.",
-      "detection_method": "Entity resolution; Registry lookups",
+      "detection_methods": [
+        "Entity resolution",
+        "Registry lookups"
+      ],
       "false_positive_risk": "New legitimate businesses or thin-file startups with limited public records",
-      "cross_account_needed": true
+      "cross_account_needed": true,
+      "evidence": [],
+      "signal_name": "Synthetic UBO / entity registration details",
+      "detection_method": "Entity resolution; Registry lookups"
     },
     {
-      "signal_name": "MCC / business type inconsistency",
+      "signal_id": "SIG-0062",
+      "name": "MCC / business type inconsistency",
       "category": "Merchant",
       "description": "Declared MCC or business type is inconsistent with actual merchant operations or transaction activity.",
-      "detection_method": "Rules + ML; Anomaly detection",
+      "detection_methods": [
+        "Rules + ML",
+        "Anomaly detection"
+      ],
       "false_positive_risk": "Legitimate business expansion or changes in product line",
-      "cross_account_needed": true
+      "cross_account_needed": true,
+      "evidence": [],
+      "signal_name": "MCC / business type inconsistency",
+      "detection_method": "Rules + ML; Anomaly detection"
     },
     {
-      "signal_name": "Too-perfect cross-document consistency",
+      "signal_id": "SIG-0063",
+      "name": "Too-perfect cross-document consistency",
       "category": "Document",
       "description": "Synthetic document sets pass consistency checks perfectly by construction, exceeding realistic variance.",
-      "detection_method": "ML consistency scoring",
+      "detection_methods": [
+        "ML consistency scoring"
+      ],
       "false_positive_risk": "Professionally prepared corporate documents from top-tier accounting firms",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Too-perfect cross-document consistency",
+      "detection_method": "ML consistency scoring"
     },
     {
-      "signal_name": "Unnatural transaction volume smoothness",
+      "signal_id": "SIG-0064",
+      "name": "Unnatural transaction volume smoothness",
       "category": "Transaction",
       "description": "AI-optimized transaction processing produces unnaturally steady volumes to avoid triggering spike detection.",
-      "detection_method": "ML anomaly detection",
+      "detection_methods": [
+        "ML anomaly detection"
+      ],
       "false_positive_risk": "Well-managed businesses or automated subscription billing processors",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Unnatural transaction volume smoothness",
+      "detection_method": "ML anomaly detection"
     },
     {
-      "signal_name": "Coordinated optimization patterns across merchants",
+      "signal_id": "SIG-0065",
+      "name": "Coordinated optimization patterns across merchants",
       "category": "Portfolio",
       "description": "Multiple independent merchants display identical transaction optimization or risk-avoidance behavioral signatures.",
-      "detection_method": "Graph Neural Network; Clustering",
+      "detection_methods": [
+        "Graph Neural Network",
+        "Clustering"
+      ],
       "false_positive_risk": "Franchise networks or merchants using identical legitimate payment software",
-      "cross_account_needed": true
+      "cross_account_needed": true,
+      "evidence": [],
+      "signal_name": "Coordinated optimization patterns across merchants",
+      "detection_method": "Graph Neural Network; Clustering"
     },
     {
-      "signal_name": "Shared infrastructure across merchants",
+      "signal_id": "SIG-0066",
+      "name": "Shared infrastructure across merchants",
       "category": "Network",
       "description": "Unrelated merchant accounts share underlying IP addresses, device fingerprints, hosting, or access points.",
-      "detection_method": "Graph analytics",
+      "detection_methods": [
+        "Graph analytics"
+      ],
       "false_positive_risk": "Shared office spaces, business parks, or common third-party e-commerce hosting",
-      "cross_account_needed": true
+      "cross_account_needed": true,
+      "evidence": [],
+      "signal_name": "Shared infrastructure across merchants",
+      "detection_method": "Graph analytics"
     },
     {
-      "signal_name": "AI-generated website text content artifacts",
+      "signal_id": "SIG-0067",
+      "name": "AI-generated website text content artifacts",
       "category": "Merchant",
       "description": "Synthetic storefronts exhibit text, review, or image generation artifacts typical of GenAI tools.",
-      "detection_method": "CNN/Transformer; NLP",
+      "detection_methods": [
+        "CNN/Transformer",
+        "NLP"
+      ],
       "false_positive_risk": "Legitimate e-commerce sites using AI copywriting tools for product descriptions",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "AI-generated website text content artifacts",
+      "detection_method": "CNN/Transformer; NLP"
     },
     {
-      "signal_name": "MCC mismatch with transaction patterns",
+      "signal_id": "SIG-0068",
+      "name": "MCC mismatch with transaction patterns",
       "category": "Transaction",
       "description": "Transaction velocity, average ticket size, and authorization patterns clash with the expected profile of the assigned MCC.",
-      "detection_method": "ML anomaly",
+      "detection_methods": [
+        "ML anomaly"
+      ],
       "false_positive_risk": "Seasonal sales spikes, legitimate promotional events, or rapid business model shifts",
-      "cross_account_needed": true
+      "cross_account_needed": true,
+      "evidence": [],
+      "signal_name": "MCC mismatch with transaction patterns",
+      "detection_method": "ML anomaly"
     },
     {
-      "signal_name": "OTP requests without corresponding user action / rapid OTP usage",
+      "signal_id": "SIG-0069",
+      "name": "OTP requests without corresponding user action / rapid OTP usage",
       "category": "Authentication Factor",
       "description": "Unsolicited OTP generation or high velocity of OTP usage immediately following phishing contact.",
-      "detection_method": "Anomaly detection; Temporal correlation",
+      "detection_methods": [
+        "Anomaly detection",
+        "Temporal correlation"
+      ],
       "false_positive_risk": "User-initiated password reset or legitimate transaction OTP verification.",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "OTP requests without corresponding user action / rapid OTP usage",
+      "detection_method": "Anomaly detection; Temporal correlation"
     },
     {
-      "signal_name": "Login attempts from unusual locations/devices post-contact",
+      "signal_id": "SIG-0070",
+      "name": "Login attempts from unusual locations/devices post-contact",
       "category": "Identity",
       "description": "Authentication attempts coming from unrecognized IP, geo-location, or device fingerprint following a phishing interaction.",
-      "detection_method": "Rule-based + ML",
+      "detection_methods": [
+        "Rule-based + ML"
+      ],
       "false_positive_risk": "Legitimate travel, roaming users, or new device setup.",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Login attempts from unusual locations/devices post-contact",
+      "detection_method": "Rule-based + ML"
     },
     {
-      "signal_name": "Device fingerprint changes between phishing interaction and login",
+      "signal_id": "SIG-0071",
+      "name": "Device fingerprint changes between phishing interaction and login",
       "category": "Device",
       "description": "Discrepancies in device properties captured during phishing link click versus actual login.",
-      "detection_method": "Device fingerprint anomaly detection",
+      "detection_methods": [
+        "Device fingerprint anomaly detection"
+      ],
       "false_positive_risk": "Legitimate device upgrade, browser update, or switching networks.",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Device fingerprint changes between phishing interaction and login",
+      "detection_method": "Device fingerprint anomaly detection"
     },
     {
-      "signal_name": "Rapid authentication post-phishing or post-OTP sharing",
+      "signal_id": "SIG-0072",
+      "name": "Rapid authentication post-phishing or post-OTP sharing",
       "category": "Session",
       "description": "Extremely short time delta between phishing email delivery/voice call and account login.",
-      "detection_method": "Temporal anomaly detection",
+      "detection_methods": [
+        "Temporal anomaly detection"
+      ],
       "false_positive_risk": "User responding immediately to legitimate bank alerts.",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Rapid authentication post-phishing or post-OTP sharing",
+      "detection_method": "Temporal anomaly detection"
     },
     {
-      "signal_name": "Unusual navigation during login",
+      "signal_id": "SIG-0073",
+      "name": "Unusual navigation during login",
       "category": "Behavioral",
       "description": "Hesitation, searching for basic account features, or non-standard movement patterns during post-authentication navigation.",
-      "detection_method": "Behavioral biometrics anomaly detection",
+      "detection_methods": [
+        "Behavioral biometrics anomaly detection"
+      ],
       "false_positive_risk": "Legitimate users navigating redesigned UI or experiencing physical fatigue.",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Unusual navigation during login",
+      "detection_method": "Behavioral biometrics anomaly detection"
     },
     {
-      "signal_name": "Phishing infrastructure patterns",
+      "signal_id": "SIG-0074",
+      "name": "Phishing infrastructure patterns",
       "category": "Network",
       "description": "Communication coming from suspicious domain, IP ranges, email headers, or known malicious infrastructure.",
-      "detection_method": "Graph analytics; Threat intelligence",
+      "detection_methods": [
+        "Graph analytics",
+        "Threat intelligence"
+      ],
       "false_positive_risk": "Flagging genuine bank communications due to third-party email delivery services.",
-      "cross_account_needed": true
+      "cross_account_needed": true,
+      "evidence": [],
+      "signal_name": "Phishing infrastructure patterns",
+      "detection_method": "Graph analytics; Threat intelligence"
     },
     {
-      "signal_name": "Caller ID spoofing and scam phone numbers",
+      "signal_id": "SIG-0075",
+      "name": "Caller ID spoofing and scam phone numbers",
       "category": "Identity / Network",
       "description": "Incoming call claims to be bank official but fails carrier authentication or matches known scam caller patterns.",
-      "detection_method": "STIR/SHAKEN; Caller ID validation; Carrier data sharing",
+      "detection_methods": [
+        "STIR/SHAKEN",
+        "Caller ID validation",
+        "Carrier data sharing"
+      ],
       "false_positive_risk": "Flagging genuine bank call-center or fraud department calls.",
-      "cross_account_needed": true
+      "cross_account_needed": true,
+      "evidence": [],
+      "signal_name": "Caller ID spoofing and scam phone numbers",
+      "detection_method": "STIR/SHAKEN; Caller ID validation; Carrier data sharing"
     },
     {
-      "signal_name": "Victim voice showing distress/coercion",
+      "signal_id": "SIG-0076",
+      "name": "Victim voice showing distress/coercion",
       "category": "Behavioral",
       "description": "Acoustic or behavioral stress cues during voice verification calls following social engineering attempts.",
-      "detection_method": "Voice stress analysis; Behavioral analytics",
+      "detection_methods": [
+        "Voice stress analysis",
+        "Behavioral analytics"
+      ],
       "false_positive_risk": "Legitimate customers under stress due to actual fraud or personal situations.",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Victim voice showing distress/coercion",
+      "detection_method": "Voice stress analysis; Behavioral analytics"
     },
     {
-      "signal_name": "Forged document artifacts",
+      "signal_id": "SIG-0077",
+      "name": "Forged document artifacts",
       "category": "Identity",
       "description": "Pixel anomalies, inconsistent EXIF metadata, unnatural aging, or visual synthesis artifacts in uploaded identity documents.",
-      "detection_method": "CNN/Transformer document forensics",
+      "detection_methods": [
+        "CNN/Transformer document forensics"
+      ],
       "false_positive_risk": "Poor camera quality, bad lighting, or damaged physical ID documents.",
-      "cross_account_needed": true
+      "cross_account_needed": true,
+      "evidence": [],
+      "signal_name": "Forged document artifacts",
+      "detection_method": "CNN/Transformer document forensics"
     },
     {
-      "signal_name": "Virtual camera detection / Device emulation",
+      "signal_id": "SIG-0078",
+      "name": "Virtual camera detection / Device emulation",
       "category": "Device",
       "description": "Use of OBS, virtual camera drivers, or emulated Android environments during liveness/biometric checks.",
-      "detection_method": "Hardware-level sensor validation; Rule-based",
+      "detection_methods": [
+        "Hardware-level sensor validation",
+        "Rule-based"
+      ],
       "false_positive_risk": "Legitimate technical user configurations or remote desktop utilities.",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Virtual camera detection / Device emulation",
+      "detection_method": "Hardware-level sensor validation; Rule-based"
     },
     {
-      "signal_name": "Unnatural facial movements / Deepfake artifacts",
+      "signal_id": "SIG-0079",
+      "name": "Unnatural facial movements / Deepfake artifacts",
       "category": "Behavioral",
       "description": "Lack of natural micro-expressions, facial warping, edge flickering, or audio-visual desynchronization in video verification.",
-      "detection_method": "Deepfake detection (CNN/Transformer); Behavioral biometrics matching",
+      "detection_methods": [
+        "Deepfake detection (CNN/Transformer)",
+        "Behavioral biometrics matching"
+      ],
       "false_positive_risk": "Poor network latency, low frame rates, or poor camera lighting.",
-      "cross_account_needed": true
+      "cross_account_needed": true,
+      "evidence": [],
+      "signal_name": "Unnatural facial movements / Deepfake artifacts",
+      "detection_method": "Deepfake detection (CNN/Transformer); Behavioral biometrics matching"
     },
     {
-      "signal_name": "Biometric match 'too perfect' / Keystroke timing anomalies",
+      "signal_id": "SIG-0080",
+      "name": "Biometric match 'too perfect' / Keystroke timing anomalies",
       "category": "Authentication Factor / Behavioral",
       "description": "GAN-generated keystroke, mouse, touch, or facial patterns exhibiting unnatural mathematical consistency or lacking natural human drift.",
-      "detection_method": "ML anomaly detection; Cross-modality consistency checking; Temporal consistency analysis",
+      "detection_methods": [
+        "ML anomaly detection",
+        "Cross-modality consistency checking",
+        "Temporal consistency analysis"
+      ],
       "false_positive_risk": "Legitimate highly consistent human typists, macro/accessibility tool usage.",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Biometric match 'too perfect' / Keystroke timing anomalies",
+      "detection_method": "ML anomaly detection; Cross-modality consistency checking; Temporal consistency analysis"
     },
     {
-      "signal_name": "Amounts just below known thresholds (e.g., $999.99)",
+      "signal_id": "SIG-0081",
+      "name": "Amounts just below known thresholds (e.g., $999.99)",
       "category": "Transaction",
       "description": "Indicates threshold-conscious structuring",
-      "detection_method": "Rules (tolerance bands) + Anomaly Detection",
+      "detection_methods": [
+        "Rules (tolerance bands) + Anomaly Detection"
+      ],
       "false_positive_risk": "Flagging legitimate Netflix/utility payments, vendor payments, business expenses, holiday shopping, self-controlled spending, direct deposits",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Amounts just below known thresholds (e.g., $999.99)",
+      "detection_method": "Rules (tolerance bands) + Anomaly Detection"
     },
     {
-      "signal_name": "Amount distributions with unnatural consistency",
+      "signal_id": "SIG-0082",
+      "name": "Amount distributions with unnatural consistency",
       "category": "Transaction",
       "description": "Indicates algorithmically generated amounts",
-      "detection_method": "ML (distributional anomaly, entropy)",
+      "detection_methods": [
+        "ML (distributional anomaly, entropy)"
+      ],
       "false_positive_risk": "Legitimate subscription billing or recurring fixed payments",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Amount distributions with unnatural consistency",
+      "detection_method": "ML (distributional anomaly, entropy)"
     },
     {
-      "signal_name": "Inter-transaction intervals with low entropy",
+      "signal_id": "SIG-0083",
+      "name": "Inter-transaction intervals with low entropy",
       "category": "Temporal",
       "description": "Indicates timing optimization, not human randomness",
-      "detection_method": "Sequence Modeling (LSTM/Autoencoder)",
+      "detection_methods": [
+        "Sequence Modeling (LSTM/Autoencoder)"
+      ],
       "false_positive_risk": "Automated payroll or scheduled recurring transfers",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Inter-transaction intervals with low entropy",
+      "detection_method": "Sequence Modeling (LSTM/Autoencoder)"
     },
     {
-      "signal_name": "Transaction volume has unnaturally constant mean across time windows",
+      "signal_id": "SIG-0084",
+      "name": "Transaction volume has unnaturally constant mean across time windows",
       "category": "Temporal",
       "description": "Evading velocity spikes; human behavior has variance",
-      "detection_method": "Anomaly Detection (velocity Z-score)",
+      "detection_methods": [
+        "Anomaly Detection (velocity Z-score)"
+      ],
       "false_positive_risk": "Regular automated business processing",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Transaction volume has unnaturally constant mean across time windows",
+      "detection_method": "Anomaly Detection (velocity Z-score)"
     },
     {
-      "signal_name": "Gradual monotonic increase in transaction amounts over time",
+      "signal_id": "SIG-0085",
+      "name": "Gradual monotonic increase in transaction amounts over time",
       "category": "Temporal",
       "description": "Indicates systematic 'probing'",
-      "detection_method": "Temporal Trend Analysis",
+      "detection_methods": [
+        "Temporal Trend Analysis"
+      ],
       "false_positive_risk": "Legitimate salary increases or expanding business activity",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Gradual monotonic increase in transaction amounts over time",
+      "detection_method": "Temporal Trend Analysis"
     },
     {
-      "signal_name": "Low variance in daily/monthly spending patterns",
+      "signal_id": "SIG-0086",
+      "name": "Low variance in daily/monthly spending patterns",
       "category": "Customer/Account",
       "description": "Indicates structured, optimized spending",
-      "detection_method": "ML anomaly detection",
+      "detection_methods": [
+        "ML anomaly detection"
+      ],
       "false_positive_risk": "Conscientious budgeting",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Low variance in daily/monthly spending patterns",
+      "detection_method": "ML anomaly detection"
     },
     {
-      "signal_name": "Consistent use of low-risk MCCs for high-risk purchases",
+      "signal_id": "SIG-0087",
+      "name": "Consistent use of low-risk MCCs for high-risk purchases",
       "category": "Merchant",
       "description": "MCC mismatch or gaming",
-      "detection_method": "Rules + ML (MCC-amount inconsistency)",
+      "detection_methods": [
+        "Rules + ML (MCC-amount inconsistency)"
+      ],
       "false_positive_risk": "Genuine purchases at general retailers",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Consistent use of low-risk MCCs for high-risk purchases",
+      "detection_method": "Rules + ML (MCC-amount inconsistency)"
     },
     {
-      "signal_name": "Similar threshold-just-below patterns across multiple accounts",
+      "signal_id": "SIG-0088",
+      "name": "Similar threshold-just-below patterns across multiple accounts",
       "category": "Network",
       "description": "Indicates coordinated use of the same strategy",
-      "detection_method": "Clustering / Graph Analytics",
+      "detection_methods": [
+        "Clustering / Graph Analytics"
+      ],
       "false_positive_risk": "Widespread consumer reaction to specific promotion or tax limits",
-      "cross_account_needed": true
+      "cross_account_needed": true,
+      "evidence": [],
+      "signal_name": "Similar threshold-just-below patterns across multiple accounts",
+      "detection_method": "Clustering / Graph Analytics"
     },
     {
-      "signal_name": "Feature combinations with high 'unnaturalness' score",
+      "signal_id": "SIG-0089",
+      "name": "Feature combinations with high 'unnaturalness' score",
       "category": "Transaction",
       "description": "Indicates generated/manipulated vectors",
-      "detection_method": "Generative Detector (GAN)",
+      "detection_methods": [
+        "Generative Detector (GAN)"
+      ],
       "false_positive_risk": "Legitimate user with variable spending or atypical behavior",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Feature combinations with high 'unnaturalness' score",
+      "detection_method": "Generative Detector (GAN)"
     },
     {
-      "signal_name": "High density of transactions near the model's decision boundary",
+      "signal_id": "SIG-0090",
+      "name": "High density of transactions near the model's decision boundary",
       "category": "Transaction",
       "description": "Indicates systematic boundary probing",
-      "detection_method": "Kernel Density Estimation + Boundary Density Monitoring",
+      "detection_methods": [
+        "Kernel Density Estimation + Boundary Density Monitoring"
+      ],
       "false_positive_risk": "Atypical genuine behavior or new affluent account ramp-up",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "High density of transactions near the model's decision boundary",
+      "detection_method": "Kernel Density Estimation + Boundary Density Monitoring"
     },
     {
-      "signal_name": "Unnatural feature drift patterns",
+      "signal_id": "SIG-0091",
+      "name": "Unnatural feature drift patterns",
       "category": "Account/Behavior",
       "description": "Indicates model-exploratory behavior",
-      "detection_method": "Temporal feature trajectory analysis",
+      "detection_methods": [
+        "Temporal feature trajectory analysis"
+      ],
       "false_positive_risk": "Rapid spending evolution on new accounts",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Unnatural feature drift patterns",
+      "detection_method": "Temporal feature trajectory analysis"
     },
     {
-      "signal_name": "High proportion of approvals near threshold",
+      "signal_id": "SIG-0092",
+      "name": "High proportion of approvals near threshold",
       "category": "Authorization History",
       "description": "Indicates successful evasion vs. score distribution",
-      "detection_method": "Statistics on approved transactions vs. score distribution",
+      "detection_methods": [
+        "Statistics on approved transactions vs. score distribution"
+      ],
       "false_positive_risk": "Seasonal or event-driven spending",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "High proportion of approvals near threshold",
+      "detection_method": "Statistics on approved transactions vs. score distribution"
     },
     {
-      "signal_name": "Similar 'boundary-hugging' patterns across many accounts",
+      "signal_id": "SIG-0093",
+      "name": "Similar 'boundary-hugging' patterns across many accounts",
       "category": "Network",
       "description": "Indicates coordinated evasion campaign",
-      "detection_method": "Clustering / Graph Analytics",
+      "detection_methods": [
+        "Clustering / Graph Analytics"
+      ],
       "false_positive_risk": "Shared purchasing trends across corporate entities",
-      "cross_account_needed": true
+      "cross_account_needed": true,
+      "evidence": [],
+      "signal_name": "Similar 'boundary-hugging' patterns across many accounts",
+      "detection_method": "Clustering / Graph Analytics"
     },
     {
-      "signal_name": "Sudden increase in approvals for certain feature combinations",
+      "signal_id": "SIG-0094",
+      "name": "Sudden increase in approvals for certain feature combinations",
       "category": "Model Drift",
       "description": "Indicates exploitation of a model blind spot",
-      "detection_method": "Monitoring model performance on recent transactions",
+      "detection_methods": [
+        "Monitoring model performance on recent transactions"
+      ],
       "false_positive_risk": "Legitimate holiday travel or shopping sprees",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Sudden increase in approvals for certain feature combinations",
+      "detection_method": "Monitoring model performance on recent transactions"
     },
     {
-      "signal_name": "Accounts sharing infrastructure (IPs, device fingerprints, email domains)",
+      "signal_id": "SIG-0095",
+      "name": "Accounts sharing infrastructure (IPs, device fingerprints, email domains)",
       "category": "Network/Graph",
       "description": "Indicates coordinated campaign",
-      "detection_method": "Graph Neural Network; Entity Resolution",
+      "detection_methods": [
+        "Graph Neural Network",
+        "Entity Resolution"
+      ],
       "false_positive_risk": "Payment facilitators (PayFac) or multi-location businesses",
-      "cross_account_needed": true
+      "cross_account_needed": true,
+      "evidence": [],
+      "signal_name": "Accounts sharing infrastructure (IPs, device fingerprints, email domains)",
+      "detection_method": "Graph Neural Network; Entity Resolution"
     },
     {
-      "signal_name": "Accounts with similar temporal lifecycle patterns",
+      "signal_id": "SIG-0096",
+      "name": "Accounts with similar temporal lifecycle patterns",
       "category": "Network/Graph",
       "description": "Indicates orchestrated farming",
-      "detection_method": "Temporal Clustering on account lifecycles",
+      "detection_methods": [
+        "Temporal Clustering on account lifecycles"
+      ],
       "false_positive_risk": "Employee benefits platform or corporate groups",
-      "cross_account_needed": true
+      "cross_account_needed": true,
+      "evidence": [],
+      "signal_name": "Accounts with similar temporal lifecycle patterns",
+      "detection_method": "Temporal Clustering on account lifecycles"
     },
     {
-      "signal_name": "Anti-correlated activity timing (one pauses, another starts)",
+      "signal_id": "SIG-0097",
+      "name": "Anti-correlated activity timing (one pauses, another starts)",
       "category": "Network/Graph",
       "description": "Indicates deliberate coordination",
-      "detection_method": "Time-series cross-correlation analysis",
+      "detection_methods": [
+        "Time-series cross-correlation analysis"
+      ],
       "false_positive_risk": "Shift-based corporate operations",
-      "cross_account_needed": true
+      "cross_account_needed": true,
+      "evidence": [],
+      "signal_name": "Anti-correlated activity timing (one pauses, another starts)",
+      "detection_method": "Time-series cross-correlation analysis"
     },
     {
-      "signal_name": "Unusual diversity of behavior across accounts (too heterogeneous)",
+      "signal_id": "SIG-0098",
+      "name": "Unusual diversity of behavior across accounts (too heterogeneous)",
       "category": "Network/Graph",
       "description": "May indicate synthetic generation",
-      "detection_method": "Anomaly detection on portfolio entropy",
+      "detection_methods": [
+        "Anomaly detection on portfolio entropy"
+      ],
       "false_positive_risk": "Diverse user base under a single aggregator",
-      "cross_account_needed": true
+      "cross_account_needed": true,
+      "evidence": [],
+      "signal_name": "Unusual diversity of behavior across accounts (too heterogeneous)",
+      "detection_method": "Anomaly detection on portfolio entropy"
     },
     {
-      "signal_name": "Suspicious phase-shifted patterns (identical lifecycles, different start dates)",
+      "signal_id": "SIG-0099",
+      "name": "Suspicious phase-shifted patterns (identical lifecycles, different start dates)",
       "category": "Temporal",
       "description": "Indicates batch creation features",
-      "detection_method": "Phase analysis on lifecycle features",
+      "detection_methods": [
+        "Phase analysis on lifecycle features"
+      ],
       "false_positive_risk": "Batch onboarding of employees or users",
-      "cross_account_needed": true
+      "cross_account_needed": true,
+      "evidence": [],
+      "signal_name": "Suspicious phase-shifted patterns (identical lifecycles, different start dates)",
+      "detection_method": "Phase analysis on lifecycle features"
     },
     {
-      "signal_name": "Coordinated dormancy and reactivation patterns",
+      "signal_id": "SIG-0100",
+      "name": "Coordinated dormancy and reactivation patterns",
       "category": "Temporal",
       "description": "Indicates orchestrated account farming",
-      "detection_method": "Temporal pattern analysis",
+      "detection_methods": [
+        "Temporal pattern analysis"
+      ],
       "false_positive_risk": "Seasonal marketing campaigns or holiday re-engagement",
-      "cross_account_needed": true
+      "cross_account_needed": true,
+      "evidence": [],
+      "signal_name": "Coordinated dormancy and reactivation patterns",
+      "detection_method": "Temporal pattern analysis"
     },
     {
-      "signal_name": "High number of accounts transacting with the same low-risk MCCs in similar amounts",
+      "signal_id": "SIG-0101",
+      "name": "High number of accounts transacting with the same low-risk MCCs in similar amounts",
       "category": "Merchant",
       "description": "Indicates coordinated laundering",
-      "detection_method": "Merchant concentration + account diversity analysis",
+      "detection_methods": [
+        "Merchant concentration + account diversity analysis"
+      ],
       "false_positive_risk": "Popular merchant promotions or franchise activity",
-      "cross_account_needed": true
+      "cross_account_needed": true,
+      "evidence": [],
+      "signal_name": "High number of accounts transacting with the same low-risk MCCs in similar amounts",
+      "detection_method": "Merchant concentration + account diversity analysis"
     },
     {
-      "signal_name": "All accounts have similar approval rates or decline patterns",
+      "signal_id": "SIG-0102",
+      "name": "All accounts have similar approval rates or decline patterns",
       "category": "Authorization History",
       "description": "Indicates uniform optimization strategy",
-      "detection_method": "Statistical comparison of approval rates across accounts",
+      "detection_methods": [
+        "Statistical comparison of approval rates across accounts"
+      ],
       "false_positive_risk": "Standard user demographic cohort behavior",
-      "cross_account_needed": true
+      "cross_account_needed": true,
+      "evidence": [],
+      "signal_name": "All accounts have similar approval rates or decline patterns",
+      "detection_method": "Statistical comparison of approval rates across accounts"
     },
     {
-      "signal_name": "Account creation patterns (batch creation, similar attributes)",
+      "signal_id": "SIG-0103",
+      "name": "Account creation patterns (batch creation, similar attributes)",
       "category": "Customer/Account",
       "description": "Indicates synthetic account farming",
-      "detection_method": "Entity resolution; creation pattern analysis",
+      "detection_methods": [
+        "Entity resolution",
+        "creation pattern analysis"
+      ],
       "false_positive_risk": "Corporate account provisioning or platform migration",
-      "cross_account_needed": true
+      "cross_account_needed": true,
+      "evidence": [],
+      "signal_name": "Account creation patterns (batch creation, similar attributes)",
+      "detection_method": "Entity resolution; creation pattern analysis"
     },
     {
-      "signal_name": "Dormant account suddenly active",
+      "signal_id": "SIG-0104",
+      "name": "Dormant account suddenly active",
       "category": "Behavioral",
       "description": "Mule activation",
-      "detection_method": "Behavioral baseline deviation",
+      "detection_methods": [
+        "Behavioral baseline deviation"
+      ],
       "false_positive_risk": "Legitimate dormancy break",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Dormant account suddenly active",
+      "detection_method": "Behavioral baseline deviation"
     },
     {
-      "signal_name": "Rapid pass-through (arrive and leave within hours)",
+      "signal_id": "SIG-0105",
+      "name": "Rapid pass-through (arrive and leave within hours)",
       "category": "Transaction",
       "description": "Mule behavior",
-      "detection_method": "Velocity rules; dwell time analysis",
+      "detection_methods": [
+        "Velocity rules",
+        "dwell time analysis"
+      ],
       "false_positive_risk": "Gig workers; marketplaces",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Rapid pass-through (arrive and leave within hours)",
+      "detection_method": "Velocity rules; dwell time analysis"
     },
     {
-      "signal_name": "Many unrelated senders",
+      "signal_id": "SIG-0106",
+      "name": "Many unrelated senders",
       "category": "Transaction",
       "description": "Fraud proceeds aggregation",
-      "detection_method": "Sender diversity analysis",
+      "detection_methods": [
+        "Sender diversity analysis"
+      ],
       "false_positive_risk": "Marketplace sellers",
-      "cross_account_needed": true
+      "cross_account_needed": true,
+      "evidence": [],
+      "signal_name": "Many unrelated senders",
+      "detection_method": "Sender diversity analysis"
     },
     {
-      "signal_name": "Funds sent to many unrelated accounts",
+      "signal_id": "SIG-0107",
+      "name": "Funds sent to many unrelated accounts",
       "category": "Transaction",
       "description": "Layering/distribution",
-      "detection_method": "Recipient diversity analysis",
+      "detection_methods": [
+        "Recipient diversity analysis"
+      ],
       "false_positive_risk": "Business payments",
-      "cross_account_needed": true
+      "cross_account_needed": true,
+      "evidence": [],
+      "signal_name": "Funds sent to many unrelated accounts",
+      "detection_method": "Recipient diversity analysis"
     },
     {
-      "signal_name": "Consistently near-zero closing balance",
+      "signal_id": "SIG-0108",
+      "name": "Consistently near-zero closing balance",
       "category": "Balance",
       "description": "Complete pass-through",
-      "detection_method": "Balance pattern analysis",
+      "detection_methods": [
+        "Balance pattern analysis"
+      ],
       "false_positive_risk": "Low-income customers",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Consistently near-zero closing balance",
+      "detection_method": "Balance pattern analysis"
     },
     {
-      "signal_name": "Off-hours; rapid sequences",
+      "signal_id": "SIG-0109",
+      "name": "Off-hours; rapid sequences",
       "category": "Temporal",
       "description": "Evasion of monitoring",
-      "detection_method": "Temporal anomaly detection",
+      "detection_methods": [
+        "Temporal anomaly detection"
+      ],
       "false_positive_risk": "Shift workers; international",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Off-hours; rapid sequences",
+      "detection_method": "Temporal anomaly detection"
     },
     {
-      "signal_name": "Unusual cross-border activity",
+      "signal_id": "SIG-0110",
+      "name": "Unusual cross-border activity",
       "category": "Geographic",
       "description": "Layering across jurisdictions",
-      "detection_method": "Geographic anomaly detection",
+      "detection_methods": [
+        "Geographic anomaly detection"
+      ],
       "false_positive_risk": "International business",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Unusual cross-border activity",
+      "detection_method": "Geographic anomaly detection"
     },
     {
-      "signal_name": "New device; VPN; unusual session",
+      "signal_id": "SIG-0111",
+      "name": "New device; VPN; unusual session",
       "category": "Device/Session",
       "description": "Account compromise or professional operation",
-      "detection_method": "Device fingerprinting",
+      "detection_methods": [
+        "Device fingerprinting"
+      ],
       "false_positive_risk": "Legitimate device changes",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "New device; VPN; unusual session",
+      "detection_method": "Device fingerprinting"
     },
     {
-      "signal_name": "Customer confusion/distress when questioned",
+      "signal_id": "SIG-0112",
+      "name": "Customer confusion/distress when questioned",
       "category": "Behavioral",
       "description": "Coerced or exploited mule",
-      "detection_method": "Behavioral analytics",
+      "detection_methods": [
+        "Behavioral analytics"
+      ],
       "false_positive_risk": "Legitimate confusion",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Customer confusion/distress when questioned",
+      "detection_method": "Behavioral analytics"
     },
     {
-      "signal_name": "Connection to known mule accounts",
+      "signal_id": "SIG-0113",
+      "name": "Connection to known mule accounts",
       "category": "Graph/Network",
       "description": "Organized network",
-      "detection_method": "Graph Neural Network",
+      "detection_methods": [
+        "Graph Neural Network"
+      ],
       "false_positive_risk": "Legitimate business networks",
-      "cross_account_needed": true
+      "cross_account_needed": true,
+      "evidence": [],
+      "signal_name": "Connection to known mule accounts",
+      "detection_method": "Graph Neural Network"
     },
     {
-      "signal_name": "Multiple accounts in short timeframe",
+      "signal_id": "SIG-0114",
+      "name": "Multiple accounts in short timeframe",
       "category": "Account",
       "description": "Farming operation",
-      "detection_method": "Account velocity rules",
+      "detection_methods": [
+        "Account velocity rules"
+      ],
       "false_positive_risk": "New business onboarding",
-      "cross_account_needed": true
+      "cross_account_needed": true,
+      "evidence": [],
+      "signal_name": "Multiple accounts in short timeframe",
+      "detection_method": "Account velocity rules"
     },
     {
-      "signal_name": "Similar attributes across accounts",
+      "signal_id": "SIG-0115",
+      "name": "Similar attributes across accounts",
       "category": "Account",
       "description": "Synthetic generation",
-      "detection_method": "Attribute clustering",
+      "detection_methods": [
+        "Attribute clustering"
+      ],
       "false_positive_risk": "Family/corporate accounts",
-      "cross_account_needed": true
+      "cross_account_needed": true,
+      "evidence": [],
+      "signal_name": "Similar attributes across accounts",
+      "detection_method": "Attribute clustering"
     },
     {
-      "signal_name": "Identical dormancy-to-activity patterns",
+      "signal_id": "SIG-0116",
+      "name": "Identical dormancy-to-activity patterns",
       "category": "Account",
       "description": "Automated seasoning",
-      "detection_method": "Temporal pattern analysis",
+      "detection_methods": [
+        "Temporal pattern analysis"
+      ],
       "false_positive_risk": "Seasonal businesses",
-      "cross_account_needed": true
+      "cross_account_needed": true,
+      "evidence": [],
+      "signal_name": "Identical dormancy-to-activity patterns",
+      "detection_method": "Temporal pattern analysis"
     },
     {
-      "signal_name": "Document artifacts (AI-generated)",
+      "signal_id": "SIG-0117",
+      "name": "Document artifacts (AI-generated)",
       "category": "Identity",
       "description": "Synthetic identity",
-      "detection_method": "Document forensics (CNN)",
+      "detection_methods": [
+        "Document forensics (CNN)"
+      ],
       "false_positive_risk": "Poor-quality scans",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Document artifacts (AI-generated)",
+      "detection_method": "Document forensics (CNN)"
     },
     {
-      "signal_name": "Inconsistent identity data",
+      "signal_id": "SIG-0118",
+      "name": "Inconsistent identity data",
       "category": "Identity",
       "description": "Synthetic persona",
-      "detection_method": "Entity resolution",
+      "detection_methods": [
+        "Entity resolution"
+      ],
       "false_positive_risk": "Legitimate inconsistencies",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Inconsistent identity data",
+      "detection_method": "Entity resolution"
     },
     {
-      "signal_name": "Sudden change from seasoning to pass-through",
+      "signal_id": "SIG-0119",
+      "name": "Sudden change from seasoning to pass-through",
       "category": "Transaction",
       "description": "Mule activation",
-      "detection_method": "Behavioral change detection",
+      "detection_methods": [
+        "Behavioral change detection"
+      ],
       "false_positive_risk": "Legitimate new activity",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Sudden change from seasoning to pass-through",
+      "detection_method": "Behavioral change detection"
     },
     {
-      "signal_name": "Shared IPs, devices across accounts",
+      "signal_id": "SIG-0120",
+      "name": "Shared IPs, devices across accounts",
       "category": "Device/Session",
       "description": "Common control",
-      "detection_method": "Device fingerprinting",
+      "detection_methods": [
+        "Device fingerprinting"
+      ],
       "false_positive_risk": "Corporate networks",
-      "cross_account_needed": true
+      "cross_account_needed": true,
+      "evidence": [],
+      "signal_name": "Shared IPs, devices across accounts",
+      "detection_method": "Device fingerprinting"
     },
     {
-      "signal_name": "Unnatural form-filling during onboarding",
+      "signal_id": "SIG-0121",
+      "name": "Unnatural form-filling during onboarding",
       "category": "Behavioral",
       "description": "Bot automation",
-      "detection_method": "Behavioral biometrics",
+      "detection_methods": [
+        "Behavioral biometrics"
+      ],
       "false_positive_risk": "Accessibility tools",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Unnatural form-filling during onboarding",
+      "detection_method": "Behavioral biometrics"
     },
     {
-      "signal_name": "Infrastructure sharing",
+      "signal_id": "SIG-0122",
+      "name": "Infrastructure sharing",
       "category": "Graph/Network",
       "description": "Farming operation",
-      "detection_method": "Graph Neural Network",
+      "detection_methods": [
+        "Graph Neural Network"
+      ],
       "false_positive_risk": "Legitimate shared infrastructure",
-      "cross_account_needed": true
+      "cross_account_needed": true,
+      "evidence": [],
+      "signal_name": "Infrastructure sharing",
+      "detection_method": "Graph Neural Network"
     },
     {
-      "signal_name": "Pattern-free movement",
+      "signal_id": "SIG-0123",
+      "name": "Pattern-free movement",
       "category": "Transaction",
       "description": "AI evasion",
-      "detection_method": "ML anomaly detection",
+      "detection_methods": [
+        "ML anomaly detection"
+      ],
       "false_positive_risk": "Legitimate random behavior",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Pattern-free movement",
+      "detection_method": "ML anomaly detection"
     },
     {
-      "signal_name": "High-frequency, low-value transfers",
+      "signal_id": "SIG-0124",
+      "name": "High-frequency, low-value transfers",
       "category": "Transaction",
       "description": "Pattern-free layering",
-      "detection_method": "Velocity analysis",
+      "detection_methods": [
+        "Velocity analysis"
+      ],
       "false_positive_risk": "Legitimate high-volume",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "High-frequency, low-value transfers",
+      "detection_method": "Velocity analysis"
     },
     {
-      "signal_name": "Cross-institution coordination",
+      "signal_id": "SIG-0125",
+      "name": "Cross-institution coordination",
       "category": "Transaction",
       "description": "Institutional silo exploitation",
-      "detection_method": "Cross-institution analytics",
+      "detection_methods": [
+        "Cross-institution analytics"
+      ],
       "false_positive_risk": "Legitimate multi-bank customers",
-      "cross_account_needed": true
+      "cross_account_needed": true,
+      "evidence": [],
+      "signal_name": "Cross-institution coordination",
+      "detection_method": "Cross-institution analytics"
     },
     {
-      "signal_name": "Rapid pass-through (minutes)",
+      "signal_id": "SIG-0126",
+      "name": "Rapid pass-through (minutes)",
       "category": "Transaction",
       "description": "AI speed",
-      "detection_method": "Dwell time analysis",
+      "detection_methods": [
+        "Dwell time analysis"
+      ],
       "false_positive_risk": "Real-time payments",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Rapid pass-through (minutes)",
+      "detection_method": "Dwell time analysis"
     },
     {
-      "signal_name": "Synchronized timing",
+      "signal_id": "SIG-0127",
+      "name": "Synchronized timing",
       "category": "Temporal",
       "description": "AI orchestration",
-      "detection_method": "Temporal correlation",
+      "detection_methods": [
+        "Temporal correlation"
+      ],
       "false_positive_risk": "Legitimate coordination",
-      "cross_account_needed": true
+      "cross_account_needed": true,
+      "evidence": [],
+      "signal_name": "Synchronized timing",
+      "detection_method": "Temporal correlation"
     },
     {
-      "signal_name": "Adaptive changes after detection",
+      "signal_id": "SIG-0128",
+      "name": "Adaptive changes after detection",
       "category": "Behavioral",
       "description": "Real-time adaptation",
-      "detection_method": "Behavioral evolution tracking",
+      "detection_methods": [
+        "Behavioral evolution tracking"
+      ],
       "false_positive_risk": "Legitimate adaptation",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Adaptive changes after detection",
+      "detection_method": "Behavioral evolution tracking"
     },
     {
-      "signal_name": "Complex, varied network structures",
+      "signal_id": "SIG-0129",
+      "name": "Complex, varied network structures",
       "category": "Graph/Network",
       "description": "AI optimization",
-      "detection_method": "Graph analytics",
+      "detection_methods": [
+        "Graph analytics"
+      ],
       "false_positive_risk": "Legitimate complex networks",
-      "cross_account_needed": true
+      "cross_account_needed": true,
+      "evidence": [],
+      "signal_name": "Complex, varied network structures",
+      "detection_method": "Graph analytics"
     },
     {
-      "signal_name": "Hidden centrality",
+      "signal_id": "SIG-0130",
+      "name": "Hidden centrality",
       "category": "Graph/Network",
       "description": "AI-obfuscated structure",
-      "detection_method": "Centrality analysis",
+      "detection_methods": [
+        "Centrality analysis"
+      ],
       "false_positive_risk": "Legitimate business structures",
-      "cross_account_needed": true
+      "cross_account_needed": true,
+      "evidence": [],
+      "signal_name": "Hidden centrality",
+      "detection_method": "Centrality analysis"
     },
     {
-      "signal_name": "Infrastructure rotation",
+      "signal_id": "SIG-0131",
+      "name": "Infrastructure rotation",
       "category": "Graph/Network",
       "description": "AI evasion",
-      "detection_method": "Infrastructure tracking",
+      "detection_methods": [
+        "Infrastructure tracking"
+      ],
       "false_positive_risk": "Legitimate infrastructure changes",
-      "cross_account_needed": true
+      "cross_account_needed": true,
+      "evidence": [],
+      "signal_name": "Infrastructure rotation",
+      "detection_method": "Infrastructure tracking"
     },
     {
-      "signal_name": "Transfer to crypto exchange",
+      "signal_id": "SIG-0132",
+      "name": "Transfer to crypto exchange",
       "category": "Transaction",
       "description": "Funds leaving banking system",
-      "detection_method": "Exchange monitoring",
+      "detection_methods": [
+        "Exchange monitoring"
+      ],
       "false_positive_risk": "Legitimate crypto investment",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Transfer to crypto exchange",
+      "detection_method": "Exchange monitoring"
     },
     {
-      "signal_name": "Rapid conversion after receipt",
+      "signal_id": "SIG-0133",
+      "name": "Rapid conversion after receipt",
       "category": "Transaction",
       "description": "AI speed",
-      "detection_method": "Temporal analysis",
+      "detection_methods": [
+        "Temporal analysis"
+      ],
       "false_positive_risk": "Day trading",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Rapid conversion after receipt",
+      "detection_method": "Temporal analysis"
     },
     {
-      "signal_name": "Cross-chain activity",
+      "signal_id": "SIG-0134",
+      "name": "Cross-chain activity",
       "category": "Transaction",
       "description": "Evasion of tracing",
-      "detection_method": "Cross-chain tracing",
+      "detection_methods": [
+        "Cross-chain tracing"
+      ],
       "false_positive_risk": "DeFi activity",
-      "cross_account_needed": true
+      "cross_account_needed": true,
+      "evidence": [],
+      "signal_name": "Cross-chain activity",
+      "detection_method": "Cross-chain tracing"
     },
     {
-      "signal_name": "Significant stablecoin conversion",
+      "signal_id": "SIG-0135",
+      "name": "Significant stablecoin conversion",
       "category": "Transaction",
       "description": "Preferred for illicit activity",
-      "detection_method": "Stablecoin monitoring",
+      "detection_methods": [
+        "Stablecoin monitoring"
+      ],
       "false_positive_risk": "Legitimate stablecoin use",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Significant stablecoin conversion",
+      "detection_method": "Stablecoin monitoring"
     },
     {
-      "signal_name": "Use of weak KYC exchanges",
+      "signal_id": "SIG-0136",
+      "name": "Use of weak KYC exchanges",
       "category": "Account",
       "description": "Evasion of KYC",
-      "detection_method": "Exchange risk scoring",
+      "detection_methods": [
+        "Exchange risk scoring"
+      ],
       "false_positive_risk": "Privacy-conscious users",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Use of weak KYC exchanges",
+      "detection_method": "Exchange risk scoring"
     },
     {
-      "signal_name": "Unnatural optimization",
+      "signal_id": "SIG-0137",
+      "name": "Unnatural optimization",
       "category": "Amount",
       "description": "AI generation",
-      "detection_method": "ML anomaly detection",
+      "detection_methods": [
+        "ML anomaly detection"
+      ],
       "false_positive_risk": "Legitimate optimization",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Unnatural optimization",
+      "detection_method": "ML anomaly detection"
     },
     {
-      "signal_name": "Rapid sequences",
+      "signal_id": "SIG-0138",
+      "name": "Rapid sequences",
       "category": "Temporal",
       "description": "AI speed",
-      "detection_method": "Velocity rules",
+      "detection_methods": [
+        "Velocity rules"
+      ],
       "false_positive_risk": "Algorithmic trading",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Rapid sequences",
+      "detection_method": "Velocity rules"
     },
     {
-      "signal_name": "Exchanges in different jurisdictions",
+      "signal_id": "SIG-0139",
+      "name": "Exchanges in different jurisdictions",
       "category": "Geographic",
       "description": "Regulatory arbitrage",
-      "detection_method": "Geographic analysis",
+      "detection_methods": [
+        "Geographic analysis"
+      ],
       "false_positive_risk": "International investors",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Exchanges in different jurisdictions",
+      "detection_method": "Geographic analysis"
     },
     {
-      "signal_name": "Mule \u2192 Exchange \u2192 Blockchain",
+      "signal_id": "SIG-0140",
+      "name": "Mule → Exchange → Blockchain",
       "category": "Graph/Network",
       "description": "Funds leaving banking",
-      "detection_method": "Graph analytics",
+      "detection_methods": [
+        "Graph analytics"
+      ],
       "false_positive_risk": "Legitimate crypto flow",
-      "cross_account_needed": true
+      "cross_account_needed": true,
+      "evidence": [],
+      "signal_name": "Mule → Exchange → Blockchain",
+      "detection_method": "Graph analytics"
     },
     {
-      "signal_name": "Cross-chain patterns",
+      "signal_id": "SIG-0141",
+      "name": "Cross-chain patterns",
       "category": "Graph/Network",
       "description": "Evasion",
-      "detection_method": "Cross-chain graph analysis",
+      "detection_methods": [
+        "Cross-chain graph analysis"
+      ],
       "false_positive_risk": "Legitimate cross-chain activity",
-      "cross_account_needed": true
+      "cross_account_needed": true,
+      "evidence": [],
+      "signal_name": "Cross-chain patterns",
+      "detection_method": "Cross-chain graph analysis"
     },
     {
-      "signal_name": "Canvas/WebGL rendering artifacts",
+      "signal_id": "SIG-0142",
+      "name": "Canvas/WebGL rendering artifacts",
       "category": "Device",
       "description": "Detection of non-standard or synthetic artifacts in canvas/WebGL rendering output",
-      "detection_method": "ML anomaly detection",
+      "detection_methods": [
+        "ML anomaly detection"
+      ],
       "false_positive_risk": "Legitimate users with privacy-focused browsers (Brave, Tor)",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Canvas/WebGL rendering artifacts",
+      "detection_method": "ML anomaly detection"
     },
     {
-      "signal_name": "Audio fingerprint consistency",
+      "signal_id": "SIG-0143",
+      "name": "Audio fingerprint consistency",
       "category": "Device",
       "description": "Evaluation of audio stack output consistency across browser sessions",
-      "detection_method": "ML anomaly detection",
+      "detection_methods": [
+        "ML anomaly detection"
+      ],
       "false_positive_risk": "Browser updates or audio driver changes",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Audio fingerprint consistency",
+      "detection_method": "ML anomaly detection"
     },
     {
-      "signal_name": "Font set consistency",
+      "signal_id": "SIG-0144",
+      "name": "Font set consistency",
       "category": "Device",
       "description": "Checking installed system fonts against expected OS profiles",
-      "detection_method": "ML anomaly detection",
+      "detection_methods": [
+        "ML anomaly detection"
+      ],
       "false_positive_risk": "Custom font installations or privacy tools",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Font set consistency",
+      "detection_method": "ML anomaly detection"
     },
     {
-      "signal_name": "Timezone/IP consistency",
+      "signal_id": "SIG-0145",
+      "name": "Timezone/IP consistency",
       "category": "Device",
       "description": "Cross-referencing reported browser timezone with network IP location",
-      "detection_method": "Rule-based + ML",
+      "detection_methods": [
+        "Rule-based + ML"
+      ],
       "false_positive_risk": "VPN usage, traveling users",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Timezone/IP consistency",
+      "detection_method": "Rule-based + ML"
     },
     {
-      "signal_name": "OS/browser attribute consistency",
+      "signal_id": "SIG-0146",
+      "name": "OS/browser attribute consistency",
       "category": "Device",
       "description": "Verifying user-agent strings against low-level API responses",
-      "detection_method": "Rule-based + ML",
+      "detection_methods": [
+        "Rule-based + ML"
+      ],
       "false_positive_risk": "User-agent spoofing extensions for privacy",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "OS/browser attribute consistency",
+      "detection_method": "Rule-based + ML"
     },
     {
-      "signal_name": "Hardware attribute consistency (GPU, RAM)",
+      "signal_id": "SIG-0147",
+      "name": "Hardware attribute consistency (GPU, RAM)",
       "category": "Device",
       "description": "Validating hardware specs against reported device models",
-      "detection_method": "ML anomaly detection",
+      "detection_methods": [
+        "ML anomaly detection"
+      ],
       "false_positive_risk": "Unusual hardware configurations",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Hardware attribute consistency (GPU, RAM)",
+      "detection_method": "ML anomaly detection"
     },
     {
-      "signal_name": "Screen resolution consistency",
+      "signal_id": "SIG-0148",
+      "name": "Screen resolution consistency",
       "category": "Device",
       "description": "Checking for realistic viewport dimensions and pixel ratios",
-      "detection_method": "Rule-based",
+      "detection_methods": [
+        "Rule-based"
+      ],
       "false_positive_risk": "External displays or resized browser windows",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Screen resolution consistency",
+      "detection_method": "Rule-based"
     },
     {
-      "signal_name": "WebGL parameter consistency",
+      "signal_id": "SIG-0149",
+      "name": "WebGL parameter consistency",
       "category": "Device",
       "description": "Checking GPU parameters and extensions exposed via WebGL",
-      "detection_method": "ML anomaly detection",
+      "detection_methods": [
+        "ML anomaly detection"
+      ],
       "false_positive_risk": "Updated graphics drivers",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "WebGL parameter consistency",
+      "detection_method": "ML anomaly detection"
     },
     {
-      "signal_name": "Multiple accounts from same underlying fingerprint",
+      "signal_id": "SIG-0150",
+      "name": "Multiple accounts from same underlying fingerprint",
       "category": "Session",
       "description": "Linking multiple distinct account sessions to shared hardware fingerprints",
-      "detection_method": "Graph analytics",
+      "detection_methods": [
+        "Graph analytics"
+      ],
       "false_positive_risk": "Shared devices (family tablet, corporate workspace)",
-      "cross_account_needed": true
+      "cross_account_needed": true,
+      "evidence": [],
+      "signal_name": "Multiple accounts from same underlying fingerprint",
+      "detection_method": "Graph analytics"
     },
     {
-      "signal_name": "Device fingerprint cycling frequency",
+      "signal_id": "SIG-0151",
+      "name": "Device fingerprint cycling frequency",
       "category": "Session",
       "description": "Tracking how rapidly a single IP/client updates or changes its fingerprint",
-      "detection_method": "Velocity rules",
+      "detection_methods": [
+        "Velocity rules"
+      ],
       "false_positive_risk": "Frequent browser restarts or privacy extensions",
-      "cross_account_needed": true
+      "cross_account_needed": true,
+      "evidence": [],
+      "signal_name": "Device fingerprint cycling frequency",
+      "detection_method": "Velocity rules"
     },
     {
-      "signal_name": "Multiple accounts sharing device fingerprint components",
+      "signal_id": "SIG-0152",
+      "name": "Multiple accounts sharing device fingerprint components",
       "category": "Network",
       "description": "Identifying overlapping hardware or canvas profile components across accounts",
-      "detection_method": "Graph Neural Network",
+      "detection_methods": [
+        "Graph Neural Network"
+      ],
       "false_positive_risk": "Identical corporate-issued laptops",
-      "cross_account_needed": true
+      "cross_account_needed": true,
+      "evidence": [],
+      "signal_name": "Multiple accounts sharing device fingerprint components",
+      "detection_method": "Graph Neural Network"
     },
     {
-      "signal_name": "Fingerprint patterns correlated across accounts",
+      "signal_id": "SIG-0153",
+      "name": "Fingerprint patterns correlated across accounts",
       "category": "Network",
       "description": "Clustering identical or mathematically near-identical fingerprint profiles",
-      "detection_method": "ML clustering",
+      "detection_methods": [
+        "ML clustering"
+      ],
       "false_positive_risk": "Popular standard device configurations",
-      "cross_account_needed": true
+      "cross_account_needed": true,
+      "evidence": [],
+      "signal_name": "Fingerprint patterns correlated across accounts",
+      "detection_method": "ML clustering"
     },
     {
-      "signal_name": "Rapid device fingerprint changes",
+      "signal_id": "SIG-0154",
+      "name": "Rapid device fingerprint changes",
       "category": "Temporal",
       "description": "Measuring unexpected shifts in device parameters within short timeframes",
-      "detection_method": "Velocity rules",
+      "detection_methods": [
+        "Velocity rules"
+      ],
       "false_positive_risk": "Rapid browser updates or developer testing",
-      "cross_account_needed": true
+      "cross_account_needed": true,
+      "evidence": [],
+      "signal_name": "Rapid device fingerprint changes",
+      "detection_method": "Velocity rules"
     },
     {
-      "signal_name": "Unusual fingerprint generation timing",
+      "signal_id": "SIG-0155",
+      "name": "Unusual fingerprint generation timing",
       "category": "Temporal",
       "description": "Analyzing timing patterns of fingerprint attribute generation",
-      "detection_method": "Rule-based",
+      "detection_methods": [
+        "Rule-based"
+      ],
       "false_positive_risk": "Slow network connections",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Unusual fingerprint generation timing",
+      "detection_method": "Rule-based"
     },
     {
-      "signal_name": "Emulator detection (virtualized environment flags)",
+      "signal_id": "SIG-0156",
+      "name": "Emulator detection (virtualized environment flags)",
       "category": "Device",
       "description": "Checking system build properties and drivers for emulator or VM indicators",
-      "detection_method": "Rule-based + ML",
+      "detection_methods": [
+        "Rule-based + ML"
+      ],
       "false_positive_risk": "Developers or legitimately virtualized workspaces",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Emulator detection (virtualized environment flags)",
+      "detection_method": "Rule-based + ML"
     },
     {
-      "signal_name": "Cloud/VPS IP ranges",
+      "signal_id": "SIG-0157",
+      "name": "Cloud/VPS IP ranges",
       "category": "Device",
       "description": "Flagging connections originating from hosting, cloud, or VPS data centers",
-      "detection_method": "Rule-based",
+      "detection_methods": [
+        "Rule-based"
+      ],
       "false_positive_risk": "Corporate VPNs routed through cloud providers",
-      "cross_account_needed": true
+      "cross_account_needed": true,
+      "evidence": [],
+      "signal_name": "Cloud/VPS IP ranges",
+      "detection_method": "Rule-based"
     },
     {
-      "signal_name": "Automated, consistent behavior patterns",
+      "signal_id": "SIG-0158",
+      "name": "Automated, consistent behavior patterns",
       "category": "Behavioral",
       "description": "Detecting low-variance, repetitive interaction timing or mouse trajectories",
-      "detection_method": "ML anomaly detection",
+      "detection_methods": [
+        "ML anomaly detection"
+      ],
       "false_positive_risk": "Power users with repetitive workflows",
-      "cross_account_needed": true
+      "cross_account_needed": true,
+      "evidence": [],
+      "signal_name": "Automated, consistent behavior patterns",
+      "detection_method": "ML anomaly detection"
     },
     {
-      "signal_name": "Superhuman timing/speed",
+      "signal_id": "SIG-0159",
+      "name": "Superhuman timing/speed",
       "category": "Behavioral",
       "description": "Identifying form completions or clicks occurring faster than human limits",
-      "detection_method": "Rule-based + ML",
+      "detection_methods": [
+        "Rule-based + ML"
+      ],
       "false_positive_risk": "Browser auto-fill tools",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Superhuman timing/speed",
+      "detection_method": "Rule-based + ML"
     },
     {
-      "signal_name": "Screen recording/remote access indicators",
+      "signal_id": "SIG-0160",
+      "name": "Screen recording/remote access indicators",
       "category": "Device",
       "description": "Detecting active remote desktop tools, screen sharing, or media projection APIs",
-      "detection_method": "ML anomaly detection",
+      "detection_methods": [
+        "ML anomaly detection"
+      ],
       "false_positive_risk": "Legitimate remote technical support or accessibility tools",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Screen recording/remote access indicators",
+      "detection_method": "ML anomaly detection"
     },
     {
-      "signal_name": "Behavioral biometrics anomalies",
+      "signal_id": "SIG-0161",
+      "name": "Behavioral biometrics anomalies",
       "category": "Behavioral",
       "description": "Measuring deviations in typing cadence, swipe dynamics, or cursor speed against historical baseline",
-      "detection_method": "ML (behavioral biometrics)",
+      "detection_methods": [
+        "ML (behavioral biometrics)"
+      ],
       "false_positive_risk": "Users with temporary physical injuries or changing context",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Behavioral biometrics anomalies",
+      "detection_method": "ML (behavioral biometrics)"
     },
     {
-      "signal_name": "ATS execution patterns",
+      "signal_id": "SIG-0162",
+      "name": "ATS execution patterns",
       "category": "Behavioral",
       "description": "Recognizing automated transfer system scripts performing transfer steps autonomously",
-      "detection_method": "ML anomaly detection",
+      "detection_methods": [
+        "ML anomaly detection"
+      ],
       "false_positive_risk": "Accessibility assistance automation",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "ATS execution patterns",
+      "detection_method": "ML anomaly detection"
     },
     {
-      "signal_name": "Keystroke timing naturalness",
+      "signal_id": "SIG-0163",
+      "name": "Keystroke timing naturalness",
       "category": "Behavioral",
       "description": "Evaluating flight time and dwell time distributions of typing inputs",
-      "detection_method": "ML (behavioral biometrics)",
+      "detection_methods": [
+        "ML (behavioral biometrics)"
+      ],
       "false_positive_risk": "Users switching between physical and virtual keyboards",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Keystroke timing naturalness",
+      "detection_method": "ML (behavioral biometrics)"
     },
     {
-      "signal_name": "Mouse movement naturalness",
+      "signal_id": "SIG-0164",
+      "name": "Mouse movement naturalness",
       "category": "Behavioral",
       "description": "Analyzing acceleration, curvature, and jitter in cursor movements",
-      "detection_method": "ML (behavioral biometrics)",
+      "detection_methods": [
+        "ML (behavioral biometrics)"
+      ],
       "false_positive_risk": "Precision trackpads, gaming mice, or accessibility tools",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Mouse movement naturalness",
+      "detection_method": "ML (behavioral biometrics)"
     },
     {
-      "signal_name": "Too-perfect mimicry (unusually consistent)",
+      "signal_id": "SIG-0165",
+      "name": "Too-perfect mimicry (unusually consistent)",
       "category": "Behavioral",
       "description": "Detecting synthetic patterns generated by models that lack natural human variance",
-      "detection_method": "ML anomaly detection",
+      "detection_methods": [
+        "ML anomaly detection"
+      ],
       "false_positive_risk": "Extremely methodical human users",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Too-perfect mimicry (unusually consistent)",
+      "detection_method": "ML anomaly detection"
     },
     {
-      "signal_name": "Amount deviations from merchant baseline",
+      "signal_id": "SIG-0166",
+      "name": "Amount deviations from merchant baseline",
       "category": "API",
       "description": "Indicates parameter manipulation on payment amount",
-      "detection_method": "Supervised ML; anomaly detection",
+      "detection_methods": [
+        "Supervised ML",
+        "anomaly detection"
+      ],
       "false_positive_risk": "Blocking valid discounts or promotional offers",
-      "cross_account_needed": true
+      "cross_account_needed": true,
+      "evidence": [],
+      "signal_name": "Amount deviations from merchant baseline",
+      "detection_method": "Supervised ML; anomaly detection"
     },
     {
-      "signal_name": "Unusual parameter combinations",
+      "signal_id": "SIG-0167",
+      "name": "Unusual parameter combinations",
       "category": "API",
       "description": "Identifies parameter injection attempts in API calls",
-      "detection_method": "Rules; ML classification",
+      "detection_methods": [
+        "Rules",
+        "ML classification"
+      ],
       "false_positive_risk": "Flagging legitimate API automation and custom client workflows",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Unusual parameter combinations",
+      "detection_method": "Rules; ML classification"
     },
     {
-      "signal_name": "Order value vs. payment amount mismatch",
+      "signal_id": "SIG-0168",
+      "name": "Order value vs. payment amount mismatch",
       "category": "Transaction",
       "description": "Core signal of parameter manipulation",
-      "detection_method": "Rule-based; ML",
+      "detection_methods": [
+        "Rule-based",
+        "ML"
+      ],
       "false_positive_risk": "Blocking valid promotions or split payment logic",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Order value vs. payment amount mismatch",
+      "detection_method": "Rule-based; ML"
     },
     {
-      "signal_name": "Prompt injection patterns in agent inputs",
+      "signal_id": "SIG-0169",
+      "name": "Prompt injection patterns in agent inputs",
       "category": "Behavioral",
       "description": "Detects natural language instruction manipulation against AI agents",
-      "detection_method": "NLP; LLM-based detection",
+      "detection_methods": [
+        "NLP",
+        "LLM-based detection"
+      ],
       "false_positive_risk": "Flagging legitimate agentic shopping instructions",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Prompt injection patterns in agent inputs",
+      "detection_method": "NLP; LLM-based detection"
     },
     {
-      "signal_name": "Agent reasoning anomalies",
+      "signal_id": "SIG-0170",
+      "name": "Agent reasoning anomalies",
       "category": "Behavioral",
       "description": "Detects unauthorized changes in agent decision logic",
-      "detection_method": "Anomaly detection",
+      "detection_methods": [
+        "Anomaly detection"
+      ],
       "false_positive_risk": "Flagging novel or legitimate agent workflows",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Agent reasoning anomalies",
+      "detection_method": "Anomaly detection"
     },
     {
-      "signal_name": "Rapid parameter variation testing",
+      "signal_id": "SIG-0171",
+      "name": "Rapid parameter variation testing",
       "category": "Temporal",
       "description": "Identifies automated manipulation testing",
-      "detection_method": "Velocity rules; anomaly detection",
+      "detection_methods": [
+        "Velocity rules",
+        "anomaly detection"
+      ],
       "false_positive_risk": "Blocking valid automated integration tests or high-volume workflows",
-      "cross_account_needed": true
+      "cross_account_needed": true,
+      "evidence": [],
+      "signal_name": "Rapid parameter variation testing",
+      "detection_method": "Velocity rules; anomaly detection"
     },
     {
-      "signal_name": "Similar parameter patterns across merchants",
+      "signal_id": "SIG-0172",
+      "name": "Similar parameter patterns across merchants",
       "category": "Network",
       "description": "Detects coordinated cross-merchant parameter manipulation campaigns",
-      "detection_method": "Graph analytics",
+      "detection_methods": [
+        "Graph analytics"
+      ],
       "false_positive_risk": "Flagging shared merchant SDK templates",
-      "cross_account_needed": true
+      "cross_account_needed": true,
+      "evidence": [],
+      "signal_name": "Similar parameter patterns across merchants",
+      "detection_method": "Graph analytics"
     },
     {
-      "signal_name": "Webhook signature validation failures",
+      "signal_id": "SIG-0173",
+      "name": "Webhook signature validation failures",
       "category": "API",
       "description": "Identifies signature bypass and payload tampering attempts",
-      "detection_method": "Rule-based; anomaly detection",
+      "detection_methods": [
+        "Rule-based",
+        "anomaly detection"
+      ],
       "false_positive_risk": "Flagging misconfigured integration webhooks during retries",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Webhook signature validation failures",
+      "detection_method": "Rule-based; anomaly detection"
     },
     {
-      "signal_name": "Webhook requests from unexpected IPs",
+      "signal_id": "SIG-0174",
+      "name": "Webhook requests from unexpected IPs",
       "category": "API",
       "description": "Flags potential webhook forgery from unknown sources",
-      "detection_method": "Rules; threat intelligence",
+      "detection_methods": [
+        "Rules",
+        "threat intelligence"
+      ],
       "false_positive_risk": "Flagging valid webhook deliveries following server IP migrations",
-      "cross_account_needed": true
+      "cross_account_needed": true,
+      "evidence": [],
+      "signal_name": "Webhook requests from unexpected IPs",
+      "detection_method": "Rules; threat intelligence"
     },
     {
-      "signal_name": "Quota credits without corresponding payments",
+      "signal_id": "SIG-0175",
+      "name": "Quota credits without corresponding payments",
       "category": "Transaction",
       "description": "Core fraud signal for LLM gateway webhook bypass",
-      "detection_method": "Rule-based; ML",
+      "detection_methods": [
+        "Rule-based",
+        "ML"
+      ],
       "false_positive_risk": "Blocking valid promotional quota grants",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Quota credits without corresponding payments",
+      "detection_method": "Rule-based; ML"
     },
     {
-      "signal_name": "Order fulfillment without payment",
+      "signal_id": "SIG-0176",
+      "name": "Order fulfillment without payment",
       "category": "Transaction",
       "description": "Webhook forgery indicator resulting in unearned order fulfillment",
-      "detection_method": "Rule-based",
+      "detection_methods": [
+        "Rule-based"
+      ],
       "false_positive_risk": "Misclassifying valid zero-dollar orders or deferred billing",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Order fulfillment without payment",
+      "detection_method": "Rule-based"
     },
     {
-      "signal_name": "Webhook payload inconsistencies",
+      "signal_id": "SIG-0177",
+      "name": "Webhook payload inconsistencies",
       "category": "Behavioral",
       "description": "Identifies forgery attempts through payload structure anomalies",
-      "detection_method": "ML anomaly detection",
+      "detection_methods": [
+        "ML anomaly detection"
+      ],
       "false_positive_risk": "Flagging schema updates in webhook versions",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Webhook payload inconsistencies",
+      "detection_method": "ML anomaly detection"
     },
     {
-      "signal_name": "Unusual webhook timing",
+      "signal_id": "SIG-0178",
+      "name": "Unusual webhook timing",
       "category": "Temporal",
       "description": "Flags pattern anomalies in event callback timing",
-      "detection_method": "Temporal anomaly detection",
+      "detection_methods": [
+        "Temporal anomaly detection"
+      ],
       "false_positive_risk": "Flagging valid delayed retry queues",
-      "cross_account_needed": true
+      "cross_account_needed": true,
+      "evidence": [],
+      "signal_name": "Unusual webhook timing",
+      "detection_method": "Temporal anomaly detection"
     },
     {
-      "signal_name": "Similar webhook forgery patterns across merchants",
+      "signal_id": "SIG-0179",
+      "name": "Similar webhook forgery patterns across merchants",
       "category": "Network",
       "description": "Campaign identification for widespread callback forgery",
-      "detection_method": "Graph analytics",
+      "detection_methods": [
+        "Graph analytics"
+      ],
       "false_positive_risk": "Flagging standardized SaaS platform integrations",
-      "cross_account_needed": true
+      "cross_account_needed": true,
+      "evidence": [],
+      "signal_name": "Similar webhook forgery patterns across merchants",
+      "detection_method": "Graph analytics"
     },
     {
-      "signal_name": "High API request rate from single source",
+      "signal_id": "SIG-0180",
+      "name": "High API request rate from single source",
       "category": "API",
       "description": "Detects automated card testing and validation attacks",
-      "detection_method": "Velocity rules; anomaly detection",
+      "detection_methods": [
+        "Velocity rules",
+        "anomaly detection"
+      ],
       "false_positive_risk": "Blocking flash sale traffic or high-volume merchants",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "High API request rate from single source",
+      "detection_method": "Velocity rules; anomaly detection"
     },
     {
-      "signal_name": "Small, consistent transaction amounts",
+      "signal_id": "SIG-0181",
+      "name": "Small, consistent transaction amounts",
       "category": "Transaction",
       "description": "Signature pattern for automated card testing",
-      "detection_method": "ML classification",
+      "detection_methods": [
+        "ML classification"
+      ],
       "false_positive_risk": "Flagging legitimate micro-transactions or subscription authorization checks",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Small, consistent transaction amounts",
+      "detection_method": "ML classification"
     },
     {
-      "signal_name": "High decline rate",
+      "signal_id": "SIG-0182",
+      "name": "High decline rate",
       "category": "Transaction",
       "description": "Indicates invalid card testing activity",
-      "detection_method": "Rules; ML",
+      "detection_methods": [
+        "Rules",
+        "ML"
+      ],
       "false_positive_risk": "Flagging legitimate customers trying multiple card failures",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "High decline rate",
+      "detection_method": "Rules; ML"
     },
     {
-      "signal_name": "Multiple cards from same BIN range",
+      "signal_id": "SIG-0183",
+      "name": "Multiple cards from same BIN range",
       "category": "Transaction",
       "description": "Identifies organized card testing using stolen BIN dumps",
-      "detection_method": "BIN analysis",
+      "detection_methods": [
+        "BIN analysis"
+      ],
       "false_positive_risk": "Flagging regional promotions tied to specific card issuers",
-      "cross_account_needed": true
+      "cross_account_needed": true,
+      "evidence": [],
+      "signal_name": "Multiple cards from same BIN range",
+      "detection_method": "BIN analysis"
     },
     {
-      "signal_name": "Same device fingerprint across multiple cards",
+      "signal_id": "SIG-0184",
+      "name": "Same device fingerprint across multiple cards",
       "category": "Device",
       "description": "Detects automated testing tools originating from single environments",
-      "detection_method": "Device fingerprinting",
+      "detection_methods": [
+        "Device fingerprinting"
+      ],
       "false_positive_risk": "Flagging shared corporate devices or public proxy users",
-      "cross_account_needed": true
+      "cross_account_needed": true,
+      "evidence": [],
+      "signal_name": "Same device fingerprint across multiple cards",
+      "detection_method": "Device fingerprinting"
     },
     {
-      "signal_name": "Unnatural checkout patterns",
+      "signal_id": "SIG-0185",
+      "name": "Unnatural checkout patterns",
       "category": "Behavioral",
       "description": "Identifies bot behavior during purchase flow",
-      "detection_method": "Behavioral analytics",
+      "detection_methods": [
+        "Behavioral analytics"
+      ],
       "false_positive_risk": "Flagging accessibility software or power users using autofill",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Unnatural checkout patterns",
+      "detection_method": "Behavioral analytics"
     },
     {
-      "signal_name": "Card testing patterns across merchants",
+      "signal_id": "SIG-0186",
+      "name": "Card testing patterns across merchants",
       "category": "Network",
       "description": "Identifies distributed card testing campaigns across platforms",
-      "detection_method": "Graph analytics",
+      "detection_methods": [
+        "Graph analytics"
+      ],
       "false_positive_risk": "Flagging widespread shopping events across merchants",
-      "cross_account_needed": true
+      "cross_account_needed": true,
+      "evidence": [],
+      "signal_name": "Card testing patterns across merchants",
+      "detection_method": "Graph analytics"
     },
     {
-      "signal_name": "Rapid checkout attempts",
+      "signal_id": "SIG-0187",
+      "name": "Rapid checkout attempts",
       "category": "Temporal",
       "description": "Detects automated transaction generation",
-      "detection_method": "Velocity rules; anomaly detection",
+      "detection_methods": [
+        "Velocity rules",
+        "anomaly detection"
+      ],
       "false_positive_risk": "Blocking valid automated API checkout integrations",
-      "cross_account_needed": true
+      "cross_account_needed": true,
+      "evidence": [],
+      "signal_name": "Rapid checkout attempts",
+      "detection_method": "Velocity rules; anomaly detection"
     },
     {
-      "signal_name": "Protocol message anomalies",
+      "signal_id": "SIG-0188",
+      "name": "Protocol message anomalies",
       "category": "API",
       "description": "Detects attacks exploiting agentic payment protocols (x402/AP2)",
-      "detection_method": "Protocol validation",
+      "detection_methods": [
+        "Protocol validation"
+      ],
       "false_positive_risk": "Flagging valid protocol retry scenarios",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Protocol message anomalies",
+      "detection_method": "Protocol validation"
     },
     {
-      "signal_name": "Reused payment proofs",
+      "signal_id": "SIG-0189",
+      "name": "Reused payment proofs",
       "category": "Transaction",
       "description": "Identifies replay attacks in agentic protocol handshakes",
-      "detection_method": "Idempotency tracking",
+      "detection_methods": [
+        "Idempotency tracking"
+      ],
       "false_positive_risk": "Flagging legitimate idempotent network retries",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Reused payment proofs",
+      "detection_method": "Idempotency tracking"
     },
     {
-      "signal_name": "Multiple grants from single payment",
+      "signal_id": "SIG-0190",
+      "name": "Multiple grants from single payment",
       "category": "Transaction",
       "description": "Core fraud signal for protocol-level state manipulation",
-      "detection_method": "Rule-based; ML",
+      "detection_methods": [
+        "Rule-based",
+        "ML"
+      ],
       "false_positive_risk": "Blocking multi-item grant entitlements",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Multiple grants from single payment",
+      "detection_method": "Rule-based; ML"
     },
     {
-      "signal_name": "Protocol state inconsistencies",
+      "signal_id": "SIG-0191",
+      "name": "Protocol state inconsistencies",
       "category": "State",
       "description": "Flags manipulation of delegation or HTTP 402 payment states",
-      "detection_method": "State consistency checking",
+      "detection_methods": [
+        "State consistency checking"
+      ],
       "false_positive_risk": "Flagging asynchronous blockchain state updates",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Protocol state inconsistencies",
+      "detection_method": "State consistency checking"
     },
     {
-      "signal_name": "Similar attack patterns across protocols",
+      "signal_id": "SIG-0192",
+      "name": "Similar attack patterns across protocols",
       "category": "Network",
       "description": "Coordinated attack identification across agentic payment protocols",
-      "detection_method": "Graph analytics",
+      "detection_methods": [
+        "Graph analytics"
+      ],
       "false_positive_risk": "Flagging standardized agent framework implementations",
-      "cross_account_needed": true
+      "cross_account_needed": true,
+      "evidence": [],
+      "signal_name": "Similar attack patterns across protocols",
+      "detection_method": "Graph analytics"
     },
     {
-      "signal_name": "Unusual routing patterns",
+      "signal_id": "SIG-0193",
+      "name": "Unusual routing patterns",
       "category": "Routing",
       "description": "Flags potential manipulation of payment routing paths",
-      "detection_method": "Anomaly detection",
+      "detection_methods": [
+        "Anomaly detection"
+      ],
       "false_positive_risk": "Flagging dynamic routing optimization for cost reduction",
-      "cross_account_needed": true
+      "cross_account_needed": true,
+      "evidence": [],
+      "signal_name": "Unusual routing patterns",
+      "detection_method": "Anomaly detection"
     },
     {
-      "signal_name": "Unusual processor selection",
+      "signal_id": "SIG-0194",
+      "name": "Unusual processor selection",
       "category": "Processor",
       "description": "Identifies attempts to bypass strict fraud controls via sub-optimal processors",
-      "detection_method": "Rules; ML",
+      "detection_methods": [
+        "Rules",
+        "ML"
+      ],
       "false_positive_risk": "Misclassifying legitimate multi-acquirer failovers",
-      "cross_account_needed": true
+      "cross_account_needed": true,
+      "evidence": [],
+      "signal_name": "Unusual processor selection",
+      "detection_method": "Rules; ML"
     },
     {
-      "signal_name": "Payments to unexpected destinations",
+      "signal_id": "SIG-0195",
+      "name": "Payments to unexpected destinations",
       "category": "Transaction",
       "description": "Redirection indicator showing funds directed to malicious entities",
-      "detection_method": "ML anomaly detection",
+      "detection_methods": [
+        "ML anomaly detection"
+      ],
       "false_positive_risk": "Flagging new legitimate merchant acquirer setups",
-      "cross_account_needed": true
+      "cross_account_needed": true,
+      "evidence": [],
+      "signal_name": "Payments to unexpected destinations",
+      "detection_method": "ML anomaly detection"
     },
     {
-      "signal_name": "Similar routing patterns across agents",
+      "signal_id": "SIG-0196",
+      "name": "Similar routing patterns across agents",
       "category": "Network",
       "description": "Identifies coordinated AI agent routing manipulation campaigns",
-      "detection_method": "Graph analytics",
+      "detection_methods": [
+        "Graph analytics"
+      ],
       "false_positive_risk": "Flagging popular AI shopping assistant default configurations",
-      "cross_account_needed": true
+      "cross_account_needed": true,
+      "evidence": [],
+      "signal_name": "Similar routing patterns across agents",
+      "detection_method": "Graph analytics"
     },
     {
-      "signal_name": "Unauthorized token retrieval attempts",
+      "signal_id": "SIG-0197",
+      "name": "Unauthorized token retrieval attempts",
       "category": "Token",
       "description": "Detects token abuse following agent credential theft",
-      "detection_method": "Rule-based; anomaly detection",
+      "detection_methods": [
+        "Rule-based",
+        "anomaly detection"
+      ],
       "false_positive_risk": "Flagging expired session token renewals",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Unauthorized token retrieval attempts",
+      "detection_method": "Rule-based; anomaly detection"
     },
     {
-      "signal_name": "Tokens used from unexpected contexts",
+      "signal_id": "SIG-0198",
+      "name": "Tokens used from unexpected contexts",
       "category": "Token",
       "description": "Flags hijacked agents executing payments from untrusted environments",
-      "detection_method": "Contextual validation",
+      "detection_methods": [
+        "Contextual validation"
+      ],
       "false_positive_risk": "Misclassifying legitimate multi-device usage",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Tokens used from unexpected contexts",
+      "detection_method": "Contextual validation"
     },
     {
-      "signal_name": "Unauthorized token-based transactions",
+      "signal_id": "SIG-0199",
+      "name": "Unauthorized token-based transactions",
       "category": "Transaction",
       "description": "Core fraud signal for token misuse via compromised assistants",
-      "detection_method": "ML anomaly detection",
+      "detection_methods": [
+        "ML anomaly detection"
+      ],
       "false_positive_risk": "Flagging valid agentic automated purchases",
-      "cross_account_needed": true
+      "cross_account_needed": true,
+      "evidence": [],
+      "signal_name": "Unauthorized token-based transactions",
+      "detection_method": "ML anomaly detection"
     },
     {
-      "signal_name": "Agent session anomalies",
+      "signal_id": "SIG-0200",
+      "name": "Agent session anomalies",
       "category": "Session",
       "description": "Detects session hijacking or prompt injection context shifts",
-      "detection_method": "Session anomaly detection",
+      "detection_methods": [
+        "Session anomaly detection"
+      ],
       "false_positive_risk": "Flagging valid IP changes during mobile roaming",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Agent session anomalies",
+      "detection_method": "Session anomaly detection"
     },
     {
-      "signal_name": "Similar hacking patterns across agents",
+      "signal_id": "SIG-0201",
+      "name": "Similar hacking patterns across agents",
       "category": "Network",
       "description": "Detects cross-agent prompt injection or web poisoning campaigns",
-      "detection_method": "Graph analytics",
+      "detection_methods": [
+        "Graph analytics"
+      ],
       "false_positive_risk": "Flagging widespread agent software updates",
-      "cross_account_needed": true
+      "cross_account_needed": true,
+      "evidence": [],
+      "signal_name": "Similar hacking patterns across agents",
+      "detection_method": "Graph analytics"
     },
     {
-      "signal_name": "Superhuman request rates",
+      "signal_id": "SIG-0202",
+      "name": "Superhuman request rates",
       "category": "API",
       "description": "Identifies AI agents operating at millisecond speeds to bypass checks",
-      "detection_method": "Velocity rules; anomaly detection",
+      "detection_methods": [
+        "Velocity rules",
+        "anomaly detection"
+      ],
       "false_positive_risk": "Blocking legitimate high-volume merchant API traffic",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Superhuman request rates",
+      "detection_method": "Velocity rules; anomaly detection"
     },
     {
-      "signal_name": "Checkout completion time anomaly",
+      "signal_id": "SIG-0203",
+      "name": "Checkout completion time anomaly",
       "category": "Transaction",
       "description": "Bot detection signal based on checkout durations under 2 seconds",
-      "detection_method": "Temporal anomaly detection",
+      "detection_methods": [
+        "Temporal anomaly detection"
+      ],
       "false_positive_risk": "Flagging legitimate human purchases using browser autofill",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Checkout completion time anomaly",
+      "detection_method": "Temporal anomaly detection"
     },
     {
-      "signal_name": "Bot-like transaction patterns",
+      "signal_id": "SIG-0204",
+      "name": "Bot-like transaction patterns",
       "category": "Behavioral",
       "description": "Flags automated interactions and script-like behaviors",
-      "detection_method": "Behavioral analytics",
+      "detection_methods": [
+        "Behavioral analytics"
+      ],
       "false_positive_risk": "Misclassifying legitimate shopping bots or personal assistants",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Bot-like transaction patterns",
+      "detection_method": "Behavioral analytics"
     },
     {
-      "signal_name": "Consistent high-velocity patterns",
+      "signal_id": "SIG-0205",
+      "name": "Consistent high-velocity patterns",
       "category": "Temporal",
       "description": "Identifies AI agent high-frequency execution signatures",
-      "detection_method": "Pattern analysis",
+      "detection_methods": [
+        "Pattern analysis"
+      ],
       "false_positive_risk": "Flagging flash sales or automated subscription renewals",
-      "cross_account_needed": true
+      "cross_account_needed": true,
+      "evidence": [],
+      "signal_name": "Consistent high-velocity patterns",
+      "detection_method": "Pattern analysis"
     },
     {
-      "signal_name": "Coordinated velocity patterns",
+      "signal_id": "SIG-0206",
+      "name": "Coordinated velocity patterns",
       "category": "Network",
       "description": "Detects distributed agent networks coordinating rapid transactions",
-      "detection_method": "Graph analytics",
+      "detection_methods": [
+        "Graph analytics"
+      ],
       "false_positive_risk": "Flagging global retail events and synchronized promos",
-      "cross_account_needed": true
+      "cross_account_needed": true,
+      "evidence": [],
+      "signal_name": "Coordinated velocity patterns",
+      "detection_method": "Graph analytics"
     },
     {
-      "signal_name": "Identity data inconsistencies",
+      "signal_id": "SIG-0207",
+      "name": "Identity data inconsistencies",
       "category": "Identity/KYC",
       "description": "PII cross-check failures against database sources such as CKYCR or DigiLocker.",
-      "detection_method": "Rule-based + ML",
+      "detection_methods": [
+        "Rule-based + ML"
+      ],
       "false_positive_risk": "Thin-file customers, new immigrants, students with limited credit history",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Identity data inconsistencies",
+      "detection_method": "Rule-based + ML"
     },
     {
-      "signal_name": "Digital footprint credibility",
+      "signal_id": "SIG-0208",
+      "name": "Digital footprint credibility",
       "category": "Identity/KYC",
       "description": "Footprint is too new, inconsistent, or fabricated across web and social presences.",
-      "detection_method": "ML",
+      "detection_methods": [
+        "ML"
+      ],
       "false_positive_risk": "Users with limited digital presence or high privacy settings",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Digital footprint credibility",
+      "detection_method": "ML"
     },
     {
-      "signal_name": "Document pixel-level anomalies",
+      "signal_id": "SIG-0209",
+      "name": "Document pixel-level anomalies",
       "category": "Identity/KYC",
       "description": "Pixel-level artifacts including compression defects and unnatural generated patterns.",
-      "detection_method": "ML (AI-driven forgery detection)",
+      "detection_methods": [
+        "ML (AI-driven forgery detection)"
+      ],
       "false_positive_risk": "Poor-quality scans, low camera resolution, or damaged physical identity documents",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Document pixel-level anomalies",
+      "detection_method": "ML (AI-driven forgery detection)"
     },
     {
-      "signal_name": "Document metadata anomalies",
+      "signal_id": "SIG-0210",
+      "name": "Document metadata anomalies",
       "category": "Identity/KYC",
       "description": "Anomalies in creation date, image editing software artifacts, or stripped metadata.",
-      "detection_method": "Rule-based + ML",
+      "detection_methods": [
+        "Rule-based + ML"
+      ],
       "false_positive_risk": "Legitimate documents re-saved or scanned via non-standard PDF/image software",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Document metadata anomalies",
+      "detection_method": "Rule-based + ML"
     },
     {
-      "signal_name": "Virtual camera detection",
+      "signal_id": "SIG-0211",
+      "name": "Virtual camera detection",
       "category": "Device/Session",
       "description": "Presence or use of virtual camera applications feeding video directly into camera pipeline.",
-      "detection_method": "Rule-based + ML",
+      "detection_methods": [
+        "Rule-based + ML"
+      ],
       "false_positive_risk": "Legitimate software camera drivers or video streaming utility tools installed on device",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Virtual camera detection",
+      "detection_method": "Rule-based + ML"
     },
     {
-      "signal_name": "Synthetic artifact patterns in video",
+      "signal_id": "SIG-0212",
+      "name": "Synthetic artifact patterns in video",
       "category": "Identity/KYC",
       "description": "Deepfake synthesis visual artifacts, lighting inconsistencies, and audio-visual desynchronization.",
-      "detection_method": "ML",
+      "detection_methods": [
+        "ML"
+      ],
       "false_positive_risk": "Poor lighting conditions, low bandwidth video compression artifacts",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Synthetic artifact patterns in video",
+      "detection_method": "ML"
     },
     {
-      "signal_name": "Liveness check failures/retries",
+      "signal_id": "SIG-0213",
+      "name": "Liveness check failures/retries",
       "category": "Identity/KYC",
       "description": "Frequent retries, micro-expression absences, or timing latency in interactive liveness challenges.",
-      "detection_method": "Rule-based + ML",
+      "detection_methods": [
+        "Rule-based + ML"
+      ],
       "false_positive_risk": "Users with physical disabilities, special needs, or poor hardware response timing",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Liveness check failures/retries",
+      "detection_method": "Rule-based + ML"
     },
     {
-      "signal_name": "Unnatural typing/mouse patterns during onboarding",
+      "signal_id": "SIG-0214",
+      "name": "Unnatural typing/mouse patterns during onboarding",
       "category": "Behavioral",
       "description": "Inconsistent typing cadence, navigation anomalies, or automated form completion behavior.",
-      "detection_method": "ML",
+      "detection_methods": [
+        "ML"
+      ],
       "false_positive_risk": "Users using screen readers, password managers, or auto-fill accessibility tools",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Unnatural typing/mouse patterns during onboarding",
+      "detection_method": "ML"
     },
     {
-      "signal_name": "Shared attributes across accounts",
+      "signal_id": "SIG-0215",
+      "name": "Shared attributes across accounts",
       "category": "Network/Relationship",
       "description": "Shared phone numbers, physical addresses, or email domains across apparently unrelated accounts.",
-      "detection_method": "ML (Graph analytics)",
+      "detection_methods": [
+        "ML (Graph analytics)"
+      ],
       "false_positive_risk": "Shared household addresses, university dorms, or corporate email domains",
-      "cross_account_needed": true
+      "cross_account_needed": true,
+      "evidence": [],
+      "signal_name": "Shared attributes across accounts",
+      "detection_method": "ML (Graph analytics)"
     },
     {
-      "signal_name": "Same document template/artifact reuse",
+      "signal_id": "SIG-0216",
+      "name": "Same document template/artifact reuse",
       "category": "Network/Relationship",
       "description": "Identical document layout templates or matching GenAI artifact signatures across multiple submissions.",
-      "detection_method": "ML (Document fingerprinting)",
+      "detection_methods": [
+        "ML (Document fingerprinting)"
+      ],
       "false_positive_risk": "Standard template downloads provided by official public issuers",
-      "cross_account_needed": true
+      "cross_account_needed": true,
+      "evidence": [],
+      "signal_name": "Same document template/artifact reuse",
+      "detection_method": "ML (Document fingerprinting)"
     },
     {
-      "signal_name": "Too-rapid credit building",
+      "signal_id": "SIG-0217",
+      "name": "Too-rapid credit building",
       "category": "Transaction",
       "description": "Velocity anomalies where credit limits and loan applications grow abnormally fast relative to account age.",
-      "detection_method": "ML",
+      "detection_methods": [
+        "ML"
+      ],
       "false_positive_risk": "High-income legitimate users rapidly establishing credit histories",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Too-rapid credit building",
+      "detection_method": "ML"
     },
     {
-      "signal_name": "Unusual transaction behavior post-scam/recovery",
+      "signal_id": "SIG-0218",
+      "name": "Unusual transaction behavior post-scam/recovery",
       "category": "Behavioral",
       "description": "Sudden additions of new beneficiaries, unexpected transaction amounts, and rapid funds transfers under coercion or control.",
-      "detection_method": "ML",
+      "detection_methods": [
+        "ML"
+      ],
       "false_positive_risk": "Legitimate emergency payments, property purchases, or new vendor setup",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Unusual transaction behavior post-scam/recovery",
+      "detection_method": "ML"
     },
     {
-      "signal_name": "Beneficiary connected to known mule networks",
+      "signal_id": "SIG-0219",
+      "name": "Beneficiary connected to known mule networks",
       "category": "Network/Relationship",
       "description": "Beneficiary accounts showing close graph proximity or funds movement toward identified mule clusters.",
-      "detection_method": "ML (Graph analytics)",
+      "detection_methods": [
+        "ML (Graph analytics)"
+      ],
       "false_positive_risk": "Transacting with large popular crypto exchanges or peer-to-peer marketplaces",
-      "cross_account_needed": true
+      "cross_account_needed": true,
+      "evidence": [],
+      "signal_name": "Beneficiary connected to known mule networks",
+      "detection_method": "ML (Graph analytics)"
     },
     {
-      "signal_name": "Accounts with identical dormancy-to-activity patterns",
+      "signal_id": "SIG-0220",
+      "name": "Accounts with identical dormancy-to-activity patterns",
       "category": "Temporal",
       "description": "Multiple accounts exhibiting synchronized switch from prolonged dormancy to high transaction velocity.",
-      "detection_method": "ML (Temporal)",
+      "detection_methods": [
+        "ML (Temporal)"
+      ],
       "false_positive_risk": "Seasonal usage accounts (e.g., tax season, holiday shopping platforms)",
-      "cross_account_needed": true
+      "cross_account_needed": true,
+      "evidence": [],
+      "signal_name": "Accounts with identical dormancy-to-activity patterns",
+      "detection_method": "ML (Temporal)"
     },
     {
-      "signal_name": "Shared identity attributes across unrelated accounts",
+      "signal_id": "SIG-0221",
+      "name": "Shared identity attributes across unrelated accounts",
       "category": "Identity",
       "description": "Phone numbers, email domains, or physical addresses shared across supposedly unrelated customer accounts.",
-      "detection_method": "Graph",
+      "detection_methods": [
+        "Graph"
+      ],
       "false_positive_risk": "Large families or businesses sharing corporate addresses and contact points.",
-      "cross_account_needed": true
+      "cross_account_needed": true,
+      "evidence": [],
+      "signal_name": "Shared identity attributes across unrelated accounts",
+      "detection_method": "Graph"
     },
     {
-      "signal_name": "Batch account creation patterns",
+      "signal_id": "SIG-0222",
+      "name": "Batch account creation patterns",
       "category": "Account",
       "description": "Multiple accounts created with identical timing or highly similar synthetic attribute distributions.",
-      "detection_method": "Rules",
+      "detection_methods": [
+        "Rules"
+      ],
       "false_positive_risk": "Legitimate business account opening campaigns or corporate onboarding.",
-      "cross_account_needed": true
+      "cross_account_needed": true,
+      "evidence": [],
+      "signal_name": "Batch account creation patterns",
+      "detection_method": "Rules"
     },
     {
-      "signal_name": "Shared device fingerprints across multiple accounts",
+      "signal_id": "SIG-0223",
+      "name": "Shared device fingerprints across multiple accounts",
       "category": "Device",
       "description": "Overlapping hardware/software device fingerprints or IP pools used to access multiple accounts.",
-      "detection_method": "Graph",
+      "detection_methods": [
+        "Graph"
+      ],
       "false_positive_risk": "Shared household devices, university campuses, or corporate proxy networks.",
-      "cross_account_needed": true
+      "cross_account_needed": true,
+      "evidence": [],
+      "signal_name": "Shared device fingerprints across multiple accounts",
+      "detection_method": "Graph"
     },
     {
-      "signal_name": "Superhuman form-filling speed",
+      "signal_id": "SIG-0224",
+      "name": "Superhuman form-filling speed",
       "category": "Behavioral",
       "description": "Onboarding forms completed at speeds physically impossible for human interaction, indicating bot automation.",
-      "detection_method": "Rules",
+      "detection_methods": [
+        "Rules"
+      ],
       "false_positive_risk": "Legitimate users utilizing password managers or accessibility auto-fill tools.",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Superhuman form-filling speed",
+      "detection_method": "Rules"
     },
     {
-      "signal_name": "Unnatural credit-building velocity",
+      "signal_id": "SIG-0225",
+      "name": "Unnatural credit-building velocity",
       "category": "Transaction",
       "description": "Unusually rapid progression of credit-building actions aimed at increasing credit limits quickly.",
-      "detection_method": "ML",
+      "detection_methods": [
+        "ML"
+      ],
       "false_positive_risk": "Legitimate rapid credit-building by new affluent customers or immigrants.",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Unnatural credit-building velocity",
+      "detection_method": "ML"
     },
     {
-      "signal_name": "Coordinated bust-out transactions",
+      "signal_id": "SIG-0226",
+      "name": "Coordinated bust-out transactions",
       "category": "Transaction",
       "description": "Synchronized maxing out of credit lines or mass fund transfers across multiple accounts simultaneously.",
-      "detection_method": "Graph",
+      "detection_methods": [
+        "Graph"
+      ],
       "false_positive_risk": "Legitimate seasonal spending spikes or holiday shopping periods.",
-      "cross_account_needed": true
+      "cross_account_needed": true,
+      "evidence": [],
+      "signal_name": "Coordinated bust-out transactions",
+      "detection_method": "Graph"
     },
     {
-      "signal_name": "High clustering coefficient among unrelated accounts",
+      "signal_id": "SIG-0227",
+      "name": "High clustering coefficient among unrelated accounts",
       "category": "Graph",
       "description": "Densely interconnected clusters of identities/accounts having no legitimate commercial or personal ties.",
-      "detection_method": "Graph",
+      "detection_methods": [
+        "Graph"
+      ],
       "false_positive_risk": "Corporate business ecosystems, payment aggregators, or co-ops.",
-      "cross_account_needed": true
+      "cross_account_needed": true,
+      "evidence": [],
+      "signal_name": "High clustering coefficient among unrelated accounts",
+      "detection_method": "Graph"
     },
     {
-      "signal_name": "Shared infrastructure across accounts",
+      "signal_id": "SIG-0228",
+      "name": "Shared infrastructure across accounts",
       "category": "Graph",
       "description": "IP addresses, devices, physical addresses, or payment gateways common across disparate accounts.",
-      "detection_method": "Graph",
+      "detection_methods": [
+        "Graph"
+      ],
       "false_positive_risk": "Shared households, co-working spaces, or business parks.",
-      "cross_account_needed": true
+      "cross_account_needed": true,
+      "evidence": [],
+      "signal_name": "Shared infrastructure across accounts",
+      "detection_method": "Graph"
     },
     {
-      "signal_name": "Small, consistent transactions just below thresholds",
+      "signal_id": "SIG-0229",
+      "name": "Small, consistent transactions just below thresholds",
       "category": "Transaction",
       "description": "Structured transactional activity deliberately calibrated to stay under reporting/monitoring thresholds.",
-      "detection_method": "Rules",
+      "detection_methods": [
+        "Rules"
+      ],
       "false_positive_risk": "Legitimate recurring subscription billing or micro-transactions.",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Small, consistent transactions just below thresholds",
+      "detection_method": "Rules"
     },
     {
-      "signal_name": "Shell merchant accounts with no physical presence",
+      "signal_id": "SIG-0230",
+      "name": "Shell merchant accounts with no physical presence",
       "category": "Merchant",
       "description": "E-commerce or merchant accounts acting as laundering fronts without verifiable real-world operations.",
-      "detection_method": "ML",
+      "detection_methods": [
+        "ML"
+      ],
       "false_positive_risk": "Legitimate digital-only or home-based online businesses.",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Shell merchant accounts with no physical presence",
+      "detection_method": "ML"
     },
     {
-      "signal_name": "Multiple accounts sending to same mule network",
+      "signal_id": "SIG-0231",
+      "name": "Multiple accounts sending to same mule network",
       "category": "Network",
       "description": "Consolidation of funds from disparate source accounts into common mule accounts or crypto wallets.",
-      "detection_method": "Graph",
+      "detection_methods": [
+        "Graph"
+      ],
       "false_positive_risk": "Legitimate B2B supplier payments or marketplace settlements.",
-      "cross_account_needed": true
+      "cross_account_needed": true,
+      "evidence": [],
+      "signal_name": "Multiple accounts sending to same mule network",
+      "detection_method": "Graph"
     },
     {
-      "signal_name": "High betweenness centrality for key nodes",
+      "signal_id": "SIG-0232",
+      "name": "High betweenness centrality for key nodes",
       "category": "Graph",
       "description": "Certain facilitator nodes occupying critical bridging positions within the transaction graph.",
-      "detection_method": "Graph",
+      "detection_methods": [
+        "Graph"
+      ],
       "false_positive_risk": "Payment aggregators, escrow services, or major marketplace sellers.",
-      "cross_account_needed": true
+      "cross_account_needed": true,
+      "evidence": [],
+      "signal_name": "High betweenness centrality for key nodes",
+      "detection_method": "Graph"
     },
     {
-      "signal_name": "Cross-stage temporal correlation",
+      "signal_id": "SIG-0233",
+      "name": "Cross-stage temporal correlation",
       "category": "Temporal",
       "description": "Structured sequential progression across stages (KYC -> Account -> Payment -> Cash-out) within predictable windows.",
-      "detection_method": "Temporal",
+      "detection_methods": [
+        "Temporal"
+      ],
       "false_positive_risk": "Standard user onboarding and legitimate product usage flows.",
-      "cross_account_needed": true
+      "cross_account_needed": true,
+      "evidence": [],
+      "signal_name": "Cross-stage temporal correlation",
+      "detection_method": "Temporal"
     },
     {
-      "signal_name": "Rapid conversion and cross-chain movement",
+      "signal_id": "SIG-0234",
+      "name": "Rapid conversion and cross-chain movement",
       "category": "Temporal",
       "description": "Automated, high-velocity movement of funds across multiple payment rails, bridges, and blockchains in minutes.",
-      "detection_method": "Temporal",
+      "detection_methods": [
+        "Temporal"
+      ],
       "false_positive_risk": "High-frequency algorithmic crypto trading or legitimate DeFi arbitrage.",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Rapid conversion and cross-chain movement",
+      "detection_method": "Temporal"
     },
     {
-      "signal_name": "Synthetic persona inconsistencies",
+      "signal_id": "SIG-0235",
+      "name": "Synthetic persona inconsistencies",
       "category": "Identity/KYC",
       "description": "Mismatched DOB, address history, or identity attribute details across verification pipelines.",
-      "detection_method": "ML anomaly detection",
+      "detection_methods": [
+        "ML anomaly detection"
+      ],
       "false_positive_risk": "Thin-file customers, new immigrants, or students with limited credit history.",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Synthetic persona inconsistencies",
+      "detection_method": "ML anomaly detection"
     },
     {
-      "signal_name": "Identity attributes shared across unrelated accounts",
+      "signal_id": "SIG-0236",
+      "name": "Identity attributes shared across unrelated accounts",
       "category": "Network",
       "description": "Shared phone numbers, email domains, or physical addresses linked across seemingly distinct applicant accounts.",
-      "detection_method": "Graph analytics / Entity resolution",
+      "detection_methods": [
+        "Graph analytics / Entity resolution"
+      ],
       "false_positive_risk": "Joint account holders, family members, or legitimate corporate accounts.",
-      "cross_account_needed": true
+      "cross_account_needed": true,
+      "evidence": [],
+      "signal_name": "Identity attributes shared across unrelated accounts",
+      "detection_method": "Graph analytics / Entity resolution"
     },
     {
-      "signal_name": "GenAI artifact patterns in documents",
+      "signal_id": "SIG-0237",
+      "name": "GenAI artifact patterns in documents",
       "category": "Identity/KYC",
       "description": "Pixel-level anomalies, font inconsistencies, logo artifacts, or metadata signatures typical of AI document generators.",
-      "detection_method": "ML document forensics",
+      "detection_methods": [
+        "ML document forensics"
+      ],
       "false_positive_risk": "Genuine low-quality scanned or re-saved PDF documents.",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "GenAI artifact patterns in documents",
+      "detection_method": "ML document forensics"
     },
     {
-      "signal_name": "Device fingerprint anomalies / emulator detection",
+      "signal_id": "SIG-0238",
+      "name": "Device fingerprint anomalies / emulator detection",
       "category": "Device/Session",
       "description": "Detection of spoofed hardware identifiers, emulators, or virtual environments during application.",
-      "detection_method": "Rule-based + ML",
+      "detection_methods": [
+        "Rule-based + ML"
+      ],
       "false_positive_risk": "Legitimate privacy-focused software, VPNs, or virtual desktop infrastructure.",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Device fingerprint anomalies / emulator detection",
+      "detection_method": "Rule-based + ML"
     },
     {
-      "signal_name": "Multiple applications from same device/IP",
+      "signal_id": "SIG-0239",
+      "name": "Multiple applications from same device/IP",
       "category": "Device/Session",
       "description": "High velocity of account applications or activation attempts originating from a single IP or device ID.",
-      "detection_method": "Velocity rules",
+      "detection_methods": [
+        "Velocity rules"
+      ],
       "false_positive_risk": "Shared public Wi-Fi networks or university campuses.",
-      "cross_account_needed": true
+      "cross_account_needed": true,
+      "evidence": [],
+      "signal_name": "Multiple applications from same device/IP",
+      "detection_method": "Velocity rules"
     },
     {
-      "signal_name": "Virtual camera / automated browser detection",
+      "signal_id": "SIG-0240",
+      "name": "Virtual camera / automated browser detection",
       "category": "Device/Session",
       "description": "Presence of virtual camera software, OBS tools, or headless automated browsers navigating onboarding.",
-      "detection_method": "Rule-based + ML",
+      "detection_methods": [
+        "Rule-based + ML"
+      ],
       "false_positive_risk": "Legitimate browser accessibility extensions or video software.",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Virtual camera / automated browser detection",
+      "detection_method": "Rule-based + ML"
     },
     {
-      "signal_name": "Unnatural form-filling patterns",
+      "signal_id": "SIG-0241",
+      "name": "Unnatural form-filling patterns",
       "category": "Behavioral",
       "description": "Superhuman completion speeds, linear navigation, absence of typos/corrections, or script-like typing cadence.",
-      "detection_method": "ML (behavioral biometrics)",
+      "detection_methods": [
+        "ML (behavioral biometrics)"
+      ],
       "false_positive_risk": "Users utilizing legitimate auto-fill tools or password managers.",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Unnatural form-filling patterns",
+      "detection_method": "ML (behavioral biometrics)"
     },
     {
-      "signal_name": "Identical dormancy-to-activity patterns across accounts",
+      "signal_id": "SIG-0242",
+      "name": "Identical dormancy-to-activity patterns across accounts",
       "category": "Temporal",
       "description": "Synchronized periods of inactivity followed by simultaneous spikes in activity across multiple accounts.",
-      "detection_method": "ML (temporal clustering)",
+      "detection_methods": [
+        "ML (temporal clustering)"
+      ],
       "false_positive_risk": "Seasonal marketing campaigns or batch payroll processing.",
-      "cross_account_needed": true
+      "cross_account_needed": true,
+      "evidence": [],
+      "signal_name": "Identical dormancy-to-activity patterns across accounts",
+      "detection_method": "ML (temporal clustering)"
     },
     {
-      "signal_name": "Cross-document data inconsistencies",
+      "signal_id": "SIG-0243",
+      "name": "Cross-document data inconsistencies",
       "category": "Identity/KYC",
       "description": "Mathematical or factual disparities between supporting documents (e.g., paystub vs. bank statement totals).",
-      "detection_method": "Rule-based + ML",
+      "detection_methods": [
+        "Rule-based + ML"
+      ],
       "false_positive_risk": "Applicants with multiple income sources or complex self-employment accounting.",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Cross-document data inconsistencies",
+      "detection_method": "Rule-based + ML"
     },
     {
-      "signal_name": "Deepfake artifact patterns in video/audio",
+      "signal_id": "SIG-0244",
+      "name": "Deepfake artifact patterns in video/audio",
       "category": "Identity/KYC",
       "description": "Visual artifacts, lack of micro-expressions, facial boundary warping, or audio desynchronization in video verification.",
-      "detection_method": "ML (CNN/Transformer)",
+      "detection_methods": [
+        "ML (CNN/Transformer)"
+      ],
       "false_positive_risk": "Users with poor camera quality, unstable internet, or physical motor disabilities.",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Deepfake artifact patterns in video/audio",
+      "detection_method": "ML (CNN/Transformer)"
     },
     {
-      "signal_name": "Bust-out transaction sequences",
+      "signal_id": "SIG-0245",
+      "name": "Bust-out transaction sequences",
       "category": "Transaction",
       "description": "Rapid maxing out of credit lines or high transaction volumes shortly after initial credit expansion.",
-      "detection_method": "ML",
+      "detection_methods": [
+        "ML"
+      ],
       "false_positive_risk": "Legitimate major life events, home renovations, or business expansions.",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Bust-out transaction sequences",
+      "detection_method": "ML"
     },
     {
-      "signal_name": "Shared fabricated document templates",
+      "signal_id": "SIG-0246",
+      "name": "Shared fabricated document templates",
       "category": "Network",
       "description": "Identical document template fingerprints or layout structures detected across multiple applicant submissions.",
-      "detection_method": "Document fingerprinting",
+      "detection_methods": [
+        "Document fingerprinting"
+      ],
       "false_positive_risk": "Standardized templates from major payroll providers or tax software.",
-      "cross_account_needed": true
+      "cross_account_needed": true,
+      "evidence": [],
+      "signal_name": "Shared fabricated document templates",
+      "detection_method": "Document fingerprinting"
     },
     {
-      "signal_name": "Consent granted for unusually broad scopes",
+      "signal_id": "SIG-0247",
+      "name": "Consent granted for unusually broad scopes",
       "category": "Customer",
       "description": "Indicates potential consent deception.",
-      "detection_method": "Rules; Anomaly detection",
+      "detection_methods": [
+        "Rules",
+        "Anomaly detection"
+      ],
       "false_positive_risk": "Customer consolidating finances using broad consent to financial aggregator; blocking legitimate financial planning.",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Consent granted for unusually broad scopes",
+      "detection_method": "Rules; Anomaly detection"
     },
     {
-      "signal_name": "Consent granted for data types inconsistent with user's normal activity",
+      "signal_id": "SIG-0248",
+      "name": "Consent granted for data types inconsistent with user's normal activity",
       "category": "Customer",
       "description": "Indicates manipulated consent.",
-      "detection_method": "ML (profile deviation)",
+      "detection_methods": [
+        "ML (profile deviation)"
+      ],
       "false_positive_risk": "Customer using new budgeting app or applying for a loan.",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Consent granted for data types inconsistent with user's normal activity",
+      "detection_method": "ML (profile deviation)"
     },
     {
-      "signal_name": "Consent granted at unusual hours",
+      "signal_id": "SIG-0249",
+      "name": "Consent granted at unusual hours",
       "category": "Customer",
       "description": "Indicates automated/impersonal attack.",
-      "detection_method": "Rules; Temporal anomaly",
+      "detection_methods": [
+        "Rules",
+        "Temporal anomaly"
+      ],
       "false_positive_risk": "Customer managing finances late at night.",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Consent granted at unusual hours",
+      "detection_method": "Rules; Temporal anomaly"
     },
     {
-      "signal_name": "Rapid sequence of consents granted",
+      "signal_id": "SIG-0250",
+      "name": "Rapid sequence of consents granted",
       "category": "Customer",
       "description": "Indicates automated consent harvesting.",
-      "detection_method": "Velocity rules",
+      "detection_methods": [
+        "Velocity rules"
+      ],
       "false_positive_risk": "User setting up multiple financial management services simultaneously.",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Rapid sequence of consents granted",
+      "detection_method": "Velocity rules"
     },
     {
-      "signal_name": "New TPP with unusually high consent conversion rate",
+      "signal_id": "SIG-0251",
+      "name": "New TPP with unusually high consent conversion rate",
       "category": "TPP",
       "description": "Indicates fraudulent TPP optimising for consent.",
-      "detection_method": "ML anomaly detection",
+      "detection_methods": [
+        "ML anomaly detection"
+      ],
       "false_positive_risk": "New legitimate fintech launching with strong marketing campaign.",
-      "cross_account_needed": true
+      "cross_account_needed": true,
+      "evidence": [],
+      "signal_name": "New TPP with unusually high consent conversion rate",
+      "detection_method": "ML anomaly detection"
     },
     {
-      "signal_name": "TPP requesting scopes inconsistent with declared service",
+      "signal_id": "SIG-0252",
+      "name": "TPP requesting scopes inconsistent with declared service",
       "category": "TPP",
       "description": "Indicates scope creep/abuse.",
-      "detection_method": "Rules; ML",
+      "detection_methods": [
+        "Rules",
+        "ML"
+      ],
       "false_positive_risk": "Fintech expanding its product capabilities.",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "TPP requesting scopes inconsistent with declared service",
+      "detection_method": "Rules; ML"
     },
     {
-      "signal_name": "Consent scope disproportionately broad for declared purpose",
+      "signal_id": "SIG-0253",
+      "name": "Consent scope disproportionately broad for declared purpose",
       "category": "Consent",
       "description": "Indicates deception or potential scope abuse.",
-      "detection_method": "Rules; ML",
+      "detection_methods": [
+        "Rules",
+        "ML"
+      ],
       "false_positive_risk": "Comprehensive financial planning app requiring wide baseline data.",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Consent scope disproportionately broad for declared purpose",
+      "detection_method": "Rules; ML"
     },
     {
-      "signal_name": "Consent revoked shortly after granting",
+      "signal_id": "SIG-0254",
+      "name": "Consent revoked shortly after granting",
       "category": "Consent",
       "description": "Indicates victim realised deception.",
-      "detection_method": "Rules",
+      "detection_methods": [
+        "Rules"
+      ],
       "false_positive_risk": "Customer trying out an app and immediately changing their mind.",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Consent revoked shortly after granting",
+      "detection_method": "Rules"
     },
     {
-      "signal_name": "Permissions used beyond declared purpose",
+      "signal_id": "SIG-0255",
+      "name": "Permissions used beyond declared purpose",
       "category": "Permissions",
       "description": "Indicates scope abuse.",
-      "detection_method": "Anomaly detection",
+      "detection_methods": [
+        "Anomaly detection"
+      ],
       "false_positive_risk": "Legitimate business accounting integration running new analysis routines.",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Permissions used beyond declared purpose",
+      "detection_method": "Anomaly detection"
     },
     {
-      "signal_name": "Unusual API call patterns following consent",
+      "signal_id": "SIG-0256",
+      "name": "Unusual API call patterns following consent",
       "category": "API",
       "description": "Indicates automated data harvesting.",
-      "detection_method": "Sequence modeling",
+      "detection_methods": [
+        "Sequence modeling"
+      ],
       "false_positive_risk": "Initial account sync by a legitimate aggregator.",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Unusual API call patterns following consent",
+      "detection_method": "Sequence modeling"
     },
     {
-      "signal_name": "API calls to endpoints not needed for declared service",
+      "signal_id": "SIG-0257",
+      "name": "API calls to endpoints not needed for declared service",
       "category": "API",
       "description": "Indicates scope exploitation.",
-      "detection_method": "Rules; Anomaly",
+      "detection_methods": [
+        "Rules",
+        "Anomaly"
+      ],
       "false_positive_risk": "TPP introducing new feature rollout.",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "API calls to endpoints not needed for declared service",
+      "detection_method": "Rules; Anomaly"
     },
     {
-      "signal_name": "Same TPP with broad consents across multiple customers",
+      "signal_id": "SIG-0258",
+      "name": "Same TPP with broad consents across multiple customers",
       "category": "Network",
       "description": "Indicates coordinated consent harvesting or fake TPP campaign.",
-      "detection_method": "Graph Neural Network",
+      "detection_methods": [
+        "Graph Neural Network"
+      ],
       "false_positive_risk": "Rapid market adoption of a popular financial tool.",
-      "cross_account_needed": true
+      "cross_account_needed": true,
+      "evidence": [],
+      "signal_name": "Same TPP with broad consents across multiple customers",
+      "detection_method": "Graph Neural Network"
     },
     {
-      "signal_name": "TPP website/app shows AI-generated artifacts",
+      "signal_id": "SIG-0259",
+      "name": "TPP website/app shows AI-generated artifacts",
       "category": "TPP",
       "description": "Indicates GenAI-created fake TPP.",
-      "detection_method": "ML (CNN/Transformer/NLP)",
+      "detection_methods": [
+        "ML (CNN/Transformer/NLP)"
+      ],
       "false_positive_risk": "Legitimate startup using AI content generation tools for branding.",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "TPP website/app shows AI-generated artifacts",
+      "detection_method": "ML (CNN/Transformer/NLP)"
     },
     {
-      "signal_name": "TPP API keys used from unusual IP addresses",
+      "signal_id": "SIG-0260",
+      "name": "TPP API keys used from unusual IP addresses",
       "category": "TPP",
       "description": "Indicates compromised credentials.",
-      "detection_method": "Rules; Anomaly detection",
+      "detection_methods": [
+        "Rules",
+        "Anomaly detection"
+      ],
       "false_positive_risk": "TPP migrating infrastructure to new cloud servers or IP ranges.",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "TPP API keys used from unusual IP addresses",
+      "detection_method": "Rules; Anomaly detection"
     },
     {
-      "signal_name": "Token used multiple times (replay)",
+      "signal_id": "SIG-0261",
+      "name": "Token used multiple times (replay)",
       "category": "Token",
       "description": "Indicates replay attack.",
-      "detection_method": "Idempotency tracking",
+      "detection_methods": [
+        "Idempotency tracking"
+      ],
       "false_positive_risk": "Network retries due to connection timeouts.",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Token used multiple times (replay)",
+      "detection_method": "Idempotency tracking"
     },
     {
-      "signal_name": "High volume of data access calls",
+      "signal_id": "SIG-0262",
+      "name": "High volume of data access calls",
       "category": "API",
       "description": "Indicates systematic harvesting.",
-      "detection_method": "Anomaly detection; Velocity rules",
+      "detection_methods": [
+        "Anomaly detection",
+        "Velocity rules"
+      ],
       "false_positive_risk": "Batch data processing by legitimate business accounting software.",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "High volume of data access calls",
+      "detection_method": "Anomaly detection; Velocity rules"
     },
     {
-      "signal_name": "Amount deviation, urgent payment flags, narrative field anomalies",
+      "signal_id": "SIG-0263",
+      "name": "Amount deviation, urgent payment flags, narrative field anomalies",
       "category": "Transaction",
       "description": "Indicates potential fraudulent instruction",
-      "detection_method": "Rules; ML anomaly detection; LLM-based NLP",
+      "detection_methods": [
+        "Rules",
+        "ML anomaly detection",
+        "LLM-based NLP"
+      ],
       "false_positive_risk": "Blocking legitimate M&A activity or large cross-border acquisition payment",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Amount deviation, urgent payment flags, narrative field anomalies",
+      "detection_method": "Rules; ML anomaly detection; LLM-based NLP"
     },
     {
-      "signal_name": "New or unusual beneficiary BIC/account in high-risk jurisdiction",
+      "signal_id": "SIG-0264",
+      "name": "New or unusual beneficiary BIC/account in high-risk jurisdiction",
       "category": "Transaction",
       "description": "Mule account indicator",
-      "detection_method": "Entity resolution; threat intelligence; ML risk scoring",
+      "detection_methods": [
+        "Entity resolution",
+        "threat intelligence",
+        "ML risk scoring"
+      ],
       "false_positive_risk": "Blocking legitimate new business expansion or corporate restructuring",
-      "cross_account_needed": true
+      "cross_account_needed": true,
+      "evidence": [],
+      "signal_name": "New or unusual beneficiary BIC/account in high-risk jurisdiction",
+      "detection_method": "Entity resolution; threat intelligence; ML risk scoring"
     },
     {
-      "signal_name": "Unusual message volume from specific participant",
+      "signal_id": "SIG-0265",
+      "name": "Unusual message volume from specific participant",
       "category": "Network",
       "description": "Compromised institution indicator",
-      "detection_method": "Network-level analytics",
+      "detection_methods": [
+        "Network-level analytics"
+      ],
       "false_positive_risk": "Blocking legitimate high-volume trading day",
-      "cross_account_needed": true
+      "cross_account_needed": true,
+      "evidence": [],
+      "signal_name": "Unusual message volume from specific participant",
+      "detection_method": "Network-level analytics"
     },
     {
-      "signal_name": "Unusual routing paths and multiple intermediary correspondents",
+      "signal_id": "SIG-0266",
+      "name": "Unusual routing paths and multiple intermediary correspondents",
       "category": "Network",
       "description": "Evasion of direct relationships",
-      "detection_method": "Graph analytics",
+      "detection_methods": [
+        "Graph analytics"
+      ],
       "false_positive_risk": "Blocking legitimate corporate treasury optimization or cost optimization",
-      "cross_account_needed": true
+      "cross_account_needed": true,
+      "evidence": [],
+      "signal_name": "Unusual routing paths and multiple intermediary correspondents",
+      "detection_method": "Graph analytics"
     },
     {
-      "signal_name": "Operator credential usage at unusual times or location",
+      "signal_id": "SIG-0267",
+      "name": "Operator credential usage at unusual times or location",
       "category": "Participant",
       "description": "Credential compromise indicator",
-      "detection_method": "Rules; temporal anomaly detection",
+      "detection_methods": [
+        "Rules",
+        "temporal anomaly detection"
+      ],
       "false_positive_risk": "Blocking legitimate remote work or backup operator using alternate workstation",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Operator credential usage at unusual times or location",
+      "detection_method": "Rules; temporal anomaly detection"
     },
     {
-      "signal_name": "Rapid sequence of messages from same operator",
+      "signal_id": "SIG-0268",
+      "name": "Rapid sequence of messages from same operator",
       "category": "Participant",
       "description": "Automation/bot behavior",
-      "detection_method": "Velocity rules; anomaly detection",
+      "detection_methods": [
+        "Velocity rules",
+        "anomaly detection"
+      ],
       "false_positive_risk": "Blocking legitimate market activity or high-volume trading day",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Rapid sequence of messages from same operator",
+      "detection_method": "Velocity rules; anomaly detection"
     },
     {
-      "signal_name": "Unusual BIC combinations and routing through non-preferred correspondents",
+      "signal_id": "SIG-0269",
+      "name": "Unusual BIC combinations and routing through non-preferred correspondents",
       "category": "Routing",
       "description": "Routing manipulation or unauthorized instruction",
-      "detection_method": "Rules; supervised ML",
+      "detection_methods": [
+        "Rules",
+        "supervised ML"
+      ],
       "false_positive_risk": "Blocking legitimate new correspondent relationship or fee optimization",
-      "cross_account_needed": true
+      "cross_account_needed": true,
+      "evidence": [],
+      "signal_name": "Unusual BIC combinations and routing through non-preferred correspondents",
+      "detection_method": "Rules; supervised ML"
     },
     {
-      "signal_name": "Off-hours or holiday submissions and rapid succession of large payments",
+      "signal_id": "SIG-0270",
+      "name": "Off-hours or holiday submissions and rapid succession of large payments",
       "category": "Temporal",
       "description": "Timing evasion",
-      "detection_method": "Rules; temporal anomaly",
+      "detection_methods": [
+        "Rules",
+        "temporal anomaly"
+      ],
       "false_positive_risk": "Blocking legitimate emergency payment or weekend funding operations",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Off-hours or holiday submissions and rapid succession of large payments",
+      "detection_method": "Rules; temporal anomaly"
     },
     {
-      "signal_name": "Unnatural navigation in SWIFT interface and superhuman speed",
+      "signal_id": "SIG-0271",
+      "name": "Unnatural navigation in SWIFT interface and superhuman speed",
       "category": "Behavioral",
       "description": "Bot/automation indicator",
-      "detection_method": "Behavioral biometrics",
+      "detection_methods": [
+        "Behavioral biometrics"
+      ],
       "false_positive_risk": "Blocking experienced operators performing fast routine transactions",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Unnatural navigation in SWIFT interface and superhuman speed",
+      "detection_method": "Behavioral biometrics"
     },
     {
-      "signal_name": "Beneficiary connections to known mule/crypto networks and rapid onward movement",
+      "signal_id": "SIG-0272",
+      "name": "Beneficiary connections to known mule/crypto networks and rapid onward movement",
       "category": "Graph/Network",
       "description": "Money laundering indicator",
-      "detection_method": "Graph Neural Network; Entity resolution",
+      "detection_methods": [
+        "Graph Neural Network",
+        "Entity resolution"
+      ],
       "false_positive_risk": "Blocking legitimate restructuring with new beneficiaries",
-      "cross_account_needed": true
+      "cross_account_needed": true,
+      "evidence": [],
+      "signal_name": "Beneficiary connections to known mule/crypto networks and rapid onward movement",
+      "detection_method": "Graph Neural Network; Entity resolution"
     },
     {
-      "signal_name": "SWIFT message format anomalies and narrative field unnatural phrasing",
+      "signal_id": "SIG-0273",
+      "name": "SWIFT message format anomalies and narrative field unnatural phrasing",
       "category": "Message/State",
       "description": "AI-generated content indicator",
-      "detection_method": "NLP; LLM-based detection (perplexity, stylometry)",
+      "detection_methods": [
+        "NLP",
+        "LLM-based detection (perplexity, stylometry)"
+      ],
       "false_positive_risk": "False positive flags on non-standard human phrasing in unstructured fields",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "SWIFT message format anomalies and narrative field unnatural phrasing",
+      "detection_method": "NLP; LLM-based detection (perplexity, stylometry)"
     },
     {
-      "signal_name": "Missing or inconsistent regulatory references",
+      "signal_id": "SIG-0274",
+      "name": "Missing or inconsistent regulatory references",
       "category": "Message/State",
       "description": "Incomplete or inconsistent payment instruction",
-      "detection_method": "Rules",
+      "detection_methods": [
+        "Rules"
+      ],
       "false_positive_risk": "Blocking non-standard or administrative cross-border messages",
-      "cross_account_needed": false
+      "cross_account_needed": false,
+      "evidence": [],
+      "signal_name": "Missing or inconsistent regulatory references",
+      "detection_method": "Rules"
     },
     {
-      "signal_name": "Payment to jurisdiction with no prior relationship or unusual corridor",
+      "signal_id": "SIG-0275",
+      "name": "Payment to jurisdiction with no prior relationship or unusual corridor",
       "category": "Geographic",
       "description": "Red flag for trade-based laundering or fraudulent transaction",
-      "detection_method": "Rules; anomaly detection",
+      "detection_methods": [
+        "Rules",
+        "anomaly detection"
+      ],
       "false_positive_risk": "Blocking legitimate business expansion into new geographic regions",
-      "cross_account_needed": true
+      "cross_account_needed": true,
+      "evidence": [],
+      "signal_name": "Payment to jurisdiction with no prior relationship or unusual corridor",
+      "detection_method": "Rules; anomaly detection"
     },
     {
-      "signal_name": "Rapid crypto conversion following receipt",
+      "signal_id": "SIG-0276",
+      "name": "Rapid crypto conversion following receipt",
       "category": "Cross-Rail/Participant",
       "description": "Mule/cash-out pattern",
-      "detection_method": "Graph analytics; threat intelligence",
+      "detection_methods": [
+        "Graph analytics",
+        "threat intelligence"
+      ],
       "false_positive_risk": "Blocking legitimate corporate crypto treasury operations",
-      "cross_account_needed": true
+      "cross_account_needed": true,
+      "evidence": [],
+      "signal_name": "Rapid crypto conversion following receipt",
+      "detection_method": "Graph analytics; threat intelligence"
     }
   ]
 }

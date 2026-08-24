@@ -65,7 +65,7 @@ data/knowledge/canonical/
     └── evidence.json
 ```
 
-The nested tree is the only canonical KB. Duplicate flat copies at `canonical/*.json` were removed. Legacy runtime files stay at `data/knowledge/attack_*.json`.
+The nested tree is the only canonical KB. Duplicate flat copies at `canonical/*.json` were removed. The three runtime files `data/knowledge/attack_families.json`, `attack_signals.json`, and `lifecycle_stages.json` are **published copies of the canonical registries** (with compatibility aliases so Red Team / API keep working).
 
 ---
 

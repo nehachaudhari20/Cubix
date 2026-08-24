@@ -72,14 +72,21 @@ def validate() -> tuple[list[str], list[str], dict[str, int]]:
 
     assert isinstance(families, list) and isinstance(signals, list) and isinstance(stages, list)
     duplicates([record.get("attack_id", "") for record in families if isinstance(record, dict)], "attack_id", errors)
-    duplicates([record.get("stage_name", "") for record in stages if isinstance(record, dict)], "stage_name", errors)
+    duplicates(
+        [record.get("stage_name") or record.get("name") or "" for record in stages if isinstance(record, dict)],
+        "stage_name",
+        errors,
+    )
 
     legacy_family_fields = {"attack_id", "name", "variants", "lifecycle_stage", "genai_classification", "simulation_type", "prerequisites", "attack_flow", "detection_signals", "controls_targeted", "evidence_confidence"}
     legacy_signal_fields = {"signal_name", "category", "description", "detection_method", "false_positive_risk", "cross_account_needed"}
     legacy_stage_fields = {"stage_name", "controls"}
     canonical_genai = {"traditional", "genai_amplified", "genai_load_bearing", "unknown"}
     legacy_genai = {"PASS", "PARTIAL"}
-    known_stage_names = {record.get("stage_name", "").casefold() for record in stages if isinstance(record, dict)}
+    known_stage_names = {
+        (record.get("stage_name") or record.get("name") or "").casefold()
+        for record in stages if isinstance(record, dict)
+    }
 
     for index, record in enumerate(families):
         prefix = f"family[{index}]"
@@ -124,6 +131,8 @@ def validate() -> tuple[list[str], list[str], dict[str, int]]:
             add(errors, f"{prefix} has empty signal_name")
         if not isinstance(record.get("cross_account_needed"), bool):
             add(errors, f"{prefix} cross_account_needed must be boolean")
+        if record.get("signal_id"):
+            continue
         add(warnings, f"{prefix} lacks stable signal_id; family-to-signal references remain fuzzy text matching")
 
     for index, record in enumerate(stages):
@@ -134,14 +143,17 @@ def validate() -> tuple[list[str], list[str], dict[str, int]]:
         missing = legacy_stage_fields - set(record)
         if missing:
             add(errors, f"{prefix} missing legacy fields: {', '.join(sorted(missing))}")
-        if not isinstance(record.get("stage_name"), str) or not record.get("stage_name", "").strip():
+        if not isinstance(record.get("stage_name") or record.get("name"), str) or not (record.get("stage_name") or record.get("name") or "").strip():
             add(errors, f"{prefix} has empty stage_name")
         if not isinstance(record.get("controls"), list) or not all(isinstance(item, str) and item.strip() for item in record.get("controls", [])):
             add(errors, f"{prefix} has an invalid controls structure")
-        add(warnings, f"{prefix} lacks stable stage_id; controls are not independently referenceable")
+        if not record.get("stage_id"):
+            add(warnings, f"{prefix} lacks stable stage_id; controls are not independently referenceable")
 
-    add(warnings, "No control registry exists, so control references cannot yet be validated.")
-    add(warnings, "No canonical relationship records exist, so family/signal/control references are not machine-verifiable yet.")
+    if not (KNOWLEDGE / "canonical" / "defense" / "controls.json").exists():
+        add(warnings, "No control registry exists, so control references cannot yet be validated.")
+    if not (KNOWLEDGE / "canonical" / "attacks" / "attack_relationships.json").exists():
+        add(warnings, "No canonical relationship records exist, so family/signal/control references are not machine-verifiable yet.")
     return errors, warnings, {"families": len(families), "signals": len(signals), "stages": len(stages)}
 
 

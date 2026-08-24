@@ -78,8 +78,8 @@ class OfflineKnowledge:
         embedded_names = {_normalize_signal(s.get("name")) for s in embedded}
         global_matches = [
             s for s in self.signals
-            if any(en in _normalize_signal(s.get("signal_name")) or
-                   _normalize_signal(s.get("signal_name")) in en
+            if any(en in _normalize_signal(s.get("signal_name") or s.get("name")) or
+                   _normalize_signal(s.get("signal_name") or s.get("name")) in en
                    for en in embedded_names if en)
         ]
         return embedded + global_matches

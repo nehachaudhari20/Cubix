@@ -112,7 +112,7 @@ def derive_payload_hints(family: Dict[str, Any], global_signals: List[Dict]) -> 
     family_id = family.get("attack_id")
     for gs in global_signals:
         # Global signals file has no family_id — match by name overlap with family signals
-        gs_name = _normalize(gs.get("signal_name") or "")
+        gs_name = _normalize(gs.get("signal_name") or gs.get("name") or "")
         if any(gs_name in ft or ft in gs_name for ft in signal_texts if ft):
             signal_texts.append(gs_name)
             signal_texts.append(_normalize(gs.get("detection_method") or ""))
@@ -161,7 +161,7 @@ def get_stage_controls(stages: List[Dict], stage_name: str) -> List[str]:
     """Lookup controls for a lifecycle stage from lifecycle_stages.json."""
     target = _normalize(stage_name)
     for stage in stages:
-        name = _normalize(stage.get("stage_name") or "")
+        name = _normalize(stage.get("stage_name") or stage.get("name") or stage.get("stage") or "")
         if target in name or name in target:
             return stage.get("controls") or []
     return []
@@ -394,7 +394,7 @@ def match_triggers_to_kb_signals(
             matched.append(name)
 
     for gs in global_signals:
-        gs_name = gs.get("signal_name") or ""
+        gs_name = gs.get("signal_name") or gs.get("name") or ""
         gs_method = gs.get("detection_method") or ""
         gs_blob = _normalize(f"{gs_name} {gs_method}")
         if any(tok in trigger_blob for tok in gs_blob.split() if len(tok) > 5):
