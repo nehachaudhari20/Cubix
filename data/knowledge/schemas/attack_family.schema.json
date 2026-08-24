@@ -22,7 +22,7 @@
     "attack_flow": {"type": "array", "items": {"type": "string", "minLength": 1}},
     "observable_signal_ids": {"type": "array", "items": {"type": "string", "minLength": 1}, "description": "Implementation extension: references replace inline signal copies."},
     "targeted_control_ids": {"type": "array", "items": {"type": "string", "minLength": 1}, "description": "Implementation extension: references replace free-text controls."},
-    "evidence": {"type": "array", "items": {"$ref": "evidence.schema.json"}},
+    "evidence": {"type": "array", "items": {"anyOf": [{"$ref": "evidence.schema.json"}, {"type": "string", "pattern": "^EVD-"}]}, "description": "Evidence records or canonical evidence IDs."},
     "confidence": {"type": ["string", "null"], "enum": ["VERIFIED", "SUPPORTED", "INFERRED", "UNVERIFIED", null]},
     "maturity": {"type": ["string", "null"]}
   },

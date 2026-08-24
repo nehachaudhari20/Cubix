@@ -1,0 +1,2885 @@
+{
+  "registry_version": "1.0",
+  "controls": [
+    {
+      "control_id": "CTL-0001",
+      "name": "Goal-action consistency scoring",
+      "lifecycle_stage_ids": [
+        "STG-0001"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0002",
+      "name": "Agent policy violation detection",
+      "lifecycle_stage_ids": [
+        "STG-0001"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0003",
+      "name": "Contextual anomaly detection",
+      "lifecycle_stage_ids": [
+        "STG-0001",
+        "STG-0004"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0004",
+      "name": "Memory integrity checking",
+      "lifecycle_stage_ids": [
+        "STG-0001"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0005",
+      "name": "Inter-agent protocol monitoring",
+      "lifecycle_stage_ids": [
+        "STG-0001"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0006",
+      "name": "Action sequence anomaly detection",
+      "lifecycle_stage_ids": [
+        "STG-0002"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0007",
+      "name": "Payment permission usage monitoring",
+      "lifecycle_stage_ids": [
+        "STG-0002"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0008",
+      "name": "Goal-action instruction validation",
+      "lifecycle_stage_ids": [
+        "STG-0002"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0009",
+      "name": "Beneficiary verification",
+      "lifecycle_stage_ids": [
+        "STG-0002"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0010",
+      "name": "API parameter validation",
+      "lifecycle_stage_ids": [
+        "STG-0003"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0011",
+      "name": "Endpoint validation rules",
+      "lifecycle_stage_ids": [
+        "STG-0003"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0012",
+      "name": "API anomaly detection",
+      "lifecycle_stage_ids": [
+        "STG-0003"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0013",
+      "name": "Velocity rules",
+      "lifecycle_stage_ids": [
+        "STG-0003",
+        "STG-0009",
+        "STG-0016"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0014",
+      "name": "Agent credential contextual validation",
+      "lifecycle_stage_ids": [
+        "STG-0004"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0015",
+      "name": "Agent identity verification",
+      "lifecycle_stage_ids": [
+        "STG-0004"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0016",
+      "name": "Entity resolution",
+      "lifecycle_stage_ids": [
+        "STG-0005",
+        "STG-0006",
+        "STG-0009",
+        "STG-0017",
+        "STG-0026"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0017",
+      "name": "Graph analytics",
+      "lifecycle_stage_ids": [
+        "STG-0005"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0018",
+      "name": "Synthetic identity detection",
+      "lifecycle_stage_ids": [
+        "STG-0005"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0019",
+      "name": "Document forensics",
+      "lifecycle_stage_ids": [
+        "STG-0005"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0020",
+      "name": "Account creation velocity rules",
+      "lifecycle_stage_ids": [
+        "STG-0006"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0021",
+      "name": "Multi-account creation rate limiting",
+      "lifecycle_stage_ids": [
+        "STG-0006"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0022",
+      "name": "Beneficiary validation",
+      "lifecycle_stage_ids": [
+        "STG-0007"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0023",
+      "name": "Novel beneficiary verification rules",
+      "lifecycle_stage_ids": [
+        "STG-0007"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0024",
+      "name": "Trusted list integrity auditing",
+      "lifecycle_stage_ids": [
+        "STG-0007"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0025",
+      "name": "ML transaction anomaly detection",
+      "lifecycle_stage_ids": [
+        "STG-0008"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0026",
+      "name": "Dynamic risk scoring",
+      "lifecycle_stage_ids": [
+        "STG-0008"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0027",
+      "name": "Sequence modeling",
+      "lifecycle_stage_ids": [
+        "STG-0008"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0028",
+      "name": "Transaction monitoring rules",
+      "lifecycle_stage_ids": [
+        "STG-0009",
+        "STG-0016"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0029",
+      "name": "ML-based anomaly detection",
+      "lifecycle_stage_ids": [
+        "STG-0009"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0030",
+      "name": "Behavioral analytics",
+      "lifecycle_stage_ids": [
+        "STG-0009",
+        "STG-0016",
+        "STG-0029"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0031",
+      "name": "Alert thresholds",
+      "lifecycle_stage_ids": [
+        "STG-0009",
+        "STG-0016"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0032",
+      "name": "Risk scoring",
+      "lifecycle_stage_ids": [
+        "STG-0009"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0033",
+      "name": "Alert generation",
+      "lifecycle_stage_ids": [
+        "STG-0009"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0034",
+      "name": "Alert triage",
+      "lifecycle_stage_ids": [
+        "STG-0009"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0035",
+      "name": "Case management",
+      "lifecycle_stage_ids": [
+        "STG-0009"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0036",
+      "name": "Investigation workflows",
+      "lifecycle_stage_ids": [
+        "STG-0009"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0037",
+      "name": "Investigator attention",
+      "lifecycle_stage_ids": [
+        "STG-0009"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0038",
+      "name": "CDD/EDD",
+      "lifecycle_stage_ids": [
+        "STG-0009"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0039",
+      "name": "Source of funds verification",
+      "lifecycle_stage_ids": [
+        "STG-0009"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0040",
+      "name": "Regulatory reporting",
+      "lifecycle_stage_ids": [
+        "STG-0009",
+        "STG-0023"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0041",
+      "name": "Compliance decisioning",
+      "lifecycle_stage_ids": [
+        "STG-0009"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0042",
+      "name": "Sanctions screening",
+      "lifecycle_stage_ids": [
+        "STG-0009"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0043",
+      "name": "PEP screening",
+      "lifecycle_stage_ids": [
+        "STG-0009"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0044",
+      "name": "Watchlist matching",
+      "lifecycle_stage_ids": [
+        "STG-0009"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0045",
+      "name": "Beneficial ownership verification",
+      "lifecycle_stage_ids": [
+        "STG-0005",
+        "STG-0009"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0046",
+      "name": "Investigator decision-making",
+      "lifecycle_stage_ids": [
+        "STG-0009"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0047",
+      "name": "SAR filing",
+      "lifecycle_stage_ids": [
+        "STG-0009"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0048",
+      "name": "Training data integrity",
+      "lifecycle_stage_ids": [
+        "STG-0009"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0049",
+      "name": "Feature pipelines",
+      "lifecycle_stage_ids": [
+        "STG-0009"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0050",
+      "name": "Model retraining",
+      "lifecycle_stage_ids": [
+        "STG-0009"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0051",
+      "name": "Model inference",
+      "lifecycle_stage_ids": [
+        "STG-0009"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0052",
+      "name": "Fund movement monitoring",
+      "lifecycle_stage_ids": [
+        "STG-0010"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0053",
+      "name": "Laundering detection",
+      "lifecycle_stage_ids": [
+        "STG-0010"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0054",
+      "name": "Timing verification",
+      "lifecycle_stage_ids": [
+        "STG-0011"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0055",
+      "name": "Settlement rules",
+      "lifecycle_stage_ids": [
+        "STG-0011"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0056",
+      "name": "Evidence fabrication checks",
+      "lifecycle_stage_ids": [
+        "STG-0012"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0057",
+      "name": "Case management workflows",
+      "lifecycle_stage_ids": [
+        "STG-0012"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0058",
+      "name": "Investigator decisioning",
+      "lifecycle_stage_ids": [
+        "STG-0012"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0059",
+      "name": "Entity creation verification",
+      "lifecycle_stage_ids": [
+        "STG-0005"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0060",
+      "name": "Identity obfuscation detection",
+      "lifecycle_stage_ids": [
+        "STG-0005"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0061",
+      "name": "Insider threat monitoring",
+      "lifecycle_stage_ids": [
+        "STG-0013"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0062",
+      "name": "Targeting & impersonation detection",
+      "lifecycle_stage_ids": [
+        "STG-0013"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0063",
+      "name": "SAR filing checks",
+      "lifecycle_stage_ids": [
+        "STG-0014"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0064",
+      "name": "Regulatory report integrity validation",
+      "lifecycle_stage_ids": [
+        "STG-0014"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0065",
+      "name": "Merchant onboarding approval",
+      "lifecycle_stage_ids": [
+        "STG-0015"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0066",
+      "name": "KYB verification",
+      "lifecycle_stage_ids": [
+        "STG-0015"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0067",
+      "name": "Underwriting risk assessment",
+      "lifecycle_stage_ids": [
+        "STG-0015"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0068",
+      "name": "Document verification",
+      "lifecycle_stage_ids": [
+        "STG-0015"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0069",
+      "name": "MATCH list screening",
+      "lifecycle_stage_ids": [
+        "STG-0015"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0070",
+      "name": "Data integrity",
+      "lifecycle_stage_ids": [
+        "STG-0015"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0071",
+      "name": "Risk scoring models",
+      "lifecycle_stage_ids": [
+        "STG-0016"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0072",
+      "name": "Portfolio analytics",
+      "lifecycle_stage_ids": [
+        "STG-0017"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0073",
+      "name": "Concentration monitoring",
+      "lifecycle_stage_ids": [
+        "STG-0017"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0074",
+      "name": "Cross-merchant correlation",
+      "lifecycle_stage_ids": [
+        "STG-0017"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0075",
+      "name": "Aggregation oversight",
+      "lifecycle_stage_ids": [
+        "STG-0017"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0076",
+      "name": "PayFac oversight",
+      "lifecycle_stage_ids": [
+        "STG-0017"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0077",
+      "name": "MCC assignment",
+      "lifecycle_stage_ids": [
+        "STG-0018"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0078",
+      "name": "Content monitoring",
+      "lifecycle_stage_ids": [
+        "STG-0018"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0079",
+      "name": "Risk tiering",
+      "lifecycle_stage_ids": [
+        "STG-0018"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0080",
+      "name": "Underwriting classification",
+      "lifecycle_stage_ids": [
+        "STG-0018"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0081",
+      "name": "Website verification",
+      "lifecycle_stage_ids": [
+        "STG-0018"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0082",
+      "name": "Synthetic identity creation detection",
+      "lifecycle_stage_ids": [
+        "STG-0019"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0083",
+      "name": "KYC verification",
+      "lifecycle_stage_ids": [
+        "STG-0019"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0084",
+      "name": "Account provisioning oversight",
+      "lifecycle_stage_ids": [
+        "STG-0020"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0085",
+      "name": "Authorization rules",
+      "lifecycle_stage_ids": [
+        "STG-0021"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0086",
+      "name": "Velocity limits",
+      "lifecycle_stage_ids": [
+        "STG-0021"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0087",
+      "name": "Merchant credentials verification",
+      "lifecycle_stage_ids": [
+        "STG-0022"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0088",
+      "name": "Merchant profile checks",
+      "lifecycle_stage_ids": [
+        "STG-0022"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0089",
+      "name": "AML screening",
+      "lifecycle_stage_ids": [
+        "STG-0023"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0090",
+      "name": "Sanction/MATCH list screening",
+      "lifecycle_stage_ids": [
+        "STG-0023"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0091",
+      "name": "Document verification systems",
+      "lifecycle_stage_ids": [
+        "STG-0005"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0092",
+      "name": "V-CIP / Liveness checks",
+      "lifecycle_stage_ids": [
+        "STG-0005"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0093",
+      "name": "Voice biometric enrollment",
+      "lifecycle_stage_ids": [
+        "STG-0005"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0094",
+      "name": "Onboarding identity verification",
+      "lifecycle_stage_ids": [
+        "STG-0006"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0095",
+      "name": "Initial risk scoring",
+      "lifecycle_stage_ids": [
+        "STG-0006"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0096",
+      "name": "Device fingerprinting",
+      "lifecycle_stage_ids": [
+        "STG-0024",
+        "STG-0028"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0097",
+      "name": "Hardware-level sensor validation",
+      "lifecycle_stage_ids": [
+        "STG-0024"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0098",
+      "name": "Session anomaly detection",
+      "lifecycle_stage_ids": [
+        "STG-0024"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0099",
+      "name": "Behavioral biometric continuous monitoring",
+      "lifecycle_stage_ids": [
+        "STG-0024"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0100",
+      "name": "Transaction authorization OTP",
+      "lifecycle_stage_ids": [
+        "STG-0002"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0101",
+      "name": "Transaction anomaly detection",
+      "lifecycle_stage_ids": [
+        "STG-0002"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0102",
+      "name": "Beneficiary management checks",
+      "lifecycle_stage_ids": [
+        "STG-0002"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0103",
+      "name": "Customer support identity verification",
+      "lifecycle_stage_ids": [
+        "STG-0025"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0104",
+      "name": "Help-desk authentication assistance",
+      "lifecycle_stage_ids": [
+        "STG-0025"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0105",
+      "name": "Per-transaction amount limits",
+      "lifecycle_stage_ids": [
+        "STG-0026"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0106",
+      "name": "Velocity rules (count/time, sum/time)",
+      "lifecycle_stage_ids": [
+        "STG-0026"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0107",
+      "name": "Risk-score floors",
+      "lifecycle_stage_ids": [
+        "STG-0026"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0108",
+      "name": "Floor limits for offline authorization",
+      "lifecycle_stage_ids": [
+        "STG-0026"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0109",
+      "name": "ML model inference pipelines",
+      "lifecycle_stage_ids": [
+        "STG-0026"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0110",
+      "name": "Risk score thresholds",
+      "lifecycle_stage_ids": [
+        "STG-0026"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0111",
+      "name": "Feature encodings",
+      "lifecycle_stage_ids": [
+        "STG-0026"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0112",
+      "name": "Ensemble scoring logic",
+      "lifecycle_stage_ids": [
+        "STG-0026"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0113",
+      "name": "Per-account fraud scoring",
+      "lifecycle_stage_ids": [
+        "STG-0026"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0114",
+      "name": "Velocity aggregation",
+      "lifecycle_stage_ids": [
+        "STG-0026"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0115",
+      "name": "Merchant concentration monitoring",
+      "lifecycle_stage_ids": [
+        "STG-0026"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0116",
+      "name": "Model ownership",
+      "lifecycle_stage_ids": [
+        "STG-0027"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0117",
+      "name": "Issuer scoring engines",
+      "lifecycle_stage_ids": [
+        "STG-0027"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0118",
+      "name": "Feature manipulation detection",
+      "lifecycle_stage_ids": [
+        "STG-0028"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0119",
+      "name": "Social media recruitment scanning",
+      "lifecycle_stage_ids": [
+        "STG-0029"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0120",
+      "name": "Customer interaction analysis",
+      "lifecycle_stage_ids": [
+        "STG-0029"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0121",
+      "name": "Dwell time analysis",
+      "lifecycle_stage_ids": [
+        "STG-0030"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0122",
+      "name": "Balance pattern analysis",
+      "lifecycle_stage_ids": [
+        "STG-0030"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0123",
+      "name": "Temporal correlation detection",
+      "lifecycle_stage_ids": [
+        "STG-0030"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0124",
+      "name": "Graph Neural Networks (GNN)",
+      "lifecycle_stage_ids": [
+        "STG-0030"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0125",
+      "name": "Cross-institution analytics",
+      "lifecycle_stage_ids": [
+        "STG-0030"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0126",
+      "name": "Exchange risk scoring",
+      "lifecycle_stage_ids": [
+        "STG-0031"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0127",
+      "name": "Exchange monitoring",
+      "lifecycle_stage_ids": [
+        "STG-0031"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0128",
+      "name": "Cross-chain tracing",
+      "lifecycle_stage_ids": [
+        "STG-0031"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0129",
+      "name": "Stablecoin monitoring",
+      "lifecycle_stage_ids": [
+        "STG-0031"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0130",
+      "name": "ATM velocity rules",
+      "lifecycle_stage_ids": [
+        "STG-0031"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0131",
+      "name": "Centrality analysis",
+      "lifecycle_stage_ids": [
+        "STG-0009"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0132",
+      "name": "ML anomaly detection",
+      "lifecycle_stage_ids": [
+        "STG-0009"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0133",
+      "name": "Infrastructure tracking",
+      "lifecycle_stage_ids": [
+        "STG-0009"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0134",
+      "name": "Device fingerprinting systems",
+      "lifecycle_stage_ids": [
+        "STG-0028"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0135",
+      "name": "Device reputation engines",
+      "lifecycle_stage_ids": [
+        "STG-0028"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0136",
+      "name": "Risk-based authentication",
+      "lifecycle_stage_ids": [
+        "STG-0028"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0137",
+      "name": "Bot detection",
+      "lifecycle_stage_ids": [
+        "STG-0028"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0138",
+      "name": "Continuous session authentication",
+      "lifecycle_stage_ids": [
+        "STG-0028"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0139",
+      "name": "Behavioral biometrics",
+      "lifecycle_stage_ids": [
+        "STG-0028",
+        "STG-0032"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0140",
+      "name": "Step-up authentication",
+      "lifecycle_stage_ids": [
+        "STG-0032"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0141",
+      "name": "Login risk scoring",
+      "lifecycle_stage_ids": [
+        "STG-0032"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0142",
+      "name": "Multi-factor authentication (MFA)",
+      "lifecycle_stage_ids": [
+        "STG-0032"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0143",
+      "name": "Clearing and settlement monitoring",
+      "lifecycle_stage_ids": [
+        "STG-0033"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0144",
+      "name": "Reconciliation checks",
+      "lifecycle_stage_ids": [
+        "STG-0033"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0145",
+      "name": "Mule account detection",
+      "lifecycle_stage_ids": [
+        "STG-0034"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0146",
+      "name": "Graph-based network analysis",
+      "lifecycle_stage_ids": [
+        "STG-0034"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0147",
+      "name": "Outbound transfer restrictions",
+      "lifecycle_stage_ids": [
+        "STG-0034"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0148",
+      "name": "Amount and currency verification",
+      "lifecycle_stage_ids": [
+        "STG-0003"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0149",
+      "name": "AI agent permission boundaries",
+      "lifecycle_stage_ids": [
+        "STG-0003"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0150",
+      "name": "Webhook signature validation",
+      "lifecycle_stage_ids": [
+        "STG-0003"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0151",
+      "name": "Event authenticity verification",
+      "lifecycle_stage_ids": [
+        "STG-0003"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0152",
+      "name": "Quota and credit management",
+      "lifecycle_stage_ids": [
+        "STG-0003"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0153",
+      "name": "API rate limiting",
+      "lifecycle_stage_ids": [
+        "STG-0003"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0154",
+      "name": "Protocol authorization and binding",
+      "lifecycle_stage_ids": [
+        "STG-0003"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0155",
+      "name": "Replay protection",
+      "lifecycle_stage_ids": [
+        "STG-0003"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0156",
+      "name": "Routing logic and processor selection",
+      "lifecycle_stage_ids": [
+        "STG-0003"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0157",
+      "name": "Token access control",
+      "lifecycle_stage_ids": [
+        "STG-0003"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0158",
+      "name": "Payment credential storage authorization",
+      "lifecycle_stage_ids": [
+        "STG-0003"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0159",
+      "name": "Behavioral and temporal anomaly detection",
+      "lifecycle_stage_ids": [
+        "STG-0003"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0160",
+      "name": "Entity resolution graph",
+      "lifecycle_stage_ids": [
+        "STG-0019"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0161",
+      "name": "Identity data cross-reference (CKYCR, DigiLocker)",
+      "lifecycle_stage_ids": [
+        "STG-0019"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0162",
+      "name": "Digital footprint credibility scoring",
+      "lifecycle_stage_ids": [
+        "STG-0019"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0163",
+      "name": "AI-driven document forensics",
+      "lifecycle_stage_ids": [
+        "STG-0019"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0164",
+      "name": "Metadata analysis",
+      "lifecycle_stage_ids": [
+        "STG-0019"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0165",
+      "name": "Document fingerprinting",
+      "lifecycle_stage_ids": [
+        "STG-0019"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0166",
+      "name": "CNN-based document forgery detection",
+      "lifecycle_stage_ids": [
+        "STG-0019"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0167",
+      "name": "OCR consistency checking",
+      "lifecycle_stage_ids": [
+        "STG-0019"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0168",
+      "name": "Active deepfake / spoof detection (RBI V-CIP requirement)",
+      "lifecycle_stage_ids": [
+        "STG-0019"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0169",
+      "name": "Liveness check with multi-factor verification",
+      "lifecycle_stage_ids": [
+        "STG-0019"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0170",
+      "name": "Behavioral biometrics for facial movements",
+      "lifecycle_stage_ids": [
+        "STG-0019"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0171",
+      "name": "Real-time identity verification against trusted sources",
+      "lifecycle_stage_ids": [
+        "STG-0019"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0172",
+      "name": "Continuous trust scoring",
+      "lifecycle_stage_ids": [
+        "STG-0019"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0173",
+      "name": "Open finance data sharing",
+      "lifecycle_stage_ids": [
+        "STG-0019"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0174",
+      "name": "Device emulation detection",
+      "lifecycle_stage_ids": [
+        "STG-0020"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0175",
+      "name": "VPN/Proxy usage pattern monitoring",
+      "lifecycle_stage_ids": [
+        "STG-0020"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0176",
+      "name": "Inconsistent device fingerprint analysis",
+      "lifecycle_stage_ids": [
+        "STG-0020"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0177",
+      "name": "Behavioral biometrics during onboarding (typing/mouse dynamics)",
+      "lifecycle_stage_ids": [
+        "STG-0020"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0178",
+      "name": "Application completion time anomaly detection",
+      "lifecycle_stage_ids": [
+        "STG-0020"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0179",
+      "name": "Anomaly detection for credit-building velocity",
+      "lifecycle_stage_ids": [
+        "STG-0021"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0180",
+      "name": "Transaction pattern monitoring against declared profile",
+      "lifecycle_stage_ids": [
+        "STG-0021"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0181",
+      "name": "Behavioral analytics for transaction coercion anomalies",
+      "lifecycle_stage_ids": [
+        "STG-0021"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0182",
+      "name": "Real-time transaction monitoring",
+      "lifecycle_stage_ids": [
+        "STG-0021"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0183",
+      "name": "Customer education and interactive alerts",
+      "lifecycle_stage_ids": [
+        "STG-0021"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0184",
+      "name": "Graph Neural Network for beneficiary risk scoring",
+      "lifecycle_stage_ids": [
+        "STG-0035"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0185",
+      "name": "New beneficiary addition delay/friction controls",
+      "lifecycle_stage_ids": [
+        "STG-0035"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0186",
+      "name": "Beneficiary risk evaluation",
+      "lifecycle_stage_ids": [
+        "STG-0035"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0187",
+      "name": "Merchant Underwriting & KYB",
+      "lifecycle_stage_ids": [
+        "STG-0036"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0188",
+      "name": "Shell Merchant Detection",
+      "lifecycle_stage_ids": [
+        "STG-0036"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0189",
+      "name": "Chargeback Monitoring",
+      "lifecycle_stage_ids": [
+        "STG-0036"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0190",
+      "name": "Transaction Pattern Profiling",
+      "lifecycle_stage_ids": [
+        "STG-0036"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0191",
+      "name": "Gateway Traffic Anomaly Detection",
+      "lifecycle_stage_ids": [
+        "STG-0037"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0192",
+      "name": "Infrastructure Abuse Monitoring",
+      "lifecycle_stage_ids": [
+        "STG-0037"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0193",
+      "name": "Processing Threshold Rules",
+      "lifecycle_stage_ids": [
+        "STG-0037"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0194",
+      "name": "Cross-Rail Monitoring",
+      "lifecycle_stage_ids": [
+        "STG-0038"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0195",
+      "name": "Interbank Velocity Limits",
+      "lifecycle_stage_ids": [
+        "STG-0038"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0196",
+      "name": "Rapid Outflow Alerts",
+      "lifecycle_stage_ids": [
+        "STG-0038"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0197",
+      "name": "Mule Account Identification",
+      "lifecycle_stage_ids": [
+        "STG-0034"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0198",
+      "name": "Graph-Based Mule Ring Detection",
+      "lifecycle_stage_ids": [
+        "STG-0034"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0199",
+      "name": "Crypto Exchange Off-Ramp Monitoring",
+      "lifecycle_stage_ids": [
+        "STG-0034"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0200",
+      "name": "Mixer/Tumbler Detection",
+      "lifecycle_stage_ids": [
+        "STG-0034"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0201",
+      "name": "Device fingerprinting and emulator detection",
+      "lifecycle_stage_ids": [
+        "STG-0039"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0202",
+      "name": "Behavioral biometrics during form completion",
+      "lifecycle_stage_ids": [
+        "STG-0039"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0203",
+      "name": "Virtual camera detection",
+      "lifecycle_stage_ids": [
+        "STG-0039"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0204",
+      "name": "Automated application flow navigation checks",
+      "lifecycle_stage_ids": [
+        "STG-0039"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0205",
+      "name": "Delayed account activation for high-risk profiles",
+      "lifecycle_stage_ids": [
+        "STG-0039"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0206",
+      "name": "Income/employment verification rules",
+      "lifecycle_stage_ids": [
+        "STG-0040"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0207",
+      "name": "Cross-document numerical consistency validation",
+      "lifecycle_stage_ids": [
+        "STG-0040"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0208",
+      "name": "Third-party income validation enrichment",
+      "lifecycle_stage_ids": [
+        "STG-0040"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0209",
+      "name": "Credit limit increase risk scoring",
+      "lifecycle_stage_ids": [
+        "STG-0040"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0210",
+      "name": "Customer notification of account recovery attempts",
+      "lifecycle_stage_ids": [
+        "STG-0041"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0211",
+      "name": "Human contextual anomaly review for high-risk recoveries",
+      "lifecycle_stage_ids": [
+        "STG-0041"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0212",
+      "name": "Multi-layer identity checks for password resets",
+      "lifecycle_stage_ids": [
+        "STG-0041"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0213",
+      "name": "Consent scope",
+      "lifecycle_stage_ids": [
+        "STG-0042"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0214",
+      "name": "Customer consent decision",
+      "lifecycle_stage_ids": [
+        "STG-0042"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0215",
+      "name": "Delegated authority",
+      "lifecycle_stage_ids": [
+        "STG-0042",
+        "STG-0046"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0216",
+      "name": "Consent duration and revocation",
+      "lifecycle_stage_ids": [
+        "STG-0042"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0217",
+      "name": "TPP-customer trust relationship",
+      "lifecycle_stage_ids": [
+        "STG-0043"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0218",
+      "name": "TPP onboarding",
+      "lifecycle_stage_ids": [
+        "STG-0043"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0219",
+      "name": "TPP reputation",
+      "lifecycle_stage_ids": [
+        "STG-0043"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0220",
+      "name": "Consent flow",
+      "lifecycle_stage_ids": [
+        "STG-0043"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0221",
+      "name": "TPP API credentials",
+      "lifecycle_stage_ids": [
+        "STG-0044"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0222",
+      "name": "Delegated access",
+      "lifecycle_stage_ids": [
+        "STG-0044"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0223",
+      "name": "Customer consents held by TPP",
+      "lifecycle_stage_ids": [
+        "STG-0044"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0224",
+      "name": "API trust relationship",
+      "lifecycle_stage_ids": [
+        "STG-0044"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0225",
+      "name": "OAuth token integrity",
+      "lifecycle_stage_ids": [
+        "STG-0045"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0226",
+      "name": "Consent token security",
+      "lifecycle_stage_ids": [
+        "STG-0045"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0227",
+      "name": "Access token lifespan",
+      "lifecycle_stage_ids": [
+        "STG-0045"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0228",
+      "name": "Sender-constrained tokens",
+      "lifecycle_stage_ids": [
+        "STG-0045"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0229",
+      "name": "Consent scope boundaries",
+      "lifecycle_stage_ids": [
+        "STG-0046"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0230",
+      "name": "Permission model",
+      "lifecycle_stage_ids": [
+        "STG-0046"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0231",
+      "name": "Least-privilege controls",
+      "lifecycle_stage_ids": [
+        "STG-0046"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0232",
+      "name": "AISP data access",
+      "lifecycle_stage_ids": [
+        "STG-0047"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0233",
+      "name": "Financial data privacy",
+      "lifecycle_stage_ids": [
+        "STG-0047"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0234",
+      "name": "Data extraction patterns",
+      "lifecycle_stage_ids": [
+        "STG-0047"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0235",
+      "name": "Data exfiltration",
+      "lifecycle_stage_ids": [
+        "STG-0047"
+      ],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0236",
+      "name": "Human -> Agent (instruction fidelity)",
+      "lifecycle_stage_ids": [],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0237",
+      "name": "Agent -> Tools (authorization boundary)",
+      "lifecycle_stage_ids": [],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0238",
+      "name": "Agent -> Merchant (identity verification)",
+      "lifecycle_stage_ids": [],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0239",
+      "name": "Agent -> Payment System (authorization)",
+      "lifecycle_stage_ids": [],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0240",
+      "name": "Human -> Agent (memory integrity)",
+      "lifecycle_stage_ids": [],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0241",
+      "name": "Agent -> Agent (communication integrity)",
+      "lifecycle_stage_ids": [],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0242",
+      "name": "All controls — agent learns to evade all controls",
+      "lifecycle_stage_ids": [],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0243",
+      "name": "ML-based detection models",
+      "lifecycle_stage_ids": [],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0244",
+      "name": "Traditional grammar/spelling filters",
+      "lifecycle_stage_ids": [],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0245",
+      "name": "Known phishing indicator lists",
+      "lifecycle_stage_ids": [],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0246",
+      "name": "Email/SMS security gateways",
+      "lifecycle_stage_ids": [],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0247",
+      "name": "Password and OTP authentication factors",
+      "lifecycle_stage_ids": [],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0248",
+      "name": "Voice biometrics systems",
+      "lifecycle_stage_ids": [],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0249",
+      "name": "OTP verification channels",
+      "lifecycle_stage_ids": [],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0250",
+      "name": "Customer phone support verification",
+      "lifecycle_stage_ids": [],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0251",
+      "name": "Account recovery processes",
+      "lifecycle_stage_ids": [],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0252",
+      "name": "Password reset flows",
+      "lifecycle_stage_ids": [],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0253",
+      "name": "Factor replacement mechanisms",
+      "lifecycle_stage_ids": [],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0254",
+      "name": "Voice biometrics",
+      "lifecycle_stage_ids": [],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0255",
+      "name": "Liveness detection",
+      "lifecycle_stage_ids": [],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0256",
+      "name": "Keystroke dynamics authentication",
+      "lifecycle_stage_ids": [],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0257",
+      "name": "Facial recognition systems",
+      "lifecycle_stage_ids": [],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0258",
+      "name": "Voice biometrics authentication",
+      "lifecycle_stage_ids": [],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0259",
+      "name": "Fingerprint/iris authenticators",
+      "lifecycle_stage_ids": [],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0260",
+      "name": "Behavioral biometrics monitoring",
+      "lifecycle_stage_ids": [],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0261",
+      "name": "Liveness detection mechanisms",
+      "lifecycle_stage_ids": [],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0262",
+      "name": "Payment Initiation APP fraud controls",
+      "lifecycle_stage_ids": [],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0263",
+      "name": "Authentication credential controls",
+      "lifecycle_stage_ids": [],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0264",
+      "name": "Behavioral baseline monitoring",
+      "lifecycle_stage_ids": [],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0265",
+      "name": "Transaction velocity and dwell time limits",
+      "lifecycle_stage_ids": [],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0266",
+      "name": "KYC controls",
+      "lifecycle_stage_ids": [],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0267",
+      "name": "Document verification workflows",
+      "lifecycle_stage_ids": [],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0268",
+      "name": "Account velocity monitoring",
+      "lifecycle_stage_ids": [],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0269",
+      "name": "Entity resolution controls",
+      "lifecycle_stage_ids": [],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0270",
+      "name": "AML transaction monitoring",
+      "lifecycle_stage_ids": [],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0271",
+      "name": "Velocity threshold rules",
+      "lifecycle_stage_ids": [],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0272",
+      "name": "Network-level fraud detection",
+      "lifecycle_stage_ids": [],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0273",
+      "name": "Cross-institution monitoring",
+      "lifecycle_stage_ids": [],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0274",
+      "name": "Fiat-to-crypto gateway controls",
+      "lifecycle_stage_ids": [],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0275",
+      "name": "Cross-chain transaction tracing",
+      "lifecycle_stage_ids": [],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0276",
+      "name": "AML transaction rules",
+      "lifecycle_stage_ids": [],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0277",
+      "name": "Exchange KYC verification",
+      "lifecycle_stage_ids": [],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0278",
+      "name": "Device reputation",
+      "lifecycle_stage_ids": [],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0279",
+      "name": "Trusted device context",
+      "lifecycle_stage_ids": [],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0280",
+      "name": "Session integrity",
+      "lifecycle_stage_ids": [],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0281",
+      "name": "Transaction authorization",
+      "lifecycle_stage_ids": [],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0282",
+      "name": "Fraud scoring",
+      "lifecycle_stage_ids": [],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0283",
+      "name": "Behavioral biometrics systems (keystroke dynamics, mouse dynamics, touch dynamics, motion patterns)",
+      "lifecycle_stage_ids": [],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0284",
+      "name": "amount/currency verification",
+      "lifecycle_stage_ids": [],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0285",
+      "name": "quota/credit management",
+      "lifecycle_stage_ids": [],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0286",
+      "name": "Fraud detection at checkout",
+      "lifecycle_stage_ids": [],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0287",
+      "name": "Protocol authorization",
+      "lifecycle_stage_ids": [],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0288",
+      "name": "Binding",
+      "lifecycle_stage_ids": [],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0289",
+      "name": "Cross-layer security",
+      "lifecycle_stage_ids": [],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0290",
+      "name": "Routing logic",
+      "lifecycle_stage_ids": [],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0291",
+      "name": "Processor selection",
+      "lifecycle_stage_ids": [],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0292",
+      "name": "AI agent decision-making",
+      "lifecycle_stage_ids": [],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0293",
+      "name": "Authorization checks",
+      "lifecycle_stage_ids": [],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0294",
+      "name": "Payment credential storage",
+      "lifecycle_stage_ids": [],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0295",
+      "name": "Rate limiting",
+      "lifecycle_stage_ids": [],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0296",
+      "name": "Anomaly detection",
+      "lifecycle_stage_ids": [],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0297",
+      "name": "KYC/onboarding systems",
+      "lifecycle_stage_ids": [],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0298",
+      "name": "Credit bureaus",
+      "lifecycle_stage_ids": [],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0299",
+      "name": "Payment platforms",
+      "lifecycle_stage_ids": [],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0300",
+      "name": "Document verification systems (OCR, document forensics, manual review)",
+      "lifecycle_stage_ids": [],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0301",
+      "name": "Biometric verification systems",
+      "lifecycle_stage_ids": [],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0302",
+      "name": "V-CIP agents",
+      "lifecycle_stage_ids": [],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0303",
+      "name": "Human reviewers",
+      "lifecycle_stage_ids": [],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0304",
+      "name": "Legitimate KYC-verified customers",
+      "lifecycle_stage_ids": [],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0305",
+      "name": "Employees",
+      "lifecycle_stage_ids": [],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0306",
+      "name": "Merchants",
+      "lifecycle_stage_ids": [],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0307",
+      "name": "Payment authorization systems",
+      "lifecycle_stage_ids": [],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0308",
+      "name": "KYC recovery processes",
+      "lifecycle_stage_ids": [],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0309",
+      "name": "Customer support",
+      "lifecycle_stage_ids": [],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0310",
+      "name": "KYC Identity Verification",
+      "lifecycle_stage_ids": [],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0311",
+      "name": "Document Forensics Checks",
+      "lifecycle_stage_ids": [],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0312",
+      "name": "Account Creation Monitoring",
+      "lifecycle_stage_ids": [],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0313",
+      "name": "Credit Monitoring & Velocity Limits",
+      "lifecycle_stage_ids": [],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0314",
+      "name": "Cash-out / Mule Detection",
+      "lifecycle_stage_ids": [],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0315",
+      "name": "Transaction Monitoring Thresholds",
+      "lifecycle_stage_ids": [],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0316",
+      "name": "Merchant Onboarding & Underwriting",
+      "lifecycle_stage_ids": [],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0317",
+      "name": "Mule & Layering Detection",
+      "lifecycle_stage_ids": [],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0318",
+      "name": "Administrative Access Controls",
+      "lifecycle_stage_ids": [],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0319",
+      "name": "Identity Verification",
+      "lifecycle_stage_ids": [],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0320",
+      "name": "Account Creation Controls",
+      "lifecycle_stage_ids": [],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0321",
+      "name": "Session Behavioral Biometrics",
+      "lifecycle_stage_ids": [],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0322",
+      "name": "Payment Fraud Detection Rules",
+      "lifecycle_stage_ids": [],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0323",
+      "name": "Merchant Risk Scoring",
+      "lifecycle_stage_ids": [],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0324",
+      "name": "AML Monitoring",
+      "lifecycle_stage_ids": [],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0325",
+      "name": "Bank Fiat Outflow Controls",
+      "lifecycle_stage_ids": [],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0326",
+      "name": "Exchange KYC / Transaction Monitoring",
+      "lifecycle_stage_ids": [],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0327",
+      "name": "Cross-Chain Bridge Analytics",
+      "lifecycle_stage_ids": [],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0328",
+      "name": "Blockchain Privacy Screening",
+      "lifecycle_stage_ids": [],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0329",
+      "name": "AML / Travel Rule Controls",
+      "lifecycle_stage_ids": [],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0330",
+      "name": "Account opening systems",
+      "lifecycle_stage_ids": [],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0331",
+      "name": "Onboarding workflows",
+      "lifecycle_stage_ids": [],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0332",
+      "name": "KYC verification pipelines",
+      "lifecycle_stage_ids": [],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0333",
+      "name": "Risk engines",
+      "lifecycle_stage_ids": [],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0334",
+      "name": "Underwriting engines",
+      "lifecycle_stage_ids": [],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0335",
+      "name": "Credit decisioning",
+      "lifecycle_stage_ids": [],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0336",
+      "name": "Account activation flows",
+      "lifecycle_stage_ids": [],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0337",
+      "name": "Password reset / recovery verification",
+      "lifecycle_stage_ids": [],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0338",
+      "name": "Biometric verification during activation",
+      "lifecycle_stage_ids": [],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0339",
+      "name": "Participant Authentication",
+      "lifecycle_stage_ids": [],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0340",
+      "name": "Message Integrity",
+      "lifecycle_stage_ids": [],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0341",
+      "name": "Payment Operator Trust",
+      "lifecycle_stage_ids": [],
+      "detects_signal_ids": [],
+      "evidence": []
+    },
+    {
+      "control_id": "CTL-0342",
+      "name": "Settlement Messaging",
+      "lifecycle_stage_ids": [],
+      "detects_signal_ids": [],
+      "evidence": []
+    }
+  ]
+}

@@ -1,0 +1,1844 @@
+{
+  "families": [
+    {
+      "attack_id": "AG-001",
+      "source": "agent-commerce-11.pdf",
+      "pages": [
+        1,
+        2
+      ],
+      "sections": [
+        "objective",
+        "attacker",
+        "target",
+        "lifecycle_stage",
+        "cross_stage",
+        "genai_classification"
+      ],
+      "raw_fields": {
+        "objective": "transaction amounts",
+        "attacker": "Malicious website operator; Fraudulent merchant; Compromised third-party content provider; SEO poisoner",
+        "target": "AI agent's system prompt; User instructions; Agent decision-making logic; Agent's stored payment credentials/tokens",
+        "lifecycle_stage": "AI-Agent Commerce",
+        "cross_stage": "Payment Initiation (unauthorized payments); Gateway/Processor (API manipulation); Authentication (agent may bypass)",
+        "traditional_mechanism": null,
+        "genai_transformation": null,
+        "genai_classification": "genai_load_bearing",
+        "signals": null,
+        "controls": null,
+        "variants": null
+      }
+    },
+    {
+      "attack_id": "AG-002",
+      "source": "agent-commerce-11.pdf",
+      "pages": [
+        3,
+        4,
+        5
+      ],
+      "sections": [
+        "objective",
+        "attacker",
+        "target",
+        "lifecycle_stage",
+        "cross_stage",
+        "genai_classification"
+      ],
+      "raw_fields": {
+        "objective": "campaigns; Exfiltrate data; Launder funds",
+        "attacker": "Malicious AI agent; Compromised legitimate agent; Attacker who deployed a malicious agent",
+        "target": "Financial institutions; Payment systems; Merchants; Other agents; Human users",
+        "lifecycle_stage": "AI-Agent Commerce",
+        "cross_stage": "Identity/KYC (synthetic identity); Authentication (impersonation); Account Creation (synthetic accounts)",
+        "traditional_mechanism": null,
+        "genai_transformation": null,
+        "genai_classification": "genai_load_bearing",
+        "signals": null,
+        "controls": null,
+        "variants": null
+      }
+    },
+    {
+      "attack_id": "AG-003",
+      "source": "agent-commerce-11.pdf",
+      "pages": [
+        6,
+        7
+      ],
+      "sections": [
+        "objective",
+        "attacker",
+        "target",
+        "lifecycle_stage",
+        "cross_stage",
+        "genai_classification"
+      ],
+      "raw_fields": {
+        "objective": "Execute unauthorized transfers based on \"historical preferences\"; Initiate unauthorized refunds; Add fraudulent beneficiaries to",
+        "attacker": "Malicious website operator; Fraudulent merchant; Compromised document provider; Attacker who can influence content",
+        "target": "Agent's persistent memory store; Agent's future decision-making; Payment systems (via agent actions based on poisoned memory)",
+        "lifecycle_stage": "AI-Agent Commerce",
+        "cross_stage": "Authentication (poisoned memory may affect auth decisions); Payment Initiation (unauthorized refunds/transfers); Beneficiary",
+        "traditional_mechanism": null,
+        "genai_transformation": null,
+        "genai_classification": "genai_load_bearing",
+        "signals": null,
+        "controls": null,
+        "variants": null
+      }
+    },
+    {
+      "attack_id": "AG-004",
+      "source": "agent-commerce-11.pdf",
+      "pages": [
+        8,
+        9,
+        10
+      ],
+      "sections": [
+        "objective",
+        "attacker",
+        "target",
+        "lifecycle_stage",
+        "cross_stage",
+        "genai_classification"
+      ],
+      "raw_fields": {
+        "objective": "Create silent backdoors",
+        "attacker": "Malicious AI agent; Compromised legitimate agent; Attacker controlling an agent",
+        "target": "Victim AI agent; Trust relationships between agents; Payment systems (via victim agent actions)",
+        "lifecycle_stage": "AI-Agent Commerce",
+        "cross_stage": "Gateway/Processor (agent routing manipulation); Authentication (agent identity compromise)",
+        "traditional_mechanism": null,
+        "genai_transformation": null,
+        "genai_classification": "genai_load_bearing",
+        "signals": null,
+        "controls": null,
+        "variants": null
+      }
+    },
+    {
+      "attack_id": "AG-005",
+      "source": "agent-commerce-11.pdf",
+      "pages": [
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20
+      ],
+      "sections": [
+        "objective",
+        "attacker",
+        "target",
+        "lifecycle_stage",
+        "cross_stage",
+        "genai_classification"
+      ],
+      "raw_fields": {
+        "objective": "Evade detection across thousands of accounts; Execute fraud at scale; Learn and adapt faster than defense systems;",
+        "attacker": "Autonomous AI agent; Malicious agent deployed by fraudster; Compromised legitimate agent",
+        "target": "Fraud detection systems; Authentication systems; Authorization controls; Financial institutions; Payment systems",
+        "lifecycle_stage": "AI-Agent Commerce / Cross-stage",
+        "cross_stage": "Authorization (evasion of fraud scoring); Payment Initiation (adaptive payment patterns); Authentication (adaptive credential",
+        "traditional_mechanism": null,
+        "genai_transformation": null,
+        "genai_classification": "genai_load_bearing",
+        "signals": null,
+        "controls": null,
+        "variants": null
+      }
+    },
+    {
+      "attack_id": "AML-001",
+      "source": "aml-14.pdf",
+      "pages": [
+        1,
+        2
+      ],
+      "sections": [
+        "objective",
+        "attacker",
+        "target",
+        "cross_stage",
+        "traditional_mechanism",
+        "genai_transformation",
+        "genai_classification"
+      ],
+      "raw_fields": {
+        "objective": "Transaction monitoring rules; ML-based anomaly detection; Behavioral analytics; Velocity rules; Alert thresholds; Risk scoring",
+        "attacker": "Transaction monitoring systems; ML-based anomaly detection; Behavioral analytics; Velocity rules; Risk scoring models",
+        "target": "Conduct fraudulent activity without triggering AML transaction monitoring alerts, maintaining a low risk profile, avoiding enhanced",
+        "lifecycle_stage": null,
+        "cross_stage": "Stages Sophisticated money launderers; Organized crime groups; Fraud rings with AI capability",
+        "traditional_mechanism": "Before GenAI, attackers evaded AML monitoring through manual transaction structuring (breaking large transactions into smaller amounts), volume smoothing, low-and-slow approaches, beneficiary diversification, and scheduling fraud during off-hours. These methods were detectable by ML-based monitoring because they relied on static patterns or unnatural consistency.",
+        "genai_transformation": "Dimension Pre-GenAI GenAI-Transformed Evasion approach Static, rule-based avoidance Adaptive, ML-based evasion Pattern generation Manual structuring AI-optimized transaction patterns Adaptation None Real-time feedback adaptation Scale Limited Thousands of optimized transactions Detection evasion Avoids known thresholds Evades ML-based monitoring Behavioral mimicry Limited Indistinguishable from legitimate HARD test result: PASS -- GenAI creates a qualitatively new capability. The transformation from manual, detectable rule evasion to adaptive, ML-evasive pattern generation is a qualitative leap. Prerequisites: Existing accounts (legitimate or fraudulently obtained) Understanding of AML monitoring parameters (can be probed) Ability to control transaction patterns GenAI capability for pattern generation and optimization (For adaptive variant) Access to detection feedback Conceptual attack flow: 1. Attacker studies AML monitoring rules, thresholds, and ML model behavior 2. Attacker establishes baseline understanding of detection parameters through probing 3. Attacker uses GenAI to generate optimized transaction patterns with natural variation 4. Attacker executes transactions at levels/scoring that appear normal 5. Risk score remains low; no alerts generated 6. Fraud continues undetected over time 7. If monitoring changes, GenAI adapts patterns accordingly 8. Detection is delayed until significant losses have accumulated Consequence: Fraud continues undetected over time; cumulative losses accumulate; delayed detection allows funds to be laundered before intervention; regulator",
+        "genai_classification": "genai_amplified",
+        "signals": null,
+        "controls": null,
+        "variants": null
+      }
+    },
+    {
+      "attack_id": "AML-002",
+      "source": "aml-14.pdf",
+      "pages": [
+        3,
+        4
+      ],
+      "sections": [
+        "objective",
+        "attacker",
+        "target",
+        "lifecycle_stage",
+        "cross_stage",
+        "traditional_mechanism",
+        "genai_transformation",
+        "genai_classification"
+      ],
+      "raw_fields": {
+        "objective": "Overwhelm AML systems with massive volumes of AI-generated suspicious activity alerts, causing alert fatigue, delayed investigation",
+        "attacker": "Sophisticated money launderers; Organized crime groups; State actors; Fraud rings",
+        "target": "AML alert generation systems; Case management workflows; Compliance investigators; Alert investigation queues",
+        "lifecycle_stage": "AML / Compliance",
+        "cross_stage": "Account Creation (synthetic accounts); Payment Initiation (multiple instructions)",
+        "traditional_mechanism": "Before GenAI, attackers could not generate sufficient volume of varied suspicious patterns to overwhelm AML systems. The attack required manual generation of suspicious activity, which was limited in scale and detectable as coordinated.",
+        "genai_transformation": "Dimension Pre-GenAI GenAI-Transformed Alert generation volume Limited by manual effort Industrial-scale, automated Pattern variety Limited, detectable High variety, indistinguishable Coordination Manual Autonomous, adaptive Scale Dozens per campaign Thousands per campaign Detection of flooding Detectable as coordinated Appears as legitimate variation HARD test result: PASS -- GenAI creates a qualitatively new capability. The transformation from limited, detectable flooding to industrial-scale, adaptive alert generation is a qualitative leap. Prerequisites: Access to synthetic accounts (or ability to generate patterns) Understanding of AML alert generation rules Ability to generate transaction patterns that trigger alerts GenAI capability for pattern variation at scale (For scale) AI agent infrastructure Conceptual attack flow: 1. Attacker studies AML alert generation rules and thresholds 2. Attacker uses GenAI to generate transaction patterns that will trigger alerts 3. Attacker executes large-scale pattern generation across multiple accounts 4. AML system generates massive volume of alerts 5. Alert queue becomes overwhelmed 6. Investigators experience alert fatigue; genuine alerts may be missed 7. Genuine fraud executed through other accounts while AML resources are consumed Consequence: Alert fatigue among investigators; delayed response to genuine threats; missed suspicious activity; system performance degradation; increased operational costs; regulatory penalties for failure to investigate. Detection Intelligence Signal Category Observable Signal Why It Matters Detectio",
+        "genai_classification": "genai_amplified",
+        "signals": null,
+        "controls": null,
+        "variants": null
+      }
+    },
+    {
+      "attack_id": "AML-003",
+      "source": "aml-14.pdf",
+      "pages": [
+        5,
+        6
+      ],
+      "sections": [
+        "objective",
+        "attacker",
+        "target",
+        "cross_stage",
+        "traditional_mechanism",
+        "genai_transformation",
+        "genai_classification"
+      ],
+      "raw_fields": {
+        "objective": "Generate convincing synthetic narratives, justifications, and evidence to explain suspicious activity, evade investigation, and comply with",
+        "attacker": "Money launderers; Fraudsters; Sanctions evaders; Organized crime groups",
+        "target": "AML investigation workflows; Customer due diligence; Source of funds verification; Compliance decisioning; Regulatory reporting",
+        "lifecycle_stage": null,
+        "cross_stage": "Account Creation (documentation); Payment Initiation (narrative generation); Investigation (evidence fabrication)",
+        "traditional_mechanism": "Before GenAI, attackers manually created explanations or used template-based justifications that were often inconsistent or detectable. Limited personalization made them easier for investigators to identify as fraudulent.",
+        "genai_transformation": "Dimension Pre-GenAI GenAI-Transformed Narrative quality Generic, inconsistent Internally consistent, context-aware Dimension Pre-GenAI GenAI-Transformed Personalization Limited Hyper-personalized to the account Scale Manual Automated at scale Detection evasion Detectable inconsistencies Passes consistency checks Supporting documents Crude forgeries Professional, photorealistic Adaptation Static Adaptive to investigation questions HARD test result: PASS -- GenAI creates a qualitatively new capability. The transformation from generic, inconsistent explanations to hyper-personalized, internally consistent narratives is a qualitative leap. Prerequisites: Account flagged for investigation Understanding of AML investigation process Access to GenAI tools (LLMs for narrative, image generation for documents) Knowledge of the account's transaction history Conceptual attack flow: 1. Account activity triggers AML alert 2. Attacker receives notice of investigation (or anticipates it) 3. Attacker uses GenAI to generate plausible explanation 4. Narrative incorporates account history, transaction patterns, business context 5. Attacker submits explanation to compliance team 6. Investigation reviews narrative; appears internally consistent 7. Investigation closed or findings mitigated 8. Fraud activity continues undetected Consequence: Fraud activity continues undetected; regulatory filings inaccurate; investigation resources wasted; increased exposure to financial crime. Detection Intelligence Signal Observable Signal Why It Matters Detection Approach FP Risk Category High Documentation AI-",
+        "genai_classification": "genai_amplified",
+        "signals": null,
+        "controls": null,
+        "variants": null
+      }
+    },
+    {
+      "attack_id": "AML-004",
+      "source": "aml-14.pdf",
+      "pages": [
+        7,
+        8
+      ],
+      "sections": [
+        "objective",
+        "attacker",
+        "target",
+        "lifecycle_stage",
+        "cross_stage",
+        "traditional_mechanism",
+        "genai_transformation",
+        "genai_classification"
+      ],
+      "raw_fields": {
+        "objective": "Evade sanctions and PEP screening by obfuscating identity, concealing beneficial ownership, or generating synthetic entities that",
+        "attacker": "Sanctions evaders; Proliferation financiers; Terrorist financiers; Corrupt officials; Organized crime groups",
+        "target": "Sanctions screening systems; PEP screening; Entity resolution; Beneficial ownership verification; Watchlist monitoring",
+        "lifecycle_stage": "Cross-stage Identity/KYC (entity creation); Account Creation (onboarding); Payment Initiation (sanctions evasion)",
+        "cross_stage": "Identity/KYC (entity creation); Account Creation (onboarding); Payment Initiation (sanctions evasion)",
+        "traditional_mechanism": "Before GenAI, sanctions evasion relied on manual identity variation, complex corporate structures, and jurisdictional arbitrage. The scale and sophistication of evasion was limited by human effort and the ability to generate convincing documentation.",
+        "genai_transformation": "Dimension Pre-GenAI GenAI-Transformed Identity variation Manual, limited AI-generated variations at scale Entity structure Manual creation AI-optimized structures Documentation Forged, detectable AI-generated, professional Dimension Pre-GenAI GenAI-Transformed Detection evasion Adaptive to screening rules Scale Limited Industrial-scale Limited HARD test result: PASS -- GenAI creates a qualitatively new capability. The transformation from manual, detectable evasion to adaptive, AI-generated evasion is a qualitative leap. Prerequisites: Knowledge of sanctions screening logic Understanding of watchlist matching Access to GenAI tools for identity/document generation (For scale) Access to synthetic identity infrastructure Conceptual attack flow: 1. Attacker identifies target sanctions watchlist 2. Attacker uses GenAI to generate identity variations that evade matching 3. Attacker creates synthetic entity structure with fabricated documentation 4. Entity submitted for onboarding 5. Sanctions screening passes (no match found) 6. Account created under synthetic entity 7. Funds moved through entity to sanctioned parties Consequence: Sanctions violations; regulatory penalties; reputational damage; funds flow to sanctioned parties; systemic AML/CFT risk. Detection Intelligence Signal Observable Signal Why It Matters Detection Approach FP Risk Category Indicates evasion attempt ML anomaly detection; Fuzzy High Identity Unnatural name variations matching Moderate Indicates synthetic generation Entity resolution High Identity Inconsistent identity details Indicates evasion attempt Graph ",
+        "genai_classification": "genai_amplified",
+        "signals": null,
+        "controls": null,
+        "variants": null
+      }
+    },
+    {
+      "attack_id": "AML-005",
+      "source": "aml-14.pdf",
+      "pages": [
+        9,
+        10
+      ],
+      "sections": [
+        "objective",
+        "attacker",
+        "target",
+        "lifecycle_stage",
+        "cross_stage",
+        "traditional_mechanism",
+        "genai_transformation",
+        "genai_classification"
+      ],
+      "raw_fields": {
+        "objective": "Manipulate AML investigators or investigation workflows to close suspicious activity cases, downgrade risk assessments, or",
+        "attacker": "Sophisticated money launderers; Organized crime groups; Fraud rings; External attackers",
+        "target": "AML investigators; Compliance officers; Case management systems; Investigation workflows",
+        "lifecycle_stage": "AML / Compliance",
+        "cross_stage": "Employee/Insider (targeting); Investigation (manipulation); Reporting (SAR manipulation)",
+        "traditional_mechanism": "Before GenAI, investigator social engineering required manual communications, generic phishing attempts, and limited personalization. Detection was possible through poor impersonation quality and generic content.",
+        "genai_transformation": "Dimension Pre-GenAI GenAI-Transformed Communication quality Generic, detectable Hyper-personalized, professional Evidence fabrication Limited, detectable AI-generated, convincing Personalization Manual AI-powered from OSINT Scale Limited Industrial-scale Adaptation Static Real-time dialogue adaptation HARD test result: PASS -- GenAI creates a qualitatively new capability. The transformation from generic social engineering to hyper-personalized, professional deception is a qualitative leap. Prerequisites: Understanding of AML investigation workflows Access to GenAI tools (LLMs, voice cloning) Target intelligence (investigator profiles, case details) (For voice variant) Voice samples of authority figures Conceptual attack flow: 1. Attacker identifies AML investigator or compliance officer 2. Attacker gathers intelligence on investigator, case, or process 3. Attacker uses GenAI to generate personalized communication 4. Attacker contacts investigator (email, phone, in-person impersonation) 5. Attacker provides fabricated evidence or instructions 6. Investigator manipulated to close case or downgrade risk 7. Fraud activity continues undetected 8. SAR not filed or filed inaccurately Consequence: Suspicious activity goes unreported; fraud continues undetected; inaccurate regulatory filings; enhanced exposure to financial crime. Detection Intelligence Signal Category Observable Signal Why It Matters Detection Approach FP Risk Indicates deception NLP; LLM-based detection High Documentation AI-generated text patterns Indicates impersonation Anomaly detection Moderate Indicates manipu",
+        "genai_classification": "genai_amplified",
+        "signals": null,
+        "controls": null,
+        "variants": null
+      }
+    },
+    {
+      "attack_id": "AML-006",
+      "source": "aml-14.pdf",
+      "pages": [
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20
+      ],
+      "sections": [
+        "objective",
+        "attacker",
+        "target",
+        "lifecycle_stage",
+        "cross_stage",
+        "traditional_mechanism",
+        "genai_transformation",
+        "genai_classification"
+      ],
+      "raw_fields": {
+        "objective": "Poison AML ML models during training or retraining to degrade detection performance, or generate adversarial inputs that evade",
+        "attacker": "Sophisticated attackers with ML knowledge; Insiders with access to training pipelines; State actors; Organized crime groups with",
+        "target": "AML ML models; Training pipelines; Feature pipelines; Model retraining; Model inference",
+        "lifecycle_stage": "AML / Compliance",
+        "cross_stage": "Authorization (score manipulation); Payment Initiation (pattern generation); Account Creation (synthetic data injection)",
+        "traditional_mechanism": "Before GenAI, model poisoning required manual data manipulation or access to training pipelines. The complexity limited the attack to insider threats or highly sophisticated attackers.",
+        "genai_transformation": "Dimension Pre-GenAI GenAI-Transformed Poisoning data generation Manual, limited AI-generated poisoned samples at scale Adaptation None Adaptive to model retraining Scalability Limited Industrial-scale Detection evasion Detectable as anomalies Appears as legitimate variation Automation Manual AI-agent automated HARD test result: PASS -- GenAI creates a qualitatively new capability. The transformation from manual, detectable poisoning to adaptive, AI-generated poisoning at scale is a qualitative leap. Prerequisites: Understanding of AML ML model architecture Ability to influence training data Ability to manipulate transaction inputs (for evasion) Access to feature pipelines Conceptual attack flow (Poisoning): 1. Attacker studies AML ML model architecture and training data 2. Attacker generates poisoned training data using GenAI 3. Poisoned data injected into training pipeline 4. Model retrains with poisoned data 5. Model performance degrades over time 6. Fraud detection rates decline 7. Fraud proceeds undetected Conceptual attack flow (Evasion): 1. Attacker understands AML model features and decision boundaries 2. Attacker uses GenAI to generate adversarial inputs 3. Manipulated transactions submitted 4. Model scores transactions as low-risk 5. Fraud transactions approved Consequence: Systemic detection degradation; increased fraud losses; increased false positives or false negatives; regulatory penalties for detection failures; costly model retraining. Detection Intelligence Signal Category Observable Signal Why It Matters Detection Approach FP Risk Model Model performance d",
+        "genai_classification": "genai_amplified",
+        "signals": null,
+        "controls": null,
+        "variants": null
+      }
+    },
+    {
+      "attack_id": "ACQ-001",
+      "source": "aquirer-7.pdf",
+      "pages": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "sections": [
+        "objective",
+        "attacker",
+        "target",
+        "lifecycle_stage",
+        "cross_stage",
+        "traditional_mechanism",
+        "genai_transformation",
+        "genai_classification"
+      ],
+      "raw_fields": {
+        "objective": "facilities, or resell accounts on fraud marketplaces",
+        "attacker": "loses the ability to",
+        "target": "Acquirer's merchant onboarding workflow, KYB verification, underwriting decisioning, document verification, MATCH list screening",
+        "lifecycle_stage": "Secondary / Identity/KYC (Stage 1 -- synthetic identity creation); Account Creation (Stage 2); Merchant (Stage 6); AML/Compliance (Stage 17)",
+        "cross_stage": "Stages",
+        "traditional_mechanism": "Before GenAI, fraudulent merchant onboarding relied on: Stolen or forged physical documents (Photoshop, physical counterfeiting) Stolen business identities from data breaches Manual fabrication of business details Template-based document forgery with detectable artifacts Each application required significant manual effort; scalability was limited",
+        "genai_transformation": "Dimension Pre-GenAI GenAI-Transformed Document quality Detectable artifacts, inconsistent details Complete, internally consistent business files Scalability Manual, dozens per campaign Industrial-scale, thousands simultaneously Business entities Stolen or paper companies Synthetic companies with no real existence Detection evasion Detectable by document forensics Evades visual and template validation Speed Weeks per application Minutes per application Dimension Pre-GenAI GenAI-Transformed Document consistency Inconsistent across documents Perfect internal consistency by construction Why GenAI is load-bearing",
+        "genai_classification": "genai_load_bearing",
+        "signals": null,
+        "controls": null,
+        "variants": null
+      }
+    },
+    {
+      "attack_id": "ACQ-002",
+      "source": "aquirer-7.pdf",
+      "pages": [
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21
+      ],
+      "sections": [
+        "objective",
+        "attacker",
+        "target",
+        "lifecycle_stage",
+        "cross_stage",
+        "traditional_mechanism",
+        "genai_transformation",
+        "genai_classification"
+      ],
+      "raw_fields": {
+        "objective": "Conduct fraudulent activity without triggering acquirer monitoring alerts, maintaining a low risk profile, avoiding enhanced",
+        "attacker": "loses the ability to",
+        "target": "Acquirer's ongoing transaction monitoring systems, risk scoring, behavioral analytics, velocity rules",
+        "lifecycle_stage": "Acquirer (Stage 7 -- Ongoing Monitoring)",
+        "cross_stage": "stage Merchant (Stage 6); Payment Initiation (Stage 5); AML/Compliance (Stage 17)",
+        "traditional_mechanism": "Before GenAI, merchants evaded monitoring through: Manual transaction structuring (breaking large transactions into smaller amounts) Volume smoothing (keeping volume consistent to avoid spikes) Low-and-slow approach (building credibility gradually) Chargeback avoidance via manual refunds Beneficiary diversification using multiple settlement accounts Scheduling fraud during off-hours Website cloaking (showing different content to crawlers vs. consumers)",
+        "genai_transformation": "Dimension Pre-GenAI GenAI-Transformed Evasion approach Static, rule-based avoidance Adaptive, ML-based evasion Pattern generation Manual structuring AI-optimized transaction patterns Adaptation None Real-time feedback adaptation Scale Manual, limited Thousands of optimized transactions Detection evasion Avoids known thresholds Evades ML-based monitoring Behavioral mimicry Limited Indistinguishable from legitimate Why GenAI is load-bearing",
+        "genai_classification": "genai_load_bearing",
+        "signals": null,
+        "controls": null,
+        "variants": null
+      }
+    },
+    {
+      "attack_id": "ACQ-003",
+      "source": "aquirer-7.pdf",
+      "pages": [
+        9,
+        10,
+        11,
+        12
+      ],
+      "sections": [
+        "objective",
+        "attacker",
+        "target",
+        "lifecycle_stage",
+        "traditional_mechanism",
+        "genai_transformation",
+        "genai_classification"
+      ],
+      "raw_fields": {
+        "objective": "Acquirer Control",
+        "attacker": "loses the ability to",
+        "target": "Attack Objective",
+        "lifecycle_stage": "Stage Acquirer's portfolio-level analytics, entity resolution, concentration monitoring, cross-merchant correlation",
+        "cross_stage": null,
+        "traditional_mechanism": "Before GenAI, coordinated merchant networks relied on: Multiple business registrations (real or synthetic) Distributed fraud activity across accounts Shared infrastructure, identities, or personnel Cross-acquirer diversification Manual coordination and management",
+        "genai_transformation": "Dimension Pre-GenAI GenAI-Transformed Merchant creation Manual, limited scale Industrial-scale synthetic merchant generation Network coordination Human-managed AI agents coordinate global attacks Detection evasion Detectable via entity resolution AI-generated merchants appear unrelated Portfolio optimization Manual AI-optimized to minimize risk perception Scale Dozens of merchants Hundreds of synthetic merchants Credibility Low, detectable Professional-grade with compliance docs Why GenAI is load-bearing",
+        "genai_classification": "genai_load_bearing",
+        "signals": null,
+        "controls": null,
+        "variants": null
+      }
+    },
+    {
+      "attack_id": "ACQ-004",
+      "source": "aquirer-7.pdf",
+      "pages": [
+        13,
+        14,
+        15,
+        16
+      ],
+      "sections": [
+        "objective",
+        "attacker",
+        "target",
+        "lifecycle_stage",
+        "traditional_mechanism",
+        "genai_transformation",
+        "genai_classification"
+      ],
+      "raw_fields": {
+        "objective": "Misrepresent business activity to obtain lower-risk MCC, avoid enhanced monitoring, reduce processing fees, and process",
+        "attacker": "loses the ability to",
+        "target": "Acquirer's MCC assignment, content monitoring, risk tiering, underwriting classification",
+        "lifecycle_stage": "Acquirer (Stage 7 -- MCC Assignment / Content Monitoring)",
+        "cross_stage": null,
+        "traditional_mechanism": "Before GenAI, merchants misrepresented business activity through: Manual website creation (often low-quality, detectable) Fabricating business descriptions Showing compliant content to acquirer, different content to consumers Application misrepresentation (claiming different business type) Each front required manual effort; limited scalability",
+        "genai_transformation": "Dimension Pre-GenAI GenAI-Transformed Website quality Blurry, broken layouts Professional, studio-grade Creation time Days/weeks Minutes/hours Content Generic, errors Authentic-sounding reviews, perfect grammar Scalability Limited Industrial-scale Detection Obvious red flags Indistinguishable from legitimate Compliance docs Simple forgeries Fabricated docs that pass checks Why GenAI is load-bearing",
+        "genai_classification": "genai_load_bearing",
+        "signals": null,
+        "controls": null,
+        "variants": null
+      }
+    },
+    {
+      "attack_id": "AUTH-001",
+      "source": "authentication-4.pdf",
+      "pages": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17
+      ],
+      "sections": [
+        "objective",
+        "attacker",
+        "target",
+        "lifecycle_stage",
+        "traditional_mechanism",
+        "genai_transformation",
+        "genai_classification"
+      ],
+      "raw_fields": {
+        "objective": "token theft via AitM)",
+        "attacker": "loses the ability to",
+        "target": "Account Creation (Stage 2 -- during onboarding), Payment Initiation (Stage 5 -- post-takeover), Device/Session (Stage 3 -- session",
+        "lifecycle_stage": "Stage Email phishing, SMS phishing (smishing), Social media phishing, Spear phishing, Business Email Compromise (BEC), AI-assisted",
+        "cross_stage": null,
+        "traditional_mechanism": "Before GenAI, phishing relied on manually crafted emails with poor grammar, generic content, and detectable red flags. Phishing kits were template-based and required human effort for personalization. Detection relied on grammar/spelling checks and known phishing indicators.",
+        "genai_transformation": "Dimension Pre-GenAI GenAI-Transformed Content quality Generic, poor grammar, detectable red flags Perfect grammar, professional branding, context-aware Personalization Manual, minimal AI-generated personalized content using OSINT Scale Human-limited, template-based Thousands of unique, personalized messages Adaptation Static templates Real-time adaptation based on detection feedback Why GenAI is load-bearing",
+        "genai_classification": "genai_load_bearing",
+        "signals": null,
+        "controls": null,
+        "variants": null
+      }
+    },
+    {
+      "attack_id": "AUTH-002",
+      "source": "authentication-4.pdf",
+      "pages": [
+        4,
+        5,
+        6
+      ],
+      "sections": [
+        "objective",
+        "attacker",
+        "target",
+        "lifecycle_stage",
+        "traditional_mechanism",
+        "genai_transformation",
+        "genai_classification"
+      ],
+      "raw_fields": {
+        "objective": "Use AI voice cloning and real-time dialogue generation to convince victims to reveal OTPs or authentication codes, enabling",
+        "attacker": "'s vocal range, language",
+        "target": "Banking customers (particularly voice-biometric-enabled services); OTP delivery channels; Voice biometrics systems",
+        "lifecycle_stage": "Stage Authentication (Stage 4)",
+        "cross_stage": null,
+        "traditional_mechanism": "Before GenAI, attackers used human callers with scripts to impersonate bank officials. Voice impersonation was limited by the attacker's vocal range, language skills, and scalability. Detection relied on recognizing unusual caller behavior or poor impersonation quality.",
+        "genai_transformation": "Dimension Pre-GenAI GenAI-Transformed Voice quality Human impersonation, limited quality AI voice clones indistinguishable from real Language Limited to attacker's languages Any language with native fluency Scalability Human-limited (one caller at a time) Automated calls at scale Adaptation Static scripts Real-time dialogue adaptation Training data Required extensive recording 3 seconds sufficient for cloning Why GenAI is load-bearing",
+        "genai_classification": "genai_load_bearing",
+        "signals": null,
+        "controls": null,
+        "variants": null
+      }
+    },
+    {
+      "attack_id": "AUTH-003",
+      "source": "authentication-4.pdf",
+      "pages": [
+        7,
+        8,
+        9
+      ],
+      "sections": [
+        "objective",
+        "attacker",
+        "target",
+        "lifecycle_stage",
+        "traditional_mechanism",
+        "genai_transformation",
+        "genai_classification"
+      ],
+      "raw_fields": {
+        "objective": "Use GenAI-generated forged identity documents, voice clones, and deepfake videos to impersonate legitimate account holders",
+        "attacker": "loses the ability to",
+        "target": "Account recovery processes; Password reset flows; Factor replacement; Customer support identity verification; Document",
+        "lifecycle_stage": "Authentication (Stage 4 -- Recovery Surface)",
+        "cross_stage": null,
+        "traditional_mechanism": "Before GenAI, recovery-assisted account takeover relied on stolen PII (from data breaches), social engineering of support staff, or physical document forgery. Attackers were limited by the availability of stolen PII and the quality of physical/Photoshop forgeries.",
+        "genai_transformation": "Dimension Pre-GenAI GenAI-Transformed Documents Stolen physical docs or Photoshop forgeries Photorealistic forged documents on demand Voice Human impersonation or stolen recordings Voice clones from 3-second samples Video Physical spoofs (photos, masks) Deepfake injection bypassing liveness Scale Labour-intensive, limited Automated, on-demand generation for any identity Why GenAI is load-bearing",
+        "genai_classification": "genai_load_bearing",
+        "signals": null,
+        "controls": null,
+        "variants": null
+      }
+    },
+    {
+      "attack_id": "AUTH-004",
+      "source": "authentication-4.pdf",
+      "pages": [
+        10,
+        11,
+        12
+      ],
+      "sections": [
+        "objective",
+        "attacker",
+        "target",
+        "lifecycle_stage",
+        "traditional_mechanism",
+        "genai_transformation",
+        "genai_classification"
+      ],
+      "raw_fields": {
+        "objective": "Generate synthetic biometric data matching legitimate user profiles to bypass biometric authentication without requiring access",
+        "attacker": "loses the ability to",
+        "target": "Biometric authentication systems (keystroke dynamics, facial recognition, voice biometrics, fingerprint/iris); Behavioral",
+        "lifecycle_stage": "Stage Authentication (Stage 4)",
+        "cross_stage": null,
+        "traditional_mechanism": "Before GenAI, biometric spoofing relied on presentation attacks: printed photos for facial recognition, 3D masks, voice recordings, and fingerprint lifts. These were detectable by basic liveness detection (blink detection, 3D depth sensing, spectral analysis).",
+        "genai_transformation": "Dimension Pre-GenAI GenAI-Transformed Keystroke patterns Statistical mimicry, detectable GAN-generated patterns, 95-96% accuracy Facial images Physical photos/masks Digital deepfake injection Voice Recorded voice replay AI-generated voice clones Fingerprint Physical lifts/prints GAN-generated synthetic fingerprints Injection Physical presentation Digital sensor bypass (camera injection, API injection) Why GenAI is load-bearing",
+        "genai_classification": "genai_load_bearing",
+        "signals": null,
+        "controls": null,
+        "variants": null
+      }
+    },
+    {
+      "attack_id": "AUT-001",
+      "source": "authorization-10.pdf",
+      "pages": [
+        1,
+        2,
+        3
+      ],
+      "sections": [
+        "objective",
+        "attacker",
+        "target",
+        "lifecycle_stage",
+        "traditional_mechanism",
+        "genai_classification"
+      ],
+      "raw_fields": {
+        "objective": "Execute large-scale fraudulent transactions where no individual transaction triggers authorization thresholds, enabling",
+        "attacker": "loses the ability to",
+        "target": "Authorization risk engines; velocity rules; amount thresholds; floor limits; risk score floors",
+        "lifecycle_stage": "Authorization (Stage 10)",
+        "cross_stage": null,
+        "traditional_mechanism": "Before GenAI, attackers manually split large payments into smaller amounts, distributed transactions across time to avoid velocity rules, and kept amounts below known thresholds. This was static, limited in scale, and detectable by modern ML-based anomaly detection. Dimension Pre-GenAI GenAI-Transformed Optimization Manual, static thresholds Adaptive, learning from approval/decline feedback Pattern generation Fixed splitting rules AI-generated distributions mimicking legitimate cohorts Scale Limited, manual Industrial-scale, automated Adaptation None Real-time adaptation to detection changes Why GenAI is load-bearing: If GenAI is removed, the attacker loses the ability to: Dynamically infer thresholds from authorization responses Generate amount distributions that mimic legitimate cohort patterns Adapt timing and velocity in response to detection feedback Operate at industrial scale while maintaining human-like patterns HARD GenAI Removal Test result: PARTIAL -- The attack exists without GenAI, but GenAI transforms it from static, detectable evasion to adaptive, ML-evading optimization. Prerequisites: Access to multiple payment instruments/cards OR a single high-limit card Ability to control transaction timing and amounts (For GenAI variant) Feedback loop of authorization responses (approve/decline) Understanding of target thresholds (discovered through probing) Attack Flow: 1. Attacker probes authorization system with test transactions across different amounts and timing patterns 2. Observes approval/decline outcomes to infer thresholds (velocity caps, amount limits, risk ",
+        "genai_transformation": null,
+        "genai_classification": "genai_load_bearing",
+        "signals": null,
+        "controls": null,
+        "variants": null
+      }
+    },
+    {
+      "attack_id": "AUT-002",
+      "source": "authorization-10.pdf",
+      "pages": [
+        4,
+        5,
+        6,
+        7
+      ],
+      "sections": [
+        "objective",
+        "attacker",
+        "target",
+        "lifecycle_stage",
+        "cross_stage",
+        "traditional_mechanism",
+        "genai_transformation",
+        "genai_classification"
+      ],
+      "raw_fields": {
+        "objective": "Manipulate transaction features to reduce fraud scores below approval thresholds, enabling fraudulent transactions to be",
+        "attacker": "loses the ability to",
+        "target": "ML-based fraud scoring models used in authorization; risk score thresholds; model feature encodings",
+        "lifecycle_stage": "Authorization (Stage 10)",
+        "cross_stage": "stage Issuer (Stage 11 -- model owner); Device/Session (Stage 3 -- feature manipulation)",
+        "traditional_mechanism": "Before GenAI, attackers manually experimented with feature combinations (amount, MCC, timing, device, location) to find patterns that evaded detection. This was limited, manual, and often detectable because the resulting feature combinations were unusual.",
+        "genai_transformation": "Dimension Pre-GenAI GenAI-Transformed Feature exploration Manual grid search Generative optimization of feature vectors Adaptation Static experiments Real-time feedback loop (propose observe adapt) Surrogate modeling None Builds surrogate model of target scorer Scale Limited probes Thousands of systematic explorations Plausibility Detectable unnatural combinations Within-distribution plausible vectors Why GenAI is load-bearing",
+        "genai_classification": "genai_load_bearing",
+        "signals": null,
+        "controls": null,
+        "variants": null
+      }
+    },
+    {
+      "attack_id": "AUT-003",
+      "source": "authorization-10.pdf",
+      "pages": [
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "sections": [
+        "objective",
+        "attacker",
+        "target",
+        "lifecycle_stage",
+        "cross_stage",
+        "traditional_mechanism",
+        "genai_transformation",
+        "genai_classification"
+      ],
+      "raw_fields": {
+        "objective": "Execute industrial-scale fraud across hundreds/thousands of accounts, ensuring no single account exceeds detection thresholds,",
+        "attacker": "loses the ability to",
+        "target": "Per-account fraud models; entity resolution; velocity rules (per-account); merchant concentration limits; graph-based detection",
+        "lifecycle_stage": "Authorization (Stage 10) -- per-account decisions",
+        "cross_stage": "network detection)",
+        "traditional_mechanism": "Before GenAI, distributed fraud required manual coordination across accounts, which was limited in scale and detectable by graph analytics. Each account required individual management; coordination was human-limited.",
+        "genai_transformation": "Dimension Pre-GenAI GenAI-Transformed Scale Dozens of accounts Hundreds/thousands of accounts Coordination Manual, limited AI-agent orchestrated, autonomous Adaptation None Real-time adaptation to detection Patterning Detectable uniformity Individualized patterns per account Infrastructure Static Dynamically rotated Why GenAI is load-bearing",
+        "genai_classification": "genai_load_bearing",
+        "signals": null,
+        "controls": null,
+        "variants": null
+      }
+    },
+    {
+      "attack_id": "CM-001",
+      "source": "cash-out-13.pdf",
+      "pages": [
+        1,
+        2
+      ],
+      "sections": [
+        "objective",
+        "attacker",
+        "target",
+        "cross_stage",
+        "traditional_mechanism",
+        "genai_transformation",
+        "genai_classification"
+      ],
+      "raw_fields": {
+        "objective": "Secure continuous supply of mules (willing, unwitting, or coerced) to move illicit funds through the banking system",
+        "attacker": "Organized crime groups; Scam syndicates; Mule recruitment specialists",
+        "target": "Financially vulnerable individuals; Job seekers; Individuals seeking relationships; Existing account holders; Elderly individuals",
+        "lifecycle_stage": null,
+        "cross_stage": "Payment Initiation (APP fraud enables recruitment); Authentication (credential compromise for unwitting exploitation)",
+        "traditional_mechanism": "Before GenAI, criminals recruited money mules through word-of-mouth, generic in-person approaches, basic online advertisements, and manual social media posts. Recruitment was localized, required personal contacts, and relied on generic scripts. Scale was limited by human effort.",
+        "genai_transformation": "Dimension Pre-GenAI GenAI-Transformed Target identification Manual; limited contacts AI scrapes social media at scale Message personalization Generic templates Hyper-personalized using scraped personal data Scale Dozens per campaign Thousands per campaign Channel Text/phone Email, text, voice (cloned), video (deepfake), social media Automation Human operators AI agents and bots Adaptation Static scripts Real-time response to objections Verification Simple documents Deepfake video calls, professional contracts Multilingual Limited by available speakers Any language, native fluency HARD GenAI Removal Test: PASS -- Without GenAI, recruitment reverts to manual, generic, limited-scale operations. The ability to personalize at scale, automate engagement, and create professional-grade deceptive content materially disappears. Prerequisites: Access to GenAI tools (LLMs, voice cloning, deepfake generation) Social media scraping capability Communication platforms (social media, messaging apps, job sites) (For deepfake recruitment) Voice/video samples of trusted figures Conceptual fund flow: Fraud Proceeds (from any fraud type) First-Tier Mule Account (recruited mule receives funds) Second-Tier Mule Account (funds layered) Third-Tier Mule Account (funds layered further) Cash-Out Point (ATM withdrawal, crypto conversion, merchant monetization) Criminal Organization (funds consolidated) Observable point: First-tier receipt -- funds arrive in recruited mule's account Critical point: Rapid pass-through -- funds leave within minutes/hours of receipt Financial consequence: AI-enabled fraud s",
+        "genai_classification": "genai_amplified",
+        "signals": null,
+        "controls": null,
+        "variants": null
+      }
+    },
+    {
+      "attack_id": "CM-002",
+      "source": "cash-out-13.pdf",
+      "pages": [
+        3,
+        4,
+        5
+      ],
+      "sections": [
+        "objective",
+        "attacker",
+        "target",
+        "lifecycle_stage",
+        "cross_stage",
+        "traditional_mechanism",
+        "genai_transformation",
+        "genai_classification"
+      ],
+      "raw_fields": {
+        "objective": "Establish large inventory of verified accounts for mule activity, either for direct use or resale on account marketplaces",
+        "attacker": "Account farming specialists; Organized crime groups; Fraud-as-a-service providers",
+        "target": "Banking systems (KYC controls); Payment networks; Fraud victims (downstream)",
+        "lifecycle_stage": "Cross-stage (KYC/Account Creation/Mule)",
+        "cross_stage": "Identity/KYC (synthetic identity creation); Account Creation (account opening); Cash-out/Mule (account usage)",
+        "traditional_mechanism": "Before GenAI, criminals manually created accounts using stolen identities or recruited individuals, then \"seasoned\" them with low activity. Limited scale; each account required individual effort. Detectable forgeries and inconsistent attributes.",
+        "genai_transformation": "Dimension Pre-GenAI GenAI-Transformed Identity creation Manual; stolen identities AI-generated synthetic personas Document quality Detectable forgeries Indistinguishable from real Scale Dozens per campaign Thousands per campaign Seasoning Manual; limited Automated; thousands simultaneously Distribution Direct use only Sold on account marketplaces Verification Simple documents Complete personas with history Cost High per account Low per account Speed Weeks per account Minutes per account Resilience Easily detected Hard to distinguish HARD GenAI Removal Test: PASS -- Without GenAI, the industrial-scale creation of synthetic personas and accounts materially disappears. The \"manufacture a synthetic persona, open a heap of accounts\" capability is qualitatively new. Prerequisites: GenAI tools for synthetic identity/document generation Understanding of KYC verification workflows Access to multiple banking platforms (Optional) Fake document vendors Conceptual fund flow: Synthetic Identity Generation (GenAI creates persona + documents) Account Opening (Multiple banks) Seasoning Phase (Low activity, legitimate-looking transactions) Mule Activation (Funds flow through account) Pass-Through (Funds arrive and leave) Cash-Out (Funds converted/extracted) Observable point: Account opening patterns -- multiple accounts in short timeframe Critical point: Seasoning Activation transition -- dormant accounts suddenly active Financial consequence: Synthetic identity fraud grew eightfold in 2025 Large-scale mule account infrastructure enables industrial-scale fraud Accounts sold on marketplaces e",
+        "genai_classification": "genai_amplified",
+        "signals": null,
+        "controls": null,
+        "variants": null
+      }
+    },
+    {
+      "attack_id": "CM-003",
+      "source": "cash-out-13.pdf",
+      "pages": [
+        6,
+        7
+      ],
+      "sections": [
+        "objective",
+        "attacker",
+        "target",
+        "cross_stage",
+        "traditional_mechanism",
+        "genai_transformation",
+        "genai_classification"
+      ],
+      "raw_fields": {
+        "objective": "Move illicit funds through the banking system undetected, from fraud receipt to cash-out, while evading transaction monitoring, velocity",
+        "attacker": "Organized crime groups with AI capability; Mule network operators; AI-powered fraud-as-a-service providers",
+        "target": "Banking systems; AML controls; Payment networks; Fraud victims (ultimately)",
+        "lifecycle_stage": null,
+        "cross_stage": "/Network",
+        "traditional_mechanism": "Before GenAI, mule networks operated through manual coordination, with hierarchical but human-limited control. Communication was through direct contact or basic messaging. Patterns were static and detectable by rule-based systems.",
+        "genai_transformation": "Dimension Pre-GenAI GenAI-Transformed Coordination Manual; human-limited AI agents autonomously coordinate Scale Dozens of accounts Millions of accounts Adaptation Static patterns Real-time adaptation to detection Speed Hours/days Milliseconds/seconds Pattern detection evasion Avoids known thresholds No patterns to detect Network structure Detectable chains Optimized, varied structures Cross-institution Manual coordination Autonomous cross-institution Cross-chain crypto Manual; single chain Autonomous; 6+ blockchains in minutes HARD GenAI Removal Test: PASS -- Without GenAI, autonomous coordination and industrial-scale orchestration of mule networks materially disappears. Agentic AI systems capable of complete campaign execution are qualitatively new. Prerequisites: Access to AI agent infrastructure Inventory of mule accounts (farmed or recruited) Understanding of detection systems (For cross-chain) Cryptocurrency exchange access Conceptual fund flow: Fraud Proceeds (from any fraud type) First-Tier Mule Accounts (Receive from fraud sources -- many-to-one) Layering Phase 1 (Transfers between accounts -- one-to-many, many-to-many) Layering Phase 2 (Cross-institution transfers) Layering Phase 3 (Cross-border transfers) Cash-Out Point (Crypto conversion, ATM withdrawal, merchant monetization) Criminal Organization (Funds consolidated) Observable point: First-tier receipt -- funds arrive in mule accounts from fraud sources Critical point: Layering patterns -- coordinated transfers across accounts Final point: Cash-out -- funds converted/extracted Financial consequence: Agentic A",
+        "genai_classification": "genai_amplified",
+        "signals": null,
+        "controls": null,
+        "variants": null
+      }
+    },
+    {
+      "attack_id": "CM-004",
+      "source": "cash-out-13.pdf",
+      "pages": [
+        8,
+        9,
+        10
+      ],
+      "sections": [
+        "objective",
+        "attacker",
+        "target",
+        "lifecycle_stage",
+        "cross_stage",
+        "traditional_mechanism",
+        "genai_transformation",
+        "genai_classification"
+      ],
+      "raw_fields": {
+        "objective": "Convert illicit funds to cryptocurrency and move them across blockchains before detection, enabling untraceable cash-out",
+        "attacker": "Organized crime groups with AI capability; Crypto laundering specialists; AI-powered fraud-as-a-service providers",
+        "target": "Banking system (final extraction); Cryptocurrency exchanges; Law enforcement (cross-chain tracing)",
+        "lifecycle_stage": "Cash-out/Mule (Conversion/Cash-Out)",
+        "cross_stage": "Payment Initiation (funds exit traditional banking); AML/Compliance (cross-chain evasion)",
+        "traditional_mechanism": "Before GenAI, criminals converted funds to cryptocurrency through manual exchange transactions, often leaving detectable patterns and taking time to execute. Conversion was limited to a single blockchain and traceable.",
+        "genai_transformation": "Dimension Pre-GenAI GenAI-Transformed Conversion execution Manual Autonomous agents Cross-chain routing Manual; limited AI-optimized bridges Scale Limited Industrial scale Adaptation Static Real-time optimization Detection evasion Traceable Cross-chain tracing difficult Speed Hours/days Milliseconds/seconds Cost optimization Manual AI-optimized gas fees Exchange selection Manual AI selects weak KYC exchanges HARD GenAI Removal Test: PASS -- Without GenAI, autonomous cross-chain crypto conversion within seconds materially disappears. Manual conversion cannot match the speed, scale, or cross-chain sophistication. Prerequisites: AI agent infrastructure for autonomous conversion Cryptocurrency exchange accounts (weak KYC preferred) Knowledge of cross-chain bridges and routing Access to mule accounts with funds Conceptual fund flow: Fraud Proceeds (in mule accounts) Transfer to Cryptocurrency Exchange Convert to Cryptocurrency (Stablecoins preferred -- 63% of illicit on-chain) Cross-Chain Movement (AI selects optimal bridges) Multiple Blockchains (6+ in minutes) Mixers/Privacy Tools (Further obfuscation) Consolidation (Funds aggregated) Fiat Conversion (Back to cash via weak KYC exchanges) Criminal Organization Observable point: Transfer to crypto exchange -- funds leave traditional banking system Critical point: Cross-chain movement -- funds become extremely difficult to trace Final point: Fiat conversion -- funds re-enter banking system Financial consequence: $158 billion in illegal crypto flows in 2025 Stablecoins accounted for 63% of illicit on-chain transactions AI-driven f",
+        "genai_classification": "genai_amplified",
+        "signals": null,
+        "controls": null,
+        "variants": null
+      }
+    },
+    {
+      "attack_id": "EFF-001",
+      "source": "device-session-3.pdf",
+      "pages": [
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "sections": [
+        "objective",
+        "attacker",
+        "target",
+        "lifecycle_stage",
+        "traditional_mechanism",
+        "genai_transformation",
+        "genai_classification"
+      ],
+      "raw_fields": {
+        "objective": "Operate thousands of synthetic device identities simultaneously to create accounts at scale, harvest incentives, and",
+        "attacker": "loses the ability to",
+        "target": "Device fingerprinting, device reputation, velocity rules, bot detection",
+        "lifecycle_stage": "Device / Session (Stage 3)",
+        "cross_stage": null,
+        "traditional_mechanism": "Before GenAI, attackers deployed networks of virtual Android instances (emulators) to simulate thousands of \"unique\" users. Each emulator was manually configured with unique fingerprints. Detection relied on: Emulator flags (virtualized environment indicators) VM/environment indicators Behavioral patterns (automated, consistent) Network-level correlation (same IP ranges)",
+        "genai_transformation": "GenAI transforms emulator farms from detectable, static infrastructure to adaptive, evasion-optimized systems: Dimension Pre-GenAI GenAI-Transformed Configuration Manual fingerprint per AI agents \"spin up fake users at scale\" emulator Evasion Static, detectable patterns \"AI-driven evasion techniques... cycle through synthetic device identities faster than legacy detection can flag\" Scale Hundreds of emulators \"100,000 injection-style fraud attempts per month, linked to emulator farms\" Behavior Detectable automation AI agents mimic human behavior patterns Why GenAI is load-bearing",
+        "genai_classification": "genai_load_bearing",
+        "signals": null,
+        "controls": null,
+        "variants": null
+      }
+    },
+    {
+      "attack_id": "BOT-001",
+      "source": "device-session-3.pdf",
+      "pages": [
+        11,
+        12,
+        13,
+        14
+      ],
+      "sections": [
+        "objective",
+        "attacker",
+        "target",
+        "lifecycle_stage",
+        "traditional_mechanism",
+        "genai_transformation",
+        "genai_classification"
+      ],
+      "raw_fields": {
+        "objective": "Operate automated bots that appear indistinguishable from legitimate human users, enabling large-scale credential",
+        "attacker": "loses the ability to",
+        "target": "Bot detection, behavioral biometrics, velocity rules, fraud scoring",
+        "lifecycle_stage": "Stage Device / Session (Stage 3)",
+        "cross_stage": null,
+        "traditional_mechanism": "Before GenAI, attackers used automated scripts and bots to test credentials, cards, and system vulnerabilities at scale. Bots were detectable by: Superhuman speed (too fast for human) No mouse movements or unnatural mouse paths Perfect form filling (no typos, no corrections) Consistent, linear navigation (no hesitation) Unusual transaction timing (e.g., 3 AM transactions)",
+        "genai_transformation": "GenAI transforms bot interaction from detectable scripts to indistinguishable human behavior: Dimension Pre-GenAI GenAI-Transformed Behavioral Limited, detectable AI agents \"randomiz[e] mouse movements and keystrokes, mirror human delays and timings mimicry between clicks\" Detection Static patterns AI agents that \"mimic human behavior patterns at scale\" evasion Limited by script complexity AI agents can operate at industrial scale Scale Fixed scripts Adaptive behavior based on detection feedback Adaptability Why GenAI is load-bearing",
+        "genai_classification": "genai_load_bearing",
+        "signals": null,
+        "controls": null,
+        "variants": null
+      }
+    },
+    {
+      "attack_id": "BBE-001",
+      "source": "device-session-3.pdf",
+      "pages": [
+        15,
+        16,
+        17,
+        18
+      ],
+      "sections": [
+        "objective",
+        "attacker",
+        "target",
+        "lifecycle_stage",
+        "traditional_mechanism",
+        "genai_transformation",
+        "genai_classification"
+      ],
+      "raw_fields": {
+        "objective": "Generate behavioral patterns that match legitimate user profiles to evade behavioral biometrics detection, enabling",
+        "attacker": "loses the ability to",
+        "target": "Behavioral biometrics systems (keystroke dynamics, mouse dynamics, touch dynamics, motion patterns)",
+        "lifecycle_stage": "Device / Session (Stage 3)",
+        "cross_stage": null,
+        "traditional_mechanism": "Before GenAI, attackers attempted to mimic legitimate user behavior through: Statistics-based attacks (matching aggregate behavioral statistics) Imitation-based attacks (learning and replicating specific user patterns) Surrogate-based attacks (using proxy models) These were limited in quality and detectable by modern behavioral biometrics systems.",
+        "genai_transformation": "GenAI transforms behavioral evasion from detectable mimicry to indistinguishable replication: Dimension Pre-GenAI GenAI-Transformed Mimicry quality Limited, detectable patterns GANs can generate realistic keystroke patterns indistinguishable from legitimate users Adaptation Static GenAI can adapt based on detection feedback Personalization Generic GenAI can learn specific user patterns Scale Manual Automated, scalable Why GenAI is load-bearing",
+        "genai_classification": "genai_load_bearing",
+        "signals": null,
+        "controls": null,
+        "variants": null
+      }
+    },
+    {
+      "attack_id": "DFS-001",
+      "source": "device-session-3.pdf",
+      "pages": [
+        19
+      ],
+      "sections": [
+        "genai_classification"
+      ],
+      "raw_fields": {
+        "objective": null,
+        "attacker": null,
+        "target": null,
+        "lifecycle_stage": null,
+        "cross_stage": null,
+        "traditional_mechanism": null,
+        "genai_transformation": null,
+        "genai_classification": "unknown",
+        "signals": null,
+        "controls": null,
+        "variants": null
+      }
+    },
+    {
+      "attack_id": "RAT-001",
+      "source": "device-session-3.pdf",
+      "pages": [
+        20,
+        21,
+        22
+      ],
+      "sections": [
+        "attacker",
+        "cross_stage",
+        "genai_transformation",
+        "genai_classification"
+      ],
+      "raw_fields": {
+        "objective": null,
+        "attacker": "Normal Mule network Agentic + Algorithmic",
+        "target": null,
+        "lifecycle_stage": null,
+        "cross_stage": "Primary attack action is creating accounts; Device/Session component",
+        "traditional_mechanism": null,
+        "genai_transformation": ", strong evidence, and simulation feasibility. The unifying theme across all 5 Device/Session families is the shift from \"appearing different\" to \"appearing identical\" --fraudsters no longer try to evade detection by being different; they use GenAI to appear indistinguishable from legitimate users and devices.",
+        "genai_classification": "genai_amplified",
+        "signals": null,
+        "controls": null,
+        "variants": null
+      }
+    },
+    {
+      "attack_id": "GP-001",
+      "source": "gateway-processor-8.pdf",
+      "pages": [
+        1,
+        2
+      ],
+      "sections": [
+        "objective",
+        "attacker",
+        "target",
+        "lifecycle_stage",
+        "cross_stage",
+        "traditional_mechanism",
+        "genai_transformation",
+        "genai_classification"
+      ],
+      "raw_fields": {
+        "objective": "Pay reduced amounts; obtain services for free; extract payment data; evade transaction controls",
+        "attacker": "identifies vulnerable API endpoint or AI agent workflow",
+        "target": "Gateway API endpoints; AI agents with payment capabilities; Merchant checkout flows",
+        "lifecycle_stage": "Gateway / Processor",
+        "cross_stage": "stage Payment Initiation (instruction manipulation); Authorization (reduced amount authorized)",
+        "traditional_mechanism": "Before GenAI, attackers manually crafted API requests with altered parameters or intercepted requests in transit. Detection was possible through parameter validation and consistency checks.",
+        "genai_transformation": "Dimension Pre-GenAI GenAI-Transformed Attack vector Manual API request crafting Prompt injection against AI agents Parameter changes Manual, detectable Autonomous, context-aware Scale Limited by manual effort Industrial-scale Detection evasion Static patterns Adaptive optimization Why GenAI is load-bearing",
+        "genai_classification": "genai_load_bearing",
+        "signals": null,
+        "controls": null,
+        "variants": null
+      }
+    },
+    {
+      "attack_id": "GP-002",
+      "source": "gateway-processor-8.pdf",
+      "pages": [
+        3,
+        4,
+        5
+      ],
+      "sections": [
+        "objective",
+        "attacker",
+        "target",
+        "lifecycle_stage",
+        "cross_stage",
+        "traditional_mechanism",
+        "genai_transformation",
+        "genai_classification"
+      ],
+      "raw_fields": {
+        "objective": "Credit arbitrary quota; mark orders paid without payment; trigger refunds",
+        "attacker": "to forge webhook events and credit arbitrary quota without making any payment. When the HMAC secret is empty (the default), any",
+        "target": "Gateway webhook endpoints; LLM gateway systems; Merchant order fulfillment systems",
+        "lifecycle_stage": "Gateway / Processor",
+        "cross_stage": "Payment Initiation (payment completion signals); Settlement (quota credits)",
+        "traditional_mechanism": "Before GenAI, attackers forged webhook payloads to simulate payment success. Detection was possible through signature validation and payload consistency checks.",
+        "genai_transformation": "Dimension Pre-GenAI GenAI-Transformed Attack surface Generic webhook endpoints LLM gateway-specific vulnerabilities Payload generation Manual payload crafting Automated, adaptive payload generation Detection evasion Static patterns Learning and adaptation Impact Payment status forgery Unlimited quota fraud at scale Why GenAI is load-bearing",
+        "genai_classification": "genai_load_bearing",
+        "signals": null,
+        "controls": null,
+        "variants": null
+      }
+    },
+    {
+      "attack_id": "GP-003",
+      "source": "gateway-processor-8.pdf",
+      "pages": [
+        6,
+        7
+      ],
+      "sections": [
+        "objective",
+        "attacker",
+        "target",
+        "lifecycle_stage",
+        "cross_stage",
+        "traditional_mechanism",
+        "genai_transformation",
+        "genai_classification"
+      ],
+      "raw_fields": {
+        "objective": "Identify active cards with available funds for exploitation or sale",
+        "attacker": "obtains list of stolen card numbers",
+        "target": "Gateway checkout APIs; Payment validation endpoints",
+        "lifecycle_stage": "Gateway / Processor (using infrastructure)",
+        "cross_stage": "Payment Initiation (authorization attempts); Authorization (validation responses)",
+        "traditional_mechanism": "Before GenAI, attackers used scripted API requests to test card numbers. Detection was possible through velocity rules and pattern analysis.",
+        "genai_transformation": "Dimension Pre-GenAI GenAI-Transformed Scale Hundreds of tests Industrial-scale (1M+ transactions) Automation Scripted AI-powered platforms with APIs Detection evasion Static patterns Adaptive, learning patterns Accessibility Technical skill required Platform-based; low barrier Why GenAI is load-bearing",
+        "genai_classification": "genai_load_bearing",
+        "signals": null,
+        "controls": null,
+        "variants": null
+      }
+    },
+    {
+      "attack_id": "GP-004",
+      "source": "gateway-processor-8.pdf",
+      "pages": [
+        8,
+        9
+      ],
+      "sections": [
+        "objective",
+        "attacker",
+        "target",
+        "lifecycle_stage",
+        "traditional_mechanism",
+        "genai_transformation",
+        "genai_classification"
+      ],
+      "raw_fields": {
+        "objective": "Reuse payment proofs; manipulate protocol messages; execute unauthorized payments; extract sensitive data",
+        "attacker": "identifies vulnerable agentic payment protocol (x402, AP2)",
+        "target": "Agentic payment protocol infrastructure; AI agents with payment capabilities",
+        "lifecycle_stage": "Gateway / Processor",
+        "cross_stage": null,
+        "traditional_mechanism": "This is a new attack surface with no traditional equivalent. Agentic payment protocols exist specifically to enable AI agent transactions.",
+        "genai_transformation": "Dimension Pre-GenAI GenAI-Transformed Attack surface None Agentic payment protocols (x402, AP2) Attack vectors N/A Protocol manipulation; prompt injection; replay Scale N/A Autonomous, large-scale protocol exploitation Why GenAI is load-bearing",
+        "genai_classification": "genai_load_bearing",
+        "signals": null,
+        "controls": null,
+        "variants": null
+      }
+    },
+    {
+      "attack_id": "GP-005",
+      "source": "gateway-processor-8.pdf",
+      "pages": [
+        10,
+        11,
+        12
+      ],
+      "sections": [
+        "objective",
+        "attacker",
+        "target",
+        "lifecycle_stage",
+        "cross_stage",
+        "traditional_mechanism",
+        "genai_transformation",
+        "genai_classification"
+      ],
+      "raw_fields": {
+        "objective": "Redirect payments; evade fraud controls; access cheaper processing",
+        "attacker": "identifies AI agent with payment routing capabilities",
+        "target": "AI agents with payment routing capabilities; Gateway routing engine",
+        "lifecycle_stage": "Gateway / Processor",
+        "cross_stage": "Payment Initiation (routing decisions); Authorization (processor selection)",
+        "traditional_mechanism": "Before GenAI, attackers manipulated transaction attributes to influence routing decisions. Detection was possible through routing pattern analysis.",
+        "genai_transformation": "Dimension Pre-GenAI GenAI-Transformed Attack vector Transaction attribute manipulation AI agent manipulation Routing decisions Rule-based Agent reasoning-based Detection evasion Static patterns Adaptive, learning Scale Manual Autonomous Why GenAI is load-bearing",
+        "genai_classification": "genai_load_bearing",
+        "signals": null,
+        "controls": null,
+        "variants": null
+      }
+    },
+    {
+      "attack_id": "GP-006",
+      "source": "gateway-processor-8.pdf",
+      "pages": [
+        13,
+        14
+      ],
+      "sections": [
+        "objective",
+        "attacker",
+        "target",
+        "lifecycle_stage",
+        "cross_stage",
+        "traditional_mechanism",
+        "genai_transformation",
+        "genai_classification"
+      ],
+      "raw_fields": {
+        "objective": "Use stored payment credentials for unauthorized transactions",
+        "attacker": "identifies AI assistant with stored payment credentials",
+        "target": "AI assistants with stored payment credentials; Tokenization services",
+        "lifecycle_stage": "Secondary / Cross-stage Authentication (credential storage); Payment Initiation (token usage)",
+        "cross_stage": "stage Authentication (credential storage); Payment Initiation (token usage)",
+        "traditional_mechanism": "Before GenAI, token abuse required exploiting token endpoints directly. Detection was possible through access control monitoring.",
+        "genai_transformation": "Dimension Pre-GenAI GenAI-Transformed Attack vector Token endpoint exploitation Agent hijacking Detection evasion Anomalous token access Normal-looking agent transactions Scale Limited Autonomous, large-scale Attack surface Token APIs AI assistants with stored credentials Why GenAI is load-bearing",
+        "genai_classification": "genai_load_bearing",
+        "signals": null,
+        "controls": null,
+        "variants": null
+      }
+    },
+    {
+      "attack_id": "GP-007",
+      "source": "gateway-processor-8.pdf",
+      "pages": [
+        15,
+        16,
+        17
+      ],
+      "sections": [
+        "objective",
+        "attacker",
+        "target",
+        "lifecycle_stage",
+        "cross_stage",
+        "traditional_mechanism",
+        "genai_transformation",
+        "genai_classification"
+      ],
+      "raw_fields": {
+        "objective": "Technical Control Targeted",
+        "attacker": "deploys AI agents across payment infrastructure",
+        "target": "Velocity rules; Rate limiting; Anomaly detection",
+        "lifecycle_stage": "Gateway velocity controls; Fraud detection systems",
+        "cross_stage": "Execute fraudulent transactions faster than detection systems can flag them",
+        "traditional_mechanism": "Before GenAI, attackers used distributed transactions to stay below velocity thresholds. Detection was possible through velocity rules.",
+        "genai_transformation": "Dimension Pre-GenAI GenAI-Transformed Speed Human-scale Millisecond-scale (1.9s per transaction) Scale Distributed manual Autonomous agent networks Detection evasion Static patterns Adaptive optimization False-positive risk Low High (velocity checks misread as card testing) Why GenAI is load-bearing",
+        "genai_classification": "genai_load_bearing",
+        "signals": null,
+        "controls": null,
+        "variants": null
+      }
+    },
+    {
+      "attack_id": "SIF-001",
+      "source": "KYC-1.pdf",
+      "pages": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "sections": [
+        "objective",
+        "attacker",
+        "target",
+        "lifecycle_stage",
+        "traditional_mechanism",
+        "genai_transformation",
+        "genai_classification"
+      ],
+      "raw_fields": {
+        "objective": "Create a credible fake identity to open accounts, obtain credit, or conduct",
+        "attacker": "loses the ability to",
+        "target": "13); Cash-out / Mule (Stage 16)",
+        "lifecycle_stage": "Stage Identity / KYC (Stage 1)",
+        "cross_stage": null,
+        "traditional_mechanism": "Before GenAI, fraudsters created synthetic identities manually, combining real and fabricated information. This required access to breached data, patience for manual identity cultivation, and knowledge of credit system mechanics. The attack was labour-intensive and not easily scalable.",
+        "genai_transformation": "GenAI enables industrial-scale generation of hyperrealistic synthetic personas with coherent digital footprints. Mastercard data from Q1 2025 shows synthetic identities surged 300%. Sumsub reports synthetic identity document fraud rose over 300% year-over-year in the U.S.. Why GenAI is load-bearing",
+        "genai_classification": "genai_load_bearing",
+        "signals": null,
+        "controls": null,
+        "variants": null
+      }
+    },
+    {
+      "attack_id": "GDF-001",
+      "source": "KYC-1.pdf",
+      "pages": [
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "sections": [
+        "objective",
+        "target",
+        "lifecycle_stage",
+        "traditional_mechanism",
+        "genai_transformation",
+        "genai_classification"
+      ],
+      "raw_fields": {
+        "objective": "Submit fraudulent identity documents that pass verification, enabling",
+        "attacker": null,
+        "target": "Document verification systems (OCR, document forensics, manual review)",
+        "lifecycle_stage": "Stage Identity / KYC (Stage 1)",
+        "cross_stage": null,
+        "traditional_mechanism": "Before GenAI, fraudsters created forged documents using physical counterfeiting (printing fake IDs), Photoshop/manual image manipulation, or stolen blank documents. This required graphic design skills, access to printing equipment, and understanding of document security features. Physical counterfeits accounted for 47% of document fraud attempts.",
+        "genai_transformation": "GenAI enables the creation of hyper-realistic replicas of identity documents that can fool automated KYC systems. Digital forgeries now comprise over a third (35%) of document fraud attempts. Why GenAI is load-bearing",
+        "genai_classification": "genai_load_bearing",
+        "signals": null,
+        "controls": null,
+        "variants": null
+      }
+    },
+    {
+      "attack_id": "DII-001",
+      "source": "KYC-1.pdf",
+      "pages": [
+        11,
+        12,
+        13,
+        14,
+        15
+      ],
+      "sections": [
+        "objective",
+        "target",
+        "lifecycle_stage",
+        "traditional_mechanism",
+        "genai_transformation",
+        "genai_classification"
+      ],
+      "raw_fields": {
+        "objective": "Bypass biometric verification and liveness checks to create/access",
+        "attacker": null,
+        "target": "Biometric verification systems, liveness detection, V-CIP agents, human",
+        "lifecycle_stage": "Stage Identity / KYC (Stage 1)",
+        "cross_stage": null,
+        "traditional_mechanism": "Before GenAI, fraudsters used presentation attacks: holding a photo of the victim in front of the camera, using a 3D mask, or playing a pre-recorded video. These attacks were relatively easy to defeat with basic liveness detection (blink detection, 3D depth sensing).",
+        "genai_transformation": "GenAI enables injection attacks where synthetic video is fed directly into the camera pipeline, bypassing the physical camera entirely. This is fundamentally different from presentation attacks. The iProov case study \"combines real-time face-swap deepfake generation with camera injection on Android, targeting mobile onboarding and account access processes\". Deepfakes now account for one in five (20%) biometric fraud attempts. Instances of deepfaked selfies increased by 58% in 2025. Injection attacks increased 40% year-over-year. Deepfakes are especially prevalent in financial services: crypto (60%), digital-first banks (22%), and payments/merchants (13%). Why GenAI is load-bearing",
+        "genai_classification": "genai_load_bearing",
+        "signals": null,
+        "controls": null,
+        "variants": null
+      }
+    },
+    {
+      "attack_id": "SEP-001",
+      "source": "KYC-1.pdf",
+      "pages": [
+        16,
+        17,
+        18,
+        19,
+        20
+      ],
+      "sections": [
+        "objective",
+        "target",
+        "lifecycle_stage",
+        "traditional_mechanism",
+        "genai_transformation",
+        "genai_classification"
+      ],
+      "raw_fields": {
+        "objective": "Manipulate a legitimate user into authorizing a fraudulent payment or",
+        "attacker": null,
+        "target": "Legitimate KYC-verified customers, employees, merchants",
+        "lifecycle_stage": "Identity / KYC (Stage 1) -- post-verification exploitation",
+        "cross_stage": null,
+        "traditional_mechanism": "Before GenAI, social engineering relied on phishing emails (often with poor grammar and generic content), phone scams (human callers with scripts), romance scams (manual engagement), and Business Email Compromise (email account compromise). These required social engineering skills, script-writing ability, and patience for manual engagement.",
+        "genai_transformation": "GenAI enables industrialized, personalized social engineering: Criminals can analyse large volumes of publicly available data and craft highly targeted behavioural scams With affordable GenAI tools, fraudsters can create convincing phishing messages, synthetic voice clones, and deepfake videos at scale Personalized scripts adapted to each victim in real-time Why GenAI is load-bearing",
+        "genai_classification": "genai_load_bearing",
+        "signals": null,
+        "controls": null,
+        "variants": null
+      }
+    },
+    {
+      "attack_id": "ATO-001",
+      "source": "KYC-1.pdf",
+      "pages": [
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27
+      ],
+      "sections": [
+        "objective",
+        "target",
+        "lifecycle_stage",
+        "traditional_mechanism",
+        "genai_transformation",
+        "genai_classification"
+      ],
+      "raw_fields": {
+        "objective": "Impersonate legitimate account holders during KYC recovery processes to",
+        "attacker": null,
+        "target": "KYC recovery processes, password reset flows, customer support",
+        "lifecycle_stage": "Identity / KYC (Stage 1) -- recovery verification",
+        "cross_stage": null,
+        "traditional_mechanism": "Before GenAI, account takeover via recovery relied on: Stolen credentials (username/password from data breaches) Social engineering of support staff Guessing security questions SIM swapping",
+        "genai_transformation": "GenAI enables attackers to generate convincing impersonation evidence on demand: Forged identity documents matching the victim's profile Voice clones to pass phone-based verification Deepfake video to pass video-based recovery verification Why GenAI is load-bearing",
+        "genai_classification": "genai_load_bearing",
+        "signals": null,
+        "controls": null,
+        "variants": null
+      }
+    },
+    {
+      "attack_id": "N-001",
+      "source": "network-15.pdf",
+      "pages": [
+        1,
+        2
+      ],
+      "sections": [
+        "objective",
+        "attacker",
+        "lifecycle_stage",
+        "cross_stage",
+        "traditional_mechanism",
+        "genai_transformation",
+        "genai_classification"
+      ],
+      "raw_fields": {
+        "objective": "Create and operate networks of synthetic identities that pass KYC, build credit, and enable large-scale coordinated fraud",
+        "attacker": "Roles Identity generator, account opener, seasoner, orchestrator, marketplace seller",
+        "target": null,
+        "lifecycle_stage": "Cross-stage / Network",
+        "cross_stage": "Identity/KYC (Stage 1), Account Creation (Stage 2), Device/Session (Stage 3), Authentication (Stage 4), Payment Initiation (Stage 5),",
+        "traditional_mechanism": "Before GenAI, synthetic i dentity creation was manual, using stolen PII fragments and basic forgeries. Each identity required significant effort, and networks were limited to dozens of identities. Detection was possible through document inconsistencies and manual KYC review.",
+        "genai_transformation": "GenAI enables industria l-scale generation of synthetic identities with flawless documents, autonomous KYC verification attempts, and APT-like persistence across thousands of accounts. Synthetic identity fraud grew eightfold in 2025, reaching 11% of global fraud. HARD Test Result: PASS -- Removing GenAI removes the ability to generate thousands of convincing synthetic identities, automate KYC, and coordinate networks at scale. Prerequisites: Access to GenAI tools (LLMs, image generation, document generation) Breached PII datasets or ability to fabricate complete personas Understanding of KYC verification workflows Infrastructure to manage thousands of accounts Conceptual Network Structure: Nodes: Synthetic identities, accounts, devices, IP addresses, documents Edges: Identity-account relationships, account-device relationships, shared infrastructure (IPs, devices, address clusters) Roles: Orchestrator (controls the network), Identity generator, Account opener, Seasoner (generates legitimate-looking activity), Seller (marketplace) Temporal Relationships: Identities are created in batches, seasoned over 30�365 days with AI-generated activity patterns, then activated in coordinated waves. Cross-Stage Flow: Identity Generation (KYC Stage 1) Document Generation (KYC Stage 1) Account Opening (Account Creation Stage 2) Device Registration (Device/Session Stage 3) Seasoning (Authentication + Payment Initiation Stages 4�5) Coordinated Activation (Payment Initiation Stage 5) Bust-out / Cash-out (Cash-out/Mule Stage 16) Why No Single-Stage Model Is Sufficient: Each individual identity",
+        "genai_classification": "genai_amplified",
+        "signals": null,
+        "controls": null,
+        "variants": null
+      }
+    },
+    {
+      "attack_id": "N-002",
+      "source": "network-15.pdf",
+      "pages": [
+        3,
+        4,
+        5
+      ],
+      "sections": [
+        "objective",
+        "attacker",
+        "lifecycle_stage",
+        "cross_stage",
+        "traditional_mechanism",
+        "genai_transformation",
+        "genai_classification"
+      ],
+      "raw_fields": {
+        "objective": "Execute large-scale, multi-vector fraud campaigns with coordinated nodes, maximizing financial return while evading detection through",
+        "attacker": "Roles Organizers (strategic), Facilitators (payment providers, bank insiders, shell company operators), Operators (account managers,",
+        "target": null,
+        "lifecycle_stage": "Cross-stage All--Identity/KYC, Account Creation, Device/Session, Authentication, Payment Initiation, Merchant, Acquirer, Gateway/Processor,",
+        "cross_stage": "/ Network",
+        "traditional_mechanism": "Before GenAI, fraud rings relied on human coordination, manual phishing, and limited scalability. The Eurojust case (EUR 300M fraud) used manual shell companies, payment provider collusion, and human operators. Each campaign required significant human effort.",
+        "genai_transformation": "AI agents autonomously coordinate multiple scam types simultaneously LLM-generated personalized content at scale (2.5M scam texts in 2 weeks) Autonomous campaign execution from reconnaissance to cash-out 4.5x profitability compared to traditional methods HARD Test Result: PASS -- Removing GenAI removes autonomous coordination, industrial-scale content generation, and multi-scam orchestration. Prerequisites: Access to GenAI tools (LLMs, voice cloning, deepfake video) Infrastructure for account creation and payment processing Network of complicit or synthetic accounts Understanding of payment systems and fraud detection Conceptual Network Structure: Nodes: Organizers, facilitators (payment providers, insiders), operators, accounts, merchants, shell companies, victims Edges: Command relationships, payment flows, shared infrastructure (IPs, devices, payment gateways), collusion relationships Roles: Organizer (strategic control), Facilitator (enables infrastructure), Operator (executes transactions), Content generator (AI for phishing/scams) Temporal Relationships: Sustained operations over months/years, with coordinated bursts of activity Cross-Stage Flow: Reconnaissance (OSINT, AI-powered) Identity Generation (KYC Stage 1) -- synthetic or stolen identities Account Creation (Account Creation Stage 2) -- accounts across multiple platforms Device Setup (Device/Session Stage 3) -- device farms, spoofed fingerprints Authentication (Authentication Stage 4) -- credential use, MFA bypass Payment Initiation (Payment Initiation Stage 5) -- fraudulent transactions, scams Merchant/Acquire",
+        "genai_classification": "genai_amplified",
+        "signals": null,
+        "controls": null,
+        "variants": null
+      }
+    },
+    {
+      "attack_id": "N-003",
+      "source": "network-15.pdf",
+      "pages": [
+        6,
+        7
+      ],
+      "sections": [
+        "objective",
+        "attacker",
+        "lifecycle_stage",
+        "cross_stage",
+        "traditional_mechanism",
+        "genai_transformation",
+        "genai_classification"
+      ],
+      "raw_fields": {
+        "objective": "Execute a complete fraud operation from reconnaissance to cash-out with autonomous, coordinated execution across all stages,",
+        "attacker": "Roles AI Orchestrator (autonomous planner and executor), Stage-specific agents (if multi-agent)",
+        "target": null,
+        "lifecycle_stage": "Cross-stage / Network",
+        "cross_stage": "/ Network",
+        "traditional_mechanism": "Before GenAI, multi-stag e fraud campaigns required human coordination across specialists (identity forgers, account openers, money movers, etc.). Each stage had manual handoffs, leading to delays, errors, and detectable patterns. Campaigns were limited in scale and required significant human effort.",
+        "genai_transformation": "Autonomous planning and execution from reconnaissance to cash-out Real-time adaptation to detection feedback Seamless coordination across all lifecycle stages 24/7 operation, no human error or fatigue 4.5x profitability HARD Test Result: PASS -- Removing GenAI removes the autonomous orchestration and end-to-end execution capability. Prerequisites: Access to AI agent infrastructure Integration with multiple financial systems and payment rails Understanding of fraud detection systems (to evade) Capability to generate synthetic identities, documents, and transaction patterns Conceptual Network Structure: Nodes: AI Orchestrator, stage-specific entities (identities, accounts, devices, merchants, mules, crypto wallets) Edges: Control flows from AI orchestrator to each stage; payment flows from fraud to cash-out Roles: AI Orchestrator (plans, executes, adapts), Stage Executors (may be sub-agents or automated scripts) Temporal Relationships: Sequential flow from reconnaissance to cash-out, with coordinated timing to maximize success Cross-Stage Flow: Reconnaissance (OSINT, AI-powered) Synthetic Identity Generation (KYC Stage 1) Document Generation (KYC Stage 1) Account Creation (Account Creation Stage 2) Device Registration (Device/Session Stage 3) Authentication (Authentication Stage 4) Payment Initiation (Payment Initiation Stage 5) Merchant/Acquirer (Merchant/Acquirer Stages 6�7) Gateway/Processor (Stage 8) Payment Rail (Stage 9) Cash-out (Cash-out/Mule Stage 16) -- mule networks, crypto conversion Layering (AML/Compliance Stage 17) Why No Single-Stage Model Is Sufficient: Each ",
+        "genai_classification": "genai_amplified",
+        "signals": null,
+        "controls": null,
+        "variants": null
+      }
+    },
+    {
+      "attack_id": "N-004",
+      "source": "network-15.pdf",
+      "pages": [
+        8,
+        9,
+        10,
+        11,
+        12,
+        13
+      ],
+      "sections": [
+        "objective",
+        "attacker",
+        "lifecycle_stage",
+        "cross_stage",
+        "traditional_mechanism",
+        "genai_transformation",
+        "genai_classification"
+      ],
+      "raw_fields": {
+        "objective": "Move illicit funds across multiple payment rails and blockchains to obscure origin, evade detection, and enable untraceable cash",
+        "attacker": "Roles Bank accounts, crypto exchanges, cross-chain bridges, blockchains, mule accounts, crypto wallets, AI routing optimizer",
+        "target": null,
+        "lifecycle_stage": "Stage Cross-stage / Network",
+        "cross_stage": "Network Objects Payment Initiation (Stage 5), Payment Rail (Stage 9), Settlement (Stage 13), Cash-out/Mule (Stage 16), AML/Compliance (Stage 17)",
+        "traditional_mechanism": "Before GenAI, criminals m oved funds manually through crypto exchanges, often leaving detectable patterns. Cross-chain movement was limited and slow, with manual selection of bridges and exchanges. Detection was possible through tracing on single blockchains.",
+        "genai_transformation": "Autonomous cross-chain routing optimization Real-time adaptation to detection and gas fees Industrial-scale cross-chain movement (6+ blockchains in minutes) 63% of illicit on-chain volume uses stablecoins HARD Test Result: PARTIAL -- Cross-rail movement exists without GenAI, but GenAI enables autonomous, optimized, high-speed cross-chain routing at scale that materially changes the attack. Prerequisites: Access to AI agent infrastructure Crypto exchange accounts (weak KYC preferred) Knowledge of cross-chain bridges and routing Access to mule accounts with funds Conceptual Network Structure: Nodes: Bank accounts, crypto exchanges, blockchains, cross-chain bridges, mule accounts, crypto wallets, AI router Edges: Fund flows between accounts, exchanges, bridges, blockchains Roles: AI Router (optimizes movement), Exchange operator, Bridge operator, Mule network operator, Cash-out specialist Temporal Relationships: Rapid sequential movement (seconds/minutes), cross-chain swaps in milliseconds Cross-Stage Flow: Fraud Proceeds (from any fraud type) Transfer to Crypto Exchange (Payment Initiation Stage 5) Convert to Cryptocurrency (Payment Rail Stage 9) Cross-Chain Movement (AI selects optimal bridges) (Payment Rail Stage 9) Multiple Blockchains (6+ in minutes) (Payment Rail Stage 9) Mixers/Privacy Tools (Cash-out/Mule Stage 16) Consolidation (Cash-out/Mule Stage 16) Fiat Conversion (Cash-out/Mule Stage 16) Criminal Organization Why No Single-Stage Model Is Sufficient: Each rail is monitored separately--banking , crypto exchanges, blockchains have siloed detection. The fraud is in t",
+        "genai_classification": "genai_load_bearing",
+        "signals": null,
+        "controls": null,
+        "variants": null
+      }
+    },
+    {
+      "attack_id": "SIA-001",
+      "source": "onboarding-2.pdf",
+      "pages": [
+        1,
+        2,
+        3
+      ],
+      "sections": [
+        "objective",
+        "attacker",
+        "target",
+        "lifecycle_stage",
+        "cross_stage",
+        "traditional_mechanism",
+        "genai_transformation",
+        "genai_classification"
+      ],
+      "raw_fields": {
+        "objective": "Open one or more operational accounts using synthetic or stolen identities to conduct fraud, launder funds, or resell",
+        "attacker": "submits a fabricated or partially fabricated identity (synthetic persona) or uses a real victim's identity with AI-generated supporting evidence",
+        "target": "Account opening systems, onboarding workflows, KYC verification pipelines, risk engines",
+        "lifecycle_stage": "Account Creation / Onboarding (Stage 2)",
+        "cross_stage": "stage Identity / KYC (Stage 1); Payment Initiation (Stage 5); Settlement (Stage 13); Cash-out / Mule (Stage 16)",
+        "traditional_mechanism": "Before GenAI, fraudsters manually assembled synthetic identities using breached data (e.g., real SSNs with fake names) and forged documents using Photoshop or physical counterfeiting. Account opening was manual or semi-automated, and each identity required significant effort to cultivate. Account farming was small-scale, reliant on stolen physical documents or insider collusion.",
+        "genai_transformation": "GenAI enables industrial-scale generation of hyperrealistic synthetic personas with coherent digital footprints, AI-generated identity documents that pass verification, and automated onboarding flow navigation. Mastercard Q1 2025 data shows synthetic identities surged 300%; Sumsub reports synthetic document fraud rose over 300% YoY in the U.S. Attackers can now produce a convincing synthetic identity in minutes, not weeks. Why GenAI is load-bearing",
+        "genai_classification": "genai_load_bearing",
+        "signals": null,
+        "controls": null,
+        "variants": null
+      }
+    },
+    {
+      "attack_id": "MDF-001",
+      "source": "onboarding-2.pdf",
+      "pages": [
+        4,
+        5
+      ],
+      "sections": [
+        "objective",
+        "attacker",
+        "target",
+        "lifecycle_stage",
+        "cross_stage",
+        "traditional_mechanism",
+        "genai_transformation",
+        "genai_classification"
+      ],
+      "raw_fields": {
+        "objective": "A legitimate applicant fabricates or inflates financial/occupational attributes using GenAI-generated documents to qualify for",
+        "attacker": "(first-party) loses the ability to",
+        "target": "Account opening systems, underwriting engines, credit decisioning, risk scoring",
+        "lifecycle_stage": "Account Creation / Onboarding (Stage 2)",
+        "cross_stage": "Stages",
+        "traditional_mechanism": "Before GenAI, first-party misrepresentation involved manually inflating income on application forms, creating fake paystubs with basic office software (detectable by formatting errors), or providing inconsistent verbal explanations. These were relatively easy for underwriters to detect and difficult to scale.",
+        "genai_transformation": "GenAI enables applicants to generate professional-grade fabricated documents with perfect formatting, authentic-looking logos, consistent data across multiple documents, and realistic aging/noise effects -- all in seconds. Multimodal LLMs can now generate entire financial histories (bank statements, tax returns) that appear completely legitimate. Why GenAI is load-bearing",
+        "genai_classification": "genai_load_bearing",
+        "signals": null,
+        "controls": null,
+        "variants": null
+      }
+    },
+    {
+      "attack_id": "ATO-002",
+      "source": "onboarding-2.pdf",
+      "pages": [
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "sections": [
+        "objective",
+        "attacker",
+        "target",
+        "lifecycle_stage",
+        "cross_stage",
+        "traditional_mechanism",
+        "genai_transformation",
+        "genai_classification"
+      ],
+      "raw_fields": {
+        "objective": "Gain control of a newly created or existing account by impersonating the legitimate user during the onboarding/activation or",
+        "attacker": "exploits the activation or recovery phase of onboarding -- where KYC is re-verified for password resets, device binding, or biometric",
+        "target": "Account activation flows; Password reset / recovery verification; Biometric verification during activation; Customer support",
+        "lifecycle_stage": "Stage Account Creation / Onboarding (Stage 2 -- Activation / Recovery)",
+        "cross_stage": "with Authentication but critical to the onboarding activation/recovery surface;",
+        "traditional_mechanism": "Before GenAI, account takeover via recovery relied on stolen credentials, guessing security questions, SIM swapping, or social engineering of support staff. These required direct access to victim PII and were limited by the need for physical or manual interaction.",
+        "genai_transformation": "GenAI enables attackers to generate convincing impersonation evidence on demand: Forged identity documents matching the victim's profile (from data breaches) Voice clones to pass phone-based verification (voice biometrics) Deepfake video to pass video-based recovery verification (V-CIP) iProov/MITRE ATLAS documented camera injection attacks using face-swap tools and virtual cameras on non-rooted Android devices targeting mobile onboarding. Deepfakes now account for 20% of biometric fraud attempts; injection attacks increased 40% YoY. Why GenAI is load-bearing",
+        "genai_classification": "genai_load_bearing",
+        "signals": null,
+        "controls": null,
+        "variants": null
+      }
+    },
+    {
+      "attack_id": "OB-001",
+      "source": "open-banking-12.pdf",
+      "pages": [
+        1,
+        2,
+        3
+      ],
+      "sections": [
+        "objective",
+        "attacker",
+        "target",
+        "lifecycle_stage",
+        "cross_stage",
+        "traditional_mechanism",
+        "genai_transformation",
+        "genai_classification"
+      ],
+      "raw_fields": {
+        "objective": "Third-party Control Consent scope; Customer consent decision; Delegated authority; Consent duration and revocation",
+        "attacker": "Open banking customers; Account Aggregator users; PSD2 consent flows; Financial institutions' consent systems",
+        "target": "Obtain broader data access or payment permissions than the customer intended, enabling downstream fraud",
+        "lifecycle_stage": "Third-Party / Open Banking (Consent Granting)",
+        "cross_stage": "(mule activity)",
+        "traditional_mechanism": "Before GenAI, consent abuse relied on: Manual social engineering (phone calls, generic emails) Fine-print exploitation (customers skipping consent details) Basic phishing pages (detectable, generic)",
+        "genai_transformation": "Dimension Pre-GenAI GenAI-Transformed Consent deception Manual social engineering AI-generated personalised consent pages Scale Limited by human effort Industrial-scale automated consent harvesting Personalisation Generic, detectable Hyper-personalised based on OSINT Adaptation Static scripts Real-time adaptation based on victim responses Detection evasion Obvious red flags Indistinguishable from legitimate consent flows HARD GenAI Removal Test result: PASS -- GenAI enables personalised, adaptive, large-scale consent manipulation that materially disappears without it. Prerequisites: Customer uses open banking / Account Aggregator framework Consent is obtained electronically Attacker can create convincing consent pages GenAI tools for personalisation and social engineering Conceptual attack flow: Attacker gathers OSINT on target customer (social media, public data) AI generates personalised consent request (bank-branded, context-aware) AI engages customer via appropriate channel (app, email, social media) Customer authenticates legitimately but approves overly broad consent Consent grants access to all accounts, full transaction histories, and/or payment initiation Attacker accesses data or initiates payments beyond what customer intended Data harvested for fraud or payments executed to mule accounts Trust boundary targeted: Customer [Trust Boundary: CONSENT DECISION] TPP (fraudulent) Attack enters here The customer authenticates legitimately but the consent decision itself is manipulated. This is why the attack is Third-Party/Open Banking-primary, not Authentication. Financ",
+        "genai_classification": "genai_amplified",
+        "signals": null,
+        "controls": null,
+        "variants": null
+      }
+    },
+    {
+      "attack_id": "OB-002",
+      "source": "open-banking-12.pdf",
+      "pages": [
+        4,
+        5
+      ],
+      "sections": [
+        "objective",
+        "attacker",
+        "target",
+        "lifecycle_stage",
+        "cross_stage",
+        "traditional_mechanism",
+        "genai_transformation",
+        "genai_classification"
+      ],
+      "raw_fields": {
+        "objective": "Third-party Control TPP-customer trust relationship; TPP onboarding; TPP reputation; Consent flow",
+        "attacker": "Open banking users; Customers of financial institutions; Users of fintech apps",
+        "target": "Harvest financial data; Obtain payment consent; Steal credentials; Enable downstream fraud",
+        "lifecycle_stage": "Third-Party / Open Banking (TPP Onboarding / Customer Acquisition)",
+        "cross_stage": "theft)",
+        "traditional_mechanism": "Before GenAI, fake TPP applications were: Basic, detectable by poor quality (bad graphics, broken English, inconsistent branding) Limited in scale (each app required manual creation) Unable to maintain consistent professional branding",
+        "genai_transformation": "Dimension Pre-GenAI GenAI-Transformed App quality Basic, detectable Professional-grade, indistinguishable from legitimate Branding Generic, inconsistent Perfect brand impersonation Content Manual, limited AI-generated product descriptions, support pages, reviews Scale Limited by manual effort Industrial-scale fake app generation Creation time Weeks to months Minutes to hours HARD GenAI Removal Test result: PASS -- GenAI enables professional-grade fake TPPs at scale that materially disappear without it. Prerequisites: Customer uses open banking / Account Aggregator framework Customer trusts app stores / fintech brands Attacker can create convincing fake apps GenAI tools for app generation Conceptual attack flow: Attacker identifies target jurisdiction and bank AI generates complete fake TPP presence (app, website, branding, content, reviews) Fake app published on app store or promoted via social media Customer downloads and connects bank via open banking Customer grants consent (believing TPP is legitimate) Fake TPP accesses financial data and/or initiates payments Data harvested for fraud or payments executed to mule accounts Trust boundary targeted: Customer [Trust Boundary: APPLICATION TRUST] Fake TPP (malicious) Attack enters here The customer trusts the application. The fake TPP is the attack vehicle; the consent mechanism is the attack vector. Financial consequence: Data harvested for synthetic identity creation Unauthorised payments via PISP consent Credential theft (if app harvests login details) Direct financial loss to victims C. Detection Intelligence Signal Obser",
+        "genai_classification": "genai_amplified",
+        "signals": null,
+        "controls": null,
+        "variants": null
+      }
+    },
+    {
+      "attack_id": "OB-003",
+      "source": "open-banking-12.pdf",
+      "pages": [
+        6,
+        7,
+        8
+      ],
+      "sections": [
+        "objective",
+        "attacker",
+        "target",
+        "lifecycle_stage",
+        "cross_stage",
+        "traditional_mechanism",
+        "genai_transformation",
+        "genai_classification"
+      ],
+      "raw_fields": {
+        "objective": "Third-party Control TPP API credentials; Delegated access; Customer consents held by TPP; API trust relationship",
+        "attacker": "; Insider",
+        "target": "Use compromised TPP access to harvest customer data or initiate fraudulent payments",
+        "lifecycle_stage": "Third-Party / Open Banking (TPP Operations / API Usage)",
+        "cross_stage": "activity)",
+        "traditional_mechanism": "Before GenAI, TPP compromise relied on: Manual phishing campaigns (generic, detectable) Manual vulnerability discovery (slow, limited) Static attack patterns",
+        "genai_transformation": "Dimension Pre-GenAI GenAI-Transformed Credential theft Manual phishing campaigns AI-generated hyper-personalised phishing at scale Vulnerability discovery Manual probing AI-powered automated vulnerability discovery API abuse Manual API calls AI agents autonomously interact with TPP APIs Detection evasion Static patterns Adaptive behaviour that mimics legitimate TPP activity Scale Limited Industrial-scale credential harvesting and API abuse HARD GenAI Removal Test result: PARTIAL -- Attack exists without GenAI but GenAI materially amplifies credential theft, automation, and evasion. Prerequisites: TPP has API access to banks TPP has security vulnerabilities Attacker can compromise TPP credentials/API keys GenAI tools for phishing and vulnerability discovery Conceptual attack flow: Attacker identifies vulnerable TPP AI generates hyper-personalised phishing targeting TPP employees Employee credentials compromised (or insider access obtained) Attacker uses TPP's API credentials to access customer data AI autonomously explores API endpoints and extracts data Data harvested for fraud or payments initiated to mule accounts Compromised TPP activity appears legitimate (mimics normal operations) Trust boundary targeted: TPP [Trust Boundary: CREDENTIAL COMPROMISE] Bank API Attack enters here The attacker compromises TPP credentials or API keys, then uses the TPP's delegated access to fraudulently access customer data or initiate payments. Financial consequence: Data breach (customer financial data exfiltrated) Unauthorised payments via compromised TPP Customer data sold on fraud marke",
+        "genai_classification": "genai_amplified",
+        "signals": null,
+        "controls": null,
+        "variants": null
+      }
+    },
+    {
+      "attack_id": "OB-004",
+      "source": "open-banking-12.pdf",
+      "pages": [
+        9,
+        10
+      ],
+      "sections": [
+        "objective",
+        "attacker",
+        "target",
+        "lifecycle_stage",
+        "cross_stage",
+        "traditional_mechanism",
+        "genai_transformation",
+        "genai_classification"
+      ],
+      "raw_fields": {
+        "objective": "Use stolen tokens to access customer data or initiate unauthorised payments",
+        "attacker": "Fraudster; Man-in-the-middle; Credential harvester; Compromised TPP operator",
+        "target": "OAuth tokens; Consent tokens; Refresh tokens; API endpoints",
+        "lifecycle_stage": "Third-Party / Open Banking (API Authorisation / Token Usage)",
+        "cross_stage": "Payment Initiation (fraudulent payments via stolen tokens); Authentication (token-based access); Account Creation (data",
+        "traditional_mechanism": "Before GenAI, token theft relied on: Manual interception (MITM attacks, network sniffing) Generic phishing for OAuth tokens (detectable) Manual token testing (limited)",
+        "genai_transformation": "Dimension Pre-GenAI GenAI-Transformed Token harvesting Manual phishing AI-generated personalised token harvesting at scale Token testing Manual replay AI agents autonomously test tokens across endpoints Detection evasion Static patterns Adaptive token usage that mimics legitimate patterns Dimension Pre-GenAI GenAI-Transformed Limited Industrial-scale token harvesting and testing Scale HARD GenAI Removal Test result: PARTIAL -- Attack exists without GenAI but GenAI materially amplifies token harvesting, testing, and evasion. Prerequisites: Token theft vector (phishing, MITM, compromised device) Token not sender-constrained GenAI tools for personalised phishing Conceptual attack flow: Attacker identifies target (TPP or customer) AI generates personalised phishing page that harvests OAuth tokens Customer/TPP authenticates and token is issued (or existing token is intercepted) Attacker steals token AI replays token to bank API in contextually appropriate way Bank API accepts token as legitimate Attacker accesses data or initiates payment Token usage appears legitimate (correct timing, context, patterns) Trust boundary targeted: TPP [Trust Boundary: TOKEN INTEGRITY] Bank API Attack enters here The token itself is the attack vector. The attacker steals a valid consent token and replays it to the bank API. Financial consequence: Unauthorised data access Unauthorised payments via stolen tokens Customer data exfiltrated Direct financial loss C. Detection Intelligence Signal Category Observable Signal Why It Matters Detection Approach Indicates token theft Rules; Anomaly API Token us",
+        "genai_classification": "genai_amplified",
+        "signals": null,
+        "controls": null,
+        "variants": null
+      }
+    },
+    {
+      "attack_id": "OB-005",
+      "source": "open-banking-12.pdf",
+      "pages": [
+        11,
+        12,
+        13
+      ],
+      "sections": [
+        "objective",
+        "attacker",
+        "target",
+        "lifecycle_stage",
+        "cross_stage",
+        "traditional_mechanism",
+        "genai_transformation",
+        "genai_classification"
+      ],
+      "raw_fields": {
+        "objective": "Third-party Control Consent scope boundaries; Permission model; Delegated authority; Least-privilege controls",
+        "attacker": "Consent scope boundaries; Permission models; Customer data",
+        "target": "Use legitimate permissions beyond their intended scope to harvest data or initiate payments",
+        "lifecycle_stage": "Third-Party / Open Banking (Consent Scope Enforcement)",
+        "cross_stage": "(data for fraud profiling)",
+        "traditional_mechanism": "Before GenAI, scope abuse relied on: Manual exploitation of broad scopes (limited discovery) Static data extraction patterns (detectable)",
+        "genai_transformation": "Dimension Pre-GenAI GenAI-Transformed Scope discovery Manual probing AI-powered automated scope exploration Data extraction Manual data access AI agents systematically extract data across scopes Detection evasion Static patterns Adaptive access that mimics legitimate TPP behaviour Scale Limited Industrial-scale scope exploitation HARD GenAI Removal Test result: PARTIAL -- Attack exists without GenAI but GenAI materially amplifies scope discovery, extraction, and evasion. Prerequisites: Customer granted broad consent TPP has access to multiple scopes Scope enforcement is weak GenAI tools for scope exploration and data extraction Conceptual attack flow: Customer grants broad consent (all accounts, full histories) TPP (malicious or compromised) has access to multiple data types AI systematically explores scope boundaries AI identifies data not needed for declared purpose but accessible AI extracts data across scopes (full histories, all accounts) Data harvested for fraud or payment consent exploited Activity appears legitimate (consent validates the access) Trust boundary targeted: Customer [Trust Boundary: SCOPE DEFINITION] TPP [Trust Boundary: SCOPE EXPLOITATION] Bank API Attack enters here The attack exploits the gap between what the customer intended and what the consent permits. The customer's intent is the vulnerability. Financial consequence: Data harvested for synthetic identity creation Unauthorised payments via PISP consent Targeted social engineering using financial profiles Privacy violations C. Detection Intelligence Signal Category Observable Signal Why It Matter",
+        "genai_classification": "genai_amplified",
+        "signals": null,
+        "controls": null,
+        "variants": null
+      }
+    },
+    {
+      "attack_id": "OB-006",
+      "source": "open-banking-12.pdf",
+      "pages": [
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24
+      ],
+      "sections": [
+        "objective",
+        "attacker",
+        "target",
+        "lifecycle_stage",
+        "cross_stage",
+        "traditional_mechanism",
+        "genai_transformation",
+        "genai_classification"
+      ],
+      "raw_fields": {
+        "objective": "AISP data access; Financial data privacy; Data extraction patterns; Data exfiltration",
+        "attacker": "Harvest detailed financial profiles for targeted social engineering, synthetic identity creation, or sale",
+        "target": "Objective AISP data access; Financial data privacy; Data extraction patterns; Data exfiltration",
+        "lifecycle_stage": "Account Creation (data for synthetic identities); Authentication (data for social engineering); AML/Compliance (data for",
+        "cross_stage": "Malicious TPP; Compromised TPP; Data broker; Organised fraud ring",
+        "traditional_mechanism": "Before GenAI, data harvesting relied on: Manual data extraction (limited scale) Static extraction patterns (detectable)",
+        "genai_transformation": "Dimension Pre-GenAI GenAI-Transformed Data extraction Manual AI agents systematically extract data at scale Data analysis Manual review AI-powered financial profiling and analysis Detection evasion Static patterns Adaptive access that mimics legitimate AISP behaviour Scale Limited Industrial-scale data harvesting HARD GenAI Removal Test result: PARTIAL -- Attack exists without GenAI but GenAI materially amplifies extraction, analysis, and evasion. Prerequisites: AISP access granted TPP has access to customer data TPP can extract and exfiltrate data GenAI tools for data extraction and analysis Conceptual attack flow: Customer grants AISP consent (legitimate) TPP (malicious or compromised) has access to customer data AI systematically extracts data (balances, transactions, account details) AI analyses data to build detailed financial profiles Data sold on fraud marketplaces or used for targeted fraud Profiles used for social engineering, synthetic identity creation, or credit fraud Access appears legitimate (TPP has valid consent) Trust boundary targeted: TPP [Trust Boundary: DATA EXTRACTION] Bank API Attack enters here The attack exploits AISP data access to systematically extract and exfiltrate customer financial data. The consent is valid; the abuse is in the volume and use of the data. Financial consequence: Data sold on fraud marketplaces Targeted social engineering using financial profiles Synthetic identity creation Credit fraud using harvested data C. Detection Intelligence Signal Category Observable Signal Why It Matters Detection Approach Indicates systematic harves",
+        "genai_classification": "genai_amplified",
+        "signals": null,
+        "controls": null,
+        "variants": null
+      }
+    },
+    {
+      "attack_id": "R-001",
+      "source": "payment-rail-9.pdf",
+      "pages": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "sections": [
+        "objective",
+        "attacker",
+        "target",
+        "lifecycle_stage",
+        "cross_stage",
+        "traditional_mechanism",
+        "genai_transformation",
+        "genai_classification"
+      ],
+      "raw_fields": {
+        "objective": "accounts, bypassing participant authentication and message integrity controls",
+        "attacker": "controlled",
+        "target": "SWIFT network messaging infrastructure; payment operators; SWIFT participant authentication; cross-border payment routing;",
+        "lifecycle_stage": "Role in Attack",
+        "cross_stage": "movement)",
+        "traditional_mechanism": "Before GenAI, SWIFT message forgery worked through: Compromised bank environments: Attackers infiltrated a bank's internal network and stole SWIFT credentials Manual message crafting: Attackers manually crafted fraudulent SWIFT MT messages using knowledge of SWIFT formats Credential theft: Payment operator credentials were stolen through phishing, insider complicity, or malware Timing exploitation: Messages were sent outside normal working hours or over holidays to delay detection The Bangladesh Bank attack (2016) exemplified this--attackers sent 35 fraudulent SWIFT messages attempting to transfer nearly $1 billion, with 5 messages successfully executing approximately $101 million.",
+        "genai_transformation": "Dimension Pre-GenAI GenAI-Transformed Dimension Pre-GenAI GenAI-Transformed Credential theft Generic phishing with grammar Hyper-personalized LLM-generated phishing referencing real projects, SWIFT codes, colleagues, errors and recent transactions Voice Human impersonation (poor Deepfake voice cloning from 3-second samples; real-time voice conversion verification quality, limited) Message Manual crafting, template-based LLM-generated SWIFT messages with perfect format, correct BIC codes, contextually accurate generation errors references Reconnaissance Manual OSINT; internal knowledge AI-powered analysis of transaction timing and sizes to identify optimal insertion moments Bank Manual forgery AI-generated professional-grade compliance documents, verification letters, and regulatory correspondence filings Scale Opportunistic, manual Industrial-scale, automated campaigns Why GenAI is load-bearing",
+        "genai_classification": "genai_load_bearing",
+        "signals": null,
+        "controls": null,
+        "variants": null
+      }
+    }
+  ]
+}

@@ -5,6 +5,7 @@
   "type": "object",
   "required": ["source"],
   "properties": {
+    "evidence_id": {"type": "string", "minLength": 1, "description": "Implementation extension: stable registry reference."},
     "source": {"type": "string", "minLength": 1, "description": "Source taxonomy document or repository source."},
     "locator": {"type": ["string", "null"], "description": "Page, section, table, or stable source locator."},
     "excerpt": {"type": ["string", "null"], "description": "Short supporting note; do not duplicate source text wholesale."},

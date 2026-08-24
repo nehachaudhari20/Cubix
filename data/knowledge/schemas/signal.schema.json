@@ -12,7 +12,7 @@
     "detection_methods": {"type": "array", "items": {"type": "string", "minLength": 1}, "description": "Normalized from current semicolon-delimited detection_method."},
     "false_positive_risk": {"type": ["string", "null"]},
     "cross_account_needed": {"type": ["boolean", "null"]},
-    "evidence": {"type": "array", "items": {"$ref": "evidence.schema.json"}}
+    "evidence": {"type": "array", "items": {"anyOf": [{"$ref": "evidence.schema.json"}, {"type": "string", "pattern": "^EVD-"}]}}
   },
   "additionalProperties": false
 }

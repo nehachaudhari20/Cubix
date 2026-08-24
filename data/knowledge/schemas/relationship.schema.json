@@ -9,7 +9,7 @@
     "from_ref": {"type": "string", "minLength": 1},
     "relationship_type": {"type": "string", "enum": ["targets", "observes", "mitigates", "occurs_at", "crosses", "has_counterpart", "implemented_by"]},
     "to_ref": {"type": "string", "minLength": 1},
-    "evidence": {"type": "array", "items": {"$ref": "evidence.schema.json"}}
+    "evidence": {"type": "array", "items": {"anyOf": [{"$ref": "evidence.schema.json"}, {"type": "string", "pattern": "^EVD-"}]}}
   },
   "additionalProperties": false
 }

@@ -1,0 +1,286 @@
+{
+  "review_queue": [
+    {
+      "attack_id": "AG-001",
+      "reasons": [
+        "insufficient traditional_mechanism evidence",
+        "insufficient genai_transformation evidence"
+      ]
+    },
+    {
+      "attack_id": "AG-002",
+      "reasons": [
+        "insufficient traditional_mechanism evidence",
+        "insufficient genai_transformation evidence"
+      ]
+    },
+    {
+      "attack_id": "AG-003",
+      "reasons": [
+        "insufficient traditional_mechanism evidence",
+        "insufficient genai_transformation evidence"
+      ]
+    },
+    {
+      "attack_id": "AG-004",
+      "reasons": [
+        "insufficient traditional_mechanism evidence",
+        "insufficient genai_transformation evidence"
+      ]
+    },
+    {
+      "attack_id": "AG-005",
+      "reasons": [
+        "insufficient traditional_mechanism evidence",
+        "insufficient genai_transformation evidence",
+        "unresolved/ambiguous cross-stage values: ['Authentication (adaptive credential']"
+      ]
+    },
+    {
+      "attack_id": "AML-001",
+      "reasons": [
+        "unresolved/ambiguous cross-stage values: ['Stages Sophisticated money launderers', 'Organized crime groups', 'Fraud rings with AI capability']"
+      ]
+    },
+    {
+      "attack_id": "AML-004",
+      "reasons": [
+        "unresolved PDF primary lifecycle: 'Cross-stage Identity/KYC (entity creation); Account Creation (onboarding); Payment Initiation (sanctions evasion)'"
+      ]
+    },
+    {
+      "attack_id": "ACQ-001",
+      "reasons": [
+        "unresolved PDF primary lifecycle: 'Secondary / Identity/KYC (Stage 1 -- synthetic identity creation); Account Creation (Stage 2); Merchant (Stage 6); AML/Compliance (Stage 17)'",
+        "unresolved/ambiguous cross-stage values: ['Stages']"
+      ]
+    },
+    {
+      "attack_id": "ACQ-002",
+      "reasons": [
+        "unresolved/ambiguous cross-stage values: ['stage Merchant']"
+      ]
+    },
+    {
+      "attack_id": "ACQ-003",
+      "reasons": [
+        "unresolved PDF primary lifecycle: \"Stage Acquirer's portfolio-level analytics, entity resolution, concentration monitoring, cross-merchant correlation\""
+      ]
+    },
+    {
+      "attack_id": "AUTH-001",
+      "reasons": [
+        "unresolved PDF primary lifecycle: 'Stage Email phishing, SMS phishing (smishing), Social media phishing, Spear phishing, Business Email Compromise (BEC), AI-assisted'"
+      ]
+    },
+    {
+      "attack_id": "AUTH-002",
+      "reasons": [
+        "unresolved PDF primary lifecycle: 'Stage Authentication (Stage 4)'"
+      ]
+    },
+    {
+      "attack_id": "AUTH-003",
+      "reasons": [
+        "unresolved PDF primary lifecycle: 'Authentication (Stage 4 -- Recovery Surface)'"
+      ]
+    },
+    {
+      "attack_id": "AUTH-004",
+      "reasons": [
+        "unresolved PDF primary lifecycle: 'Stage Authentication (Stage 4)'"
+      ]
+    },
+    {
+      "attack_id": "AUT-001",
+      "reasons": [
+        "insufficient genai_transformation evidence"
+      ]
+    },
+    {
+      "attack_id": "AUT-002",
+      "reasons": [
+        "unresolved/ambiguous cross-stage values: ['stage Issuer']"
+      ]
+    },
+    {
+      "attack_id": "AUT-003",
+      "reasons": [
+        "unresolved PDF primary lifecycle: 'Authorization (Stage 10) -- per-account decisions'",
+        "unresolved/ambiguous cross-stage values: ['network detection)']"
+      ]
+    },
+    {
+      "attack_id": "CM-003",
+      "reasons": [
+        "unresolved/ambiguous cross-stage values: ['/Network']"
+      ]
+    },
+    {
+      "attack_id": "DFS-001",
+      "reasons": [
+        "insufficient objective evidence",
+        "insufficient attacker evidence",
+        "insufficient target evidence",
+        "insufficient traditional_mechanism evidence",
+        "insufficient genai_transformation evidence"
+      ]
+    },
+    {
+      "attack_id": "RAT-001",
+      "reasons": [
+        "insufficient objective evidence",
+        "insufficient target evidence",
+        "insufficient traditional_mechanism evidence",
+        "unresolved/ambiguous cross-stage values: ['Primary attack action is creating accounts', 'Device/Session component']"
+      ]
+    },
+    {
+      "attack_id": "BOT-001",
+      "reasons": [
+        "unresolved PDF primary lifecycle: 'Stage Device / Session (Stage 3)'"
+      ]
+    },
+    {
+      "attack_id": "GP-001",
+      "reasons": [
+        "unresolved/ambiguous cross-stage values: ['stage Payment Initiation']"
+      ]
+    },
+    {
+      "attack_id": "GP-003",
+      "reasons": [
+        "unresolved PDF primary lifecycle: 'Gateway / Processor (using infrastructure)'"
+      ]
+    },
+    {
+      "attack_id": "GP-006",
+      "reasons": [
+        "unresolved PDF primary lifecycle: 'Secondary / Cross-stage Authentication (credential storage); Payment Initiation (token usage)'",
+        "unresolved/ambiguous cross-stage values: ['stage Authentication']"
+      ]
+    },
+    {
+      "attack_id": "GP-007",
+      "reasons": [
+        "unresolved PDF primary lifecycle: 'Gateway velocity controls; Fraud detection systems'",
+        "unresolved/ambiguous cross-stage values: ['Execute fraudulent transactions faster than detection systems can flag them']"
+      ]
+    },
+    {
+      "attack_id": "SIF-001",
+      "reasons": [
+        "unresolved PDF primary lifecycle: 'Stage Identity / KYC (Stage 1)'"
+      ]
+    },
+    {
+      "attack_id": "GDF-001",
+      "reasons": [
+        "insufficient attacker evidence",
+        "unresolved PDF primary lifecycle: 'Stage Identity / KYC (Stage 1)'"
+      ]
+    },
+    {
+      "attack_id": "DII-001",
+      "reasons": [
+        "insufficient attacker evidence",
+        "unresolved PDF primary lifecycle: 'Stage Identity / KYC (Stage 1)'"
+      ]
+    },
+    {
+      "attack_id": "SEP-001",
+      "reasons": [
+        "insufficient attacker evidence"
+      ]
+    },
+    {
+      "attack_id": "ATO-001",
+      "reasons": [
+        "insufficient attacker evidence"
+      ]
+    },
+    {
+      "attack_id": "N-001",
+      "reasons": [
+        "insufficient target evidence",
+        "primary lifecycle conflict: PDF 'Cross-stage / Network' vs canonical STG-0048",
+        "unresolved/ambiguous cross-stage values: ['Identity/KYC, Account Creation, Device/Session, Authentication, Payment Initiation,']"
+      ]
+    },
+    {
+      "attack_id": "N-002",
+      "reasons": [
+        "insufficient target evidence",
+        "unresolved PDF primary lifecycle: 'Cross-stage All--Identity/KYC, Account Creation, Device/Session, Authentication, Payment Initiation, Merchant, Acquirer, Gateway/Processor,'",
+        "unresolved/ambiguous cross-stage values: ['/ Network']"
+      ]
+    },
+    {
+      "attack_id": "N-003",
+      "reasons": [
+        "insufficient target evidence",
+        "primary lifecycle conflict: PDF 'Cross-stage / Network' vs canonical STG-0048",
+        "unresolved/ambiguous cross-stage values: ['/ Network']"
+      ]
+    },
+    {
+      "attack_id": "N-004",
+      "reasons": [
+        "insufficient target evidence",
+        "unresolved PDF primary lifecycle: 'Stage Cross-stage / Network'",
+        "unresolved/ambiguous cross-stage values: ['Network Objects Payment Initiation, Payment Rail, Settlement, Cash-out/Mule, AML/Compliance']"
+      ]
+    },
+    {
+      "attack_id": "SIA-001",
+      "reasons": [
+        "unresolved/ambiguous cross-stage values: ['stage Identity / KYC']"
+      ]
+    },
+    {
+      "attack_id": "MDF-001",
+      "reasons": [
+        "unresolved/ambiguous cross-stage values: ['Stages']"
+      ]
+    },
+    {
+      "attack_id": "ATO-002",
+      "reasons": [
+        "unresolved PDF primary lifecycle: 'Stage Account Creation / Onboarding (Stage 2 -- Activation / Recovery)'",
+        "unresolved/ambiguous cross-stage values: ['with Authentication but critical to the onboarding activation/recovery surface']"
+      ]
+    },
+    {
+      "attack_id": "OB-002",
+      "reasons": [
+        "unresolved/ambiguous cross-stage values: ['theft)']"
+      ]
+    },
+    {
+      "attack_id": "OB-003",
+      "reasons": [
+        "unresolved/ambiguous cross-stage values: ['activity)']"
+      ]
+    },
+    {
+      "attack_id": "OB-004",
+      "reasons": [
+        "unresolved/ambiguous cross-stage values: ['Account Creation (data']"
+      ]
+    },
+    {
+      "attack_id": "OB-006",
+      "reasons": [
+        "unresolved PDF primary lifecycle: 'Account Creation (data for synthetic identities); Authentication (data for social engineering); AML/Compliance (data for'",
+        "unresolved/ambiguous cross-stage values: ['Malicious TPP', 'Compromised TPP', 'Data broker', 'Organised fraud ring']"
+      ]
+    },
+    {
+      "attack_id": "R-001",
+      "reasons": [
+        "unresolved PDF primary lifecycle: 'Role in Attack'",
+        "unresolved/ambiguous cross-stage values: ['movement)']"
+      ]
+    }
+  ]
+}

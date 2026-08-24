@@ -9,7 +9,7 @@
     "name": {"type": "string", "minLength": 1},
     "lifecycle_stage_ids": {"type": "array", "items": {"type": "string", "minLength": 1}},
     "detects_signal_ids": {"type": "array", "items": {"type": "string", "minLength": 1}, "description": "Implementation extension for executable relationships."},
-    "evidence": {"type": "array", "items": {"$ref": "evidence.schema.json"}}
+    "evidence": {"type": "array", "items": {"anyOf": [{"$ref": "evidence.schema.json"}, {"type": "string", "pattern": "^EVD-"}]}}
   },
   "additionalProperties": false
 }

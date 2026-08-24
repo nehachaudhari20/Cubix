@@ -9,7 +9,7 @@
     "name": {"type": "string", "minLength": 1},
     "sequence": {"type": ["integer", "null"], "minimum": 1, "description": "Source-derived when stage numbers exist."},
     "controls": {"type": "array", "items": {"type": "string", "minLength": 1}},
-    "evidence": {"type": "array", "items": {"$ref": "evidence.schema.json"}}
+    "evidence": {"type": "array", "items": {"anyOf": [{"$ref": "evidence.schema.json"}, {"type": "string", "pattern": "^EVD-"}]}}
   },
   "additionalProperties": false
 }
