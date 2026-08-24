@@ -1,10 +1,7 @@
 """Read-only access to canonical knowledge registries.
 
-This loader is intentionally separate from ``KnowledgeLoader`` so legacy Red
-Team and API behavior stays unchanged during the migration.
-
+``KnowledgeLoader`` wraps this and adds runtime compatibility aliases in memory.
 Prefers the nested layout under ``data/knowledge/canonical/{attacks,defense,...}``.
-Flat duplicate copies are no longer written.
 """
 from __future__ import annotations
 

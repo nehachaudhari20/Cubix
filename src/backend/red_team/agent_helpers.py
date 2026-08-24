@@ -39,7 +39,7 @@ def parse_llm_json(content: str, parser=None):
 
 
 class OfflineKnowledge:
-    """Load all three KB JSON files directly (no API required)."""
+    """Load canonical KB via KnowledgeLoader (no API required)."""
 
     def __init__(self):
         self.loader = KnowledgeLoader()

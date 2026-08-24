@@ -1,6 +1,6 @@
 {
   "registry_version": "2.0",
-  "built_at": "2026-08-24T21:33:25.607473+00:00",
+  "built_at": "2026-08-24T21:39:33.516174+00:00",
   "layout": {
     "attacks": [
       "attack_families.json",
@@ -55,12 +55,9 @@
     "Sandbox state, experiments, Red memory, buffer, training datasets, and model registry are separate domains."
   ],
   "compat": {
-    "runtime_files": [
-      "data/knowledge/attack_families.json",
-      "data/knowledge/attack_signals.json",
-      "data/knowledge/lifecycle_stages.json"
-    ],
-    "runtime_files_are_canonical": true,
+    "runtime_loader": "src/backend/knowledge/loader.py",
+    "runtime_source": "data/knowledge/canonical/",
+    "duplicate_runtime_json_removed": true,
     "flat_canonical_copies": false,
     "enriched_families_not_promoted": true
   }

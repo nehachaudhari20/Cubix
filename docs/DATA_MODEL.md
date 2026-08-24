@@ -31,8 +31,8 @@ A FraudShield **score is an output**, never a fraud label, never KB ground truth
 
 - 57 PDF-backed attack families (legacy + canonical). No new families invented.
 - 276 signals, 49 lifecycle stages, 342 controls, existing evidence and `occurs_at` / `observes` / `targets` edges.
-- Legacy runtime files frozen: `data/knowledge/attack_families.json`, `attack_signals.json`, `lifecycle_stages.json`.
-- `KnowledgeLoader` / Red Team / loop still read the legacy files.
+- Legacy runtime files frozen: canonical only at `data/knowledge/canonical/`. `KnowledgeLoader` hydrates runtime aliases in memory.
+- `KnowledgeLoader` / Red Team / loop read canonical via `KnowledgeLoader` (runtime aliases hydrated in memory).
 - Dirty `attack_families_enriched.json` was **not** promoted.
 - `MCH-*` and `PI-F*` remain **dataset-only**, in `data/knowledge/review/dataset_only_families.json`, because those IDs were not extracted from merchant-6 / payment-inititation-5 PDFs.
 
@@ -65,7 +65,7 @@ data/knowledge/canonical/
     └── evidence.json
 ```
 
-The nested tree is the only canonical KB. Duplicate flat copies at `canonical/*.json` were removed. The three runtime files `data/knowledge/attack_families.json`, `attack_signals.json`, and `lifecycle_stages.json` are **published copies of the canonical registries** (with compatibility aliases so Red Team / API keep working).
+The nested tree is the only on-disk KB. Duplicate flat copies at `canonical/*.json` were removed. Duplicate runtime JSON files at `data/knowledge/` were removed; `KnowledgeLoader` projects compatibility aliases in memory for Red Team and the API.
 
 ---
 

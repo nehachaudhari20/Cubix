@@ -1,32 +1,33 @@
 """Runtime knowledge loader.
 
-Loads the published KB at data/knowledge/{attack_families,attack_signals,lifecycle_stages}.json.
-Those files are the canonical registries plus compatibility aliases so Red Team
-and the API keep working while using the final data model.
+Reads the canonical nested KB under ``data/knowledge/canonical/`` and applies
+in-memory compatibility aliases (``lifecycle_stage``, ``detection_signals``,
+``controls_targeted``, etc.) so Red Team and the API keep working without
+duplicate JSON files at ``data/knowledge/``.
 """
 from __future__ import annotations
 
-import json
 import os
 from typing import Any, Dict, List, Optional
+
+from .canonical_loader import CanonicalKnowledgeLoader
 
 
 class KnowledgeLoader:
     def __init__(self, kb_path: str = "data/knowledge/"):
-        self.kb_path = kb_path
+        canonical_path = os.path.join(kb_path, "canonical")
+        if not os.path.isdir(canonical_path):
+            canonical_path = "data/knowledge/canonical"
+        self.canonical = CanonicalKnowledgeLoader(canonical_path)
+        raw_controls = self.canonical.controls
+        self.signals = [self._hydrate_signal(item) for item in self.canonical.signals]
+        self.stages = [self._hydrate_stage(item) for item in self.canonical.stages]
         self.families = self._hydrate_families(
-            self._load("attack_families.json", "attack_families"),
-            self._load("attack_signals.json", "signals"),
-            self._load("lifecycle_stages.json", "lifecycle_stages"),
+            self.canonical.families,
+            self.canonical.signals,
+            self.canonical.stages,
+            raw_controls,
         )
-        self.signals = [self._hydrate_signal(item) for item in self._load("attack_signals.json", "signals")]
-        self.stages = [self._hydrate_stage(item) for item in self._load("lifecycle_stages.json", "lifecycle_stages")]
-
-    def _load(self, filename: str, key: str) -> List[Dict[str, Any]]:
-        path = os.path.join(self.kb_path, filename)
-        with open(path, encoding="utf-8") as handle:
-            data = json.load(handle)
-            return data.get(key, [])
 
     @staticmethod
     def _hydrate_signal(signal: Dict[str, Any]) -> Dict[str, Any]:
@@ -57,28 +58,31 @@ class KnowledgeLoader:
         families: List[Dict[str, Any]],
         signals: List[Dict[str, Any]],
         stages: List[Dict[str, Any]],
+        controls: List[Dict[str, Any]],
     ) -> List[Dict[str, Any]]:
         signal_by_id = {item.get("signal_id"): self._hydrate_signal(item) for item in signals if item.get("signal_id")}
         stage_by_id = {item.get("stage_id"): self._hydrate_stage(item) for item in stages if item.get("stage_id")}
+        control_by_id = {item.get("control_id"): item for item in controls if item.get("control_id")}
         hydrated: List[Dict[str, Any]] = []
         for family in families:
             record = dict(family)
             stage = stage_by_id.get(record.get("lifecycle_stage_id") or "")
-            if not record.get("lifecycle_stage"):
-                record["lifecycle_stage"] = (stage or {}).get("name") or ""
-            if not record.get("detection_signals"):
-                record["detection_signals"] = [
-                    {
-                        "signal_id": signal_id,
-                        "name": (signal_by_id.get(signal_id) or {}).get("name"),
-                        "detection_method": (signal_by_id.get(signal_id) or {}).get("detection_method") or "",
-                    }
-                    for signal_id in record.get("observable_signal_ids") or []
-                    if signal_id in signal_by_id
-                ]
-            if not record.get("controls_targeted"):
-                record["controls_targeted"] = list(record.get("targeted_control_names") or [])
-            record.setdefault("evidence_confidence", record.get("confidence"))
+            record["lifecycle_stage"] = (stage or {}).get("name") or record.get("lifecycle_stage") or ""
+            record["detection_signals"] = [
+                {
+                    "signal_id": signal_id,
+                    "name": (signal_by_id.get(signal_id) or {}).get("name"),
+                    "detection_method": (signal_by_id.get(signal_id) or {}).get("detection_method") or "",
+                }
+                for signal_id in record.get("observable_signal_ids") or []
+                if signal_id in signal_by_id
+            ]
+            record["controls_targeted"] = [
+                (control_by_id.get(control_id) or {}).get("name")
+                for control_id in record.get("targeted_control_ids") or []
+                if control_id in control_by_id and (control_by_id.get(control_id) or {}).get("name")
+            ]
+            record["evidence_confidence"] = record.get("confidence") or "UNVERIFIED"
             record.setdefault("variants", [])
             hydrated.append(record)
         return hydrated

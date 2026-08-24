@@ -701,10 +701,9 @@ def main() -> int:
     relationships_doc = load_json(CANONICAL / "attacks" / "attack_relationships.json")
     aliases_lifecycle = load_json(CANONICAL / "lifecycle" / "lifecycle_aliases.json")
     aliases_signal = load_json(CANONICAL / "defense" / "signal_aliases.json")
-    legacy_families = load_json(LEGACY / "attack_families.json").get("attack_families", [])
-    legacy_variant_names = {
+    source_variant_names = {
         item["attack_id"]: [name for name in (item.get("variants") or []) if isinstance(name, str) and name.strip()]
-        for item in legacy_families
+        for item in families_doc["attack_families"]
         if item.get("attack_id")
     }
 
@@ -788,7 +787,7 @@ def main() -> int:
             "transformation": family.get("genai_transformation"),
             "capability_ids": caps,
         }
-        names = merge_variant_names(legacy_variant_names.get(attack_id, []), dataset_variants.get(attack_id, []))
+        names = merge_variant_names(source_variant_names.get(attack_id, []), dataset_variants.get(attack_id, []))
         variant_ids: list[str] = []
         for index, (name, variant_slug, origin) in enumerate(names, start=1):
             variant_id = f"VAR-{attack_id}-{index:02d}"
@@ -953,12 +952,9 @@ def main() -> int:
             "Sandbox state, experiments, Red memory, buffer, training datasets, and model registry are separate domains.",
         ],
         "compat": {
-            "runtime_files": [
-                "data/knowledge/attack_families.json",
-                "data/knowledge/attack_signals.json",
-                "data/knowledge/lifecycle_stages.json",
-            ],
-            "runtime_files_are_canonical": True,
+            "runtime_loader": "src/backend/knowledge/loader.py",
+            "runtime_source": "data/knowledge/canonical/",
+            "duplicate_runtime_json_removed": True,
             "flat_canonical_copies": False,
             "enriched_families_not_promoted": True,
         },
@@ -997,64 +993,6 @@ def main() -> int:
     write_nested(CANONICAL / "evidence" / "evidence.json", evidence_payload)
     dump_json(CANONICAL / "catalog.json", catalog)
 
-    signal_by_id = {item["signal_id"]: item for item in signals if item.get("signal_id")}
-    stage_by_id = {item["stage_id"]: item for item in stages if item.get("stage_id")}
-    control_by_id = {item["control_id"]: item for item in controls if item.get("control_id")}
-    runtime_families = []
-    for family in families:
-        record = deepcopy(family)
-        stage = stage_by_id.get(record.get("lifecycle_stage_id") or "")
-        record["lifecycle_stage"] = (stage or {}).get("name") or ""
-        record["detection_signals"] = [
-            {
-                "signal_id": signal_id,
-                "name": (signal_by_id.get(signal_id) or {}).get("name"),
-                "detection_method": "; ".join((signal_by_id.get(signal_id) or {}).get("detection_methods") or []),
-            }
-            for signal_id in record.get("observable_signal_ids") or []
-            if signal_id in signal_by_id
-        ]
-        record["controls_targeted"] = [
-            (control_by_id.get(control_id) or {}).get("name")
-            for control_id in record.get("targeted_control_ids") or []
-            if control_id in control_by_id and (control_by_id.get(control_id) or {}).get("name")
-        ]
-        record["evidence_confidence"] = record.get("confidence") or "UNVERIFIED"
-        runtime_families.append(record)
-    runtime_signals = []
-    for signal in signals:
-        record = deepcopy(signal)
-        record["signal_name"] = record.get("name")
-        record["detection_method"] = "; ".join(record.get("detection_methods") or [])
-        runtime_signals.append(record)
-    runtime_stages = []
-    for stage in stages:
-        record = deepcopy(stage)
-        record["stage_name"] = record.get("name")
-        record["stage"] = record.get("name")
-        runtime_stages.append(record)
-    dump_json(LEGACY / "attack_families.json", {
-        "registry_version": "2.0",
-        "built_at": now,
-        "source": "data/knowledge/canonical/attacks/attack_families.json",
-        "total_families": len(runtime_families),
-        "attack_families": runtime_families,
-    })
-    dump_json(LEGACY / "attack_signals.json", {
-        "registry_version": "2.0",
-        "built_at": now,
-        "source": "data/knowledge/canonical/defense/signals.json",
-        "total_signals": len(runtime_signals),
-        "signals": runtime_signals,
-    })
-    dump_json(LEGACY / "lifecycle_stages.json", {
-        "registry_version": "2.0",
-        "built_at": now,
-        "source": "data/knowledge/canonical/lifecycle/lifecycle_stages.json",
-        "total_stages": len(runtime_stages),
-        "lifecycle_stages": runtime_stages,
-    })
-
     review_queue_path = LEGACY / "review" / "dataset_only_families.json"
     dump_json(review_queue_path, {
         "status": "review",
@@ -1081,7 +1019,7 @@ def main() -> int:
     print(f"  templates: {len(templates)} parameters: {len(PARAMETERS)} counterparts: {len(COUNTERPARTS)}")
     print(f"  genai capabilities: {len(CAPABILITIES)} family classes: {dict(genai_counts)}")
     print(f"  dataset-only family IDs held in review: {len(dataset_only)}")
-    print(f"  published runtime KB: {LEGACY / 'attack_families.json'}")
+    print(f"  runtime loader reads: {CANONICAL}")
     return 0
 
 

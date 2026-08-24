@@ -1,7 +1,7 @@
 """
 Dynamic KB → Red Team → Sandbox continuous test.
 
-Loads all three KB JSON files, dynamically selects simulatable families,
+Loads the canonical KB via KnowledgeLoader, dynamically selects simulatable families,
 generates campaigns via agents, executes in sandbox, and prints separate
 Red Team vs Sandbox output sections.
 
@@ -37,11 +37,11 @@ def sep(title: str, char: str = "=", width: int = 72):
 
 
 def print_kb_section(kb: OfflineKnowledge):
-    sep("SECTION 1: KNOWLEDGE BASE (3 JSON files)")
+    sep("SECTION 1: KNOWLEDGE BASE (canonical → KnowledgeLoader)")
     stats = kb.kb_stats()
-    print(f"  attack_families.json  → {stats['total_families']} families")
-    print(f"  attack_signals.json   → {stats['total_signals']} signals")
-    print(f"  lifecycle_stages.json → {stats['total_stages']} stages")
+    print(f"  attack families  → {stats['total_families']} families")
+    print(f"  signals          → {stats['total_signals']} signals")
+    print(f"  lifecycle stages → {stats['total_stages']} stages")
     print(f"  Simulatable in sandbox → {stats['simulatable_families']} families")
     print(f"\n  Sample simulatable IDs: {', '.join(stats['simulatable_ids'][:12])}...")
     print(f"\n  Sample stage + controls:")

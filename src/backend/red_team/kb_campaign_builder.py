@@ -1,8 +1,8 @@
 """
-KB Campaign Builder — dynamic attack plan synthesis from all three KB JSON files.
+KB Campaign Builder — dynamic attack plan synthesis from the canonical KB.
 
-Reads attack_families.json, attack_signals.json, lifecycle_stages.json and produces
-executable sandbox action plans without static CAMPAIGN_TEMPLATES.
+``KnowledgeLoader`` reads ``data/knowledge/canonical/`` and hydrates runtime
+compatibility aliases (``lifecycle_stage``, ``detection_signals``, etc.).
 """
 
 from __future__ import annotations
@@ -158,7 +158,7 @@ def derive_payload_hints(family: Dict[str, Any], global_signals: List[Dict]) -> 
 
 
 def get_stage_controls(stages: List[Dict], stage_name: str) -> List[str]:
-    """Lookup controls for a lifecycle stage from lifecycle_stages.json."""
+    """Lookup controls for a lifecycle stage from hydrated stage records."""
     target = _normalize(stage_name)
     for stage in stages:
         name = _normalize(stage.get("stage_name") or stage.get("name") or stage.get("stage") or "")
