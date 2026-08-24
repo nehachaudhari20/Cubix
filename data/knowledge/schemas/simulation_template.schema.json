@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "simulation_template.schema.json",
+  "title": "Simulation template",
+  "type": "object",
+  "required": ["template_id", "name"],
+  "properties": {
+    "template_id": {"type": "string", "minLength": 1, "description": "Implementation extension: extracts executable configuration from code."},
+    "name": {"type": "string", "minLength": 1},
+    "supported_action_types": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "required_state_keys": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "parameter_schema_ref": {"type": ["string", "null"], "description": "Implementation extension; points to parameter contract, not generated values."},
+    "evidence": {"type": "array", "items": {"$ref": "evidence.schema.json"}}
+  },
+  "additionalProperties": false
+}

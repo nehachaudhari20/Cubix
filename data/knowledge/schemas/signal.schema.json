@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "signal.schema.json",
+  "title": "Observable fraud signal",
+  "type": "object",
+  "required": ["signal_id", "name"],
+  "properties": {
+    "signal_id": {"type": "string", "minLength": 1, "description": "Implementation extension: existing signals have no stable IDs."},
+    "name": {"type": "string", "minLength": 1},
+    "category": {"type": ["string", "null"]},
+    "description": {"type": ["string", "null"]},
+    "detection_methods": {"type": "array", "items": {"type": "string", "minLength": 1}, "description": "Normalized from current semicolon-delimited detection_method."},
+    "false_positive_risk": {"type": ["string", "null"]},
+    "cross_account_needed": {"type": ["boolean", "null"]},
+    "evidence": {"type": "array", "items": {"$ref": "evidence.schema.json"}}
+  },
+  "additionalProperties": false
+}

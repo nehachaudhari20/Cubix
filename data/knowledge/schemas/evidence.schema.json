@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "evidence.schema.json",
+  "title": "Knowledge evidence reference",
+  "type": "object",
+  "required": ["source"],
+  "properties": {
+    "source": {"type": "string", "minLength": 1, "description": "Source taxonomy document or repository source."},
+    "locator": {"type": ["string", "null"], "description": "Page, section, table, or stable source locator."},
+    "excerpt": {"type": ["string", "null"], "description": "Short supporting note; do not duplicate source text wholesale."},
+    "confidence": {"type": ["string", "null"], "enum": ["VERIFIED", "SUPPORTED", "INFERRED", "UNVERIFIED", null]},
+    "maturity": {"type": ["string", "null"], "description": "Taxonomy maturity where the source supplies it."}
+  },
+  "additionalProperties": false
+}

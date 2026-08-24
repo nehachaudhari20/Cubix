@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "lifecycle_stage.schema.json",
+  "title": "Lifecycle stage",
+  "type": "object",
+  "required": ["stage_id", "name"],
+  "properties": {
+    "stage_id": {"type": "string", "minLength": 1, "description": "Canonical identifier; implementation extension for stable references."},
+    "name": {"type": "string", "minLength": 1},
+    "sequence": {"type": ["integer", "null"], "minimum": 1, "description": "Source-derived when stage numbers exist."},
+    "controls": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "evidence": {"type": "array", "items": {"$ref": "evidence.schema.json"}}
+  },
+  "additionalProperties": false
+}

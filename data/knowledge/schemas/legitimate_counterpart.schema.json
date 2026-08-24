@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "legitimate_counterpart.schema.json",
+  "title": "Legitimate counterpart",
+  "type": "object",
+  "required": ["counterpart_id", "name"],
+  "properties": {
+    "counterpart_id": {"type": "string", "minLength": 1, "description": "Implementation extension for vector evaluation."},
+    "name": {"type": "string", "minLength": 1},
+    "description": {"type": ["string", "null"]},
+    "distinguishing_signal_ids": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "evidence": {"type": "array", "items": {"$ref": "evidence.schema.json"}}
+  },
+  "additionalProperties": false
+}

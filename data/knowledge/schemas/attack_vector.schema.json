@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "attack_vector.schema.json",
+  "title": "Executable attack specification (not a transaction instance)",
+  "type": "object",
+  "required": ["vector_id", "family_id", "ordered_actions"],
+  "properties": {
+    "vector_id": {"type": "string", "minLength": 1, "description": "Implementation extension; no vectors are created in this phase."},
+    "family_id": {"type": "string", "minLength": 1},
+    "variant_ref": {"type": ["string", "null"]},
+    "objective": {"type": ["string", "null"]},
+    "lifecycle_stage_ids": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "rails": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "channels": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "prerequisites": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "required_state": {"type": "object", "description": "Sandbox-state requirements only; not generated instance values."},
+    "ordered_actions": {"type": "array", "minItems": 1, "items": {"type": "object", "required": ["action_id", "action_type"], "properties": {"action_id": {"type": "string", "minLength": 1}, "action_type": {"type": "string", "minLength": 1}, "parameters": {"type": "object"}}, "additionalProperties": false}},
+    "attacker_controlled_parameters": {"type": "object"},
+    "parameter_distribution_refs": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "mutation_dimensions": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "expected_observable_signal_ids": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "targeted_control_ids": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "success_conditions": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "failure_conditions": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "legitimate_counterpart_ids": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "edge_cases": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "simulation_template_ref": {"type": ["string", "null"]},
+    "evidence": {"type": "array", "items": {"$ref": "evidence.schema.json"}}
+  },
+  "additionalProperties": false
+}

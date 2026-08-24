@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "control.schema.json",
+  "title": "Defensive control",
+  "type": "object",
+  "required": ["control_id", "name"],
+  "properties": {
+    "control_id": {"type": "string", "minLength": 1, "description": "Implementation extension: current controls are stage-local strings."},
+    "name": {"type": "string", "minLength": 1},
+    "lifecycle_stage_ids": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "detects_signal_ids": {"type": "array", "items": {"type": "string", "minLength": 1}, "description": "Implementation extension for executable relationships."},
+    "evidence": {"type": "array", "items": {"$ref": "evidence.schema.json"}}
+  },
+  "additionalProperties": false
+}

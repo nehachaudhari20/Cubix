@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "attack_family.schema.json",
+  "title": "Canonical attack family",
+  "type": "object",
+  "required": ["attack_id", "name"],
+  "properties": {
+    "attack_id": {"type": "string", "minLength": 1},
+    "name": {"type": "string", "minLength": 1},
+    "objective": {"type": ["string", "null"]},
+    "variants": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "lifecycle_stage_id": {"type": ["string", "null"], "description": "Implementation extension: stable normalized primary-stage reference."},
+    "cross_stage_lifecycle_stage_ids": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "attacker": {"type": ["string", "array", "null"], "items": {"type": "string"}},
+    "target": {"type": ["string", "array", "null"], "items": {"type": "string"}},
+    "prerequisites": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "traditional_mechanism": {"type": ["string", "null"]},
+    "genai_transformation": {"type": ["string", "null"]},
+    "genai_classification": {"type": ["string", "null"], "enum": ["traditional", "genai_amplified", "genai_load_bearing", "unknown", null], "description": "Canonical replacement for opaque legacy PASS/PARTIAL labels."},
+    "genai_load_bearing": {"type": ["boolean", "null"]},
+    "simulation_type": {"type": ["string", "null"]},
+    "attack_flow": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "observable_signal_ids": {"type": "array", "items": {"type": "string", "minLength": 1}, "description": "Implementation extension: references replace inline signal copies."},
+    "targeted_control_ids": {"type": "array", "items": {"type": "string", "minLength": 1}, "description": "Implementation extension: references replace free-text controls."},
+    "evidence": {"type": "array", "items": {"$ref": "evidence.schema.json"}},
+    "confidence": {"type": ["string", "null"], "enum": ["VERIFIED", "SUPPORTED", "INFERRED", "UNVERIFIED", null]},
+    "maturity": {"type": ["string", "null"]}
+  },
+  "additionalProperties": false
+}

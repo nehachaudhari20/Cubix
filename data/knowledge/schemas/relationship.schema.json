@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "relationship.schema.json",
+  "title": "Knowledge relationship",
+  "type": "object",
+  "required": ["relationship_id", "from_ref", "relationship_type", "to_ref"],
+  "properties": {
+    "relationship_id": {"type": "string", "minLength": 1, "description": "Implementation extension for explicit graph edges."},
+    "from_ref": {"type": "string", "minLength": 1},
+    "relationship_type": {"type": "string", "enum": ["targets", "observes", "mitigates", "occurs_at", "crosses", "has_counterpart", "implemented_by"]},
+    "to_ref": {"type": "string", "minLength": 1},
+    "evidence": {"type": "array", "items": {"$ref": "evidence.schema.json"}}
+  },
+  "additionalProperties": false
+}
