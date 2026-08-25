@@ -11,6 +11,14 @@ from .stacked_model import StackedFraudShieldModel
 from .anomaly import AnomalyScorer, IsolationForestTrainer, load_anomaly_scorer, combine_risk_scores
 from .training_mix import build_hardening_dataset, temporal_train_val_split
 from .evaluation_runner import EvaluationRunner
+from .evaluation import (
+    run_detection_suite,
+    run_fidelity_checks,
+    run_generalization_suite,
+    run_integrity_battery,
+    run_asr_evaluation,
+    run_asr_for_loop,
+)
 from .metrics import (
     REVIEW_CAPACITY,
     REPORT_PREVALENCES,
@@ -37,6 +45,12 @@ __all__ = [
     "build_hardening_dataset",
     "temporal_train_val_split",
     "EvaluationRunner",
+    "run_detection_suite",
+    "run_fidelity_checks",
+    "run_generalization_suite",
+    "run_integrity_battery",
+    "run_asr_evaluation",
+    "run_asr_for_loop",
     "DEFAULT_BUFFER_PATH",
     "evaluate_detection",
     "evaluate_detection_dict",

@@ -106,6 +106,9 @@ class StackedFraudShieldModel:
     def _predict_proba_matrix(self, X: np.ndarray) -> np.ndarray:
         import pandas as pd
         X_df = pd.DataFrame(X, columns=self.feature_order)
+        return self._predict_proba_frame(X_df)
+
+    def _predict_proba_frame(self, X_df: pd.DataFrame) -> np.ndarray:
         p_xgb = self.xgb_model.predict_proba(X_df)[:, 1]
         if self.lgb_model is not None:
             p_lgb = np.asarray(self.lgb_model.predict(X_df.values), dtype=float)
@@ -114,6 +117,15 @@ class StackedFraudShieldModel:
         p_log = self.log_model.predict_proba(X_df)[:, 1]
         stack = np.column_stack([p_xgb, p_lgb, p_log])
         return self.meta_model.predict_proba(stack)[:, 1]
+
+    def predict_proba_from_encoded(self, X) -> np.ndarray:
+        """Score already-encoded feature matrix (training/eval aligned path)."""
+        import pandas as pd
+        if isinstance(X, pd.DataFrame):
+            X_df = X[self.feature_order]
+        else:
+            X_df = pd.DataFrame(X, columns=self.feature_order)
+        return self._predict_proba_frame(X_df)
 
     def predict_proba_from_transaction(self, transaction: Dict[str, Any], state: Any) -> float:
         row = self.feature_builder.build(transaction, state)

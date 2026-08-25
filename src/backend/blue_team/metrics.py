@@ -103,6 +103,20 @@ def best_f1_threshold(y: ArrayLike, proba: ArrayLike) -> float:
     return float(thr[max(0, int(np.nanargmax(f1)) - 1)])
 
 
+def threshold_at_fpr(y: ArrayLike, proba: ArrayLike, target_fpr: float = 0.01) -> float:
+    """Highest threshold achieving FPR <= target_fpr on labeled data."""
+    y_arr = _as_numpy(y)
+    p_arr = _as_float_proba(proba)
+    fpr, _, thr = roc_curve(y_arr, p_arr)
+    if len(thr) == 0:
+        return 0.5
+    valid = np.where(fpr <= target_fpr)[0]
+    if len(valid) == 0:
+        return float(thr[0])
+    idx = int(valid[-1])
+    return float(thr[idx]) if idx < len(thr) else float(thr[-1])
+
+
 def evaluate_detection(
     name: str,
     y: ArrayLike,

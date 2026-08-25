@@ -21,7 +21,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import StratifiedKFold
 
 from .evidence_buffer import EvidenceBuffer, DEFAULT_BUFFER_PATH
-from .metrics import best_f1_threshold, evaluate_detection
+from .metrics import best_f1_threshold, evaluate_detection, threshold_at_fpr
 from .training_mix import build_hardening_dataset
 from .trainer import HardeningTrainer, DEFAULT_MODEL_DIR, BASELINE_DATA
 
@@ -80,39 +80,58 @@ class StackedEnsembleTrainer:
 
     def _make_xgb(self, pos_weight: float) -> xgb.XGBClassifier:
         return xgb.XGBClassifier(
-            n_estimators=600,
-            max_depth=6,
+            n_estimators=400,
+            max_depth=5,
             learning_rate=0.05,
             subsample=0.8,
             colsample_bytree=0.8,
-            min_child_weight=5,
-            reg_alpha=0.1,
-            reg_lambda=2.0,
+            min_child_weight=8,
+            reg_alpha=0.2,
+            reg_lambda=3.0,
+            gamma=0.1,
             scale_pos_weight=pos_weight,
             objective="binary:logistic",
             eval_metric="aucpr",
             tree_method="hist",
             random_state=self.random_state,
             n_jobs=-1,
+            early_stopping_rounds=40,
         )
 
     def _make_lgb(self, pos_weight: float):
         if not HAVE_LGB:
             raise ImportError("LightGBM required for stacked v3 training")
         return lgb.LGBMClassifier(
-            n_estimators=600,
+            n_estimators=400,
             learning_rate=0.05,
-            max_depth=6,
-            num_leaves=48,
+            max_depth=5,
+            num_leaves=31,
             subsample=0.8,
             colsample_bytree=0.8,
+            min_child_samples=40,
+            reg_alpha=0.2,
+            reg_lambda=2.0,
             scale_pos_weight=pos_weight,
             random_state=self.random_state,
             verbose=-1,
         )
 
     def _make_logistic(self) -> LogisticRegression:
-        return LogisticRegression(max_iter=5000, class_weight="balanced", solver="lbfgs")
+        return LogisticRegression(
+            max_iter=5000,
+            class_weight="balanced",
+            solver="lbfgs",
+            C=0.5,
+        )
+
+    def _make_meta(self) -> LogisticRegression:
+        """Meta-learner on base probabilities — L2 regularized, no class re-weighting."""
+        return LogisticRegression(
+            max_iter=5000,
+            class_weight=None,
+            solver="lbfgs",
+            C=0.15,
+        )
 
     def _base_proba(self, name: str, model: Any, X: pd.DataFrame) -> np.ndarray:
         if name == "xgboost":
@@ -140,7 +159,11 @@ class StackedEnsembleTrainer:
             y_tr = y.iloc[tr_idx]
 
             xgb_model = self._make_xgb(pos_weight)
-            xgb_model.fit(X_tr, y_tr, verbose=False)
+            xgb_model.fit(
+                X_tr, y_tr,
+                eval_set=[(X_va, y.iloc[va_idx])],
+                verbose=False,
+            )
             oof[va_idx, 0] = self._base_proba("xgboost", xgb_model, X_va)
             fold_models["xgboost"].append(xgb_model)
 
@@ -196,11 +219,15 @@ class StackedEnsembleTrainer:
         pos_weight = float((y_train == 0).sum() / max((y_train == 1).sum(), 1))
 
         oof, _ = self._oof_predictions(X_train, y_train, pos_weight)
-        meta = self._make_logistic()
+        meta = self._make_meta()
         meta.fit(oof, y_train)
 
         xgb_final = self._make_xgb(pos_weight)
-        xgb_final.fit(X_train, y_train, verbose=False)
+        xgb_final.fit(
+            X_train, y_train,
+            eval_set=[(X_val, y_val)],
+            verbose=False,
+        )
 
         lgb_final = None
         if HAVE_LGB:
@@ -221,8 +248,38 @@ class StackedEnsembleTrainer:
             log_final,
             meta,
         )
-        best_thr = best_f1_threshold(y_val.values, val_stack)
-        detection = evaluate_detection("v3_stack", y_val.values, val_stack, threshold=best_thr)
+
+        # Tune threshold on baseline-only val rows (exclude adversarial buffer tail)
+        val_baseline_mask = (
+            val_df.get("source", pd.Series("baseline", index=val_df.index)) != "adversarial_buffer"
+        ).values
+        y_val_np = y_val.values
+        if val_baseline_mask.sum() >= 50:
+            thr_y = y_val_np[val_baseline_mask]
+            thr_p = val_stack[val_baseline_mask]
+        else:
+            thr_y, thr_p = y_val_np, val_stack
+
+        thr_f1 = best_f1_threshold(thr_y, thr_p)
+        thr_1pct = threshold_at_fpr(thr_y, thr_p, target_fpr=0.01)
+        thr_5pct = threshold_at_fpr(thr_y, thr_p, target_fpr=0.05)
+        # Operational threshold: 5% FPR on baseline val (1% is reported separately)
+        best_thr = thr_5pct
+
+        detection = evaluate_detection("v3_stack", y_val_np, val_stack, threshold=best_thr)
+        detection_f1 = evaluate_detection("v3_stack_f1", y_val_np, val_stack, threshold=thr_f1)
+        detection_1pct = evaluate_detection("v3_stack_1pct", y_val_np, val_stack, threshold=thr_1pct)
+
+        train_stack = self._stack_predict(X_train, xgb_final, lgb_final, log_final, meta)
+        train_det = evaluate_detection("v3_stack_train", y_train.values, train_stack, threshold=best_thr)
+
+        meta_weights = {
+            "intercept": float(meta.intercept_[0]),
+            "xgboost": float(meta.coef_[0][0]),
+            "lightgbm": float(meta.coef_[0][1]),
+            "logistic": float(meta.coef_[0][2]),
+        }
+        base_corr = np.corrcoef(oof.T).round(4).tolist()
 
         self.model_dir.mkdir(parents=True, exist_ok=True)
         v3_dir = self.model_dir / "fraudshield_v3"
@@ -265,6 +322,11 @@ class StackedEnsembleTrainer:
             },
             "meta_model": "fraudshield_v3/meta.pkl",
             "meta_features": ["xgboost", "lightgbm", "logistic"],
+            "meta_weights": meta_weights,
+            "meta_base_correlation": {
+                "labels": ["xgboost", "lightgbm", "logistic"],
+                "matrix": base_corr,
+            },
             "anomaly_model": anomaly_report["relative_path"],
             "risk_blend": {"rule": 0.40, "ml": 0.45, "anomaly": 0.15},
             "anomaly_training": {
@@ -280,8 +342,15 @@ class StackedEnsembleTrainer:
             "categorical_mappings": mappings,
             "unseen_category_code": spec_v1.get("unseen_category_code", -1),
             "decision_threshold": best_thr,
-            "threshold_tuned_on": "v3 validation split",
+            "threshold_f1": thr_f1,
+            "threshold_at_1pct_fpr": thr_1pct,
+            "threshold_at_5pct_fpr": thr_5pct,
+            "threshold_tuned_on": "baseline_validation_at_5pct_fpr",
             "metrics": detection.model_dump(),
+            "metrics_at_1pct_fpr": detection_1pct.model_dump(),
+            "metrics_at_f1_threshold": detection_f1.model_dump(),
+            "train_metrics": train_det.model_dump(),
+            "overfit_gap_pr_auc": round(train_det.pr_auc - detection.pr_auc, 6),
             "n_folds": self.n_folds,
         }
 
@@ -294,7 +363,13 @@ class StackedEnsembleTrainer:
             "mix_stats": mix_stats,
             "training_manifest": mix_stats,
             "detection": detection.model_dump(),
+            "detection_at_f1": detection_f1.model_dump(),
+            "train_detection": train_det.model_dump(),
+            "meta_weights": meta_weights,
+            "overfit_gap_pr_auc": round(train_det.pr_auc - detection.pr_auc, 6),
             "decision_threshold": best_thr,
+            "threshold_at_1pct_fpr": thr_1pct,
+            "threshold_at_5pct_fpr": thr_5pct,
             "spec_path": str(spec_path),
             "artifact_dir": str(v3_dir),
             "anomaly": anomaly_report,

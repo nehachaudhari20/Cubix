@@ -37,31 +37,76 @@ class HardeningEvaluator:
         self.trainer = HardeningTrainer(model_dir=model_dir, buffer_path=buffer_path)
 
     def load_model_version(self, version: str) -> Optional[FraudShieldModel]:
-        """Load v1 (active), v2, or v3 stacked ensemble."""
+        """Load v1 baseline, v2, v3 stacked ensemble, or active model."""
         if version == "v3":
             from .stacked_model import StackedFraudShieldModel
             model = StackedFraudShieldModel.load(str(self.model_dir))
             return model  # type: ignore[return-value]
         if version == "v2":
-            spec_path = self.model_dir / "features_v2.json"
+            return self._load_lightgbm_spec(self.model_dir / "features_v2.json")
+        if version == "v1":
+            return self._load_v1_baseline()
+        return FraudShieldModel.load(str(self.model_dir))
+
+    def _load_lightgbm_spec(self, spec_path: Path) -> Optional[FraudShieldModel]:
+        if not spec_path.exists():
+            return None
+        import lightgbm as lgb
+
+        with open(spec_path) as f:
+            spec = json.load(f)
+        model_path = self.model_dir / spec["model_file"]
+        if not model_path.exists():
+            return None
+        booster = lgb.Booster(model_file=str(model_path))
+        return FraudShieldModel(model=booster, spec=spec, model_dir=str(self.model_dir))
+
+    def _load_v1_baseline(self) -> Optional[FraudShieldModel]:
+        """Load original v1 LightGBM (fraudshield_v1.txt), not swapped active spec."""
+        import lightgbm as lgb
+
+        for spec_name in ("features_v1_baseline.json", "features_v1_backup.json"):
+            spec_path = self.model_dir / spec_name
             if not spec_path.exists():
-                return None
-            import lightgbm as lgb
+                continue
             with open(spec_path) as f:
                 spec = json.load(f)
-            model_path = self.model_dir / spec["model_file"]
-            if not model_path.exists():
-                return None
-            booster = lgb.Booster(model_file=str(model_path))
-            return FraudShieldModel(model=booster, spec=spec, model_dir=str(self.model_dir))
-        return FraudShieldModel.load(str(self.model_dir))
+            model_file = spec.get("model_file", "")
+            if model_file == "fraudshield_v1.txt":
+                return self._load_lightgbm_spec(spec_path)
+
+        template = self.model_dir / "features_v2.json"
+        if not template.exists():
+            template = self.model_dir / "features.json"
+        if not template.exists():
+            return None
+
+        with open(template) as f:
+            spec = json.load(f)
+        v1_path = self.model_dir / "fraudshield_v1.txt"
+        if not v1_path.exists():
+            return None
+
+        spec = dict(spec)
+        spec["model_file"] = "fraudshield_v1.txt"
+        spec["version"] = "v1"
+        spec["model_type"] = "LightGBM"
+
+        metrics_path = self.model_dir / "model_metrics.json"
+        if metrics_path.exists():
+            with open(metrics_path) as f:
+                metrics = json.load(f)
+            for row in metrics.get("results", []):
+                if row.get("model") == "LightGBM" and row.get("threshold") is not None:
+                    spec["decision_threshold"] = row["threshold"]
+                    break
+
+        booster = lgb.Booster(model_file=str(v1_path))
+        return FraudShieldModel(model=booster, spec=spec, model_dir=str(self.model_dir))
 
     def _predict_proba(self, model: FraudShieldModel, X: pd.DataFrame) -> np.ndarray:
         if getattr(model, "model_type", "") == "StackedEnsemble":
-            probs = []
-            for _, row in X.iterrows():
-                probs.append(model.predict_proba_from_features(row.to_dict()))  # type: ignore
-            return np.asarray(probs, dtype=float)
+            return np.asarray(model.predict_proba_from_encoded(X), dtype=float)  # type: ignore[attr-defined]
         if model.model_type == "LightGBM":
             return np.asarray(model.model.predict(X.values), dtype=float)
         import xgboost as xgb

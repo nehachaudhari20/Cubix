@@ -37,6 +37,7 @@ class LoopRunResult:
     buffer_stats: Dict[str, Any] = field(default_factory=dict)
     hardening: Dict[str, Any] = field(default_factory=dict)
     comparison: Dict[str, Any] = field(default_factory=dict)
+    evaluation: Dict[str, Any] = field(default_factory=dict)
     verify: Dict[str, Any] = field(default_factory=dict)
     events: List[Dict[str, Any]] = field(default_factory=list)
     log: str = ""
@@ -93,6 +94,7 @@ class LoopRunner:
                 hardening, comparison = self._step_harden(swap=config.swap_model)
                 result.hardening = hardening
                 result.comparison = comparison
+                result.evaluation = self._step_evaluation(run_id=run_id)
                 result.verify = self._step_verify()
 
             result.status = "completed"
@@ -124,6 +126,7 @@ class LoopRunner:
         comp = result.comparison
         hardening = result.hardening
         verify = result.verify
+        evaluation = result.evaluation
 
         loop_row.status = "completed"
         loop_row.finished_at = datetime.now(timezone.utc)
@@ -132,14 +135,22 @@ class LoopRunner:
         loop_row.buffer_blocked = buffer.get("blocked", 0)
         loop_row.families_tested = ", ".join(buffer.get("families", []))
         loop_row.v1_buffer_mean = comp.get("v1_buffer_mean_score")
-        loop_row.v2_buffer_mean = comp.get("v2_buffer_mean_score")
+        loop_row.v2_buffer_mean = comp.get("v3_buffer_mean_score", comp.get("v2_buffer_mean_score"))
         loop_row.score_lift = comp.get("buffer_score_lift")
         loop_row.recommend_swap = comp.get("recommend_swap")
-        loop_row.val_pr_auc = hardening.get("val_pr_auc")
-        loop_row.val_roc_auc = hardening.get("val_roc_auc")
+        det = hardening.get("detection", {})
+        loop_row.val_pr_auc = det.get("pr_auc", hardening.get("val_pr_auc"))
+        loop_row.val_roc_auc = det.get("roc_auc", hardening.get("val_roc_auc"))
         loop_row.verify_decision = verify.get("decision")
         loop_row.verify_ml_score = verify.get("ml_score")
         loop_row.log_summary = result.log[-4000:] if result.log else None
+
+        eval_path = evaluation.get("report_path")
+        if eval_path:
+            loop_row.log_summary = (
+                (loop_row.log_summary or "")
+                + f"\n[evaluation] {eval_path}"
+            )[-4000:]
 
         for ev in events:
             session.add(
@@ -228,14 +239,88 @@ class LoopRunner:
         from backend.blue_team.evaluator import HardeningEvaluator
 
         trainer = HardeningTrainer()
-        report = trainer.train_v2(n_baseline_legit=4000, n_baseline_fraud=4000)
-        comparison_obj = HardeningEvaluator().full_report()
-        comparison = comparison_obj.model_dump()
+        print("\n--- Training FraudShield v3 (stacked ensemble + anomaly) ---")
+        report = trainer.train_v3(n_baseline_legit=4000, n_baseline_fraud=4000)
+
+        evaluator = HardeningEvaluator(
+            model_dir=self.settings.fraudshield_model_dir,
+            buffer_path=self.settings.evidence_buffer_path,
+        )
+        v1 = evaluator.load_model_version("v1")
+        v3 = evaluator.load_model_version("v3")
+        comparison: Dict[str, Any] = {
+            "before_version": "v1",
+            "after_version": "v3",
+            "val_pr_auc": report.get("detection", {}).get("pr_auc"),
+        }
+        if v1 and v3:
+            buffer_eval = evaluator.evaluate_buffer(v1, v3)
+            comparison.update({
+                "v1_buffer_mean_score": buffer_eval.get("v1_mean_score", 0.0),
+                "v3_buffer_mean_score": buffer_eval.get("v2_mean_score", 0.0),
+                "buffer_score_lift": buffer_eval.get("lift", 0.0),
+                "recommend_swap": buffer_eval.get("lift", 0.0) >= 0,
+                "buffer": buffer_eval,
+            })
+            print(
+                f"  v1 buffer mean: {comparison['v1_buffer_mean_score']:.4f} "
+                f"-> v3: {comparison['v3_buffer_mean_score']:.4f} "
+                f"(lift {comparison['buffer_score_lift']:+.4f})"
+            )
 
         if swap:
-            trainer.swap_to_v2()
+            trainer.swap_to_v3()
+            print("  Active model swapped to v3")
 
         return report, comparison
+
+    def _step_evaluation(self, run_id: str) -> Dict[str, Any]:
+        """Phase 11e — full evaluation + ASR before/after hardening."""
+        from backend.blue_team.evaluation_runner import EvaluationRunner
+
+        eval_dir = os.path.join(self._project_root(), "data", "evaluation")
+        os.makedirs(eval_dir, exist_ok=True)
+        report_path = os.path.join(eval_dir, f"loop_{run_id}.json")
+
+        runner = EvaluationRunner(
+            model_dir=self.settings.fraudshield_model_dir,
+            buffer_path=self.settings.evidence_buffer_path,
+        )
+        models_report = os.path.join(
+            self.settings.fraudshield_model_dir, "evaluation_report.json"
+        )
+        report = runner.run(
+            before_version="v1",
+            after_version="v3",
+            n_baseline_legit=2000,
+            n_baseline_fraud=2000,
+            save_path=models_report,
+        )
+        import shutil
+        shutil.copy(models_report, report_path)
+        summary = report.summary
+        asr = report.asr
+
+        print("\n--- Phase 11 Evaluation ---")
+        print(f"  Integrity:     {summary.get('integrity_score')}")
+        print(f"  Holdout PR-AUC:{summary.get('primary_detection_metric', 0):.4f}")
+        print(f"  ASR reduction: {asr.asr_reduction:.4f} (ML {asr.before_ml_asr:.4f} -> {asr.after_ml_asr:.4f})")
+        print(f"  Report:        {report_path}")
+
+        return {
+            "report_path": report_path,
+            "summary": summary,
+            "asr": asr.model_dump(),
+            "integrity_passed": report.integrity.all_passed,
+            "detection": {
+                "holdout_pr_auc": report.detection.after_holdout_pr_auc,
+                "buffer_recall_lift": report.detection.buffer_recall_lift,
+            },
+            "generalization": {
+                "mean_family_recall": report.generalization.mean_family_recall,
+                "composite_campaigns": report.generalization.composite_campaign_count,
+            },
+        }
 
     def _step_verify(self) -> Dict[str, Any]:
         from backend.sandbox import PaymentSandbox

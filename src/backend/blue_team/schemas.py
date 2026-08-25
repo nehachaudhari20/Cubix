@@ -79,16 +79,45 @@ class DetectionMetrics(BaseModel):
 
 
 class FidelityMetrics(BaseModel):
-    """Fidelity pillar — score behavior vs legitimate transaction patterns."""
+    """Fidelity pillar — score behavior vs legitimate transaction patterns (11b)."""
     legit_mean_score: float = 0.0
     legit_std_score: float = 0.0
     fraud_mean_score: float = 0.0
     score_separation: float = 0.0
     amount_score_correlation: float = 0.0
+    amount_ks_stat: float = 0.0
+    amount_buckets: List[Dict[str, Any]] = Field(default_factory=list)
     hour_score_std: float = 0.0
+    hour_profile: Dict[str, float] = Field(default_factory=dict)
+    day_of_week_spread: float = 0.0
+    timing_ks_stat: float = 0.0
     rail_score_spread: float = 0.0
+    velocity_correlation: float = 0.0
     legit_samples: int = 0
     fraud_samples: int = 0
+    checks: List["DistributionCheck"] = Field(default_factory=list)
+    all_checks_passed: bool = False
+
+
+class DistributionCheck(BaseModel):
+    name: str
+    passed: bool
+    value: float = 0.0
+    threshold: float = 0.0
+    detail: str = ""
+
+
+class DetectionSuiteResult(BaseModel):
+    """Phase 11a — detection on holdout, test, and buffer slices."""
+    holdout: Dict[str, Any] = Field(default_factory=dict)
+    test: Dict[str, Any] = Field(default_factory=dict)
+    buffer: Dict[str, Any] = Field(default_factory=dict)
+    suite_table: List[Dict[str, Any]] = Field(default_factory=list)
+    summary_table: Dict[str, Any] = Field(default_factory=dict)
+    primary_metric: str = "pr_auc"
+    before_holdout_pr_auc: float = 0.0
+    after_holdout_pr_auc: float = 0.0
+    buffer_recall_lift: float = 0.0
 
 
 class FamilyRecall(BaseModel):
@@ -98,14 +127,51 @@ class FamilyRecall(BaseModel):
     mean_score: float = 0.0
 
 
+class LOFOMetrics(BaseModel):
+    held_out_family: str = ""
+    held_out_samples: int = 0
+    held_out_recall: float = 0.0
+    train_proxy_samples: int = 0
+    train_proxy_recall: float = 0.0
+    recall_gap: float = 0.0
+
+
+class VariantRecall(BaseModel):
+    variant: str = ""
+    samples: int = 0
+    recall: float = 0.0
+    mean_score: float = 0.0
+    is_unseen: bool = False
+
+
+class CompositeCampaignMetrics(BaseModel):
+    campaign_id: str = ""
+    steps: int = 0
+    families: List[str] = Field(default_factory=list)
+    is_composite: bool = False
+    recall: float = 0.0
+    mean_score: float = 0.0
+    bypass_rate: float = 0.0
+
+
 class GeneralizationMetrics(BaseModel):
-    """Generalization pillar — performance on unseen / held-out attack families."""
+    """Generalization pillar — LOFO, unseen family/variant, composite (11c)."""
     buffer_families: List[str] = Field(default_factory=list)
+    trained_families: List[str] = Field(default_factory=list)
     family_recall: List[FamilyRecall] = Field(default_factory=list)
     mean_family_recall: float = 0.0
     min_family_recall: float = 0.0
     unseen_family_count: int = 0
     unseen_family_recall: float = 0.0
+    seen_family_recall: float = 0.0
+    lofo: List[LOFOMetrics] = Field(default_factory=list)
+    mean_lofo_gap: float = 0.0
+    variant_recall: List[VariantRecall] = Field(default_factory=list)
+    unseen_variant_count: int = 0
+    unseen_variant_recall: float = 0.0
+    composite_campaigns: List[CompositeCampaignMetrics] = Field(default_factory=list)
+    composite_campaign_count: int = 0
+    composite_mean_recall: float = 0.0
 
 
 class IntegrityCheck(BaseModel):
@@ -129,8 +195,17 @@ class IntegrityMetrics(BaseModel):
     training_manifest: Dict[str, Any] = Field(default_factory=dict)
 
 
+class FamilyASR(BaseModel):
+    family: str = ""
+    attacks: int = 0
+    historical_bypass_rate: float = 0.0
+    before_ml_recall: float = 0.0
+    after_ml_recall: float = 0.0
+    asr_reduction: float = 0.0
+
+
 class ASRMetrics(BaseModel):
-    """Attack Success Rate — sandbox bypass before vs ML catch after hardening."""
+    """Attack Success Rate — sandbox bypass before vs ML catch after (11e)."""
     payment_attacks: int = 0
     historical_bypass_count: int = 0
     historical_bypass_rate: float = 0.0
@@ -138,16 +213,19 @@ class ASRMetrics(BaseModel):
     before_ml_recall: float = 0.0
     after_ml_recall: float = 0.0
     ml_recall_lift: float = 0.0
+    before_ml_asr: float = 0.0
+    after_ml_asr: float = 0.0
     projected_bypass_rate_after: float = 0.0
     asr_reduction: float = 0.0
+    per_family: List[FamilyASR] = Field(default_factory=list)
 
 
 class EvaluationReport(BaseModel):
-    """Full Phase 11 evaluation report (all pillars)."""
+    """Full Phase 11 evaluation report (11a–11e)."""
     before_version: str = "v1"
     after_version: str = "v2"
     generated_at: str = ""
-    detection: Dict[str, Any] = Field(default_factory=dict)
+    detection: DetectionSuiteResult = Field(default_factory=DetectionSuiteResult)
     fidelity: FidelityMetrics = Field(default_factory=FidelityMetrics)
     generalization: GeneralizationMetrics = Field(default_factory=GeneralizationMetrics)
     integrity: IntegrityMetrics = Field(default_factory=IntegrityMetrics)
