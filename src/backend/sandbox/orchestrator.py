@@ -454,10 +454,19 @@ class SandboxOrchestrator:
         if transaction.get("genai_features"):
             transaction["genai_context"] = transaction["genai_features"]
 
+        # Journey correlation + expected controls for data-driven RuleEngine
+        transaction["journey"] = journey
+        transaction["control_triggers"] = list(control_triggers)
+        expected = self._resolve_expected_controls(transaction)
+        if expected:
+            transaction["expected_controls"] = expected
+            transaction["targeted_control_ids"] = expected
+
         risk_result = self.risk_engine.score(transaction)
         journey.append(JourneyStep(step=JOURNEY_STEP_NAMES["risk"], result=risk_result))
         for rule in risk_result.get("rule_details", []):
             control_triggers.extend(rule.get("triggered_rules", []))
+        control_triggers.extend(risk_result.get("triggered_controls") or [])
 
         authz_result = self.authz_engine.authorize(risk_result, transaction)
         journey.append(JourneyStep(step=JOURNEY_STEP_NAMES["authz"], result=authz_result))
@@ -485,6 +494,12 @@ class SandboxOrchestrator:
             })
         if transaction.get("genai_features"):
             state_snapshot["genai_features"] = transaction["genai_features"]
+        if risk_result.get("control_gaps"):
+            state_snapshot["control_gaps"] = risk_result["control_gaps"]
+        if risk_result.get("journey_features"):
+            state_snapshot["journey_features"] = risk_result["journey_features"]
+        if risk_result.get("triggered_signals"):
+            state_snapshot["triggered_signals"] = risk_result["triggered_signals"]
 
         if self.compiled_controls is not None:
             control_triggers = self.compiled_controls.resolve_triggers(control_triggers)
@@ -507,6 +522,27 @@ class SandboxOrchestrator:
             settled=settled,
             settlement_detail=settlement_result,
         )
+
+    def _resolve_expected_controls(self, transaction: Dict[str, Any]) -> List[str]:
+        """Load expected/targeted controls from payload or KB family."""
+        direct = transaction.get("expected_controls") or transaction.get("targeted_control_ids")
+        family_id = transaction.get("attack_family") or transaction.get("family_id")
+        family = None
+        if family_id:
+            try:
+                from backend.knowledge.canonical_loader import CanonicalKnowledgeLoader
+
+                family = CanonicalKnowledgeLoader().get_family(family_id)
+            except Exception:
+                family = None
+        if family:
+            if not transaction.get("family_signal_ids") and not transaction.get("observable_signal_ids"):
+                transaction["family_signal_ids"] = list(family.get("observable_signal_ids") or [])
+            if not direct:
+                direct = list(family.get("targeted_control_ids") or [])
+            # Pass full family for richer GenAI/rule context
+            transaction.setdefault("family", family)
+        return list(direct or [])
 
     def _payment_observation(
         self,

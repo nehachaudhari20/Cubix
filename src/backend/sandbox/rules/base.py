@@ -1,5 +1,5 @@
 """
-Base Rule Class — uses CompiledControlSet at boot (no runtime KB access).
+Base Rule Class — thresholds from CompiledControlSet parameter_bindings (no hardcoded runtime values).
 """
 
 from typing import Any, Dict, List, Optional
@@ -33,8 +33,29 @@ class BaseRule:
         return {}
 
     def get_control_value(self, control_name: str, default: Any) -> Any:
-        controls = self.get_controls()
+        """Resolve threshold from parameter_bindings first, then stage registry."""
         key = control_name.lower().replace(" ", "_")
+        compiled = self.compiled
+        if compiled is not None:
+            # 1) parameter_bindings.resolved
+            for binding in (compiled.parameter_bindings or {}).values():
+                resolved = binding.get("resolved") or {}
+                if key in resolved:
+                    value = resolved[key]
+                    if isinstance(value, (int, float, bool)):
+                        return value
+            # 2) compiled thresholds for this stage
+            stage_defaults = compiled.get_stage_defaults(self.stage)
+            if key in stage_defaults:
+                value = stage_defaults[key]
+                if isinstance(value, (int, float, bool)):
+                    return value
+            # 3) any registry threshold
+            for values in (compiled.thresholds or {}).values():
+                if key in values and isinstance(values[key], (int, float, bool)):
+                    return values[key]
+
+        controls = self.get_controls()
         value = controls.get(key, default)
         if isinstance(value, (int, float, bool)):
             return value

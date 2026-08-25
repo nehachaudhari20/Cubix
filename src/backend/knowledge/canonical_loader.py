@@ -18,6 +18,7 @@ NESTED_FILES: Dict[str, Tuple[str, str]] = {
     "signals": ("defense/signals.json", "signals"),
     "controls": ("defense/controls.json", "controls"),
     "mappings": ("defense/signal_feature_mappings.json", "signal_feature_mappings"),
+    "rules": ("defense/rules.json", "rules"),
     "stages": ("lifecycle/lifecycle_stages.json", "lifecycle_stages"),
     "templates": ("simulation/simulation_templates.json", "simulation_templates"),
     "parameters": ("simulation/parameters.json", "parameters"),
@@ -35,6 +36,7 @@ FLAT_FILES: Dict[str, Tuple[str, str]] = {
     "signals": ("signals.json", "signals"),
     "controls": ("controls.json", "controls"),
     "mappings": ("signal_feature_mappings.json", "signal_feature_mappings"),
+    "rules": ("rules.json", "rules"),
     "stages": ("lifecycle_stages.json", "lifecycle_stages"),
     "templates": ("simulation_templates.json", "simulation_templates"),
     "parameters": ("simulation_parameters.json", "parameters"),
@@ -56,6 +58,7 @@ class CanonicalKnowledgeLoader:
         self.stages = self._load("stages")
         self.controls = self._load("controls")
         self.mappings = self._load("mappings")
+        self.rules = self._load("rules")
         self.templates = self._load("templates")
         self.parameters = self._load("parameters")
         self.requirements = self._load("requirements")
@@ -160,6 +163,7 @@ class CanonicalKnowledgeLoader:
             "parameters": len(self.parameters),
             "capabilities": len(self.capabilities),
             "mappings": len(self.mappings),
+            "rules": len(self.rules),
             "counterparts": len(self.counterparts),
             "evidence": len(self.evidence),
         }

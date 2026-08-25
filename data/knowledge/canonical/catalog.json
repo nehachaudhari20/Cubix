@@ -11,7 +11,8 @@
     "defense": [
       "signals.json",
       "controls.json",
-      "signal_feature_mappings.json"
+      "signal_feature_mappings.json",
+      "rules.json"
     ],
     "lifecycle": [
       "lifecycle_stages.json",
@@ -45,6 +46,7 @@
     "legitimate_counterparts": 5,
     "genai_capabilities": 15,
     "signal_feature_mappings": 151,
+    "rules": 301,
     "dataset_only_family_ids": 10
   },
   "domain_law": [

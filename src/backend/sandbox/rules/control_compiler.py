@@ -51,8 +51,9 @@ class ControlCompiler:
             controls_by_id=controls_by_id,
             stage_id_to_control_ids=stage_id_to_control_ids,
             parameter_bindings=parameter_bindings,
-            trigger_to_control_id=build_trigger_map(),
+            trigger_to_control_id=build_trigger_map(str(self.loader.kb_path)),
             compiled_at=datetime.now(timezone.utc).isoformat(),
+            source=str(self.loader.kb_path),
         )
 
     def _resolve_parameter_bindings(

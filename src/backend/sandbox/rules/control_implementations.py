@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import json
+from pathlib import Path
 from typing import Dict, List, Tuple
 
 # (trigger_prefix_or_exact, control_id, rule_set)
@@ -28,9 +30,15 @@ TRIGGER_IMPLEMENTATIONS: List[Tuple[str, str, str]] = [
     ("merchant_very_high_risk", "CTL-0323", "merchant_rules"),
     ("merchant_high_risk", "CTL-0323", "merchant_rules"),
     ("velocity_exceeded", "CTL-0013", "authorization"),
+    ("composite_new_device_low_trust_high_amount", "CTL-0096", "composite"),
+    ("composite_beneficiary_velocity_structuring", "CTL-0009", "composite"),
+    ("composite_gateway_merchant_risk", "CTL-0323", "composite"),
+    ("composite_genai_payment", "CTL-0236", "composite"),
+    ("composite_journey_multi_engine_flags", "CTL-0140", "composite"),
+    ("composite_young_account_mule", "CTL-0009", "composite"),
+    ("signal_", "CTL-0140", "signal_rules"),
 ]
 
-# Registry parameter keys -> primary control for AttackEngine threshold lookup
 REGISTRY_KEY_CONTROLS: Dict[str, str] = {
     "payment_initiation.amount_limit_tier1": "CTL-0105",
     "payment_initiation.amount_limit_tier2": "CTL-0105",
@@ -46,8 +54,22 @@ REGISTRY_KEY_CONTROLS: Dict[str, str] = {
 }
 
 
-def build_trigger_map() -> Dict[str, str]:
+def build_trigger_map(kb_path: str = "data/knowledge/canonical") -> Dict[str, str]:
     mapping: Dict[str, str] = {}
     for prefix, control_id, _rule_set in TRIGGER_IMPLEMENTATIONS:
         mapping[prefix] = control_id
+
+    rules_path = Path(kb_path) / "defense" / "rules.json"
+    if not rules_path.exists():
+        rules_path = Path(kb_path) / "rules.json"
+    if rules_path.exists():
+        try:
+            rules = json.loads(rules_path.read_text(encoding="utf-8")).get("rules") or []
+            for rule in rules:
+                trigger = rule.get("trigger")
+                control_id = rule.get("control_id")
+                if trigger and control_id:
+                    mapping[trigger] = control_id
+        except Exception:
+            pass
     return mapping
