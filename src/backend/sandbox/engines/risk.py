@@ -1,7 +1,9 @@
 """Risk Scoring Engine with Rules + ML Model (KB-Connected)"""
 
-from typing import Dict, Any
+from typing import Dict, Any, Optional
+
 from ..state import SandboxState
+from ..rules.compiled_controls import CompiledControlSet
 from ..rules import (
     AmountRules,
     VelocityRules,
@@ -16,18 +18,22 @@ from ..rules import (
 class RiskEngine:
     """Risk scoring engine with rules + ML model."""
 
-    def __init__(self, state: SandboxState):
+    def __init__(
+        self,
+        state: SandboxState,
+        compiled_controls: Optional[CompiledControlSet] = None,
+    ):
         self.state = state
+        self.compiled_controls = compiled_controls
         self.ml_model = None
 
-        self.amount_rules = AmountRules()
-        self.velocity_rules = VelocityRules()
-        self.device_rules = DeviceRules()
-        self.merchant_rules = MerchantRules()
-        self.identity_rules = IdentityRules()
-        self.aml_rules = AMLRules()
-        self.mule_rules = MuleRules()
-
+        self.amount_rules = AmountRules(compiled_controls=compiled_controls)
+        self.velocity_rules = VelocityRules(compiled_controls=compiled_controls)
+        self.device_rules = DeviceRules(compiled_controls=compiled_controls)
+        self.merchant_rules = MerchantRules(compiled_controls=compiled_controls)
+        self.identity_rules = IdentityRules(compiled_controls=compiled_controls)
+        self.aml_rules = AMLRules(compiled_controls=compiled_controls)
+        self.mule_rules = MuleRules(compiled_controls=compiled_controls)
     def set_ml_model(self, model):
         """Inject the ML model (FraudShield)."""
         self.ml_model = model

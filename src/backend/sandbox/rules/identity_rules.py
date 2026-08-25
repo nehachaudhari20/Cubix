@@ -1,15 +1,16 @@
 """Identity / KYC risk rules."""
 
-from typing import Any, Dict
+from typing import Any, Dict, Optional
 
 from .base import BaseRule
+from .compiled_controls import CompiledControlSet
 
 
 class IdentityRules(BaseRule):
     """Rules based on customer identity and KYC trust signals."""
 
-    def __init__(self):
-        super().__init__("Identity/KYC")
+    def __init__(self, compiled_controls: Optional[CompiledControlSet] = None):
+        super().__init__("Identity/KYC", compiled_controls=compiled_controls)
 
     def evaluate(self, features: Dict[str, Any]) -> Dict[str, Any]:
         customer = features.get("customer")

@@ -1,15 +1,15 @@
 """Amount-Based Static Rules with KB API Integration"""
 
-from typing import Dict, Any
+from typing import Dict, Any, Optional
 from .base import BaseRule
+from .compiled_controls import CompiledControlSet
 
 
 class AmountRules(BaseRule):
     """Rules based on transaction amounts."""
     
-    def __init__(self):
-        super().__init__("Payment Initiation")
-    
+    def __init__(self, compiled_controls: Optional[CompiledControlSet] = None):
+        super().__init__("Payment Initiation", compiled_controls=compiled_controls)    
     def _get_default_controls(self) -> Dict[str, Any]:
         """Fallback default controls."""
         return {

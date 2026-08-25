@@ -24,21 +24,31 @@ from .engines.payment_initiation import PaymentInitiationEngine
 from .engines.risk import RiskEngine
 from .engines.authorization import AuthorizationEngine
 from .engines.settlement import SettlementEngine
+from .rules.compiled_controls import CompiledControlSet, set_global_compiled_controls
+from .rules.control_compiler import ControlCompiler
 
 
 class PaymentSandbox:
     """The main Payment Sandbox engine."""
 
-    def __init__(self, state: Optional[SandboxState] = None, ml_model: Any = None):
+    def __init__(
+        self,
+        state: Optional[SandboxState] = None,
+        ml_model: Any = None,
+        compiled_controls: Optional[CompiledControlSet] = None,
+        kb_path: str = "data/knowledge/canonical",
+    ):
         self.state = state or SandboxState()
+        self.compiled_controls = compiled_controls or ControlCompiler(kb_path).compile()
+        set_global_compiled_controls(self.compiled_controls)
 
         self.kyc_engine = KYCStateEngine(self.state)
         self.device_engine = DeviceEngine(self.state)
         self.auth_engine = AuthenticationEngine(self.state)
         self.account_merchant_engine = AccountMerchantEngine(self.state)
         self.payment_initiation_engine = PaymentInitiationEngine(self.state)
-        self.risk_engine = RiskEngine(self.state)
-        self.authz_engine = AuthorizationEngine(self.state)
+        self.risk_engine = RiskEngine(self.state, compiled_controls=self.compiled_controls)
+        self.authz_engine = AuthorizationEngine(self.state, compiled_controls=self.compiled_controls)
         self.settlement_engine = SettlementEngine(self.state)
 
         if ml_model is not None:
@@ -56,6 +66,7 @@ class PaymentSandbox:
             risk_engine=self.risk_engine,
             authz_engine=self.authz_engine,
             settlement_engine=self.settlement_engine,
+            compiled_controls=self.compiled_controls,
         )
 
     def execute(self, action_type: str, payload: Dict[str, Any]) -> SandboxObservation:

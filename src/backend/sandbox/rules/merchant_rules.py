@@ -1,14 +1,15 @@
 """Merchant-Based Static Rules with KB API Integration"""
 
-from typing import Dict, Any
+from typing import Dict, Any, Optional
 from .base import BaseRule
+from .compiled_controls import CompiledControlSet
 
 
 class MerchantRules(BaseRule):
     """Rules based on merchant characteristics."""
     
-    def __init__(self):
-        super().__init__("Merchant (Stage 6)")
+    def __init__(self, compiled_controls: Optional[CompiledControlSet] = None):
+        super().__init__("Merchant (Stage 6)", compiled_controls=compiled_controls)
     
     def _get_default_controls(self) -> Dict[str, Any]:
         return {

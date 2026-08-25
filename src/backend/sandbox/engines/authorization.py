@@ -1,18 +1,22 @@
-"""Authorization Engine — Final Decision (KB-Connected)"""
+"""Authorization Engine — Final Decision (compiled controls at boot)"""
 
-from typing import Dict, Any
+from typing import Dict, Any, Optional
+
 from ..state import SandboxState
 from ..rules.base import BaseRule
+from ..rules.compiled_controls import CompiledControlSet
 
 
 class AuthorizationEngine:
     """Final authorization decision engine."""
     
-    def __init__(self, state: SandboxState):
+    def __init__(
+        self,
+        state: SandboxState,
+        compiled_controls: Optional[CompiledControlSet] = None,
+    ):
         self.state = state
-        # Use BaseRule to fetch authorization thresholds from KB
-        self.kb_rule = BaseRule("Authorization")
-    
+        self.kb_rule = BaseRule("Authorization", compiled_controls=compiled_controls)    
     def authorize(self, risk_result: Dict[str, Any], transaction: Dict[str, Any]) -> Dict[str, Any]:
         """Make final ALLOW/BLOCK/CHALLENGE decision."""
         risk_score = risk_result.get("risk_score", 0.5)

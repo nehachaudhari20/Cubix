@@ -9,6 +9,7 @@ from typing import Any, Dict, List
 
 from .schemas import ActionType, JourneyStep, SandboxObservation
 from .state import SandboxState, SyntheticCustomer, SyntheticDevice
+from .rules.compiled_controls import CompiledControlSet
 from .engines.kyc import KYCStateEngine
 from .engines.device import DeviceEngine
 from .engines.auth import AuthenticationEngine
@@ -33,8 +34,10 @@ class SandboxOrchestrator:
         risk_engine: RiskEngine,
         authz_engine: AuthorizationEngine,
         settlement_engine: SettlementEngine,
+        compiled_controls: CompiledControlSet | None = None,
     ):
         self.state = state
+        self.compiled_controls = compiled_controls
         self.kyc_engine = kyc_engine
         self.device_engine = device_engine
         self.auth_engine = auth_engine
@@ -341,6 +344,9 @@ class SandboxOrchestrator:
                 "tx_count_24h": customer.get_tx_count_24h(),
             }
 
+        if self.compiled_controls is not None:
+            control_triggers = self.compiled_controls.resolve_triggers(control_triggers)
+
         return SandboxObservation(
             action_id=action_id,
             action_type=ActionType.INITIATE_PAYMENT.value,
@@ -369,6 +375,8 @@ class SandboxOrchestrator:
         control_triggers: List[str],
         timestamp: str,
     ) -> SandboxObservation:
+        if self.compiled_controls is not None:
+            control_triggers = self.compiled_controls.resolve_triggers(control_triggers)
         return SandboxObservation(
             action_id=action_id,
             action_type=ActionType.INITIATE_PAYMENT.value,

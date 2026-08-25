@@ -1,16 +1,17 @@
 """AML / Compliance risk rules."""
 
 from datetime import datetime, timedelta
-from typing import Any, Dict
+from typing import Any, Dict, Optional
 
 from .base import BaseRule
+from .compiled_controls import CompiledControlSet
 
 
 class AMLRules(BaseRule):
     """Anti-money laundering and structuring detection rules."""
 
-    def __init__(self):
-        super().__init__("AML / Compliance")
+    def __init__(self, compiled_controls: Optional[CompiledControlSet] = None):
+        super().__init__("AML / Compliance", compiled_controls=compiled_controls)
 
     def evaluate(self, features: Dict[str, Any]) -> Dict[str, Any]:
         customer = features.get("customer")
