@@ -23,6 +23,10 @@ class Hypothesis(BaseModel):
     attack_flow_summary: str = Field(description="Brief step-by-step summary")
     reasoning: str = Field(description="Chain-of-thought reasoning")
     suggested_variant: Optional[str] = Field(default=None, description="Specific variant to use")
+    jailbreak_strategy: Optional[str] = Field(
+        default=None,
+        description="DeepTeam strategy: kb, crescendo, tree, sequential, linear",
+    )
 
 class ThreatHunterOutput(BaseModel):
     """Full output from Threat Hunter."""
@@ -55,6 +59,8 @@ class AttackPlan(BaseModel):
     success_criteria: str = Field(description="Success criteria")
     estimated_complexity: str = Field(description="low, medium, high")
     reasoning: str = Field(description="Chain-of-thought reasoning")
+    jailbreak_strategy: Optional[str] = Field(default="kb", description="Planning strategy used")
+    branch_label: Optional[str] = Field(default=None, description="Tree branch label when applicable")
 
 
 # ============================================================
@@ -74,6 +80,8 @@ class ActionPayload(BaseModel):
     target_control: str
     expected_outcome: str = "PASS"
     narrative: Optional[str] = None
+    variation_label: Optional[str] = Field(default=None, description="AttackEngine variation label")
+    engine_validated: bool = Field(default=False, description="True if PaymentAttackEngine validated this payload")
 
 
 class Payload(BaseModel):
