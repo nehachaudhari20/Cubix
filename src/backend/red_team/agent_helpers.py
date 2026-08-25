@@ -9,20 +9,10 @@ import uuid
 from typing import Any, Dict, List, Optional
 
 from backend.knowledge.loader import KnowledgeLoader
+from backend.llm import get_llm
 
 USE_LLM = os.environ.get("RED_TEAM_USE_LLM", "false").lower() in ("1", "true", "yes")
 LLM_MODEL = os.environ.get("RED_TEAM_LLM_MODEL", "gemini-2.0-flash")
-
-
-def get_llm():
-    """Return LLM instance if enabled and API key present."""
-    if not USE_LLM or not os.environ.get("GOOGLE_API_KEY"):
-        return None
-    try:
-        from langchain_google_genai import ChatGoogleGenerativeAI
-        return ChatGoogleGenerativeAI(model=LLM_MODEL, temperature=0.4)
-    except Exception:
-        return None
 
 
 def parse_llm_json(content: str, parser=None):
