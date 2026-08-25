@@ -22,6 +22,8 @@ class RedTeamGraphState(TypedDict):
     """State passed between graph nodes."""
     hypothesis: Optional[Dict[str, Any]]
     plan: Optional[Dict[str, Any]]
+    plan_branches: List[Dict[str, Any]]
+    current_branch_index: int
     payloads: List[Dict[str, Any]]
     current_payload_index: int
     sandbox_response: Optional[Dict[str, Any]]
@@ -59,6 +61,7 @@ class RedTeamGraph:
         graph.add_node("analyze", self._analyze_node)
         graph.add_node("remember", self._remember_node)
         graph.add_node("decide", self._decide_node)
+        graph.add_node("next_branch", self._next_branch_node)
 
         graph.set_entry_point("hunt")
         graph.add_edge("hunt", "plan")
@@ -70,8 +73,10 @@ class RedTeamGraph:
         graph.add_conditional_edges(
             "remember",
             self._after_remember,
-            {"execute": "execute", "decide": "decide"},
+            {"execute": "execute", "next_branch": "next_branch", "decide": "decide"},
         )
+
+        graph.add_edge("next_branch", "generate")
 
         graph.add_conditional_edges(
             "decide",
@@ -89,10 +94,27 @@ class RedTeamGraph:
             return None
 
     def _after_remember(self, state: RedTeamGraphState) -> str:
-        """Continue executing remaining payloads before starting a new campaign."""
+        """Continue payloads, next tree branch, or decide."""
         if not state.get("done", True):
             return "execute"
+        branches = state.get("plan_branches") or []
+        next_idx = state.get("current_branch_index", 0) + 1
+        if branches and next_idx < len(branches):
+            return "next_branch"
         return "decide"
+
+    def _next_branch_node(self, state: RedTeamGraphState) -> RedTeamGraphState:
+        """Advance to the next parallel tree jailbreak branch."""
+        next_idx = state.get("current_branch_index", 0) + 1
+        branches = state.get("plan_branches") or []
+        state["current_branch_index"] = next_idx
+        state["plan"] = branches[next_idx]
+        state["payloads"] = []
+        state["current_payload_index"] = 0
+        state["sandbox_response"] = None
+        state["analysis"] = None
+        state["done"] = False
+        return state
 
     def _hunt_node(self, state: RedTeamGraphState) -> RedTeamGraphState:
         context = self.memory_agent.get_memory_context()
@@ -117,7 +139,10 @@ class RedTeamGraph:
             return state
 
         hypothesis = Hypothesis(**state["hypothesis"])
-        plan = self.attack_planner.plan(hypothesis)
+        branches = self.attack_planner.plan_branches(hypothesis)
+        state["plan_branches"] = [branch.model_dump() for branch in branches] if len(branches) > 1 else []
+        state["current_branch_index"] = 0
+        plan = branches[0]
         state["plan"] = plan.model_dump()
 
         self.state.create_campaign(
@@ -230,6 +255,8 @@ class RedTeamGraph:
             state["done"] = False
             state["hypothesis"] = None
             state["plan"] = None
+            state["plan_branches"] = []
+            state["current_branch_index"] = 0
             state["payloads"] = []
             state["current_payload_index"] = 0
             state["sandbox_response"] = None
@@ -249,6 +276,8 @@ class RedTeamGraph:
         initial_state = {
             "hypothesis": None,
             "plan": None,
+            "plan_branches": [],
+            "current_branch_index": 0,
             "payloads": [],
             "current_payload_index": 0,
             "sandbox_response": None,

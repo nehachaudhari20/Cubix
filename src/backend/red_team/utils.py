@@ -74,11 +74,11 @@ class BaselineLoader:
         if os.path.exists(self.baseline_path):
             try:
                 self.df = pd.read_csv(self.baseline_path)
-                print(f"✅ Baseline loaded: {len(self.df)} transactions")
+                print(f"Baseline loaded: {len(self.df)} transactions")
             except Exception as e:
-                print(f"⚠️ Baseline load failed: {e}")
+                print(f"Baseline load failed: {e}")
         else:
-            print(f"⚠️ Baseline not found: {self.baseline_path}")
+            print(f"Baseline not found: {self.baseline_path}")
     
     def sample_amount(self) -> float:
         if self.df is not None and len(self.df) > 0:
