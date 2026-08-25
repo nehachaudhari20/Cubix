@@ -24,6 +24,7 @@ load_dotenv(ROOT / ".env")
 from backend.api.routes import knowledge, platform  # noqa: E402
 from backend.platform.database import init_db  # noqa: E402
 from backend.platform.scheduler import LoopScheduler  # noqa: E402
+from backend.platform.s3_storage import is_configured as s3_is_configured  # noqa: E402
 
 FRONTEND_DIR = ROOT / "src" / "frontend"
 STATIC_DIR = FRONTEND_DIR / "static"
@@ -31,7 +32,23 @@ STATIC_DIR = FRONTEND_DIR / "static"
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    import logging
+    logger = logging.getLogger("payment_defense_twin")
+
+    # 1. Ensure persistence models are registered (imports Base.metadata tables)
+    from backend.platform import persistence_models  # noqa: F401
+
+    # 2. Create tables (SQLite or RDS)
     init_db()
+    logger.info("Database initialized.")
+
+    # 3. Log S3 status
+    if s3_is_configured():
+        logger.info("S3 artifact storage is ENABLED.")
+    else:
+        logger.info("S3 artifact storage is OFF (S3_BUCKET not set). Using local filesystem.")
+
+    # 4. Start scheduler
     scheduler = LoopScheduler.get()
     scheduler.start()
     yield

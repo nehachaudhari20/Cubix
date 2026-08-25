@@ -11,35 +11,76 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 class PlatformSettings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
+    # --- Database ---
     db_url: str = "sqlite:///./data/platform.db"
+    db_pool_size: int = 5
+    db_max_overflow: int = 10
+    db_pool_recycle: int = 3600
+    db_ssl_mode: str = "prefer"  # disable / allow / prefer / require
+
+    # --- API ---
     api_port: int = 8000
+
+    # --- Scheduler ---
     scheduler_enabled: bool = False
     scheduler_interval_minutes: int = 60
     scheduler_families: int = 5
     scheduler_skip_train_v1: bool = True
     scheduler_auto_swap: bool = True
+
+    # --- Evidence / Models ---
     evidence_buffer_path: str = "data/adversarial_buffer/evidence.jsonl"
     fraudshield_model_dir: str = "data/models"
     red_team_use_llm: bool = False
 
+    # --- AWS ---
+    aws_region: str = "us-east-1"
+    aws_profile: str | None = None  # named profile, or None for IAM role
+    s3_bucket: str | None = None  # required for S3 artifact storage
+    s3_prefix: str = "payment-defense-twin"  # key prefix inside the bucket
+
+    # --- RDS ---
+    rds_host: str | None = None
+    rds_port: int = 5432
+    rds_db_name: str = "payment_defense_twin"
+    rds_username: str | None = None
+    rds_password: str | None = None  # static password, or "iam" to auto-generate token
+    db_auth_mode: str = "password"  # "password" | "iam"
+
+
+def generate_iam_auth_token(settings: "PlatformSettings") -> str:
+    """Generate an RDS IAM auth token via AWS CLI."""
+    import subprocess
+
+    cmd = [
+        "aws", "rds", "generate-db-auth-token",
+        "--hostname", settings.rds_host,
+        "--port", str(settings.rds_port),
+        "--username", settings.rds_username,
+        "--region", settings.aws_region,
+    ]
+    result = subprocess.run(cmd, capture_output=True, text=True, check=True)
+    return result.stdout.strip()
+
+
+def _build_db_url(settings: "PlatformSettings") -> str:
+    """If explicit RDS params are set, build a postgres:// URL from them.
+    Otherwise fall back to the DB_URL env var or SQLite default."""
+    if settings.rds_host and settings.rds_username:
+        # For IAM auth, embed a placeholder password; the real token is
+        # injected at connection time via an event listener in database.py.
+        password = settings.rds_password or ""
+        if settings.db_auth_mode == "iam":
+            password = "iam-placeholder"
+        return (
+            f"postgresql+psycopg://{settings.rds_username}:{password}"
+            f"@{settings.rds_host}:{settings.rds_port}/{settings.rds_db_name}"
+        )
+    return settings.db_url
+
 
 @lru_cache
 def get_settings() -> PlatformSettings:
-    return PlatformSettings(
-        db_url=os.environ.get("DB_URL", "sqlite:///./data/platform.db"),
-        api_port=int(os.environ.get("API_PORT", "8000")),
-        scheduler_enabled=os.environ.get("SCHEDULER_ENABLED", "false").lower()
-        in ("1", "true", "yes"),
-        scheduler_interval_minutes=int(os.environ.get("SCHEDULER_INTERVAL_MINUTES", "60")),
-        scheduler_families=int(os.environ.get("SCHEDULER_FAMILIES", "5")),
-        scheduler_skip_train_v1=os.environ.get("SCHEDULER_SKIP_TRAIN_V1", "true").lower()
-        in ("1", "true", "yes"),
-        scheduler_auto_swap=os.environ.get("SCHEDULER_AUTO_SWAP", "true").lower()
-        in ("1", "true", "yes"),
-        evidence_buffer_path=os.environ.get(
-            "EVIDENCE_BUFFER_PATH", "data/adversarial_buffer/evidence.jsonl"
-        ),
-        fraudshield_model_dir=os.environ.get("FRAUDSHIELD_MODEL_DIR", "data/models"),
-        red_team_use_llm=os.environ.get("RED_TEAM_USE_LLM", "false").lower()
-        in ("1", "true", "yes"),
-    )
+    raw = PlatformSettings()
+    raw.db_url = _build_db_url(raw)
+    return raw

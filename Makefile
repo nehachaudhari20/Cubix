@@ -1,6 +1,6 @@
 PYTHON ?= python
 
-.PHONY: install seed train run dashboard test test-platform loop
+.PHONY: install seed train run dashboard test test-platform loop query-rds
 
 install:
 	$(PYTHON) -m pip install -r requirements.txt
@@ -24,3 +24,6 @@ test:
 
 test-platform:
 	$(PYTHON) src/scripts/test_platform.py
+
+query-rds:
+	$(PYTHON) src/scripts/query_rds.py
