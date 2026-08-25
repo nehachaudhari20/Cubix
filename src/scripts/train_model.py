@@ -41,6 +41,8 @@ import sys
 import warnings
 from collections import OrderedDict
 
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
+
 import matplotlib
 import numpy as np
 import pandas as pd
@@ -53,6 +55,17 @@ from sklearn.metrics import (
     precision_recall_curve,
 )
 from sklearn.tree import DecisionTreeClassifier
+
+from backend.blue_team.metrics import (
+    REVIEW_CAPACITY,
+    REPORT_PREVALENCES,
+    best_f1_threshold,
+    evaluate_detection_dict,
+    precision_at_prevalence,
+    precision_at_prevalence_report,
+    queue_precision,
+    recall_at_fpr,
+)
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt  # noqa: E402
@@ -121,9 +134,7 @@ TRAIN_FRAC, VAL_FRAC = 0.70, 0.15  # remainder is test, split chronologically
 # Deployment prevalences to report precision at. The dataset is 50/50 so that
 # every attack family is represented; real card-fraud prevalence is far lower,
 # and precision is brutally sensitive to it.
-REPORT_PREVALENCES = [0.005, 0.015]
-
-REVIEW_CAPACITY = 0.01  # analysts can review the top 1% of scored volume
+# REVIEW_CAPACITY and REPORT_PREVALENCES imported from backend.blue_team.metrics
 
 
 def banner(text, char="="):
@@ -363,61 +374,7 @@ def encode(df, features, cats):
     return X, mappings
 
 
-# ============================================================
-# 5. METRICS
-# ============================================================
-
-def recall_at_fpr(y, proba, target_fpr):
-    fpr, tpr, _ = roc_curve(y, proba)
-    return float(np.interp(target_fpr, fpr, tpr))
-
-
-def precision_at_prevalence(y, proba, threshold, prevalence):
-    """Precision this model would show at a different fraud base rate.
-
-    Derived from TPR/FPR, which are prevalence-invariant:
-        precision = pi*TPR / (pi*TPR + (1-pi)*FPR)
-    """
-    pred = proba >= threshold
-    tpr = pred[y == 1].mean() if (y == 1).any() else 0.0
-    fpr = pred[y == 0].mean() if (y == 0).any() else 0.0
-    num = prevalence * tpr
-    den = num + (1 - prevalence) * fpr
-    return float(num / den) if den > 0 else 0.0, tpr, fpr
-
-
-def queue_precision(y, proba, capacity):
-    """Precision among the highest-scoring `capacity` share of transactions."""
-    k = max(1, int(len(proba) * capacity))
-    idx = np.argsort(proba)[::-1][:k]
-    return float(y.iloc[idx].mean() if hasattr(y, "iloc") else y[idx].mean()), k
-
-
-def best_f1_threshold(y, proba):
-    prec, rec, thr = precision_recall_curve(y, proba)
-    f1 = 2 * prec * rec / np.clip(prec + rec, 1e-12, None)
-    return float(thr[max(0, int(np.nanargmax(f1)) - 1)])
-
-
-def evaluate(name, y, proba, threshold):
-    pred = (proba >= threshold).astype(int)
-    tn, fp, fn, tp = confusion_matrix(y, pred, labels=[0, 1]).ravel()
-    q_prec, k = queue_precision(y, proba, REVIEW_CAPACITY)
-    return OrderedDict(
-        model=name,
-        pr_auc=average_precision_score(y, proba),
-        roc_auc=roc_auc_score(y, proba),
-        f1=f1_score(y, pred, zero_division=0),
-        precision=precision_score(y, pred, zero_division=0),
-        recall=recall_score(y, pred, zero_division=0),
-        recall_at_1pct_fpr=recall_at_fpr(y, proba, 0.01),
-        recall_at_0p1pct_fpr=recall_at_fpr(y, proba, 0.001),
-        queue_precision_top1pct=q_prec,
-        brier=brier_score_loss(y, proba),
-        threshold=threshold,
-        tn=int(tn), fp=int(fp), fn=int(fn), tp=int(tp),
-        review_queue_size=k,
-    )
+# Metric helpers live in backend.blue_team.metrics (Phase 10a).
 
 
 # ============================================================
@@ -518,7 +475,7 @@ def main():
             else:
                 pv = logit.predict_proba(((X_va.fillna(med) - med) / (X_tr.std() + 1e-9)))[:, 1]
             thr = best_f1_threshold(y_va, pv)
-        rows.append(evaluate(name, y_te, proba, thr))
+        rows.append(evaluate_detection_dict(name, y_te, proba, thr))
 
     probas = {}
     for name, model in models.items():
@@ -526,7 +483,7 @@ def main():
         thr = best_f1_threshold(y_va, pv)
         pt = model.predict_proba(X_te)[:, 1]
         probas[name] = pt
-        rows.append(evaluate(name, y_te, pt, thr))
+        rows.append(evaluate_detection_dict(name, y_te, pt, thr))
 
     table = pd.DataFrame(rows)
     show = ["model", "pr_auc", "roc_auc", "recall_at_1pct_fpr",
@@ -650,9 +607,7 @@ def main():
             "test_fraud_rate": float(y_te.mean()),
             "results": [{k: (float(v) if isinstance(v, (int, float, np.floating)) else v)
                          for k, v in r.items()} for r in rows],
-            "precision_at_prevalence": {
-                str(pi): precision_at_prevalence(y_te, best_proba, thr, pi)[0]
-                for pi in REPORT_PREVALENCES},
+            "precision_at_prevalence": precision_at_prevalence_report(y_te, best_proba, thr),
         }, f, indent=2)
 
     print(f"  {model_path}          - trained model")

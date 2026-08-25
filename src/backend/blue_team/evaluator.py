@@ -1,5 +1,7 @@
 """
 Hardening Evaluator — compare FraudShield v1 vs v2 on buffer and baseline holdout.
+
+Phase 10a: uses shared DetectionMetrics from blue_team.metrics.
 """
 
 from __future__ import annotations
@@ -13,7 +15,12 @@ import pandas as pd
 
 from .evidence_buffer import EvidenceBuffer, DEFAULT_BUFFER_PATH
 from .fraudshield import FraudShieldModel, DEFAULT_MODEL_DIR
-from .schemas import HardeningReport
+from .metrics import (
+    compare_detection,
+    evaluate_detection,
+    hard_negative_fpr,
+)
+from .schemas import DetectionMetrics, HardeningReport
 from .trainer import HardeningTrainer, FEATURE_DEFAULTS
 
 
@@ -45,6 +52,24 @@ class HardeningEvaluator:
             return FraudShieldModel(model=booster, spec=spec, model_dir=str(self.model_dir))
         return FraudShieldModel.load(str(self.model_dir))
 
+    def _predict_proba(self, model: FraudShieldModel, X: pd.DataFrame) -> np.ndarray:
+        if model.model_type == "LightGBM":
+            return np.asarray(model.model.predict(X.values), dtype=float)
+        import xgboost as xgb
+        dmat = xgb.DMatrix(X, feature_names=model.feature_order)
+        return np.asarray(model.model.predict(dmat), dtype=float)
+
+    def _encode_for_model(self, df: pd.DataFrame, model: FraudShieldModel) -> pd.DataFrame:
+        spec = {
+            "feature_order": model.feature_order,
+            "categorical_features": model.categorical_features,
+            "categorical_mappings": model.categorical_mappings,
+            "unseen_category_code": model.unseen_code,
+        }
+        aligned = self.trainer.align_to_spec(df, spec)
+        X, _ = self.trainer.encode_features(aligned, spec, fit=False)
+        return X
+
     def _score_buffer_records(self, model: FraudShieldModel) -> List[float]:
         """Score all buffer payment records using stored features."""
         scores = []
@@ -71,56 +96,69 @@ class HardeningEvaluator:
         return scores
 
     def evaluate_buffer(self, v1: FraudShieldModel, v2: FraudShieldModel) -> Dict[str, Any]:
-        """Compare mean fraud score on adversarial buffer (all label=1)."""
+        """Compare scores on adversarial buffer (all fraud attempts, label=1)."""
         s1 = self._score_buffer_records(v1)
         s2 = self._score_buffer_records(v2)
         if not s1:
-            return {"records": 0, "v1_mean": 0, "v2_mean": 0, "lift": 0}
+            return {"records": 0, "v1_mean_score": 0, "v2_mean_score": 0, "lift": 0}
 
         bypassed = [
             r for r in self.buffer.read_all()
             if r.action_type == "initiate_payment" and r.evasion_outcome == "bypassed"
         ]
 
+        y_all = np.ones(len(s1), dtype=int)
+        v1_det = evaluate_detection("v1_buffer", y_all, s1, threshold=v1.threshold)
+        v2_det = evaluate_detection("v2_buffer", y_all, s2, threshold=v2.threshold)
+
         return {
             "records": len(s1),
             "v1_mean_score": round(float(np.mean(s1)), 4),
             "v2_mean_score": round(float(np.mean(s2)), 4),
             "lift": round(float(np.mean(s2) - np.mean(s1)), 4),
-            "v1_recall_at_threshold": round(float(np.mean(np.array(s1) >= v1.threshold)), 4),
-            "v2_recall_at_threshold": round(float(np.mean(np.array(s2) >= v2.threshold)), 4),
+            "v1_recall_at_threshold": round(v1_det.recall, 4),
+            "v2_recall_at_threshold": round(v2_det.recall, 4),
+            "v1_detection": v1_det.model_dump(),
+            "v2_detection": v2_det.model_dump(),
+            "detection_delta": compare_detection(v1_det, v2_det),
             "bypassed_count": len(bypassed),
         }
 
-    def evaluate_baseline_holdout(self, model: FraudShieldModel, n: int = 500) -> Dict[str, float]:
-        """Score a small baseline fraud holdout sample."""
+    def evaluate_baseline_holdout(
+        self,
+        model: FraudShieldModel,
+        n_fraud: int = 500,
+        n_legit: int = 500,
+    ) -> Dict[str, Any]:
+        """Score balanced baseline holdout with full detection metrics."""
         try:
-            df = self.trainer.load_baseline_sample(n_legit=0, n_fraud=n)
+            df = self.trainer.load_baseline_sample(n_legit=n_legit, n_fraud=n_fraud)
         except Exception:
-            return {"fraud_recall": 0.0, "samples": 0}
+            return {"samples": 0, "fraud_recall": 0.0, "detection": {}}
 
-        spec = {"feature_order": model.feature_order, "categorical_features": model.categorical_features}
-        aligned = self.trainer.align_to_spec(df, spec)
-        X, _ = self.trainer.encode_features(aligned, {
-            "feature_order": model.feature_order,
-            "categorical_features": model.categorical_features,
-            "categorical_mappings": model.categorical_mappings,
-            "unseen_category_code": model.unseen_code,
-        }, fit=False)
+        X = self._encode_for_model(df, model)
+        proba = self._predict_proba(model, X)
+        y = df["is_fraud"].astype(int).values
 
-        if model.model_type == "LightGBM":
-            proba = model.model.predict(X.values)
+        detection = evaluate_detection(
+            f"{model.version}_holdout",
+            y,
+            proba,
+            threshold=model.threshold,
+        )
+
+        hn_mask = df.get("meta_hard_negative", pd.Series(False, index=df.index)).fillna(False)
+        if hn_mask.any() or (y == 0).any():
+            hn_stats = hard_negative_fpr(y, proba, model.threshold, hn_mask.values)
         else:
-            import xgboost as xgb
-            dmat = xgb.DMatrix(X, feature_names=model.feature_order)
-            proba = model.model.predict(dmat)
+            hn_stats = {}
 
-        y = aligned["is_fraud"].astype(int).values
-        recall = float((proba >= model.threshold)[y == 1].mean()) if (y == 1).any() else 0.0
         return {
-            "fraud_recall": round(recall, 4),
+            "fraud_recall": detection.recall,
             "mean_fraud_score": round(float(np.mean(proba)), 4),
-            "samples": len(y),
+            "samples": detection.samples,
+            "detection": detection.model_dump(),
+            "hard_negative_stats": hn_stats,
         }
 
     def full_report(self) -> HardeningReport:
@@ -135,9 +173,13 @@ class HardeningEvaluator:
         v1_holdout = self.evaluate_baseline_holdout(v1)
         v2_holdout = self.evaluate_baseline_holdout(v2)
 
+        v1_det = v1_holdout.get("detection") or {}
+        v2_det = v2_holdout.get("detection") or {}
+
         improved = (
             buffer_eval["v2_mean_score"] >= buffer_eval["v1_mean_score"]
             and v2_holdout["fraud_recall"] >= v1_holdout["fraud_recall"] * 0.95
+            and v2_det.get("fpr", 1.0) <= v1_det.get("fpr", 1.0) * 1.05
         )
 
         return HardeningReport(
@@ -155,5 +197,7 @@ class HardeningEvaluator:
                 "buffer": buffer_eval,
                 "v1_holdout": v1_holdout,
                 "v2_holdout": v2_holdout,
+                "v1_detection": v1_det,
+                "v2_detection": v2_det,
             },
         )

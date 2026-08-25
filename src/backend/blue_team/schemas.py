@@ -53,3 +53,26 @@ class HardeningReport(BaseModel):
     bypassed_attacks: int = 0
     recommend_swap: bool = False
     details: Dict[str, Any] = Field(default_factory=dict)
+
+
+class DetectionMetrics(BaseModel):
+    """Detection pillar metrics (Phase 10a evaluation framework)."""
+    model: str = "unknown"
+    samples: int = 0
+    fraud_rate: float = 0.0
+    pr_auc: float = 0.0
+    roc_auc: float = 0.0
+    f1: float = 0.0
+    precision: float = 0.0
+    recall: float = 0.0
+    fpr: float = 0.0
+    recall_at_1pct_fpr: float = 0.0
+    recall_at_0p1pct_fpr: float = 0.0
+    queue_precision_top1pct: float = 0.0
+    brier: float = 0.0
+    threshold: float = 0.5
+    tn: int = 0
+    fp: int = 0
+    fn: int = 0
+    tp: int = 0
+    review_queue_size: int = 0
