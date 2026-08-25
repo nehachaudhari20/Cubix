@@ -8,6 +8,7 @@ from .trainer import HardeningTrainer
 from .evaluator import HardeningEvaluator
 from .stacked_trainer import StackedEnsembleTrainer
 from .stacked_model import StackedFraudShieldModel
+from .anomaly import AnomalyScorer, IsolationForestTrainer, load_anomaly_scorer, combine_risk_scores
 from .metrics import (
     REVIEW_CAPACITY,
     REPORT_PREVALENCES,
@@ -27,6 +28,10 @@ __all__ = [
     "HardeningEvaluator",
     "StackedEnsembleTrainer",
     "StackedFraudShieldModel",
+    "AnomalyScorer",
+    "IsolationForestTrainer",
+    "load_anomaly_scorer",
+    "combine_risk_scores",
     "DEFAULT_BUFFER_PATH",
     "evaluate_detection",
     "evaluate_detection_dict",

@@ -356,6 +356,7 @@ class SandboxOrchestrator:
             risk_score=risk_result.get("risk_score"),
             ml_score=risk_result.get("ml_score"),
             rule_risk=risk_result.get("rule_risk"),
+            anomaly_score=risk_result.get("anomaly_score"),
             control_triggers=control_triggers,
             journey=journey,
             state_snapshot=state_snapshot,

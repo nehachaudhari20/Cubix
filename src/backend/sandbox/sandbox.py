@@ -74,12 +74,18 @@ class PaymentSandbox:
         return self.orchestrator.execute(action_type, payload)
 
     def _try_load_fraudshield(self):
-        """Auto-load FraudShield from data/models if artifacts exist."""
+        """Auto-load FraudShield and anomaly scorer from data/models if present."""
         try:
             from backend.blue_team.fraudshield import load_fraudshield
+            from backend.blue_team.anomaly import load_anomaly_scorer
+
             model = load_fraudshield()
             if model:
                 self.risk_engine.set_ml_model(model)
+
+            scorer = load_anomaly_scorer()
+            if scorer:
+                self.risk_engine.set_anomaly_scorer(scorer)
         except Exception:
             pass
 

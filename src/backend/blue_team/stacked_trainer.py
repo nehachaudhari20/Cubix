@@ -271,11 +271,19 @@ class StackedEnsembleTrainer:
         with open(meta_path, "wb") as f:
             pickle.dump(meta, f)
 
+        from .anomaly import IsolationForestTrainer
+
+        anomaly_trainer = IsolationForestTrainer(
+            model_dir=str(self.model_dir),
+            baseline_path=self.base_trainer.baseline_path,
+        )
+        anomaly_report = anomaly_trainer.train(n_legit=max(2000, n_baseline_legit))
+
         spec_v3 = {
             "model_type": "StackedEnsemble",
             "version": "v3",
             "parent_version": spec_v1.get("version", "v1"),
-            "algorithm": "xgboost+lightgbm+logistic->meta_lr",
+            "algorithm": "xgboost+lightgbm+logistic->meta_lr+isolation_forest",
             "trained_at": datetime.now(timezone.utc).isoformat(),
             "model_dir": "fraudshield_v3",
             "base_models": {
@@ -285,6 +293,13 @@ class StackedEnsembleTrainer:
             },
             "meta_model": "fraudshield_v3/meta.pkl",
             "meta_features": ["xgboost", "lightgbm", "logistic"],
+            "anomaly_model": anomaly_report["relative_path"],
+            "risk_blend": {"rule": 0.40, "ml": 0.45, "anomaly": 0.15},
+            "anomaly_training": {
+                "training_rows": anomaly_report["training_rows"],
+                "score_p05": anomaly_report["score_p05"],
+                "score_p95": anomaly_report["score_p95"],
+            },
             "training_sources": mix_stats,
             "feature_order": spec_v1["feature_order"],
             "categorical_features": spec_v1.get("categorical_features", []),
@@ -307,6 +322,7 @@ class StackedEnsembleTrainer:
             "decision_threshold": best_thr,
             "spec_path": str(spec_path),
             "artifact_dir": str(v3_dir),
+            "anomaly": anomaly_report,
         }
         report_path = self.model_dir / "hardening_report_v3.json"
         with open(report_path, "w") as f:

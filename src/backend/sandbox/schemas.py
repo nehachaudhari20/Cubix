@@ -47,6 +47,7 @@ class SandboxObservation(BaseModel):
     transaction_id: Optional[str] = None
     ml_score: Optional[float] = None
     rule_risk: Optional[float] = None
+    anomaly_score: Optional[float] = None
     settled: bool = False
     settlement_detail: Optional[Dict[str, Any]] = None
 
@@ -62,6 +63,7 @@ class SandboxObservation(BaseModel):
                 "risk_score": self.risk_score,
                 "ml_score": self.ml_score,
                 "rule_risk": self.rule_risk,
+                "anomaly_score": self.anomaly_score,
                 "settled": self.settled,
                 "settlement_detail": self.settlement_detail,
                 "control_triggers": self.control_triggers,

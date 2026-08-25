@@ -15,6 +15,7 @@ from backend.blue_team.evidence_buffer import EvidenceBuffer
 from backend.blue_team.schemas import EvidenceRecord
 from backend.blue_team.stacked_model import StackedFraudShieldModel
 from backend.blue_team.stacked_trainer import StackedEnsembleTrainer
+from backend.blue_team.anomaly import load_anomaly_scorer
 
 
 def _load_feature_order() -> list:
@@ -98,6 +99,12 @@ def main() -> int:
         score = loaded.predict_proba_from_features(_synthetic_features())
         assert 0.0 <= score <= 1.0
         print(f"runtime score: {score:.4f}")
+
+        scorer = load_anomaly_scorer(out_dir)
+        if scorer:
+            anom = scorer.score_features(_synthetic_features(50000))
+            print(f"anomaly score: {anom:.4f}")
+        assert Path(out_dir, "fraudshield_v3", "isolation_forest.pkl").exists()
 
     print("OK: test_stacked_trainer passed")
     return 0
