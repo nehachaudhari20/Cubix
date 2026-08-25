@@ -32,7 +32,12 @@ class PaymentAttackEngine:
         )
         base = self._transform(legitimate_payment, mutation)
         variations = self._vary(base, mutation)
-        validated = [item for item in variations if self._validate(item.action_payload)]
+        validated: List[ValidatedVariation] = []
+        for item in variations:
+            ok = self._validate(item.action_payload)
+            item.validation_status = "VALID" if ok else "INVALID"
+            if ok:
+                validated.append(item)
         return VariationSet(
             source_mutation=mutation,
             variations=validated,
