@@ -184,12 +184,17 @@ class LoopRunner:
         run_id: str,
         on_event: Optional[Callable[[Dict[str, Any]], None]] = None,
     ) -> tuple[Dict[str, Any], List[Dict[str, Any]]]:
+        os.environ.setdefault("RED_TEAM_LINEAR_RETRIES", "2")
+        os.environ.setdefault("RED_TEAM_USE_ATTACK_ENGINE", "true")
+
+        from backend.red_team.runner import select_families, _linear_retry_limit
         from backend.red_team.agent_helpers import OfflineKnowledge
         from backend.red_team.agents.threat_hunter import ThreatHunter
         from backend.red_team.agents.attack_planner import AttackPlanner
         from backend.red_team.agents.attack_generator import AttackGenerator
         from backend.red_team.agents.failure_analyzer import FailureAnalyzer
         from backend.red_team.sandbox_client import SandboxClient
+        from backend.red_team.deepteam.linear_mutator import LinearMutator
         from backend.blue_team.collector import EvidenceCollector
         from backend.blue_team.evidence_buffer import EvidenceBuffer
 
@@ -206,44 +211,87 @@ class LoopRunner:
         planner = AttackPlanner()
         generator = AttackGenerator()
         analyzer = FailureAnalyzer()
+        mutator = LinearMutator()
 
-        simulatable = kb.get_simulatable_families()[:families]
+        selected = select_families(kb, max_families=families)
         campaign_events: List[Dict[str, Any]] = []
 
-        for i, family in enumerate(simulatable, 1):
+        print(
+            f"  CVSS-ordered {len(selected)} families | "
+            f"strategy={os.environ.get('RED_TEAM_JAILBREAK_STRATEGY', 'kb')} | "
+            f"linear_retries={_linear_retry_limit()}"
+        )
+
+        for i, family in enumerate(selected, 1):
             family_id = family["attack_id"]
             family_name = family.get("name", "")[:80]
-            print(f"\n  Campaign {i}/{len(simulatable)}: {family_id} — {family_name[:50]}")
+            print(f"\n  Campaign {i}/{len(selected)}: {family_id} - {family_name[:50]}")
 
             hypothesis = hunter.hypothesis_from_family(family)
+            hypothesis.jailbreak_strategy = os.environ.get("RED_TEAM_JAILBREAK_STRATEGY", "kb")
             plan = planner.plan(hypothesis)
             sequence = generator.generate_sequence(plan)
 
+            linear_limit = _linear_retry_limit()
             for payload in sequence.payloads:
-                response = client.execute_payload(payload.model_dump())
-                analysis = analyzer.analyze(response, payload, plan)
-                record = collector.collect(
-                    response, payload, plan, hypothesis, analysis, client.get_sandbox()
-                )
-                if not record:
-                    continue
-                event = {
-                    "loop_run_id": run_id,
-                    "family_id": family_id,
-                    "family_name": family_name,
-                    "step": record.step,
-                    "sandbox_decision": record.sandbox_decision,
-                    "evasion_outcome": record.evasion_outcome,
-                    "ml_score": record.ml_score,
-                    "amount": record.amount,
-                }
-                campaign_events.append(event)
-                if on_event:
-                    on_event(event)
-                print(
-                    f"    payment step {record.step}: {record.sandbox_decision} "
-                    f"({record.evasion_outcome}) ml={record.ml_score}"
-                )
+                payloads_to_run = [payload]
+                for current in payloads_to_run:
+                    response = client.execute_payload(current.model_dump())
+                    analysis = analyzer.analyze(response, current, plan)
+                    record = collector.collect(
+                        response, current, plan, hypothesis, analysis, client.get_sandbox()
+                    )
+                    if record:
+                        event = {
+                            "loop_run_id": run_id,
+                            "family_id": family_id,
+                            "family_name": family_name,
+                            "step": record.step,
+                            "sandbox_decision": record.sandbox_decision,
+                            "evasion_outcome": record.evasion_outcome,
+                            "ml_score": record.ml_score,
+                            "amount": record.amount,
+                        }
+                        campaign_events.append(event)
+                        if on_event:
+                            on_event(event)
+                        print(
+                            f"    step {record.step}: {record.sandbox_decision} "
+                            f"({record.evasion_outcome}) ml={record.ml_score}"
+                        )
+
+                    if (
+                        current.action_type == "initiate_payment"
+                        and analysis.outcome == "failure"
+                        and linear_limit > 0
+                    ):
+                        for attempt in range(linear_limit):
+                            mutated = mutator.mutate(current, analysis, attempt=attempt)
+                            response = client.execute_payload(mutated.model_dump())
+                            analysis = analyzer.analyze(response, mutated, plan)
+                            record = collector.collect(
+                                response, mutated, plan, hypothesis, analysis, client.get_sandbox()
+                            )
+                            if record:
+                                event = {
+                                    "loop_run_id": run_id,
+                                    "family_id": family_id,
+                                    "family_name": family_name,
+                                    "step": record.step,
+                                    "sandbox_decision": record.sandbox_decision,
+                                    "evasion_outcome": record.evasion_outcome,
+                                    "ml_score": record.ml_score,
+                                    "amount": record.amount,
+                                }
+                                campaign_events.append(event)
+                                if on_event:
+                                    on_event(event)
+                                print(
+                                    f"    step {record.step} (linear): {record.sandbox_decision} "
+                                    f"({record.evasion_outcome}) ml={record.ml_score}"
+                                )
+                            if analysis.outcome == "success":
+                                break
 
         return buffer.stats(), campaign_events
 

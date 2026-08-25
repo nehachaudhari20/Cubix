@@ -3,12 +3,14 @@ Red Team LangGraph Workflow
 Orchestrates the complete pipeline against the real Payment Sandbox.
 """
 
+import os
 from typing import TypedDict, List, Dict, Any, Optional
 from langgraph.graph import StateGraph, END
 from langgraph.checkpoint.memory import MemorySaver
 
 from .state import RedTeamState
 from .sandbox_client import SandboxClient
+from .deepteam.linear_mutator import LinearMutator
 from .agents.threat_hunter import ThreatHunter
 from .agents.attack_planner import AttackPlanner
 from .agents.attack_generator import AttackGenerator
@@ -44,6 +46,7 @@ class RedTeamGraph:
         self.memory_agent = MemoryAgent()
         self.strategy_layer = StrategyLayer(self.memory_agent)
         self.sandbox_client = sandbox_client or SandboxClient()
+        self.linear_mutator = LinearMutator()
         self.evidence_collector = self._init_evidence_collector()
 
         self.state = RedTeamState()
@@ -231,7 +234,22 @@ class RedTeamGraph:
             self.state.failed_attacks += 1
         self.state.experiment_count += 1
 
-        next_idx = state.get("current_payload_index", 0) + 1
+        idx = state.get("current_payload_index", 0)
+        payload = ActionPayload(**state["payloads"][idx]) if state.get("payloads") else None
+        linear_limit = max(0, int(os.environ.get("RED_TEAM_LINEAR_RETRIES", "2")))
+
+        if (
+            payload
+            and analysis.outcome == "failure"
+            and payload.action_type == "initiate_payment"
+            and linear_limit > 0
+            and not (payload.variation_label or "").startswith("linear_")
+        ):
+            for attempt in range(linear_limit):
+                mutated = self.linear_mutator.mutate(payload, analysis, attempt=attempt)
+                state["payloads"].insert(idx + 1 + attempt, mutated.model_dump())
+
+        next_idx = idx + 1
         if next_idx < len(state.get("payloads", [])):
             state["current_payload_index"] = next_idx
             state["done"] = False
