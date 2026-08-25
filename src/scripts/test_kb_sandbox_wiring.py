@@ -114,6 +114,56 @@ def test_risk_only_payment():
     print(f"risk_only payment journey: {steps} decision={obs.decision}")
 
 
+def test_genai_kb_engine_ag001():
+    from backend.sandbox.engines.genai_engine import GenAIEngine, GENAI_FEATURE_NAMES
+    engine = GenAIEngine()
+    result = engine.evaluate(
+        attack_family_id="AG-001",
+        variant_id="VAR-AG-001-02",
+        payload={"channels": ["web"]},
+    )
+    assert result.risk_contribution > 0.5
+    assert result.evidence.get("load_bearing") is True
+    assert len(result.genai_features) >= len(GENAI_FEATURE_NAMES) - 2
+    assert result.evidence.get("capability_ids")
+    assert "prompt_injection_risk" in result.genai_features
+    print(f"AG-001 KB engine: risk={result.risk_contribution} features_active={result.evidence.get('active_features')}")
+
+
+def test_lifecycle_registry_covers_stages():
+    from backend.sandbox.lifecycle_engine_registry import STAGE_TO_ENGINE, ENGINE_CATALOG
+    assert len(STAGE_TO_ENGINE) == 49
+    assert len(ENGINE_CATALOG) >= 15
+    print(f"lifecycle: {len(STAGE_TO_ENGINE)} stages -> {len(ENGINE_CATALOG)} engines")
+
+
+def test_expanded_payment_journey():
+    sandbox = PaymentSandbox()
+    sandbox.execute(ActionType.REGISTER_CUSTOMER.value, {
+        "customer_id": "C2",
+        "name": "User2",
+        "pan": "PAN2",
+        "dob": "1990-01-01",
+        "address": "X",
+        "trust_score": 0.9,
+        "verified": True,
+        "account_age_days": 400,
+    })
+    obs = sandbox.execute(ActionType.INITIATE_PAYMENT.value, {
+        "transaction_id": "T2",
+        "customer_id": "C2",
+        "amount": 45000,
+        "payment_path": "risk_only",
+        "attack_family": "SEP-001",
+        "genai_features": {"social_engineering_score": 0.8},
+    })
+    steps = [j.step for j in obs.journey]
+    assert "Gateway/Processor" in steps
+    assert "AML/Compliance" in steps
+    assert "Risk" in steps
+    print(f"expanded journey: {steps}")
+
+
 if __name__ == "__main__":
     test_all_families_simulatable()
     test_entry_points()
@@ -122,4 +172,7 @@ if __name__ == "__main__":
     test_payment_paths()
     test_genai_context_sandbox()
     test_risk_only_payment()
+    test_genai_kb_engine_ag001()
+    test_lifecycle_registry_covers_stages()
+    test_expanded_payment_journey()
     print("\nAll KB wiring + sandbox routing tests passed.")

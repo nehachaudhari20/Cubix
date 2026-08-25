@@ -178,10 +178,12 @@ class RiskEngine:
             from .genai_context import GenAIContextEngine
             genai_eval = GenAIContextEngine().evaluate({
                 "genai_features": genai_features,
-                "attack_family": transaction.get("attack_family"),
+                "attack_family": transaction.get("attack_family") or transaction.get("family_id"),
+                "variant_id": transaction.get("variant_id"),
+                "channels": transaction.get("channels"),
                 "victim_coerced": transaction.get("victim_coerced"),
                 "capability_ids": transaction.get("capability_ids") or [],
-            })
+            }, sandbox_state=self.state)
             genai_risk = float(genai_eval.get("genai_risk_contribution") or 0)
             rule_results.append({
                 "rule_set": "genai_context",

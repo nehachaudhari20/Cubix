@@ -9,15 +9,8 @@ from __future__ import annotations
 
 from typing import Any, Dict, List, Optional, Set
 
-# Payment execution profiles (subset of lifecycle engines to run)
-PAYMENT_PATHS: Dict[str, List[str]] = {
-    "full": ["kyc", "device", "auth", "payment_init", "risk", "authz", "settlement"],
-    "existing_customer": ["device", "payment_init", "risk", "authz", "settlement"],
-    "auth_risk": ["auth", "payment_init", "risk", "authz", "settlement"],
-    "risk_only": ["payment_init", "risk", "authz", "settlement"],
-    "merchant_focus": ["payment_init", "risk", "authz", "settlement"],
-    "genai_victim_payment": ["payment_init", "risk", "authz", "settlement"],
-}
+# Payment execution profiles — 15 engines covering 49 KB lifecycle stages
+from .lifecycle_engine_registry import PAYMENT_PATHS, STAGE_TO_ENGINE, ENGINE_CATALOG  # noqa: E402
 
 # KB lifecycle stage_id → primary sandbox action (when composing cross-stage campaigns)
 STAGE_ID_TO_ACTION: Dict[str, str] = {
@@ -82,7 +75,7 @@ def payment_path_for_entry(entry_point: str, payload: Optional[Dict[str, Any]] =
         "merchant": "merchant_focus",
         "social_engineering": "genai_victim_payment",
         "genai_proxy": "risk_only",
-        "cross_stage": "auth_risk",
+        "cross_stage": "cross_stage_full",
     }
     return mapping.get(entry_point, "full")
 
@@ -173,5 +166,5 @@ def setup_flags_for_entry(entry_point: str) -> Dict[str, Any]:
     if entry_point == "genai_proxy":
         return {"payment_path": "risk_only", "genai_proxy": True}
     if entry_point == "cross_stage":
-        return {"payment_path": "auth_risk"}
+        return {"payment_path": "cross_stage_full"}
     return {"payment_path": "full"}

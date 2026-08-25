@@ -120,6 +120,20 @@ class CanonicalKnowledgeLoader:
         identifiers = [family.get("lifecycle_stage_id"), *family.get("cross_stage_lifecycle_stage_ids", [])]
         return [item for identifier in identifiers if identifier and (item := self.get_stage(identifier))]
 
+    def get_family_capabilities(self, attack_id: str) -> List[Dict[str, Any]]:
+        family = self.get_family(attack_id) or {}
+        genai = family.get("genai") or {}
+        cap_ids = genai.get("capability_ids") or []
+        return [c for cid in cap_ids if (c := self.get_capability(cid))]
+
+    def get_family_mapped_features(self, attack_id: str) -> List[str]:
+        names: List[str] = []
+        for signal in self.get_family_signals(attack_id):
+            sig_id = signal.get("signal_id")
+            if sig_id:
+                names.extend(self.get_signal_features(sig_id))
+        return sorted(set(names))
+
     def get_family_variants(self, attack_id: str) -> List[Dict[str, Any]]:
         return [item for item in self.variants if item.get("family_id") == attack_id]
 

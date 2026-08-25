@@ -39,6 +39,13 @@ class SyntheticCustomer:
             if (ts := t.get("timestamp")) is not None and ts > cutoff
         ])
 
+    def get_tx_count_1h(self) -> int:
+        cutoff = datetime.now() - timedelta(hours=1)
+        return len([
+            t for t in self.transactions
+            if (ts := t.get("timestamp")) is not None and ts > cutoff
+        ])
+
 @dataclass
 class SyntheticDevice:
     """A synthetic device in the sandbox."""
@@ -88,6 +95,10 @@ class SyntheticBeneficiary:
     created_at: datetime
     is_verified: bool = True
     risk_score: float = 0.2
+
+    @property
+    def is_new(self) -> bool:
+        return (datetime.now() - self.created_at).days < 7
 
 
 class SandboxState:
