@@ -8,6 +8,7 @@ from typing import Any, Dict, List, Optional
 from ..schemas import AnalysisResult, AttackPlan, ActionPayload
 from ..agent_helpers import OfflineKnowledge, get_llm, USE_LLM
 from ..kb_campaign_builder import match_triggers_to_kb_signals
+from backend.labs.control_gap import ControlGapLab
 
 
 class FailureAnalyzer:
@@ -16,6 +17,7 @@ class FailureAnalyzer:
     def __init__(self, model_name: str = None):
         self.kb = OfflineKnowledge()
         self.llm = get_llm()
+        self.control_gap_lab = ControlGapLab()
 
     def analyze(
         self,
@@ -66,6 +68,20 @@ class FailureAnalyzer:
             control_triggers, kb_signals, payload, plan, family,
         )
 
+        gap_verdict = None
+        if payload.action_type == "initiate_payment":
+            gap_verdict = self.control_gap_lab.analyze(
+                payload=payload.action_payload,
+                sandbox_response=sandbox_response,
+                family=family,
+            )
+            if gap_verdict.control_gap_detected:
+                learnings.append(f"CONTROL GAP: missing {', '.join(gap_verdict.missing_control_ids)}")
+                mutations.append(
+                    f"Re-test with focus on {gap_verdict.missing_control_ids[0]}"
+                    if gap_verdict.missing_control_ids else "Review control mapping"
+                )
+
         return AnalysisResult(
             outcome=outcome,
             blocking_control=blocking_control,
@@ -75,6 +91,9 @@ class FailureAnalyzer:
             mutation_suggestions=mutations,
             confidence=0.9,
             journey_trace=journey,
+            control_gap_detected=gap_verdict.control_gap_detected if gap_verdict else None,
+            missing_control_ids=gap_verdict.missing_control_ids if gap_verdict else [],
+            investigator_summary=gap_verdict.investigator_summary if gap_verdict else None,
         )
 
     def _find_blocking_step(

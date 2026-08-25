@@ -133,6 +133,9 @@ class AnalysisResult(BaseModel):
     mutation_suggestions: List[str] = Field(description="How to mutate this attack")
     confidence: float = Field(ge=0, le=1, description="Confidence in analysis")
     journey_trace: List[Dict[str, Any]] = Field(default_factory=list, description="Full journey trace from Sandbox")
+    control_gap_detected: Optional[bool] = Field(default=None, description="KB expected control did not trigger")
+    missing_control_ids: List[str] = Field(default_factory=list, description="Expected CTL-* IDs not triggered")
+    investigator_summary: Optional[str] = Field(default=None, description="Fraud investigator verdict")
 
 
 # ============================================================
