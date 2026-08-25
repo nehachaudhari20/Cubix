@@ -85,7 +85,11 @@ class EvidenceBuffer:
             row["campaign_id"] = r.campaign_id
             row["evidence_id"] = r.evidence_id
             row["sandbox_decision"] = r.sandbox_decision
-            row["source"] = "adversarial_buffer"
+            row["evasion_outcome"] = r.evasion_outcome
+            row["ml_score"] = r.ml_score
+            row["is_hard_negative"] = r.is_hard_negative
+            row["timestamp"] = r.timestamp
+            row["source"] = "hard_negative" if r.is_hard_negative else "adversarial_buffer"
             rows.append(row)
         return rows
 

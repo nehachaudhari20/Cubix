@@ -22,7 +22,8 @@ from sklearn.model_selection import StratifiedKFold
 
 from .evidence_buffer import EvidenceBuffer, DEFAULT_BUFFER_PATH
 from .metrics import best_f1_threshold, evaluate_detection
-from .trainer import HardeningTrainer, FEATURE_DEFAULTS, DEFAULT_MODEL_DIR, BASELINE_DATA
+from .training_mix import build_hardening_dataset
+from .trainer import HardeningTrainer, DEFAULT_MODEL_DIR, BASELINE_DATA
 
 try:
     import lightgbm as lgb
@@ -58,52 +59,24 @@ class StackedEnsembleTrainer:
         n_baseline_legit: int = 4000,
         n_baseline_fraud: int = 4000,
         include_hard_negatives: bool = True,
-    ) -> Tuple[pd.DataFrame, Dict[str, Any]]:
-        """Merge baseline sample, adversarial buffer, and hard-negative rows."""
+        val_frac: float = 0.15,
+    ) -> Tuple[pd.DataFrame, pd.DataFrame, Dict[str, Any]]:
+        """Build temporally split train/val frames with prioritized buffer mix."""
         spec_v1 = self.base_trainer.load_v1_spec()
         baseline_df = self.base_trainer.load_baseline_sample(n_baseline_legit, n_baseline_fraud)
-        buffer_df = self.base_trainer.buffer_to_dataframe()
+        baseline_df = self.base_trainer.align_to_spec(baseline_df, spec_v1)
 
-        parts = [baseline_df]
-        if not buffer_df.empty:
-            fraud_buffer = buffer_df[buffer_df.get("is_fraud", 1) == 1]
-            parts.append(fraud_buffer)
-
-        hn_rows = 0
-        if include_hard_negatives:
-            hn_df = self._hard_negatives_dataframe()
-            if not hn_df.empty:
-                hn_rows = len(hn_df)
-                parts.append(hn_df)
-
-        combined = pd.concat(parts, ignore_index=True)
-        combined = self.base_trainer.align_to_spec(combined, spec_v1)
-        combined = combined.sample(frac=1, random_state=self.random_state).reset_index(drop=True)
-
-        stats = {
-            "baseline_rows": len(baseline_df),
-            "buffer_fraud_rows": len(buffer_df) if not buffer_df.empty else 0,
-            "hard_negative_rows": hn_rows,
-            "total_rows": len(combined),
-            "fraud_rows": int((combined["is_fraud"] == 1).sum()),
-            "legit_rows": int((combined["is_fraud"] == 0).sum()),
-            "buffer_stats": self.buffer.stats(),
-        }
-        return combined, stats
-
-    def _hard_negatives_dataframe(self) -> pd.DataFrame:
-        rows = []
-        for record in self.buffer.read_all():
-            if not record.is_hard_negative or record.label != 0:
-                continue
-            if record.action_type != "initiate_payment":
-                continue
-            row = dict(record.features)
-            row["is_fraud"] = 0
-            row["meta_hard_negative"] = True
-            row["source"] = "hard_negative"
-            rows.append(row)
-        return pd.DataFrame(rows) if rows else pd.DataFrame()
+        records = self.buffer.read_all()
+        train_df, val_df, manifest = build_hardening_dataset(
+            baseline_df,
+            records,
+            include_hard_negatives=include_hard_negatives,
+            val_frac=val_frac,
+        )
+        train_df = self.base_trainer.align_to_spec(train_df, spec_v1)
+        val_df = self.base_trainer.align_to_spec(val_df, spec_v1)
+        manifest["buffer_stats"] = self.buffer.stats()
+        return train_df, val_df, manifest
 
     def _make_xgb(self, pos_weight: float) -> xgb.XGBClassifier:
         return xgb.XGBClassifier(
@@ -208,13 +181,12 @@ class StackedEnsembleTrainer:
             )
 
         spec_v1 = self.base_trainer.load_v1_spec()
-        combined, mix_stats = self.build_training_frame(
-            n_baseline_legit, n_baseline_fraud, include_hard_negatives
+        train_df, val_df, mix_stats = self.build_training_frame(
+            n_baseline_legit,
+            n_baseline_fraud,
+            include_hard_negatives,
+            val_frac=val_frac,
         )
-
-        n_val = max(1, int(len(combined) * val_frac))
-        val_df = combined.iloc[:n_val]
-        train_df = combined.iloc[n_val:]
 
         X_train, mappings = self.base_trainer.encode_features(train_df, spec_v1, fit=True)
         X_val, _ = self.base_trainer.encode_features(val_df, spec_v1, fit=False, mappings=mappings)
@@ -301,6 +273,8 @@ class StackedEnsembleTrainer:
                 "score_p95": anomaly_report["score_p95"],
             },
             "training_sources": mix_stats,
+            "training_manifest": mix_stats,
+            "split_method": mix_stats.get("split_method", "temporal_group"),
             "feature_order": spec_v1["feature_order"],
             "categorical_features": spec_v1.get("categorical_features", []),
             "categorical_mappings": mappings,
@@ -318,6 +292,7 @@ class StackedEnsembleTrainer:
         report = {
             "version": "v3",
             "mix_stats": mix_stats,
+            "training_manifest": mix_stats,
             "detection": detection.model_dump(),
             "decision_threshold": best_thr,
             "spec_path": str(spec_path),

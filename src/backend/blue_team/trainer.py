@@ -15,6 +15,8 @@ import numpy as np
 import pandas as pd
 
 from .evidence_buffer import EvidenceBuffer, DEFAULT_BUFFER_PATH
+from .metrics import best_f1_threshold, evaluate_detection
+from .training_mix import build_hardening_dataset
 
 DEFAULT_MODEL_DIR = os.environ.get("FRAUDSHIELD_MODEL_DIR", os.path.join("data", "models"))
 BASELINE_DATA = os.environ.get("FRAUDSHIELD_BASELINE_DATA", "master_dataset.json")
@@ -141,17 +143,16 @@ class HardeningTrainer:
 
         spec_v1 = self.load_v1_spec()
         baseline_df = self.load_baseline_sample(n_baseline_legit, n_baseline_fraud)
-        buffer_df = self.buffer_to_dataframe()
+        baseline_df = self.align_to_spec(baseline_df, spec_v1)
 
-        baseline_aligned = self.align_to_spec(baseline_df, spec_v1)
-        buffer_aligned = self.align_to_spec(buffer_df, spec_v1)
-
-        combined = pd.concat([baseline_aligned, buffer_aligned], ignore_index=True)
-        combined = combined.sample(frac=1, random_state=42).reset_index(drop=True)
-
-        n_val = max(1, int(len(combined) * val_frac))
-        val_df = combined.iloc[:n_val]
-        train_df = combined.iloc[n_val:]
+        train_df, val_df, manifest = build_hardening_dataset(
+            baseline_df,
+            self.buffer.read_all(),
+            include_hard_negatives=True,
+            val_frac=val_frac,
+        )
+        train_df = self.align_to_spec(train_df, spec_v1)
+        val_df = self.align_to_spec(val_df, spec_v1)
 
         X_train, mappings = self.encode_features(train_df, spec_v1, fit=True)
         X_val, _ = self.encode_features(val_df, spec_v1, fit=False, mappings=mappings)
@@ -159,7 +160,6 @@ class HardeningTrainer:
         y_val = val_df["is_fraud"].astype(int)
 
         import lightgbm as lgb
-        from sklearn.metrics import average_precision_score, roc_auc_score
 
         pos_weight = float((y_train == 0).sum() / max((y_train == 1).sum(), 1))
         model = lgb.LGBMClassifier(
@@ -181,14 +181,10 @@ class HardeningTrainer:
         )
 
         val_proba = model.predict_proba(X_val)[:, 1]
-        pr_auc = float(average_precision_score(y_val, val_proba))
-        roc_auc = float(roc_auc_score(y_val, val_proba))
-
-        # Threshold tuned on validation F1
-        from sklearn.metrics import precision_recall_curve
-        prec, rec, thr = precision_recall_curve(y_val, val_proba)
-        f1 = 2 * prec * rec / np.clip(prec + rec, 1e-12, None)
-        best_thr = float(thr[max(0, int(np.nanargmax(f1)) - 1)])
+        detection = evaluate_detection("v2_lgb", y_val.values, val_proba)
+        best_thr = best_f1_threshold(y_val.values, val_proba)
+        pr_auc = detection.pr_auc
+        roc_auc = detection.roc_auc
 
         self.model_dir.mkdir(parents=True, exist_ok=True)
         model_path = self.model_dir / "fraudshield_v2.txt"
@@ -201,17 +197,20 @@ class HardeningTrainer:
             "parent_version": spec_v1.get("version", "v1"),
             "trained_at": datetime.now(timezone.utc).isoformat(),
             "training_sources": {
-                "baseline_rows": len(baseline_aligned),
-                "buffer_rows": len(buffer_aligned),
+                "baseline_rows": manifest.get("baseline_rows", len(baseline_df)),
+                "buffer_rows": manifest.get("buffer_selected_rows", 0),
                 "buffer_families": buffer_stats["families"],
+                "hard_negative_rows": manifest.get("hard_negative_rows", 0),
             },
+            "training_manifest": manifest,
+            "split_method": manifest.get("split_method", "temporal_group"),
             "feature_order": spec_v1["feature_order"],
             "categorical_features": spec_v1.get("categorical_features", []),
             "categorical_mappings": mappings,
             "unseen_category_code": spec_v1.get("unseen_category_code", -1),
             "decision_threshold": best_thr,
             "threshold_tuned_on": "hardening validation split",
-            "metrics": {"pr_auc": pr_auc, "roc_auc": roc_auc},
+            "metrics": detection.model_dump(),
         }
 
         spec_v2_path = self.model_dir / "features_v2.json"
@@ -221,11 +220,13 @@ class HardeningTrainer:
         report_path = self.model_dir / "hardening_report.json"
         report = {
             "version": "v2",
-            "baseline_sample": len(baseline_aligned),
-            "buffer_rows": len(buffer_aligned),
+            "baseline_sample": manifest.get("baseline_rows", len(baseline_df)),
+            "buffer_rows": manifest.get("buffer_selected_rows", 0),
             "buffer_stats": buffer_stats,
+            "training_manifest": manifest,
             "val_pr_auc": pr_auc,
             "val_roc_auc": roc_auc,
+            "detection": detection.model_dump(),
             "decision_threshold": best_thr,
             "model_path": str(model_path),
             "spec_path": str(spec_v2_path),
