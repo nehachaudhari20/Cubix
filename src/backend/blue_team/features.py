@@ -95,6 +95,15 @@ class FeatureBuilder:
 
         velocity_score = min(1.0, tx_count_24h / 10.0)
 
+        if state:
+            from .graph.graph_signals import GraphSignalBuilder
+
+            graph_signals = GraphSignalBuilder(state, reference_time=now).build(
+                transaction, include_graph_extras=True
+            )
+        else:
+            graph_signals = {}
+
         row = {
             "amount": amount,
             "payment_rail": transaction.get("payment_rail", "upi"),
@@ -124,14 +133,18 @@ class FeatureBuilder:
             "amount_to_avg_7d_ratio": round(amount_to_avg, 4),
             "amount_zscore_account": round(amount_zscore, 4),
             "seconds_since_prev_tx": prev_tx_seconds,
-            "distinct_beneficiaries_last_24h": 1 if beneficiary_id else 0,
-            "distinct_devices_last_7d": 1,
+            "distinct_beneficiaries_last_24h": 0,
+            "distinct_devices_last_7d": 0,
             "account_tx_count_to_date": len(customer.transactions) if customer else 0,
             "campaign_step": int(transaction.get("campaign_step", 1)),
             "hour_of_day": now.hour,
             "day_of_week": now.weekday(),
             "is_night": int(now.hour < 6 or now.hour >= 22),
         }
+        row.update(graph_signals)
+        if not graph_signals:
+            row["distinct_beneficiaries_last_24h"] = 1 if beneficiary_id else 0
+            row["distinct_devices_last_7d"] = 1 if device_id else 0
         return row
 
     def to_model_vector(
