@@ -46,27 +46,19 @@ payment-defense-twin/
 │   │   └── baseline_transactions.csv
 │   ├── known_fraud/
 │   │   └── known_fraud.csv
-│   ├── synthetic_generated/
 │   ├── knowledge/
-│   │   ├── attack_families.json
-│   │   ├── attack_signals.json
-│   │   ├── lifecycle_stages.json
-│   │   └── control_gaps.json
+│   │   └── canonical/
 │   └── models/
-│       └── fraudshield_v1.pkl
 │
 ├── src/
 │   ├── backend/
 │   │   ├── api/
-│   │   └── knowledge/
+│   │   ├── knowledge/
+│   │   ├── sandbox/
+│   │   ├── red_team/
+│   │   └── blue_team/
 │   ├── frontend/
-│   ├── ml/
 │   └── scripts/
-│
-├── tests/
-│   ├── unit/
-│   ├── integration/
-│   └── conftest.py
 │
 └── .github/
     └── workflows/
