@@ -36,6 +36,8 @@ class EvidenceRecord(BaseModel):
     step: Optional[int] = None
     source: str = "red_team"
     timestamp: str
+    is_hard_negative: bool = False
+    legitimacy_reason: Optional[str] = None
 
 
 class HardeningReport(BaseModel):
