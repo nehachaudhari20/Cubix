@@ -8,7 +8,6 @@ from typing import Any, Dict, List, Optional
 from ..schemas import AnalysisResult, AttackPlan, ActionPayload
 from ..agent_helpers import OfflineKnowledge, get_llm, USE_LLM
 from ..kb_campaign_builder import match_triggers_to_kb_signals
-from backend.labs.control_gap import ControlGapLab
 
 
 class FailureAnalyzer:
@@ -17,7 +16,14 @@ class FailureAnalyzer:
     def __init__(self, model_name: str = None):
         self.kb = OfflineKnowledge()
         self.llm = get_llm()
-        self.control_gap_lab = ControlGapLab()
+        self._control_gap_lab = None
+
+    @property
+    def control_gap_lab(self):
+        if self._control_gap_lab is None:
+            from backend.labs.control_gap import ControlGapLab
+            self._control_gap_lab = ControlGapLab()
+        return self._control_gap_lab
 
     def analyze(
         self,

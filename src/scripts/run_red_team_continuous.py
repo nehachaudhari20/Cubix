@@ -21,6 +21,8 @@ def main() -> int:
     parser.add_argument("--strategy", choices=["kb", "crescendo", "tree", "sequential"], default=None)
     parser.add_argument("--linear-retries", type=int, default=None)
     parser.add_argument("--no-engine", action="store_true")
+    parser.add_argument("--hard-negatives", action="store_true")
+    parser.add_argument("--hard-negative-count", type=int, default=None)
     args = parser.parse_args()
 
     if args.strategy:
@@ -29,6 +31,10 @@ def main() -> int:
         os.environ["RED_TEAM_LINEAR_RETRIES"] = str(args.linear_retries)
     if args.no_engine:
         os.environ["RED_TEAM_USE_ATTACK_ENGINE"] = "false"
+    if args.hard_negatives:
+        os.environ["RED_TEAM_HARD_NEGATIVES"] = "true"
+    if args.hard_negative_count is not None:
+        os.environ["RED_TEAM_HARD_NEGATIVE_COUNT"] = str(args.hard_negative_count)
 
     from backend.red_team.runner import run_continuous
 

@@ -35,13 +35,33 @@ class ControlGapLab:
 
     def summarize(self) -> Dict[str, Any]:
         gaps = [item for item in self.findings if item.control_gap_detected]
+        missing_all = [
+            cid for item in self.findings for cid in item.missing_control_ids
+        ]
         return {
             "total_findings": len(self.findings),
             "control_gaps": len(gaps),
-            "families_with_gaps": len({item.outcome for item in gaps}),
+            "families_with_gaps": len(gaps),
+            "unique_missing_controls": sorted(set(missing_all)),
             "recent_missing_controls": [
                 cid
                 for item in self.findings[-5:]
                 for cid in item.missing_control_ids
             ],
         }
+
+    def export_report(self) -> Dict[str, Any]:
+        """Full lab report for loop runner and dashboards."""
+        summary = self.summarize()
+        summary["findings"] = [
+            {
+                "outcome": item.outcome,
+                "control_gap_detected": item.control_gap_detected,
+                "missing_control_ids": item.missing_control_ids,
+                "triggered_control_ids": item.triggered_control_ids,
+                "expected_control_ids": item.expected_control_ids,
+                "investigator_summary": item.investigator_summary[:200],
+            }
+            for item in self.findings[-20:]
+        ]
+        return summary

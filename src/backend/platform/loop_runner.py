@@ -186,15 +186,10 @@ class LoopRunner:
     ) -> tuple[Dict[str, Any], List[Dict[str, Any]]]:
         os.environ.setdefault("RED_TEAM_LINEAR_RETRIES", "2")
         os.environ.setdefault("RED_TEAM_USE_ATTACK_ENGINE", "true")
+        os.environ.setdefault("RED_TEAM_HARD_NEGATIVES", "true")
+        os.environ.setdefault("RED_TEAM_HARD_NEGATIVE_COUNT", "3")
 
-        from backend.red_team.runner import select_families, _linear_retry_limit
-        from backend.red_team.agent_helpers import OfflineKnowledge
-        from backend.red_team.agents.threat_hunter import ThreatHunter
-        from backend.red_team.agents.attack_planner import AttackPlanner
-        from backend.red_team.agents.attack_generator import AttackGenerator
-        from backend.red_team.agents.failure_analyzer import FailureAnalyzer
-        from backend.red_team.sandbox_client import SandboxClient
-        from backend.red_team.deepteam.linear_mutator import LinearMutator
+        from backend.red_team.runner import run_red_team_for_loop
         from backend.blue_team.collector import EvidenceCollector
         from backend.blue_team.evidence_buffer import EvidenceBuffer
 
@@ -204,96 +199,29 @@ class LoopRunner:
 
         buffer = EvidenceBuffer(buffer_path)
         collector = EvidenceCollector(buffer=buffer)
-        client = SandboxClient()
-        kb = OfflineKnowledge()
 
-        hunter = ThreatHunter()
-        planner = AttackPlanner()
-        generator = AttackGenerator()
-        analyzer = FailureAnalyzer()
-        mutator = LinearMutator()
+        result = run_red_team_for_loop(
+            families=families,
+            collector=collector,
+            run_id=run_id,
+            on_event=on_event,
+            print_sections=True,
+        )
+        campaign_events = result["campaign_events"]
 
-        selected = select_families(kb, max_families=families)
-        campaign_events: List[Dict[str, Any]] = []
+        stats = buffer.stats()
+        stats["control_gap_report"] = result.get("control_gap_report", {})
+        stats["memory_entries"] = result.get("memory_entries", 0)
+        stats["hard_negatives"] = result.get("hard_negatives", {})
+        stats["campaign_summaries"] = result.get("summaries", [])
 
         print(
-            f"  CVSS-ordered {len(selected)} families | "
-            f"strategy={os.environ.get('RED_TEAM_JAILBREAK_STRATEGY', 'kb')} | "
-            f"linear_retries={_linear_retry_limit()}"
+            f"  Memory entries: {stats['memory_entries']} | "
+            f"Control gaps: {stats['control_gap_report'].get('control_gaps', 0)} | "
+            f"Hard negatives: {stats['hard_negatives'].get('hard_negatives_generated', 0)}"
         )
 
-        for i, family in enumerate(selected, 1):
-            family_id = family["attack_id"]
-            family_name = family.get("name", "")[:80]
-            print(f"\n  Campaign {i}/{len(selected)}: {family_id} - {family_name[:50]}")
-
-            hypothesis = hunter.hypothesis_from_family(family)
-            hypothesis.jailbreak_strategy = os.environ.get("RED_TEAM_JAILBREAK_STRATEGY", "kb")
-            plan = planner.plan(hypothesis)
-            sequence = generator.generate_sequence(plan)
-
-            linear_limit = _linear_retry_limit()
-            for payload in sequence.payloads:
-                payloads_to_run = [payload]
-                for current in payloads_to_run:
-                    response = client.execute_payload(current.model_dump())
-                    analysis = analyzer.analyze(response, current, plan)
-                    record = collector.collect(
-                        response, current, plan, hypothesis, analysis, client.get_sandbox()
-                    )
-                    if record:
-                        event = {
-                            "loop_run_id": run_id,
-                            "family_id": family_id,
-                            "family_name": family_name,
-                            "step": record.step,
-                            "sandbox_decision": record.sandbox_decision,
-                            "evasion_outcome": record.evasion_outcome,
-                            "ml_score": record.ml_score,
-                            "amount": record.amount,
-                        }
-                        campaign_events.append(event)
-                        if on_event:
-                            on_event(event)
-                        print(
-                            f"    step {record.step}: {record.sandbox_decision} "
-                            f"({record.evasion_outcome}) ml={record.ml_score}"
-                        )
-
-                    if (
-                        current.action_type == "initiate_payment"
-                        and analysis.outcome == "failure"
-                        and linear_limit > 0
-                    ):
-                        for attempt in range(linear_limit):
-                            mutated = mutator.mutate(current, analysis, attempt=attempt)
-                            response = client.execute_payload(mutated.model_dump())
-                            analysis = analyzer.analyze(response, mutated, plan)
-                            record = collector.collect(
-                                response, mutated, plan, hypothesis, analysis, client.get_sandbox()
-                            )
-                            if record:
-                                event = {
-                                    "loop_run_id": run_id,
-                                    "family_id": family_id,
-                                    "family_name": family_name,
-                                    "step": record.step,
-                                    "sandbox_decision": record.sandbox_decision,
-                                    "evasion_outcome": record.evasion_outcome,
-                                    "ml_score": record.ml_score,
-                                    "amount": record.amount,
-                                }
-                                campaign_events.append(event)
-                                if on_event:
-                                    on_event(event)
-                                print(
-                                    f"    step {record.step} (linear): {record.sandbox_decision} "
-                                    f"({record.evasion_outcome}) ml={record.ml_score}"
-                                )
-                            if analysis.outcome == "success":
-                                break
-
-        return buffer.stats(), campaign_events
+        return stats, campaign_events
 
     def _step_harden(self, swap: bool) -> tuple[Dict[str, Any], Dict[str, Any]]:
         from backend.blue_team.trainer import HardeningTrainer
