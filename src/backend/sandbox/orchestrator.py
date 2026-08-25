@@ -18,6 +18,8 @@ from .engines.payment_initiation import PaymentInitiationEngine
 from .engines.risk import RiskEngine
 from .engines.authorization import AuthorizationEngine
 from .engines.settlement import SettlementEngine
+from .engines.genai_context import GenAIContextEngine
+from .lifecycle_router import PAYMENT_PATHS, resolve_payment_path
 
 
 class SandboxOrchestrator:
@@ -34,6 +36,7 @@ class SandboxOrchestrator:
         risk_engine: RiskEngine,
         authz_engine: AuthorizationEngine,
         settlement_engine: SettlementEngine,
+        genai_engine: GenAIContextEngine | None = None,
         compiled_controls: CompiledControlSet | None = None,
     ):
         self.state = state
@@ -46,6 +49,7 @@ class SandboxOrchestrator:
         self.risk_engine = risk_engine
         self.authz_engine = authz_engine
         self.settlement_engine = settlement_engine
+        self.genai_engine = genai_engine or GenAIContextEngine()
         self.execution_log: List[Dict[str, Any]] = []
 
     def execute(self, action_type: str, payload: Dict[str, Any]) -> SandboxObservation:
@@ -62,6 +66,7 @@ class SandboxOrchestrator:
             ActionType.ONBOARD_MERCHANT.value: self._onboard_merchant,
             ActionType.LINK_BENEFICIARY.value: self._link_beneficiary,
             ActionType.INITIATE_PAYMENT.value: self._initiate_payment,
+            ActionType.SIMULATE_GENAI_CONTEXT.value: self._simulate_genai_context,
         }
 
         handler = handlers.get(action_type)
@@ -127,6 +132,11 @@ class SandboxOrchestrator:
             trust_score=float(payload.get("trust_score", 0.5)),
             account_age_days=int(payload.get("account_age_days", 0)),
         )
+        age_days = int(payload.get("account_age_days", 0))
+        if age_days > 0:
+            from datetime import timedelta
+            customer.created_at = datetime.now() - timedelta(days=age_days)
+            customer.account_age_days = age_days
         self.state.customers[customer_id] = customer
 
         return SandboxObservation(
@@ -269,51 +279,97 @@ class SandboxOrchestrator:
             timestamp=timestamp,
         )
 
+    def _simulate_genai_context(
+        self, action_id: str, payload: Dict[str, Any], timestamp: str
+    ) -> SandboxObservation:
+        """Simulate GenAI / social-engineering / agentic context (pre-payment or standalone)."""
+        result = self.genai_engine.evaluate(payload)
+        features = result.get("genai_features") or {}
+        triggers = list(result.get("triggered_rules") or [])
+        risk = float(result.get("genai_risk_contribution") or 0)
+
+        if self.compiled_controls is not None:
+            triggers = self.compiled_controls.resolve_triggers(triggers)
+
+        decision = "PASS"
+        if risk >= 0.75:
+            decision = "CHALLENGE"
+        if risk >= 0.90:
+            decision = "BLOCK"
+
+        return SandboxObservation(
+            action_id=action_id,
+            action_type=ActionType.SIMULATE_GENAI_CONTEXT.value,
+            decision=decision,
+            reason="genai_context_evaluated",
+            message=f"GenAI context scored {risk:.3f} ({len(triggers)} signals)",
+            risk_score=round(risk, 4),
+            control_triggers=triggers,
+            journey=[JourneyStep(step="GenAI Context", result=result)],
+            state_snapshot={
+                "genai_features": features,
+                "channels": result.get("channels") or [],
+                "capability_ids": result.get("capability_ids") or [],
+                "attack_family": payload.get("attack_family"),
+            },
+            timestamp=timestamp,
+        )
+
     def _initiate_payment(
         self, action_id: str, payload: Dict[str, Any], timestamp: str
     ) -> SandboxObservation:
-        """Run full payment lifecycle: KYC → Device → Auth → Payment Initiation → Risk → Authz → Settlement."""
+        """Route payment through KB-selected lifecycle engines (not always full chain)."""
         transaction = dict(payload)
         transaction_id = transaction.get("transaction_id", action_id)
         customer_id = transaction.get("customer_id")
         device_id = transaction.get("device_id", f"dev_{uuid.uuid4().hex[:8]}")
 
+        path = resolve_payment_path(transaction)
+        stages = set(PAYMENT_PATHS.get(path, PAYMENT_PATHS["full"]))
+
         journey: List[JourneyStep] = []
         control_triggers: List[str] = []
 
-        kyc_result = self.kyc_engine.verify(customer_id)
-        journey.append(JourneyStep(step="KYC", result=kyc_result))
-        if kyc_result["status"] == "FAIL":
-            return self._payment_observation(
-                action_id, transaction_id, "BLOCK", "kyc_failed",
-                journey, control_triggers, timestamp,
-            )
+        if "kyc" in stages:
+            kyc_result = self.kyc_engine.verify(customer_id)
+            journey.append(JourneyStep(step="KYC", result=kyc_result))
+            if kyc_result["status"] == "FAIL":
+                return self._payment_observation(
+                    action_id, transaction_id, "BLOCK", "kyc_failed",
+                    journey, control_triggers, timestamp, payment_path=path,
+                )
 
-        device_result = self.device_engine.check_device(device_id, customer_id)
-        journey.append(JourneyStep(step="Device", result=device_result))
-        transaction["is_new_device"] = device_result.get("is_new", True)
-        transaction["is_unknown_device"] = device_result.get("is_unknown_device", False)
-        transaction["device_age_days"] = device_result.get("device_age_days", 0)
+        if "device" in stages:
+            device_result = self.device_engine.check_device(device_id, customer_id)
+            journey.append(JourneyStep(step="Device", result=device_result))
+            transaction["is_new_device"] = device_result.get("is_new", True)
+            transaction["is_unknown_device"] = device_result.get("is_unknown_device", False)
+            transaction["device_age_days"] = device_result.get("device_age_days", 0)
 
-        auth_method = transaction.get("authentication_method", "otp")
-        auth_result = self.auth_engine.authenticate(customer_id, auth_method)
-        journey.append(JourneyStep(step="Authentication", result=auth_result))
-        if auth_result["status"] == "FAIL":
-            return self._payment_observation(
-                action_id, transaction_id, "BLOCK", "auth_failed",
-                journey, control_triggers, timestamp,
-            )
+        if "auth" in stages:
+            auth_method = transaction.get("authentication_method", "otp")
+            auth_result = self.auth_engine.authenticate(customer_id, auth_method)
+            journey.append(JourneyStep(step="Authentication", result=auth_result))
+            if auth_result["status"] == "FAIL":
+                return self._payment_observation(
+                    action_id, transaction_id, "BLOCK", "auth_failed",
+                    journey, control_triggers, timestamp, payment_path=path,
+                )
 
-        pi_result = self.payment_initiation_engine.validate(transaction)
-        journey.append(JourneyStep(step="Payment Initiation", result=pi_result))
-        if pi_result.get("flags"):
-            control_triggers.extend(pi_result["flags"])
-            transaction["payment_initiation_flags"] = pi_result["flags"]
-        if pi_result["status"] == "FAIL":
-            return self._payment_observation(
-                action_id, transaction_id, "BLOCK", "payment_initiation_failed",
-                journey, control_triggers, timestamp,
-            )
+        if "payment_init" in stages:
+            pi_result = self.payment_initiation_engine.validate(transaction)
+            journey.append(JourneyStep(step="Payment Initiation", result=pi_result))
+            if pi_result.get("flags"):
+                control_triggers.extend(pi_result["flags"])
+                transaction["payment_initiation_flags"] = pi_result["flags"]
+            if pi_result["status"] == "FAIL":
+                return self._payment_observation(
+                    action_id, transaction_id, "BLOCK", "payment_initiation_failed",
+                    journey, control_triggers, timestamp, payment_path=path,
+                )
+
+        if transaction.get("genai_features"):
+            transaction["genai_context"] = transaction["genai_features"]
 
         risk_result = self.risk_engine.score(transaction)
         journey.append(JourneyStep(step="Risk", result=risk_result))
@@ -327,22 +383,25 @@ class SandboxOrchestrator:
 
         settlement_result = None
         settled = False
-        if decision == "ALLOW":
+        if decision == "ALLOW" and "settlement" in stages:
             settlement_result = self.settlement_engine.settle(transaction, authz_result)
             journey.append(JourneyStep(step="Settlement", result=settlement_result))
             settled = settlement_result is not None and settlement_result.get("status") == "SETTLED"
 
         transaction["transaction_id"] = transaction_id
+        transaction["payment_path"] = path
         self.state.add_transaction(transaction)
 
-        state_snapshot = {}
+        state_snapshot = {"payment_path": path}
         customer = self.state.get_customer(customer_id)
         if customer:
-            state_snapshot = {
+            state_snapshot.update({
                 "customer_id": customer_id,
                 "trust_score": customer.trust_score,
                 "tx_count_24h": customer.get_tx_count_24h(),
-            }
+            })
+        if transaction.get("genai_features"):
+            state_snapshot["genai_features"] = transaction["genai_features"]
 
         if self.compiled_controls is not None:
             control_triggers = self.compiled_controls.resolve_triggers(control_triggers)
@@ -352,7 +411,7 @@ class SandboxOrchestrator:
             action_type=ActionType.INITIATE_PAYMENT.value,
             decision=decision,
             reason=reason,
-            message=f"Transaction {decision.lower()}ed: {reason}",
+            message=f"Transaction {decision.lower()}ed via {path}: {reason}",
             risk_score=risk_result.get("risk_score"),
             ml_score=risk_result.get("ml_score"),
             rule_risk=risk_result.get("rule_risk"),
@@ -375,6 +434,7 @@ class SandboxOrchestrator:
         journey: List[JourneyStep],
         control_triggers: List[str],
         timestamp: str,
+        payment_path: str = "full",
     ) -> SandboxObservation:
         if self.compiled_controls is not None:
             control_triggers = self.compiled_controls.resolve_triggers(control_triggers)
@@ -383,9 +443,10 @@ class SandboxOrchestrator:
             action_type=ActionType.INITIATE_PAYMENT.value,
             decision=decision,
             reason=reason,
-            message=f"Transaction {decision.lower()}ed: {reason}",
+            message=f"Transaction {decision.lower()}ed via {payment_path}: {reason}",
             control_triggers=control_triggers,
             journey=journey,
+            state_snapshot={"payment_path": payment_path},
             timestamp=timestamp,
             transaction_id=transaction_id,
         )

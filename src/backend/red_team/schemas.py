@@ -61,6 +61,7 @@ class AttackPlan(BaseModel):
     reasoning: str = Field(description="Chain-of-thought reasoning")
     jailbreak_strategy: Optional[str] = Field(default="kb", description="Planning strategy used")
     branch_label: Optional[str] = Field(default=None, description="Tree branch label when applicable")
+    entry_point: Optional[str] = Field(default=None, description="KB campaign entry point")
 
 
 # ============================================================

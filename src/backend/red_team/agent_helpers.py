@@ -105,11 +105,15 @@ class OfflineKnowledge:
 
     def kb_stats(self) -> Dict[str, Any]:
         simulatable = self.get_simulatable_families()
+        direct = [f for f in simulatable if f.get("sandbox_executable") is True]
+        proxy = [f for f in simulatable if f.get("sandbox_executable") is False]
         return {
             "total_families": len(self.families),
             "total_signals": len(self.signals),
             "total_stages": len(self.stages),
             "simulatable_families": len(simulatable),
+            "direct_executable": len(direct),
+            "genai_proxy_executable": len(proxy),
             "simulatable_ids": [f.get("attack_id") for f in simulatable],
         }
 

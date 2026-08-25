@@ -111,15 +111,17 @@ class AttackGenerator:
             }, meta
 
         if action_type == "onboard_merchant":
-            return {
+            payload = {
                 "merchant_id": ids["merchant_id"],
                 "name": tpl.get("name", f"Merchant {ids['merchant_id']}"),
                 "mcc": str(tpl.get("mcc", "5411")),
                 "declared_mcc": str(tpl.get("declared_mcc", tpl.get("mcc", "5411"))),
                 "kyb_verified": tpl.get("kyb_verified", True),
                 "risk_score": float(tpl.get("risk_score", 0.3)),
-                "owner_customer_id": ids["customer_id"],
-            }, meta
+            }
+            if not tpl.get("skip_payer_setup"):
+                payload["owner_customer_id"] = ids["customer_id"]
+            return payload, meta
 
         if action_type == "link_beneficiary":
             return {
@@ -128,6 +130,17 @@ class AttackGenerator:
                 "name": tpl.get("name", "External Payee"),
                 "account_ref": tpl.get("account_ref", f"EXT-{ids['beneficiary_id']}"),
                 "risk_score": float(tpl.get("risk_score", 0.25)),
+            }, meta
+
+        if action_type == "simulate_genai_context":
+            return {
+                "attack_family": plan.primary_family,
+                "customer_id": ids.get("customer_id"),
+                "capability_ids": tpl.get("capability_ids") or [],
+                "channels": tpl.get("channels") or [],
+                "genai_features": tpl.get("genai_features") or {},
+                "victim_coerced": tpl.get("victim_coerced", False),
+                "agent_mediated": tpl.get("agent_mediated", False),
             }, meta
 
         payment = self._build_payment_payload(step, ids, idx, plan, tpl)
@@ -173,6 +186,27 @@ class AttackGenerator:
 
         if any(s.action_type == "open_account" for s in plan.steps):
             payment["account_id"] = tpl.get("account_id", ids.get("account_id"))
+
+        payment["payment_path"] = tpl.get("payment_path")
+        payment["entry_point"] = tpl.get("entry_point") or getattr(plan, "entry_point", None)
+        genai_feats = dict(tpl.get("genai_features") or {})
+        for prior in plan.steps:
+            if prior.step >= step.step:
+                break
+            if prior.action_type == "simulate_genai_context":
+                pt = prior.payload_template or {}
+                genai_feats.update(pt.get("genai_features") or {})
+                if pt.get("victim_coerced"):
+                    payment["victim_coerced"] = True
+                if pt.get("capability_ids"):
+                    payment.setdefault("capability_ids", pt["capability_ids"])
+        if genai_feats:
+            payment["genai_features"] = genai_feats
+        if tpl.get("capability_ids"):
+            payment["capability_ids"] = tpl["capability_ids"]
+        if tpl.get("victim_coerced"):
+            payment["victim_coerced"] = tpl["victim_coerced"]
+        payment["attack_family"] = plan.primary_family
 
         return payment
 

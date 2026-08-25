@@ -73,19 +73,34 @@ def _family_text_blob(family: Dict[str, Any]) -> str:
 
 
 def is_simulatable(family: Dict[str, Any]) -> bool:
-    """True if family can be exercised in the current payment sandbox."""
+    """True if family can be exercised in sandbox (direct or GenAI proxy)."""
+    if family.get("sandbox_executable") is True:
+        return True
+    if family.get("sandbox_executable") is False:
+        return _supports_genai_proxy(family)
+
     sim_type = _normalize(family.get("simulation_type") or "")
     if sim_type in PURE_AGENTIC:
-        return False
+        return _supports_genai_proxy(family)
     if "algorithmic" in sim_type or "hybrid" in sim_type:
         return True
-    # Fallback: payment-related lifecycle stages
     stage = _normalize(family.get("lifecycle_stage") or "")
     payment_stages = (
         "payment", "authorization", "identity", "kyc", "mule", "merchant",
         "beneficiary", "account", "authentication", "aml", "cash-out", "gateway",
     )
     return any(k in stage for k in payment_stages)
+
+
+def _supports_genai_proxy(family: Dict[str, Any]) -> bool:
+    genai = family.get("genai") or {}
+    if family.get("genai_load_bearing") or genai.get("load_bearing"):
+        return True
+    sim_type = _normalize(family.get("simulation_type") or "")
+    if "agentic" in sim_type:
+        return True
+    template_id = family.get("simulation_template_id") or ""
+    return template_id == "TPL-AGENTIC-NONEXEC"
 
 
 def classify_family(family: Dict[str, Any]) -> str:
@@ -276,103 +291,10 @@ def build_plan_from_family(
     global_signals: List[Dict],
     hypothesis: Optional[Hypothesis] = None,
 ) -> AttackPlan:
-    """Synthesize an AttackPlan from KB family + stages + signals."""
-    if hypothesis is None:
-        hypothesis = build_hypothesis_from_family(family)
+    """Synthesize an AttackPlan from KB family via simulation templates."""
+    from .kb_template_planner import build_plan_from_template
 
-    hints = derive_payload_hints(family, global_signals)
-    pattern = classify_family(family)
-    steps: List[PlanStep] = []
-    step_num = 1
-
-    # Setup steps common to all campaigns
-    trust = float(hints.get("trust_score", 0.65))
-    steps.append(PlanStep(
-        step=step_num,
-        action_type="register_customer",
-        action=f"Register customer for {family.get('attack_id')}",
-        target_control=pick_target_control(family, stages, "register_customer"),
-        payload_template={
-            "trust_score": trust,
-            "pan": hints.get("pan", "SYN0000001"),
-            "verified": trust >= 0.5,
-        },
-        expected_outcome="PASS",
-        rationale=f"Setup payer per KB prerequisites: {(family.get('prerequisites') or [''])[0][:80]}",
-    ))
-    step_num += 1
-
-    steps.append(PlanStep(
-        step=step_num,
-        action_type="register_device",
-        action="Register device fingerprint",
-        target_control=pick_target_control(family, stages, "register_device"),
-        payload_template={},
-        expected_outcome="PASS",
-        rationale="Device registration required before payment lifecycle",
-    ))
-    step_num += 1
-
-    if hints.get("needs_account") or pattern == "account":
-        steps.append(PlanStep(
-            step=step_num,
-            action_type="open_account",
-            action="Open synthetic account",
-            target_control=pick_target_control(family, stages, "open_account"),
-            payload_template={"balance": hints.get("balance", 75000)},
-            expected_outcome="PASS",
-            rationale="KB pattern requires account provisioning",
-        ))
-        step_num += 1
-
-    if hints.get("needs_merchant") or pattern == "merchant":
-        steps.append(PlanStep(
-            step=step_num,
-            action_type="onboard_merchant",
-            action="Onboard merchant (KB MCC probe)",
-            target_control=pick_target_control(family, stages, "onboard_merchant"),
-            payload_template={
-                "mcc": hints.get("mcc", "7995"),
-                "declared_mcc": hints.get("declared_mcc", "5411"),
-                "risk_score": 0.35,
-            },
-            expected_outcome="PASS",
-            rationale="Merchant onboarding per KB merchant/MCC signals",
-        ))
-        step_num += 1
-
-    if hints.get("needs_beneficiary") or pattern == "mule":
-        steps.append(PlanStep(
-            step=step_num,
-            action_type="link_beneficiary",
-            action="Link new beneficiary (mule probe)",
-            target_control=pick_target_control(family, stages, "link_beneficiary"),
-            payload_template={"risk_score": 0.25},
-            expected_outcome="PASS",
-            rationale="Beneficiary link per KB mule/cash-out attack flow",
-        ))
-        step_num += 1
-
-    payment_steps, step_num = _payment_steps(hints, family, stages, step_num)
-    steps.extend(payment_steps)
-
-    variant = hypothesis.suggested_variant or (family.get("variants") or ["default"])[0]
-    stage_name = family.get("lifecycle_stage") or "Payment Initiation"
-
-    return AttackPlan(
-        campaign_name=family.get("name") or hypothesis.name,
-        objective=(
-            f"Simulate {family.get('attack_id')} ({pattern}) against "
-            f"stage '{stage_name}' using {len(steps)} sandbox actions"
-        ),
-        target_stages=[stage_name],
-        primary_family=family.get("attack_id"),
-        selected_variant=variant,
-        steps=steps,
-        success_criteria="Final payment returns ALLOW or exposes target control triggers",
-        estimated_complexity="high" if len(steps) > 6 else "medium" if len(steps) > 3 else "low",
-        reasoning=hypothesis.reasoning,
-    )
+    return build_plan_from_template(family, stages, global_signals, hypothesis)
 
 
 def match_triggers_to_kb_signals(

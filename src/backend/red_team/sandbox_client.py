@@ -20,6 +20,7 @@ ACTION_ALIASES = {
     "link_beneficiary": ActionType.LINK_BENEFICIARY.value,
     "initiate_payment": ActionType.INITIATE_PAYMENT.value,
     "payment": ActionType.INITIATE_PAYMENT.value,
+    "simulate_genai_context": ActionType.SIMULATE_GENAI_CONTEXT.value,
 }
 
 
@@ -87,6 +88,16 @@ class SandboxClient:
                 "customer_id": payload.get("customer_id"),
                 "balance": payload.get("balance", 50000),
             }
+        if action_type == ActionType.SIMULATE_GENAI_CONTEXT.value:
+            return {
+                "attack_family": payload.get("attack_family"),
+                "customer_id": payload.get("customer_id"),
+                "capability_ids": payload.get("capability_ids") or [],
+                "channels": payload.get("channels") or [],
+                "genai_features": payload.get("genai_features") or {},
+                "victim_coerced": payload.get("victim_coerced", False),
+                "agent_mediated": payload.get("agent_mediated", False),
+            }
         # Default: payment initiation
         return {
             "transaction_id": payload.get("transaction_id"),
@@ -99,6 +110,12 @@ class SandboxClient:
             "merchant_risk_score": payload.get("merchant_risk_score", 0.3),
             "beneficiary_id": payload.get("beneficiary_id") or payload.get("beneficiary_account_id"),
             "account_id": payload.get("account_id"),
+            "payment_path": payload.get("payment_path"),
+            "entry_point": payload.get("entry_point"),
+            "genai_features": payload.get("genai_features") or {},
+            "capability_ids": payload.get("capability_ids") or [],
+            "victim_coerced": payload.get("victim_coerced"),
+            "attack_family": payload.get("attack_family"),
         }
 
     def _observation_to_response(self, obs: SandboxObservation) -> Dict[str, Any]:

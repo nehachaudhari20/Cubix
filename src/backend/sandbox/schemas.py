@@ -22,6 +22,7 @@ class ActionType(str, Enum):
     ONBOARD_MERCHANT = "onboard_merchant"
     LINK_BENEFICIARY = "link_beneficiary"
     INITIATE_PAYMENT = "initiate_payment"
+    SIMULATE_GENAI_CONTEXT = "simulate_genai_context"
 
 
 class JourneyStep(BaseModel):

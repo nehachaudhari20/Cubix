@@ -145,6 +145,13 @@ class FeatureBuilder:
         if not graph_signals:
             row["distinct_beneficiaries_last_24h"] = 1 if beneficiary_id else 0
             row["distinct_devices_last_7d"] = 1 if device_id else 0
+
+        genai = transaction.get("genai_features") or transaction.get("genai_context") or {}
+        if genai:
+            for key, val in genai.items():
+                if key not in row:
+                    row[key] = val
+
         return row
 
     def to_model_vector(
