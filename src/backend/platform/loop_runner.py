@@ -38,6 +38,7 @@ class LoopRunResult:
     hardening: Dict[str, Any] = field(default_factory=dict)
     comparison: Dict[str, Any] = field(default_factory=dict)
     evaluation: Dict[str, Any] = field(default_factory=dict)
+    failure_analysis: Dict[str, Any] = field(default_factory=dict)
     verify: Dict[str, Any] = field(default_factory=dict)
     events: List[Dict[str, Any]] = field(default_factory=list)
     log: str = ""
@@ -94,7 +95,11 @@ class LoopRunner:
                 hardening, comparison = self._step_harden(swap=config.swap_model)
                 result.hardening = hardening
                 result.comparison = comparison
-                result.evaluation = self._step_evaluation(run_id=run_id)
+                result.evaluation = self._step_evaluation(
+                    run_id=run_id,
+                    buffer_stats=result.buffer_stats,
+                )
+                result.failure_analysis = result.evaluation.get("failure_analysis", {})
                 result.verify = self._step_verify()
 
             result.status = "completed"
@@ -274,13 +279,32 @@ class LoopRunner:
 
         return report, comparison
 
-    def _step_evaluation(self, run_id: str) -> Dict[str, Any]:
-        """Phase 11e — full evaluation + ASR before/after hardening."""
+    def _step_evaluation(
+        self,
+        run_id: str,
+        buffer_stats: Optional[Dict[str, Any]] = None,
+    ) -> Dict[str, Any]:
+        """Phase 11–14 — full evaluation, graph eval, and failure analysis."""
         from backend.blue_team.evaluation_runner import EvaluationRunner
+        from backend.labs.failure_analysis import run_failure_analysis_for_loop
 
         eval_dir = os.path.join(self._project_root(), "data", "evaluation")
         os.makedirs(eval_dir, exist_ok=True)
         report_path = os.path.join(eval_dir, f"loop_{run_id}.json")
+        failure_path = os.path.join(eval_dir, f"failure_analysis_{run_id}.json")
+
+        buffer_stats = buffer_stats or {}
+        failure_report = run_failure_analysis_for_loop(
+            buffer_path=self.settings.evidence_buffer_path,
+            control_gap_report=buffer_stats.get("control_gap_report"),
+            campaign_summaries=buffer_stats.get("campaign_summaries"),
+            model_dir=self.settings.fraudshield_model_dir,
+            before_version="v1",
+            after_version="v3",
+        )
+        with open(failure_path, "w") as f:
+            import json
+            json.dump(failure_report, f, indent=2)
 
         runner = EvaluationRunner(
             model_dir=self.settings.fraudshield_model_dir,
@@ -295,22 +319,30 @@ class LoopRunner:
             n_baseline_legit=2000,
             n_baseline_fraud=2000,
             save_path=models_report,
+            failure_analysis=failure_report,
         )
         import shutil
         shutil.copy(models_report, report_path)
         summary = report.summary
         asr = report.asr
+        graph = report.graph_model
 
-        print("\n--- Phase 11 Evaluation ---")
-        print(f"  Integrity:     {summary.get('integrity_score')}")
-        print(f"  Holdout PR-AUC:{summary.get('primary_detection_metric', 0):.4f}")
-        print(f"  ASR reduction: {asr.asr_reduction:.4f} (ML {asr.before_ml_asr:.4f} -> {asr.after_ml_asr:.4f})")
-        print(f"  Report:        {report_path}")
+        print("\n--- Phase 11-14 Evaluation ---")
+        print(f"  Integrity:       {summary.get('integrity_score')}")
+        print(f"  Holdout PR-AUC:  {summary.get('primary_detection_metric', 0):.4f}")
+        print(f"  ASR reduction:   {asr.asr_reduction:.4f} (ML {asr.before_ml_asr:.4f} -> {asr.after_ml_asr:.4f})")
+        print(f"  Graph recall +Δ: {graph.graph_recall_lift:.4f}  clusters={graph.clusters_detected}")
+        print(f"  CTL gap controls:{len(failure_report.get('gap_summary', {}).get('controls_with_gaps', []))}")
+        print(f"  Report:          {report_path}")
 
         return {
             "report_path": report_path,
+            "failure_analysis_path": failure_path,
+            "failure_analysis": failure_report,
             "summary": summary,
             "asr": asr.model_dump(),
+            "graph_fidelity": report.graph_fidelity.model_dump(),
+            "graph_model": graph.model_dump(),
             "integrity_passed": report.integrity.all_passed,
             "detection": {
                 "holdout_pr_auc": report.detection.after_holdout_pr_auc,

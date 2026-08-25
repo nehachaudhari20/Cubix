@@ -7,6 +7,8 @@ Delegates to sub-pillars:
            11d integrity
                  ↓
               11e ASR
+                 ↓
+        13 graph fidelity | 14 graph model eval
 """
 
 from __future__ import annotations
@@ -15,7 +17,7 @@ import json
 import os
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Optional
+from typing import Any, Dict, Optional
 
 from .evaluator import HardeningEvaluator
 from .evaluation.asr import run_asr_evaluation
@@ -23,6 +25,7 @@ from .evaluation.context import EvaluationContext
 from .evaluation.detection import run_detection_suite
 from .evaluation.fidelity import run_fidelity_checks
 from .evaluation.generalization import run_generalization_suite
+from .evaluation.graph_model import run_graph_fidelity, run_graph_model_eval
 from .evaluation.integrity import run_integrity_battery
 from .evaluation.manifest import load_training_manifest
 from .fraudshield import DEFAULT_MODEL_DIR
@@ -59,6 +62,7 @@ class EvaluationRunner:
         n_baseline_legit: int = 500,
         n_baseline_fraud: int = 500,
         save_path: Optional[str] = None,
+        failure_analysis: Optional[Dict[str, Any]] = None,
     ) -> EvaluationReport:
         ctx = EvaluationContext.build(
             self.evaluator,
@@ -84,8 +88,12 @@ class EvaluationRunner:
             n_baseline_fraud=n_baseline_fraud,
         )
         asr = run_asr_evaluation(ctx)
+        graph_fidelity = run_graph_fidelity(ctx)
+        graph_model = run_graph_model_eval(ctx)
 
-        summary = self._build_summary(detection, fidelity, generalization, integrity, asr)
+        summary = self._build_summary(
+            detection, fidelity, generalization, integrity, asr, graph_fidelity, graph_model
+        )
 
         report = EvaluationReport(
             before_version=before_version,
@@ -96,6 +104,9 @@ class EvaluationRunner:
             generalization=generalization,
             integrity=integrity,
             asr=asr,
+            graph_fidelity=graph_fidelity,
+            graph_model=graph_model,
+            failure_analysis=failure_analysis,
             summary=summary,
         )
 
@@ -106,7 +117,9 @@ class EvaluationRunner:
 
         return report
 
-    def _build_summary(self, detection, fidelity, generalization, integrity, asr) -> dict:
+    def _build_summary(
+        self, detection, fidelity, generalization, integrity, asr, graph_fidelity, graph_model
+    ) -> dict:
         holdout_delta = detection.holdout.get("delta", {})
         buffer_cmp = detection.buffer.get("comparison", {})
 
@@ -132,11 +145,17 @@ class EvaluationRunner:
             "mean_lofo_gap": generalization.mean_lofo_gap,
             "composite_campaign_count": generalization.composite_campaign_count,
             "score_separation": fidelity.score_separation,
+            "graph_heavy_coverage": graph_fidelity.graph_heavy_coverage,
+            "graph_recall_lift": graph_model.graph_recall_lift,
+            "graph_asr_reduction": graph_model.graph_asr_reduction,
+            "composite_cross_account_count": graph_model.composite_cross_account_count,
             "pillars": {
                 "11a_detection": "holdout+test+buffer",
                 "11b_fidelity": "amount+timing+behavior",
                 "11c_generalization": "lofo+unseen+composite",
                 "11d_integrity": "leakage+null+ablation+temporal",
                 "11e_asr": "before_after",
+                "13_graph_fidelity": "graph_signals+buffer",
+                "14_graph_model": "cluster+composite+ablation",
             },
         }

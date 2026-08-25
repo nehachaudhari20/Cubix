@@ -220,8 +220,42 @@ class ASRMetrics(BaseModel):
     per_family: List[FamilyASR] = Field(default_factory=list)
 
 
+class GraphFidelityMetrics(BaseModel):
+    """Graph signal fidelity on adversarial buffer (Phase 13)."""
+    buffer_samples: int = 0
+    graph_signal_stats: Dict[str, Any] = Field(default_factory=dict)
+    graph_heavy_count: int = 0
+    graph_heavy_coverage: float = 0.0
+    graph_heavy_recall: float = 0.0
+    graph_light_recall: float = 0.0
+    checks: List[Dict[str, Any]] = Field(default_factory=list)
+    all_checks_passed: bool = False
+
+
+class GraphModelMetrics(BaseModel):
+    """Graph model evaluation — clusters, composite, ablation (Phase 14)."""
+    buffer_samples: int = 0
+    clusters_detected: int = 0
+    clusters: List[Dict[str, Any]] = Field(default_factory=list)
+    composite_cross_account_count: int = 0
+    composite_campaigns: List[Dict[str, Any]] = Field(default_factory=list)
+    tabular_before_recall: float = 0.0
+    tabular_after_recall: float = 0.0
+    graph_before_recall: float = 0.0
+    graph_after_recall: float = 0.0
+    graph_recall_lift: float = 0.0
+    tabular_before_asr: float = 0.0
+    tabular_after_asr: float = 0.0
+    graph_before_asr: float = 0.0
+    graph_after_asr: float = 0.0
+    graph_asr_reduction: float = 0.0
+    graph_heavy_tabular_recall: float = 0.0
+    graph_heavy_graph_recall: float = 0.0
+    graph_heavy_recall_lift: float = 0.0
+
+
 class EvaluationReport(BaseModel):
-    """Full Phase 11 evaluation report (11a–11e)."""
+    """Full Phase 11–14 evaluation report."""
     before_version: str = "v1"
     after_version: str = "v2"
     generated_at: str = ""
@@ -230,4 +264,7 @@ class EvaluationReport(BaseModel):
     generalization: GeneralizationMetrics = Field(default_factory=GeneralizationMetrics)
     integrity: IntegrityMetrics = Field(default_factory=IntegrityMetrics)
     asr: ASRMetrics = Field(default_factory=ASRMetrics)
+    graph_fidelity: GraphFidelityMetrics = Field(default_factory=GraphFidelityMetrics)
+    graph_model: GraphModelMetrics = Field(default_factory=GraphModelMetrics)
+    failure_analysis: Optional[Dict[str, Any]] = None
     summary: Dict[str, Any] = Field(default_factory=dict)
