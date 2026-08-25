@@ -1,18 +1,21 @@
 """
-Strategy Layer — decides whether to continue, mutate, or stop based on memory.
-Uses dynamic KB family queue instead of static templates.
+Strategy Layer — CVSS-prioritized family selection with experiment memory.
 """
 
-from typing import List, Optional
+from __future__ import annotations
+
+from typing import List, Optional, Set
 
 from ..schemas import Hypothesis, StrategyDecision
 from ..agent_helpers import OfflineKnowledge
 from ..kb_campaign_builder import build_hypothesis_from_family
+from ..deepteam.family_scorer import prioritize_families
+from ..deepteam.schemas import AttackCandidate
 from .memory_agent import MemoryAgent
 
 
 class StrategyLayer:
-    """Selects next campaign strategy from experiment memory and KB coverage."""
+    """Selects next campaign strategy from CVSS-ranked KB families + memory."""
 
     def __init__(self, memory_agent: MemoryAgent):
         self.memory = memory_agent
@@ -33,23 +36,26 @@ class StrategyLayer:
                 confidence=0.95,
             )
 
-        tested = self._tested_family_ids()
-        remaining = self.kb.get_untested_families(tested, limit=1)
-
+        tested = set(self._tested_family_ids())
+        ranked = self.prioritized_candidates(tested)
         failures = self.memory.get_memories_by_condition("outcome", "failure")
         successes = self.memory.get_memories_by_condition("outcome", "success")
 
-        if last_analysis and last_analysis.get("outcome") == "failure" and remaining:
+        if last_analysis and last_analysis.get("outcome") == "failure" and ranked:
             mutations = last_analysis.get("mutation_suggestions") or []
             blocking = last_analysis.get("blocking_control", "unknown")
+            nxt = self._hypothesis_from_candidate(ranked[0])
             return StrategyDecision(
                 action="continue",
-                next_hypothesis=self._next_hypothesis(tested),
-                reason=f"Next KB family after {blocking} block. Mutation hint: {mutations[0] if mutations else 'adjust params'}",
-                confidence=0.8,
+                next_hypothesis=nxt,
+                reason=(
+                    f"CVSS next {ranked[0].family_id} (score={ranked[0].cvss.composite}) "
+                    f"after {blocking} block. Hint: {mutations[0] if mutations else 'adjust params'}"
+                ),
+                confidence=0.85,
             )
 
-        if not remaining:
+        if not ranked:
             stats = self.kb.kb_stats()
             return StrategyDecision(
                 action="stop",
@@ -70,11 +76,27 @@ class StrategyLayer:
                 confidence=0.9,
             )
 
+        top = ranked[0]
         return StrategyDecision(
             action="continue",
-            next_hypothesis=self._next_hypothesis(tested),
-            reason=f"Continue KB exploration ({len(tested)} tested, {len(remaining)} remaining in queue)",
-            confidence=0.75,
+            next_hypothesis=self._hypothesis_from_candidate(top),
+            reason=(
+                f"CVSS prioritize {top.family_id} "
+                f"(composite={top.cvss.composite}, impact={top.cvss.impact}, "
+                f"exploitability={top.cvss.exploitability}, exposure={top.cvss.exposure})"
+            ),
+            confidence=min(0.95, 0.6 + top.cvss.composite / 20.0),
+        )
+
+    def prioritized_candidates(self, tested_ids: Optional[Set[str]] = None) -> List[AttackCandidate]:
+        tested = tested_ids or set(self._tested_family_ids())
+        simulatable = self.kb.get_simulatable_families()
+        return prioritize_families(
+            simulatable,
+            self.kb.signals,
+            tested_ids=tested,
+            memories=self.memory.memories,
+            limit=10,
         )
 
     def _tested_family_ids(self) -> List[str]:
@@ -84,18 +106,32 @@ class StrategyLayer:
             if m.applicable_conditions.get("primary_family")
         ]
 
-    def _next_hypothesis(self, tested: List[str]) -> Optional[Hypothesis]:
-        family = self.kb.get_untested_families(tested, limit=1)
-        if family:
-            return build_hypothesis_from_family(family[0])
-        return None
+    def _hypothesis_from_candidate(self, candidate: AttackCandidate) -> Optional[Hypothesis]:
+        family = self.kb.get_family(candidate.family_id)
+        if not family:
+            return None
+        hypothesis = build_hypothesis_from_family(family)
+        hypothesis.success_probability = min(0.95, candidate.cvss.exposure / 10.0)
+        hypothesis.reasoning = (
+            f"{hypothesis.reasoning} CVSS composite={candidate.cvss.composite}."
+        )
+        return hypothesis
 
     def coverage_report(self) -> dict:
         tested = set(self._tested_family_ids())
         simulatable = self.kb.get_simulatable_families()
+        ranked = self.prioritized_candidates(tested)
         return {
             "tested": len(tested),
             "simulatable": len(simulatable),
             "remaining": len([f for f in simulatable if f.get("attack_id") not in tested]),
             "kb_stats": self.kb.kb_stats(),
+            "cvss_top5": [
+                {
+                    "family_id": item.family_id,
+                    "composite": item.cvss.composite,
+                    "amount": item.estimated_amount,
+                }
+                for item in ranked[:5]
+            ],
         }

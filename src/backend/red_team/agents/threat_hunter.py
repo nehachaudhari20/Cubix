@@ -11,6 +11,7 @@ from ..kb_campaign_builder import (
     classify_family,
     is_simulatable,
 )
+from ..deepteam.family_scorer import prioritize_families
 
 
 class ThreatHunter:
@@ -64,21 +65,31 @@ class ThreatHunter:
             candidates.append(h)
 
         if not candidates:
-            # All simulatable families tested — pick first simulatable for re-probe
+            # All simulatable families tested — pick highest CVSS for re-probe
             if simulatable:
-                candidates = [build_hypothesis_from_family(simulatable[0])]
+                ranked = prioritize_families(
+                    simulatable,
+                    self.kb.signals,
+                    tested_ids=tested,
+                    limit=1,
+                )
+                if ranked:
+                    family = self.kb.get_family(ranked[0].family_id) or simulatable[0]
+                    candidates = [build_hypothesis_from_family(family)]
+                else:
+                    candidates = [build_hypothesis_from_family(simulatable[0])]
             else:
                 return ThreatHunterOutput(hypotheses=[], confidence=0.0)
 
-        # Prioritize diverse patterns: mule, merchant, velocity, identity, aml first
-        priority = ["mule", "merchant", "velocity", "identity", "aml", "account", "auth", "payment_probe"]
+        ranked = prioritize_families(
+            [f for f in (self.kb.get_family(h.primary_family) for h in candidates) if f],
+            self.kb.signals,
+            tested_ids=tested,
+            limit=len(candidates),
+        )
+        rank_order = {item.family_id: index for index, item in enumerate(ranked)}
         candidates.sort(
-            key=lambda h: (
-                priority.index(classify_family(self.kb.get_family(h.primary_family) or {}))
-                if classify_family(self.kb.get_family(h.primary_family) or {}) in priority
-                else 99,
-                -h.novelty_score,
-            )
+            key=lambda h: rank_order.get(h.primary_family, 999),
         )
 
         return ThreatHunterOutput(hypotheses=candidates[:3], confidence=0.9)

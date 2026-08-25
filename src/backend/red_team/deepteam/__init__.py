@@ -14,6 +14,7 @@ from .attack_engine import PaymentAttackEngine
 from .jailbreak_planner import JailbreakPlanner
 from .cvss_scorer import prioritize_attacks, score_family
 from .fraud_judge import FraudInvestigatorJudge
+from .family_scorer import prioritize_families, build_attack_candidate
 from .mutation_builder import mutation_from_plan_step
 
 __all__ = [
@@ -32,4 +33,6 @@ __all__ = [
     "score_family",
     "FraudInvestigatorJudge",
     "mutation_from_plan_step",
+    "prioritize_families",
+    "build_attack_candidate",
 ]
