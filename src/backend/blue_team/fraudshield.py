@@ -11,6 +11,7 @@ from typing import Any, Dict, Optional
 
 from .features import FeatureBuilder
 from .schemas import FraudShieldPrediction
+from .stacked_model import StackedFraudShieldModel
 
 DEFAULT_MODEL_DIR = os.environ.get(
     "FRAUDSHIELD_MODEL_DIR",
@@ -125,5 +126,19 @@ class FraudShieldModel:
 
 
 def load_fraudshield(model_dir: str = DEFAULT_MODEL_DIR) -> Optional[FraudShieldModel]:
-    """Convenience loader."""
+    """Load active FraudShield (stacked v3 or single booster)."""
+    path = Path(model_dir)
+    spec_path = path / "features.json"
+    if spec_path.exists():
+        with open(spec_path) as f:
+            spec = json.load(f)
+        if spec.get("model_type") == "StackedEnsemble":
+            stacked = StackedFraudShieldModel.load(str(path), spec_path=str(spec_path))
+            if stacked:
+                return stacked  # type: ignore[return-value]
+
+    stacked_v3 = StackedFraudShieldModel.load(model_dir)
+    if stacked_v3:
+        return stacked_v3  # type: ignore[return-value]
+
     return FraudShieldModel.load(model_dir)

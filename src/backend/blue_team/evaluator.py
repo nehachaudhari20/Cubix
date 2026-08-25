@@ -37,7 +37,11 @@ class HardeningEvaluator:
         self.trainer = HardeningTrainer(model_dir=model_dir, buffer_path=buffer_path)
 
     def load_model_version(self, version: str) -> Optional[FraudShieldModel]:
-        """Load v1 (active) or v2 (features_v2.json)."""
+        """Load v1 (active), v2, or v3 stacked ensemble."""
+        if version == "v3":
+            from .stacked_model import StackedFraudShieldModel
+            model = StackedFraudShieldModel.load(str(self.model_dir))
+            return model  # type: ignore[return-value]
         if version == "v2":
             spec_path = self.model_dir / "features_v2.json"
             if not spec_path.exists():
@@ -53,6 +57,11 @@ class HardeningEvaluator:
         return FraudShieldModel.load(str(self.model_dir))
 
     def _predict_proba(self, model: FraudShieldModel, X: pd.DataFrame) -> np.ndarray:
+        if getattr(model, "model_type", "") == "StackedEnsemble":
+            probs = []
+            for _, row in X.iterrows():
+                probs.append(model.predict_proba_from_features(row.to_dict()))  # type: ignore
+            return np.asarray(probs, dtype=float)
         if model.model_type == "LightGBM":
             return np.asarray(model.model.predict(X.values), dtype=float)
         import xgboost as xgb
@@ -70,6 +79,22 @@ class HardeningEvaluator:
         X, _ = self.trainer.encode_features(aligned, spec, fit=False)
         return X
 
+    def _predict_row_proba(self, model: FraudShieldModel, row: Dict[str, Any]) -> float:
+        if getattr(model, "model_type", "") == "StackedEnsemble":
+            return float(model.predict_proba_from_features(row))  # type: ignore[attr-defined]
+        vector = model.feature_builder.to_model_vector(
+            row,
+            model.feature_order,
+            model.categorical_features,
+            model.categorical_mappings,
+            model.unseen_code,
+        )
+        if model.model_type == "LightGBM":
+            return float(model.model.predict([vector])[0])
+        import xgboost as xgb
+        dmat = xgb.DMatrix([vector], feature_names=model.feature_order)
+        return float(model.model.predict(dmat)[0])
+
     def _score_buffer_records(self, model: FraudShieldModel) -> List[float]:
         """Score all buffer payment records using stored features."""
         scores = []
@@ -80,19 +105,7 @@ class HardeningEvaluator:
             for col in model.feature_order:
                 if col not in row:
                     row[col] = FEATURE_DEFAULTS.get(col, 0)
-            vector = model.feature_builder.to_model_vector(
-                row,
-                model.feature_order,
-                model.categorical_features,
-                model.categorical_mappings,
-                model.unseen_code,
-            )
-            if model.model_type == "LightGBM":
-                scores.append(float(model.model.predict([vector])[0]))
-            else:
-                import xgboost as xgb
-                dmat = xgb.DMatrix([vector], feature_names=model.feature_order)
-                scores.append(float(model.model.predict(dmat)[0]))
+            scores.append(self._predict_row_proba(model, row))
         return scores
 
     def evaluate_buffer(self, v1: FraudShieldModel, v2: FraudShieldModel) -> Dict[str, Any]:

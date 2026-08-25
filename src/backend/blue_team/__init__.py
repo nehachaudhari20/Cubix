@@ -6,6 +6,8 @@ from .evidence_buffer import EvidenceBuffer, DEFAULT_BUFFER_PATH
 from .collector import EvidenceCollector
 from .trainer import HardeningTrainer
 from .evaluator import HardeningEvaluator
+from .stacked_trainer import StackedEnsembleTrainer
+from .stacked_model import StackedFraudShieldModel
 from .metrics import (
     REVIEW_CAPACITY,
     REPORT_PREVALENCES,
@@ -23,6 +25,8 @@ __all__ = [
     "EvidenceCollector",
     "HardeningTrainer",
     "HardeningEvaluator",
+    "StackedEnsembleTrainer",
+    "StackedFraudShieldModel",
     "DEFAULT_BUFFER_PATH",
     "evaluate_detection",
     "evaluate_detection_dict",

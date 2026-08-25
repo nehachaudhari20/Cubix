@@ -253,3 +253,34 @@ class HardeningTrainer:
             "v1_backup": str(v1_backup) if v1_backup.exists() else "",
             "model_file": "fraudshield_v2.txt",
         }
+
+    def train_v3(
+        self,
+        n_baseline_legit: int = 4000,
+        n_baseline_fraud: int = 4000,
+        val_frac: float = 0.15,
+        include_hard_negatives: bool = True,
+    ) -> Dict[str, Any]:
+        """Train stacked FraudShield v3 (delegates to StackedEnsembleTrainer)."""
+        from .stacked_trainer import StackedEnsembleTrainer
+
+        trainer = StackedEnsembleTrainer(
+            model_dir=str(self.model_dir),
+            buffer_path=str(self.buffer.path),
+            baseline_path=self.baseline_path,
+        )
+        return trainer.train_v3(
+            n_baseline_legit=n_baseline_legit,
+            n_baseline_fraud=n_baseline_fraud,
+            val_frac=val_frac,
+            include_hard_negatives=include_hard_negatives,
+        )
+
+    def swap_to_v3(self) -> Dict[str, str]:
+        from .stacked_trainer import StackedEnsembleTrainer
+
+        return StackedEnsembleTrainer(
+            model_dir=str(self.model_dir),
+            buffer_path=str(self.buffer.path),
+            baseline_path=self.baseline_path,
+        ).swap_to_v3()
