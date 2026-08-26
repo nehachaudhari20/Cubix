@@ -6,7 +6,7 @@ import json
 from typing import Any, Dict, List, Optional
 
 from ..schemas import AnalysisResult, AttackPlan, ActionPayload
-from ..agent_helpers import OfflineKnowledge, get_llm, USE_LLM
+from ..agent_helpers import OfflineKnowledge, get_llm, use_llm
 from ..kb_campaign_builder import match_triggers_to_kb_signals
 
 
@@ -15,7 +15,6 @@ class FailureAnalyzer:
 
     def __init__(self, model_name: str = None):
         self.kb = OfflineKnowledge()
-        self.llm = get_llm()
         self._control_gap_lab = None
 
     @property
@@ -33,7 +32,7 @@ class FailureAnalyzer:
     ) -> AnalysisResult:
         rule_result = self._analyze_rule_based(sandbox_response, payload, plan)
 
-        if self.llm and USE_LLM:
+        if get_llm() and use_llm():
             llm_result = self._enhance_with_llm(sandbox_response, payload, plan, rule_result)
             if llm_result:
                 return llm_result
@@ -192,9 +191,12 @@ class FailureAnalyzer:
     def _enhance_with_llm(
         self, sandbox_response, payload, plan, base: AnalysisResult
     ) -> Optional[AnalysisResult]:
+        llm = get_llm()
+        if llm is None:
+            return None
         try:
-            from langchain.schema import HumanMessage, SystemMessage
             from langchain.output_parsers import PydanticOutputParser
+            from backend.llm import invoke_text
 
             parser = PydanticOutputParser(pydantic_object=AnalysisResult)
             family = self.kb.get_family(plan.primary_family)
@@ -208,10 +210,9 @@ Sandbox: {json.dumps(sandbox_response, indent=2)[:2500]}
 
 {parser.get_format_instructions()}"""
 
-            response = self.llm.invoke([
-                SystemMessage(content="Return only valid JSON."),
-                HumanMessage(content=prompt),
-            ])
-            return parser.parse(response.content)
+            text = invoke_text(llm, "Return only valid JSON.", prompt)
+            if not text:
+                return None
+            return parser.parse(text)
         except Exception:
             return None

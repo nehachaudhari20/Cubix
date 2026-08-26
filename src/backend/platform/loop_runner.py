@@ -54,6 +54,12 @@ class LoopRunner:
 
     def _configure_env(self) -> None:
         os.environ.setdefault("RED_TEAM_USE_LLM", "false" if not self.settings.red_team_use_llm else "true")
+        if self.settings.llm_provider:
+            os.environ.setdefault("LLM_PROVIDER", self.settings.llm_provider)
+        if self.settings.red_team_llm_model:
+            os.environ.setdefault("RED_TEAM_LLM_MODEL", self.settings.red_team_llm_model)
+        if self.settings.cohere_api_key:
+            os.environ.setdefault("COHERE_API_KEY", self.settings.cohere_api_key)
         os.environ.setdefault("USE_KB_API", "false")
         os.environ.setdefault("EVIDENCE_BUFFER_ENABLED", "true")
         os.environ.setdefault("FRAUDSHIELD_ENABLED", "true")

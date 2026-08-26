@@ -5,7 +5,7 @@ Threat Hunter Agent — discovers attack hypotheses dynamically from all three K
 from typing import List, Optional
 
 from ..schemas import Hypothesis, ThreatHunterOutput
-from ..agent_helpers import OfflineKnowledge, get_llm, USE_LLM
+from ..agent_helpers import OfflineKnowledge, get_llm, use_llm
 from ..kb_campaign_builder import (
     build_hypothesis_from_family,
     classify_family,
@@ -19,7 +19,6 @@ class ThreatHunter:
 
     def __init__(self, model_name: str = None):
         self.kb = OfflineKnowledge()
-        self.llm = get_llm()
         self._family_queue: List[str] = []
 
     def discover(
@@ -28,7 +27,8 @@ class ThreatHunter:
         tested_families: Optional[List[str]] = None,
     ) -> ThreatHunterOutput:
         tested = set(tested_families or [])
-        if self.llm and USE_LLM:
+        llm = get_llm()
+        if llm and use_llm():
             result = self._discover_with_llm(memory_context, list(tested))
             if result:
                 return result
@@ -111,9 +111,12 @@ class ThreatHunter:
     def _discover_with_llm(
         self, memory_context: Optional[str], tested: List[str]
     ) -> Optional[ThreatHunterOutput]:
+        llm = get_llm()
+        if llm is None:
+            return None
         try:
-            from langchain.schema import HumanMessage, SystemMessage
             from langchain.output_parsers import PydanticOutputParser
+            from backend.llm import invoke_text
 
             parser = PydanticOutputParser(pydantic_object=ThreatHunterOutput)
             families = self.kb.get_simulatable_families()[:20]
@@ -139,11 +142,10 @@ Memory: {memory_context or 'None'}
 
 Use ONLY real attack_id values from the family list."""
 
-            response = self.llm.invoke([
-                SystemMessage(content="Return only valid JSON."),
-                HumanMessage(content=prompt),
-            ])
-            return parser.parse(response.content)
+            text = invoke_text(llm, "Return only valid JSON.", prompt)
+            if not text:
+                return None
+            return parser.parse(text)
         except Exception as exc:
             print(f"[ThreatHunter] LLM fallback: {exc}")
             return None

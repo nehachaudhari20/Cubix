@@ -9,10 +9,12 @@ import uuid
 from typing import Any, Dict, List, Optional
 
 from backend.knowledge.loader import KnowledgeLoader
-from backend.llm import get_llm
+from backend.llm import get_llm, use_llm_enabled
 
-USE_LLM = os.environ.get("RED_TEAM_USE_LLM", "false").lower() in ("1", "true", "yes")
-LLM_MODEL = os.environ.get("RED_TEAM_LLM_MODEL", "gemini-2.0-flash")
+
+def use_llm() -> bool:
+    """Whether Red Team agents should call the configured LLM."""
+    return use_llm_enabled()
 
 
 def parse_llm_json(content: str, parser=None):

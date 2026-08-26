@@ -18,7 +18,6 @@ class PaymentAttackEngine:
 
     def __init__(self, compiled_controls: Optional[CompiledControlSet] = None):
         self.compiled = compiled_controls or ControlCompiler().compile()
-        self.llm = get_llm()
 
     def generate(
         self,
@@ -97,7 +96,8 @@ class PaymentAttackEngine:
         return variations
 
     def _validate(self, payload: Dict[str, Any]) -> bool:
-        if self.llm is None:
+        llm = get_llm()
+        if llm is None:
             return True
         system = (
             "You evaluate synthetic payment transactions for red-team simulation. "
@@ -107,5 +107,5 @@ class PaymentAttackEngine:
             "Given this transaction JSON, does it look like a real customer's mistake "
             f"or a fraudster? Return VALID or INVALID only.\n\n{payload}"
         )
-        text = (invoke_text(self.llm, system, user) or "").strip().upper()
+        text = (invoke_text(llm, system, user) or "").strip().upper()
         return "VALID" in text and "INVALID" not in text

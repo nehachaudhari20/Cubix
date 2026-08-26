@@ -32,6 +32,9 @@ class PlatformSettings(BaseSettings):
     evidence_buffer_path: str = "data/adversarial_buffer/evidence.jsonl"
     fraudshield_model_dir: str = "data/models"
     red_team_use_llm: bool = False
+    llm_provider: str = "cohere"
+    red_team_llm_model: str | None = None
+    cohere_api_key: str | None = None
 
     # --- AWS ---
     aws_region: str = "us-east-1"
@@ -49,18 +52,18 @@ class PlatformSettings(BaseSettings):
 
 
 def generate_iam_auth_token(settings: "PlatformSettings") -> str:
-    """Generate an RDS IAM auth token via AWS CLI."""
-    import subprocess
+    """Generate an RDS IAM auth token via boto3."""
+    import boto3
 
-    cmd = [
-        "aws", "rds", "generate-db-auth-token",
-        "--hostname", settings.rds_host,
-        "--port", str(settings.rds_port),
-        "--username", settings.rds_username,
-        "--region", settings.aws_region,
-    ]
-    result = subprocess.run(cmd, capture_output=True, text=True, check=True)
-    return result.stdout.strip()
+    session_kwargs: dict = {"region_name": settings.aws_region}
+    if settings.aws_profile:
+        session_kwargs["profile_name"] = settings.aws_profile
+    client = boto3.client("rds", **session_kwargs)
+    return client.generate_db_auth_token(
+        DBHostname=settings.rds_host,
+        Port=settings.rds_port,
+        DBUsername=settings.rds_username,
+    )
 
 
 def _build_db_url(settings: "PlatformSettings") -> str:

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import logging
+import os
 from contextlib import contextmanager
 from typing import Generator
 
@@ -34,6 +35,7 @@ def _make_engine():
             pool_recycle=settings.db_pool_recycle if not is_iam else 900,  # IAM tokens expire in 15 min
             pool_pre_ping=True,  # reconnect on stale connections
         )
+        connect_args["connect_timeout"] = int(os.environ.get("DB_CONNECT_TIMEOUT", "15"))
         # SSL mode for RDS
         ssl_mode = settings.db_ssl_mode
         if ssl_mode and ssl_mode != "disable":

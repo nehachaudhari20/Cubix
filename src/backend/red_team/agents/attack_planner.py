@@ -8,7 +8,7 @@ import json
 from typing import List, Optional
 
 from ..schemas import Hypothesis, AttackPlan
-from ..agent_helpers import OfflineKnowledge, get_llm, USE_LLM
+from ..agent_helpers import OfflineKnowledge, get_llm, use_llm
 from ..kb_campaign_builder import build_plan_from_family, derive_payload_hints
 from ..deepteam.jailbreak_planner import JailbreakPlanner
 from ..deepteam.strategy_config import resolve_jailbreak_strategy
@@ -20,7 +20,6 @@ class AttackPlanner:
 
     def __init__(self, model_name: str = None):
         self.kb = OfflineKnowledge()
-        self.llm = get_llm()
         self.jailbreak_planner = JailbreakPlanner()
 
     def plan(self, hypothesis: Hypothesis) -> AttackPlan:
@@ -35,7 +34,7 @@ class AttackPlanner:
         strategy = resolve_jailbreak_strategy(hypothesis)
 
         if strategy is None:
-            if self.llm and USE_LLM:
+            if get_llm() and use_llm():
                 llm_plan = self._plan_with_llm(hypothesis, family)
                 if llm_plan:
                     llm_plan.jailbreak_strategy = "kb+llm"
@@ -93,9 +92,12 @@ class AttackPlanner:
         return plan.model_copy(update={"steps": updated_steps, "branch_label": branch_label})
 
     def _plan_with_llm(self, hypothesis: Hypothesis, family: dict) -> Optional[AttackPlan]:
+        llm = get_llm()
+        if llm is None:
+            return None
         try:
-            from langchain.schema import HumanMessage, SystemMessage
             from langchain.output_parsers import PydanticOutputParser
+            from backend.llm import invoke_text
 
             parser = PydanticOutputParser(pydantic_object=AttackPlan)
             stage_controls = self.kb.get_stage_controls(family.get("lifecycle_stage") or "")
@@ -115,11 +117,10 @@ Attack flow from KB: {family.get('attack_flow')}
 
 {parser.get_format_instructions()}"""
 
-            response = self.llm.invoke([
-                SystemMessage(content="Return only valid JSON for AttackPlan."),
-                HumanMessage(content=prompt),
-            ])
-            return parser.parse(response.content)
+            text = invoke_text(llm, "Return only valid JSON for AttackPlan.", prompt)
+            if not text:
+                return None
+            return parser.parse(text)
         except Exception as exc:
             print(f"[AttackPlanner] LLM fallback to KB builder: {exc}")
             return None

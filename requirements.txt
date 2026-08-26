@@ -70,7 +70,9 @@ langchain-core>=0.2,<2.0
 
 # LLM provider integrations
 openai>=1.40,<3.0
+cohere>=5.0,<6.0
 langchain-openai>=0.1,<2.0
+langchain-cohere>=0.3,<1.0
 langchain-anthropic>=0.1,<1.0
 langchain-google-genai>=1.0,<3.0
 langchain-aws>=0.2,<1.0
