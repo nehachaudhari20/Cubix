@@ -42,13 +42,47 @@ def _hard_negative_count() -> int:
 
 
 def _tested_family_ids(memory: MemoryAgent) -> set:
+    tested: set = set()
+    for m in memory.memories:
+        conditions = m.applicable_conditions or {}
+        primary = conditions.get("primary_family")
+        if primary:
+            tested.add(primary)
+        for fid in conditions.get("composite_families") or []:
+            if fid:
+                tested.add(fid)
+        for fid in conditions.get("covered_families") or []:
+            if fid:
+                tested.add(fid)
+    return tested
+
+
+def _coverage_metrics(summaries: List[dict], kb: OfflineKnowledge) -> Dict[str, Any]:
+    covered: set = set()
+    composites = 0
+    payloads = 0
+    variations = 0
+    action_types: Dict[str, int] = {}
+    for s in summaries:
+        for fid in s.get("covered_families") or [s.get("family_id")]:
+            if fid:
+                covered.add(fid)
+        if s.get("composite_families"):
+            composites += 1
+        payloads += int(s.get("payloads_generated") or 0)
+        variations += int(s.get("variations_generated") or s.get("linear_retries_used") or 0)
+        for at, n in (s.get("action_type_counts") or {}).items():
+            action_types[at] = action_types.get(at, 0) + n
+    simulatable = len(kb.get_simulatable_families())
     return {
-        fid
-        for fid in (
-            m.applicable_conditions.get("primary_family")
-            for m in memory.memories
-        )
-        if fid
+        "campaigns": len(summaries),
+        "composite_campaigns": composites,
+        "families_covered": sorted(covered),
+        "families_covered_count": len(covered),
+        "families_remaining": max(0, simulatable - len(covered)),
+        "payloads_generated": payloads,
+        "variations_generated": variations,
+        "action_type_counts": action_types,
     }
 
 
@@ -211,6 +245,109 @@ def _execute_payload_with_retries(
     return results
 
 
+def run_hypothesis_campaign(
+    hypothesis: Hypothesis,
+    planner: AttackPlanner,
+    generator: AttackGenerator,
+    client: SandboxClient,
+    analyzer: FailureAnalyzer,
+    mutator: LinearMutator,
+    *,
+    memory: Optional[MemoryAgent] = None,
+    collector: Optional[Any] = None,
+    print_sections: bool = True,
+    on_event: Optional[Callable[[Dict[str, Any]], None]] = None,
+    run_id: Optional[str] = None,
+) -> dict:
+    """Run one Threat Hunter hypothesis (single or composite) through Red Team -> Sandbox."""
+    from .composite_intel import covered_family_ids
+
+    env_strategy = os.environ.get("RED_TEAM_JAILBREAK_STRATEGY")
+    if env_strategy and env_strategy != "kb" and not hypothesis.composite_families:
+        hypothesis = hypothesis.model_copy(update={"jailbreak_strategy": env_strategy})
+
+    plans = planner.plan_branches(hypothesis)
+    primary = hypothesis.primary_family
+    composites = list(hypothesis.composite_families or [])
+    covered = sorted(covered_family_ids(hypothesis))
+
+    if print_sections:
+        _sep(f"RED TEAM - {primary}" + (f" + {composites}" if composites else ""))
+        print(f"  hypothesis={hypothesis.name}")
+        print(f"  strategy={plans[0].jailbreak_strategy}  composites={composites or 'none'}")
+        print(f"  covered_families={covered}")
+        if len(plans) > 1:
+            print(f"  tree branches={len(plans)}")
+
+    all_results: List[Dict[str, Any]] = []
+    gap_count = 0
+    total_generated = 0
+    variations = 0
+    action_type_counts: Dict[str, int] = {}
+
+    for branch_idx, plan in enumerate(plans):
+        if print_sections and len(plans) > 1:
+            label = plan.branch_label or f"branch_{branch_idx + 1}"
+            print(f"\n  Tree branch {branch_idx + 1}/{len(plans)}: {label}")
+
+        sequence = generator.generate_sequence(plan)
+        total_generated += sequence.total_payloads
+        for p in sequence.payloads:
+            action_type_counts[p.action_type] = action_type_counts.get(p.action_type, 0) + 1
+            if p.variation_label:
+                variations += 1
+
+        if print_sections:
+            _print_sequence(sequence)
+            _sep(f"SANDBOX OUTPUT - {primary}", char="-")
+
+        branch_results: List[Dict[str, Any]] = []
+        for payload in sequence.payloads:
+            batch = _execute_payload_with_retries(
+                payload,
+                client=client,
+                analyzer=analyzer,
+                plan=plan,
+                mutator=mutator,
+                hypothesis=hypothesis,
+                memory=memory,
+                collector=collector,
+                print_sections=print_sections,
+                on_event=on_event,
+                run_id=run_id,
+                family_id=primary,
+                family_name=hypothesis.name[:80],
+            )
+            branch_results.extend(batch)
+            gap_count += sum(1 for r in batch if r.get("control_gap"))
+            variations += sum(1 for r in batch if r.get("linear") or r.get("variation"))
+
+        all_results.extend(branch_results)
+        if branch_results and print_sections:
+            print(f"  Branch {branch_idx + 1} final: {branch_results[-1].get('decision')}")
+
+    if print_sections and all_results:
+        last = all_results[-1]
+        print(f"\n  Final decision={last.get('decision')}  gaps={gap_count}  payloads={total_generated}")
+
+    return {
+        "family_id": primary,
+        "composite_families": composites,
+        "covered_families": covered,
+        "hypothesis_name": hypothesis.name,
+        "strategy": plans[0].jailbreak_strategy if plans else "kb",
+        "branches": len(plans),
+        "steps_executed": len(all_results),
+        "payloads_generated": total_generated,
+        "variations_generated": variations,
+        "action_type_counts": action_type_counts,
+        "final_decision": all_results[-1]["decision"] if all_results else None,
+        "outcomes": [r["outcome"] for r in all_results],
+        "linear_retries_used": sum(1 for r in all_results if r.get("linear")),
+        "control_gaps": gap_count,
+    }
+
+
 def run_family_campaign(
     family: dict,
     hunter: ThreatHunter,
@@ -230,74 +367,19 @@ def run_family_campaign(
     strategy = os.environ.get("RED_TEAM_JAILBREAK_STRATEGY", "kb")
     hypothesis = hunter.hypothesis_from_family(family)
     hypothesis.jailbreak_strategy = strategy
-
-    if strategy == "tree":
-        plans = planner.plan_branches(hypothesis)
-    else:
-        plans = [planner.plan(hypothesis)]
-
-    if print_sections:
-        _print_red_team_header(family, hypothesis, plans)
-
-    all_results: List[Dict[str, Any]] = []
-    gap_count = 0
-    total_generated = 0
-
-    for branch_idx, plan in enumerate(plans):
-        if print_sections and len(plans) > 1:
-            label = plan.branch_label or f"branch_{branch_idx + 1}"
-            print(f"\n  Tree branch {branch_idx + 1}/{len(plans)}: {label}")
-
-        sequence = generator.generate_sequence(plan)
-        total_generated += sequence.total_payloads
-        if print_sections and len(plans) == 1:
-            _print_sequence(sequence)
-
-        if print_sections:
-            _sep(f"SANDBOX OUTPUT - {family.get('attack_id')}", char="-")
-
-        branch_results: List[Dict[str, Any]] = []
-        for payload in sequence.payloads:
-            batch = _execute_payload_with_retries(
-                payload,
-                client=client,
-                analyzer=analyzer,
-                plan=plan,
-                mutator=mutator,
-                hypothesis=hypothesis,
-                memory=memory,
-                collector=collector,
-                print_sections=print_sections,
-                on_event=on_event,
-                run_id=run_id,
-                family_id=family.get("attack_id"),
-                family_name=family.get("name", "")[:80],
-            )
-            branch_results.extend(batch)
-            gap_count += sum(1 for r in batch if r.get("control_gap"))
-
-        all_results.extend(branch_results)
-
-        if branch_results and analyzer:
-            last_payload_analysis = branch_results[-1]
-            if print_sections:
-                print(f"  Branch {branch_idx + 1} final: {last_payload_analysis.get('decision')}")
-
-    if print_sections and all_results:
-        last = all_results[-1]
-        print(f"\n  Final decision={last.get('decision')}  gaps_this_family={gap_count}")
-
-    return {
-        "family_id": family.get("attack_id"),
-        "strategy": strategy,
-        "branches": len(plans),
-        "steps_executed": len(all_results),
-        "payloads_generated": total_generated,
-        "final_decision": all_results[-1]["decision"] if all_results else None,
-        "outcomes": [r["outcome"] for r in all_results],
-        "linear_retries_used": sum(1 for r in all_results if r.get("linear")),
-        "control_gaps": gap_count,
-    }
+    return run_hypothesis_campaign(
+        hypothesis,
+        planner,
+        generator,
+        client,
+        analyzer,
+        mutator,
+        memory=memory,
+        collector=collector,
+        print_sections=print_sections,
+        on_event=on_event,
+        run_id=run_id,
+    )
 
 
 def run_red_team_for_loop(
@@ -308,7 +390,7 @@ def run_red_team_for_loop(
     on_event: Optional[Callable[[Dict[str, Any]], None]] = None,
     print_sections: bool = False,
 ) -> Dict[str, Any]:
-    """Red team step for LoopRunner with memory, gaps, and optional hard negatives."""
+    """Red team step for LoopRunner — Threat Hunter composites + multi-hypothesis execution."""
     kb = OfflineKnowledge()
     memory = MemoryAgent()
     hunter = ThreatHunter()
@@ -318,7 +400,20 @@ def run_red_team_for_loop(
     analyzer = FailureAnalyzer()
     mutator = LinearMutator()
 
-    selected = select_families(kb, max_families=families, memory=memory)
+    tested = sorted(_tested_family_ids(memory))
+    hunt = hunter.discover(
+        memory_context=memory.get_memory_context(),
+        tested_families=tested,
+        prefer_composites=True,
+        max_hypotheses=max(1, families),
+    )
+    hypotheses = list(hunt.hypotheses or [])
+
+    # Fallback: CVSS family selection if hunter returns nothing
+    if not hypotheses:
+        selected = select_families(kb, max_families=families, memory=memory)
+        hypotheses = [hunter.hypothesis_from_family(f) for f in selected]
+
     campaign_events: List[Dict[str, Any]] = []
 
     def _capture_event(event: Dict[str, Any]) -> None:
@@ -327,27 +422,37 @@ def run_red_team_for_loop(
             on_event(event)
 
     summaries: List[dict] = []
-    for family in selected:
-        summaries.append(run_family_campaign(
-            family, hunter, planner, generator, client, analyzer, mutator,
-            memory=memory,
-            collector=collector,
-            print_sections=print_sections,
-            on_event=_capture_event,
-            run_id=run_id,
-        ))
+    for hypothesis in hypotheses:
+        summaries.append(
+            run_hypothesis_campaign(
+                hypothesis,
+                planner,
+                generator,
+                client,
+                analyzer,
+                mutator,
+                memory=memory,
+                collector=collector,
+                print_sections=print_sections,
+                on_event=_capture_event,
+                run_id=run_id,
+            )
+        )
 
     gap_report = analyzer.control_gap_lab.export_report()
     hn_report: Dict[str, Any] = {}
     if _hard_negatives_enabled():
         hn_report = run_hard_negatives()
 
+    coverage = _coverage_metrics(summaries, kb)
     return {
         "summaries": summaries,
         "campaign_events": campaign_events,
         "memory_entries": len(memory.memories),
         "control_gap_report": gap_report,
         "hard_negatives": hn_report,
+        "coverage": coverage,
+        "hypotheses": [h.model_dump() for h in hypotheses],
     }
 
 
@@ -369,37 +474,63 @@ def run_continuous(
     if print_sections:
         _print_kb_section(kb, memory)
 
-    families = select_families(kb, max_families=max_families, family_id=family_id, memory=memory)
-    if not families:
-        print("ERROR: No simulatable families found")
+    if family_id:
+        family = kb.get_family(family_id)
+        if not family:
+            print(f"ERROR: Family not found: {family_id}")
+            return []
+        hypotheses = [hunter.hypothesis_from_family(family)]
+    else:
+        hunt = hunter.discover(
+            memory_context=memory.get_memory_context(),
+            tested_families=sorted(_tested_family_ids(memory)),
+            prefer_composites=True,
+            max_hypotheses=max(1, max_families),
+        )
+        hypotheses = list(hunt.hypotheses or [])
+        if not hypotheses:
+            families = select_families(kb, max_families=max_families, memory=memory)
+            hypotheses = [hunter.hypothesis_from_family(f) for f in families]
+
+    if not hypotheses:
+        print("ERROR: No hypotheses / simulatable families found")
         return []
 
     if print_sections:
-        _sep(f"CONTINUOUS RUN - {len(families)} families (CVSS + memory)")
+        _sep(f"CONTINUOUS RUN - {len(hypotheses)} hypotheses (Threat Hunter + composites)")
         print(
             f"  strategy={os.environ.get('RED_TEAM_JAILBREAK_STRATEGY', 'kb')}  "
             f"attack_engine={os.environ.get('RED_TEAM_USE_ATTACK_ENGINE', 'true')}  "
             f"linear_retries={_linear_retry_limit()}  "
             f"hard_negatives={_hard_negatives_enabled()}"
         )
+        for i, h in enumerate(hypotheses, 1):
+            comps = h.composite_families or []
+            print(
+                f"  H{i}: {h.primary_family}"
+                + (f" + {comps}" if comps else "")
+                + f" | {h.name[:60]}"
+            )
 
     summary: List[dict] = []
-    for i, family in enumerate(families, 1):
+    for i, hypothesis in enumerate(hypotheses, 1):
         if print_sections:
             print(f"\n{'#' * 72}")
-            print(f"# CAMPAIGN {i}/{len(families)}: {family.get('attack_id')} - {family.get('name')}")
+            print(f"# CAMPAIGN {i}/{len(hypotheses)}: {hypothesis.primary_family} - {hypothesis.name}")
             print(f"{'#' * 72}")
 
-        if not is_simulatable(family):
-            if print_sections:
-                print(f"  SKIPPED (not simulatable: {family.get('simulation_type')})")
-            continue
-
-        summary.append(run_family_campaign(
-            family, hunter, planner, generator, client, analyzer, mutator,
-            memory=memory,
-            print_sections=print_sections,
-        ))
+        summary.append(
+            run_hypothesis_campaign(
+                hypothesis,
+                planner,
+                generator,
+                client,
+                analyzer,
+                mutator,
+                memory=memory,
+                print_sections=print_sections,
+            )
+        )
 
     gap_report = analyzer.control_gap_lab.export_report()
     hn_report: Dict[str, Any] = {}
@@ -408,29 +539,40 @@ def run_continuous(
         if print_sections:
             print(f"\n  Hard negatives generated: {hn_report.get('hard_negatives_generated', 0)}")
 
+    coverage = _coverage_metrics(summary, kb)
     if print_sections:
         _sep("RUN SUMMARY")
-        total_payloads = 0
         for s in summary:
-            total_payloads += s["steps_executed"]
             successes = s["outcomes"].count("success")
+            comps = s.get("composite_families") or []
             print(
-                f"  {s['family_id']:10s}  strategy={s.get('strategy', 'kb'):10s}  "
-                f"branches={s.get('branches', 1)}  "
-                f"executed={s['steps_executed']}  linear+={s.get('linear_retries_used', 0)}  "
-                f"gaps={s.get('control_gaps', 0)}  "
+                f"  {s['family_id']:10s}  composites={comps or '-'}  "
+                f"strategy={s.get('strategy', 'kb'):10s}  "
+                f"payloads={s.get('payloads_generated', 0)}  "
+                f"variations={s.get('variations_generated', 0)}  "
+                f"executed={s['steps_executed']}  "
                 f"successes={successes}/{len(s['outcomes'])}"
             )
         stats = kb.kb_stats()
-        print(f"\n  Total sandbox executions: {total_payloads}")
+        print(f"\n  Coverage: {coverage['families_covered_count']} families "
+              f"({coverage['composite_campaigns']} composite campaigns)")
+        print(f"  Families covered: {', '.join(coverage['families_covered'])}")
+        print(f"  Payloads generated: {coverage['payloads_generated']}  "
+              f"variations: {coverage['variations_generated']}")
+        print(f"  Action mix: {coverage['action_type_counts']}")
         print(f"  Memory entries stored: {len(memory.memories)}")
         print(
             f"  Control gaps: {gap_report.get('control_gaps', 0)} "
             f"(findings={gap_report.get('total_findings', 0)})"
         )
-        print(f"  KB: {stats['total_families']} families | {stats['simulatable_families']} simulatable")
-        print("\n  OK Dynamic KB -> Red Team -> Sandbox continuous run complete")
-        print("  (Bedrock/LLM not required; set RED_TEAM_USE_LLM=true + LLM_PROVIDER=bedrock later)")
+        print(
+            f"  KB: {stats['total_families']} families | "
+            f"{stats['simulatable_families']} simulatable | "
+            f"variants={stats.get('total_variants', 0)} | "
+            f"relationships={stats.get('total_relationships', 0)} | "
+            f"genai_lb={stats.get('genai_load_bearing', 0)}"
+        )
+        print("\n  OK Dynamic KB -> Threat Hunter composites -> Sandbox run complete")
 
     return summary
 
@@ -442,8 +584,16 @@ def _sep(title: str, char: str = "=", width: int = 72) -> None:
 def _print_kb_section(kb: OfflineKnowledge, memory: MemoryAgent) -> None:
     _sep("KNOWLEDGE BASE (canonical -> KnowledgeLoader)")
     stats = kb.kb_stats()
-    print(f"  families={stats['total_families']}  signals={stats['total_signals']}  stages={stats['total_stages']}")
-    print(f"  simulatable={stats['simulatable_families']}")
+    print(
+        f"  families={stats['total_families']}  signals={stats['total_signals']}  "
+        f"stages={stats['total_stages']}  variants={stats.get('total_variants', 0)}  "
+        f"relationships={stats.get('total_relationships', 0)}"
+    )
+    print(
+        f"  simulatable={stats['simulatable_families']}  "
+        f"genai_load_bearing={stats.get('genai_load_bearing', 0)}  "
+        f"capabilities={stats.get('total_capabilities', 0)}"
+    )
     top = StrategyLayer(memory).prioritized_candidates(_tested_family_ids(memory))[:5]
     if top:
         print("  CVSS top 5:", ", ".join(f"{c.family_id}({c.cvss.composite})" for c in top))
@@ -452,6 +602,8 @@ def _print_kb_section(kb: OfflineKnowledge, memory: MemoryAgent) -> None:
 def _print_red_team_header(family, hypothesis, plans) -> None:
     _sep(f"RED TEAM - {family.get('attack_id')}")
     print(f"  pattern={classify_family(family)}  strategy={plans[0].jailbreak_strategy}")
+    if hypothesis.composite_families:
+        print(f"  composites={hypothesis.composite_families}")
     if len(plans) > 1:
         print(f"  tree branches={len(plans)}")
 

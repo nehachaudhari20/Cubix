@@ -45,9 +45,11 @@ class MemoryAgent:
             confidence=analysis.confidence,
             applicable_conditions={
                 "primary_family": hypothesis.primary_family,
+                "composite_families": list(hypothesis.composite_families or []),
+                "covered_families": [hypothesis.primary_family, *(hypothesis.composite_families or [])],
                 "target_stages": hypothesis.target_stages,
                 "outcome": analysis.outcome,
-                "blocking_control": analysis.blocking_control
+                "blocking_control": analysis.blocking_control,
             },
             strategy_used=None,
             last_validated=datetime.now().isoformat()

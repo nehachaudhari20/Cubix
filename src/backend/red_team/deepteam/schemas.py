@@ -73,6 +73,7 @@ class VariationSet(BaseModel):
     source_mutation: MutationPayload
     variations: List[ValidatedVariation] = Field(default_factory=list)
     valid_count: int = 0
+    attempted_count: int = 0
 
 
 class AttackCandidate(BaseModel):

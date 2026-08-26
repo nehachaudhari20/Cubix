@@ -48,8 +48,32 @@ class OfflineKnowledge:
     def stages(self) -> List[Dict]:
         return self.loader.stages
 
+    @property
+    def canonical(self):
+        return self.loader.canonical
+
+    @property
+    def relationships(self) -> List[Dict]:
+        return list(self.loader.canonical.relationships or [])
+
+    @property
+    def variants(self) -> List[Dict]:
+        return list(self.loader.canonical.variants or [])
+
+    @property
+    def vectors(self) -> List[Dict]:
+        return list(self.loader.canonical.vectors or [])
+
+    @property
+    def capabilities(self) -> List[Dict]:
+        return list(self.loader.canonical.capabilities or [])
+
     def get_family(self, family_id: str) -> Optional[Dict]:
         return self.loader.get_family(family_id)
+
+    def get_genai_load_bearing_families(self) -> List[Dict]:
+        from .composite_intel import is_genai_load_bearing
+        return [f for f in self.get_simulatable_families() if is_genai_load_bearing(f)]
 
     def get_families_by_stage(self, stage: str) -> List[Dict]:
         return self.loader.get_families_by_stage(stage)
@@ -109,13 +133,19 @@ class OfflineKnowledge:
         simulatable = self.get_simulatable_families()
         direct = [f for f in simulatable if f.get("sandbox_executable") is True]
         proxy = [f for f in simulatable if f.get("sandbox_executable") is False]
+        catalog = self.loader.canonical.catalog_stats()
         return {
             "total_families": len(self.families),
             "total_signals": len(self.signals),
             "total_stages": len(self.stages),
+            "total_variants": catalog.get("variants", 0),
+            "total_vectors": catalog.get("vectors", 0),
+            "total_relationships": catalog.get("relationships", 0),
+            "total_capabilities": catalog.get("capabilities", 0),
             "simulatable_families": len(simulatable),
             "direct_executable": len(direct),
             "genai_proxy_executable": len(proxy),
+            "genai_load_bearing": len(self.get_genai_load_bearing_families()),
             "simulatable_ids": [f.get("attack_id") for f in simulatable],
         }
 

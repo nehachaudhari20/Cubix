@@ -56,11 +56,18 @@ def pick_variation_for_step(
     """Choose the best validated variation for a plan step."""
     if not variations:
         return None
+
+    valid = [
+        v for v in variations
+        if not hasattr(v, "validation_status") or v.validation_status == "VALID"
+    ]
+    pool = valid or variations
+
     target_amount = (step.payload_template or {}).get("amount")
     if target_amount is not None:
-        for item in variations:
+        for item in pool:
             payload = item.action_payload if hasattr(item, "action_payload") else item
             if abs(float(payload.get("amount", 0)) - float(target_amount)) < 1:
                 return payload
-    first = variations[0]
+    first = pool[0]
     return first.action_payload if hasattr(first, "action_payload") else first

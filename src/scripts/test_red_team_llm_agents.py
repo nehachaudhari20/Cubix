@@ -3,7 +3,7 @@ Exercise Red Team agents and print outputs — verify Cohere LLM wiring.
 
 Usage:
   python src/scripts/test_red_team_llm_agents.py
-  python src/scripts/test_red_team_llm_agents.py --family AF-001
+  python src/scripts/test_red_team_llm_agents.py --family AUT-001
   python src/scripts/test_red_team_llm_agents.py --json
 """
 
@@ -58,27 +58,23 @@ def dump(label: str, obj: Any, as_json: bool) -> None:
         print(json.dumps(obj, indent=2, default=str))
 
 
-def pick_family(kb: OfflineKnowledge, family_id: str | None) -> dict:
-    if family_id:
-        family = kb.get_family(family_id)
-        if not family:
-            raise SystemExit(f"Family not found: {family_id}")
-        return family
-    simulatable = kb.get_simulatable_families()
-    if not simulatable:
-        raise SystemExit("No simulatable families in KB")
-    return simulatable[0]
+def print_payload_preview(action_type: str, payload: dict, max_len: int = 400) -> None:
+    text = json.dumps(payload, default=str)
+    if len(text) > max_len:
+        text = text[: max_len - 3] + "..."
+    print(f"    {action_type}: {text}")
 
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Verify Red Team agent outputs with LLM")
-    parser.add_argument("--family", help="KB attack_id to use for planner/analyzer tests")
+    parser.add_argument(
+        "--family",
+        help="KB attack_id for fallback hypothesis if Threat Hunter returns none",
+    )
     parser.add_argument("--json", action="store_true", help="Emit JSON only")
     args = parser.parse_args()
 
     kb = OfflineKnowledge()
-    family = pick_family(kb, args.family)
-    family_id = family["attack_id"]
 
     if not args.json:
         sep("LLM CONFIG")
@@ -87,23 +83,46 @@ def main() -> None:
         if not use_llm_enabled():
             print("\nWARNING: RED_TEAM_USE_LLM is not true — agents will use rule-based fallbacks.")
 
-    # 1. Threat Hunter (LLM when enabled)
+    # 1. Threat Hunter (LLM when enabled) — composites + GenAI/CVSS
     hunter = ThreatHunter()
-    hunt = hunter.discover(memory_context="Prior run: velocity block on AF families", tested_families=[])
+    hunt = hunter.discover(
+        memory_context="Prior run: velocity block on AF families",
+        tested_families=[],
+        prefer_composites=True,
+        max_hypotheses=3,
+    )
     if args.json:
         dump("threat_hunter", hunt, True)
     else:
         sep(f"1. THREAT HUNTER (LLM={'yes' if use_llm() else 'KB fallback'})")
         dump("ThreatHunterOutput", hunt, False)
 
-    hypothesis = hunt.hypotheses[0] if hunt.hypotheses else hunter.hypothesis_from_family(family)
+    if hunt.hypotheses:
+        hypothesis = hunt.hypotheses[0]
+    elif args.family:
+        family = kb.get_family(args.family)
+        if not family:
+            raise SystemExit(f"Family not found: {args.family}")
+        hypothesis = hunter.hypothesis_from_family(family)
+    else:
+        simulatable = kb.get_simulatable_families()
+        if not simulatable:
+            raise SystemExit("No simulatable families in KB")
+        hypothesis = hunter.hypothesis_from_family(simulatable[0])
+
+    hyp_family = hypothesis.primary_family
+    if not args.json:
+        print(f"\n  Selected hypothesis: {hypothesis.name}")
+        print(f"  primary={hyp_family}  composites={hypothesis.composite_families or []}")
+        if len(hunt.hypotheses) > 1:
+            print(f"  queue ({len(hunt.hypotheses)} total):")
+            for h in hunt.hypotheses:
+                print(f"    - {h.primary_family} + {h.composite_families or []}")
 
     # 2. Attack Planner — LLM path (no jailbreak strategy)
     planner = AttackPlanner()
-    if args.json:
-        pass
-    else:
-        sep(f"2. ATTACK PLANNER — LLM path (family={family_id})")
+    if not args.json:
+        sep(f"2. ATTACK PLANNER — LLM path (hypothesis.primary_family={hyp_family})")
 
     os.environ.pop("RED_TEAM_JAILBREAK_STRATEGY", None)
     llm_plan = planner.plan(hypothesis)
@@ -111,7 +130,12 @@ def main() -> None:
         dump("attack_planner_llm", llm_plan, True)
     else:
         dump("AttackPlan (LLM or KB)", llm_plan, False)
+        print(f"  primary_family: {llm_plan.primary_family}")
         print(f"  jailbreak_strategy: {llm_plan.jailbreak_strategy}")
+        payment_steps = [s for s in llm_plan.steps if s.action_type == "initiate_payment"]
+        print(f"  payment_steps: {len(payment_steps)}")
+        for s in payment_steps[:3]:
+            print(f"    step {s.step}: {s.action} template={s.payload_template}")
 
     # 3. Jailbreak strategies (rule-based DeepTeam planners)
     if not args.json:
@@ -126,16 +150,17 @@ def main() -> None:
             for b in branches[:2]:
                 print(f"    - {b.campaign_name} ({len(b.steps)} steps)")
 
-    # 4. Attack Generator
+    # 4. Attack Generator — full concrete payloads
     generator = AttackGenerator()
     sequence = generator.generate_sequence(llm_plan)
     if args.json:
         dump("attack_generator", sequence, True)
     else:
-        sep("4. ATTACK GENERATOR (payload builder)")
+        sep("4. ATTACK GENERATOR (concrete payloads)")
         print(f"  payloads: {len(sequence.payloads)}")
-        for p in sequence.payloads[:3]:
-            print(f"    step {p.step}: {p.action_type} → {list(p.action_payload.keys())[:5]}")
+        for p in sequence.payloads:
+            print(f"  step {p.step}/{p.total_steps} [{p.action_type}]")
+            print_payload_preview(p.action_type, p.action_payload)
 
     # 5. Failure Analyzer (LLM enhancement when enabled)
     analyzer = FailureAnalyzer()
@@ -143,7 +168,7 @@ def main() -> None:
     sandbox_response = {
         "decision": "BLOCK",
         "reason": "velocity_threshold_exceeded",
-        "control_triggers": ["velocity_burst", "amount_tier2"],
+        "control_triggers": ["velocity_burst", "amount_limit_tier2"],
         "risk_score": 0.82,
     }
     analysis = None
@@ -166,9 +191,13 @@ def main() -> None:
         dump("attack_engine", variation_set, True)
     else:
         sep(f"6. PAYMENT ATTACK ENGINE (LLM validate={'yes' if use_llm() else 'pass-through'})")
-        print(f"  valid variations: {variation_set.valid_count}/{len(variation_set.variations)}")
-        for v in variation_set.variations[:2]:
-            print(f"    - {v.label}: {v.validation_status}")
+        print(
+            f"  variations: {variation_set.valid_count} valid / "
+            f"{variation_set.attempted_count} attempted"
+        )
+        for v in variation_set.variations:
+            reason = f" — {v.validation_reason}" if v.validation_reason else ""
+            print(f"    - {v.label}: {v.validation_status}{reason}")
 
     # 7. Fraud Investigator Judge (LLM)
     judge = FraudInvestigatorJudge()
@@ -176,7 +205,7 @@ def main() -> None:
         payload=sample_payment,
         sandbox_response=sandbox_response,
         expected_control_ids=["velocity_burst", "amount_limit_tier2"],
-        triggered_control_ids=["velocity_burst"],
+        triggered_control_ids=sandbox_response["control_triggers"],
     )
     if args.json:
         dump("fraud_judge", verdict, True)
@@ -197,8 +226,9 @@ def main() -> None:
     else:
         sep("8. STRATEGY LAYER (CVSS — rule-based, no LLM)")
         dump("StrategyDecision", decision, False)
+        print(f"  threat_hunter picked: {hyp_family}")
+        print(f"  strategy_next: {decision.next_hypothesis.primary_family if decision.next_hypothesis else 'none'}")
         print(f"  coverage: tested={coverage['tested']} remaining={coverage['remaining']}")
-        print(f"  cvss_top5: {coverage['cvss_top5'][:3]}")
 
     if not args.json:
         sep("DONE")

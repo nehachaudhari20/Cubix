@@ -23,6 +23,7 @@ from .schemas import Hypothesis, AttackPlan, ActionPayload, AnalysisResult
 class RedTeamGraphState(TypedDict):
     """State passed between graph nodes."""
     hypothesis: Optional[Dict[str, Any]]
+    hypotheses_queue: List[Dict[str, Any]]
     plan: Optional[Dict[str, Any]]
     plan_branches: List[Dict[str, Any]]
     current_branch_index: int
@@ -84,7 +85,7 @@ class RedTeamGraph:
         graph.add_conditional_edges(
             "decide",
             self._should_continue,
-            {"continue": "hunt", "end": END},
+            {"continue": "hunt", "plan": "plan", "end": END},
         )
 
         return graph
@@ -121,17 +122,35 @@ class RedTeamGraph:
 
     def _hunt_node(self, state: RedTeamGraphState) -> RedTeamGraphState:
         context = self.memory_agent.get_memory_context()
-        tested = [
-            m.applicable_conditions.get("primary_family")
-            for m in self.memory_agent.memories
-            if m.applicable_conditions.get("primary_family")
-        ]
-        output = self.threat_hunter.discover(memory_context=context, tested_families=tested)
+        tested = []
+        for m in self.memory_agent.memories:
+            conditions = m.applicable_conditions or {}
+            if conditions.get("primary_family"):
+                tested.append(conditions["primary_family"])
+            tested.extend(conditions.get("composite_families") or [])
+            tested.extend(conditions.get("covered_families") or [])
+
+        queue = list(state.get("hypotheses_queue") or [])
+        if queue:
+            state["hypothesis"] = queue.pop(0)
+            state["hypotheses_queue"] = queue
+            state["iteration"] = state.get("iteration", 0) + 1
+            return state
+
+        output = self.threat_hunter.discover(
+            memory_context=context,
+            tested_families=list(dict.fromkeys(tested)),
+            prefer_composites=True,
+            max_hypotheses=3,
+        )
 
         if output.hypotheses:
-            state["hypothesis"] = output.hypotheses[0].model_dump()
+            dumped = [h.model_dump() for h in output.hypotheses]
+            state["hypothesis"] = dumped[0]
+            state["hypotheses_queue"] = dumped[1:]
         else:
             state["hypothesis"] = None
+            state["hypotheses_queue"] = []
 
         state["iteration"] = state.get("iteration", 0) + 1
         return state
@@ -259,6 +278,21 @@ class RedTeamGraph:
         return state
 
     def _decide_node(self, state: RedTeamGraphState) -> RedTeamGraphState:
+        # Drain remaining Threat Hunter hypotheses before StrategyLayer stop/continue
+        queue = list(state.get("hypotheses_queue") or [])
+        if queue:
+            state["done"] = False
+            state["hypothesis"] = queue.pop(0)
+            state["hypotheses_queue"] = queue
+            state["plan"] = None
+            state["plan_branches"] = []
+            state["current_branch_index"] = 0
+            state["payloads"] = []
+            state["current_payload_index"] = 0
+            state["sandbox_response"] = None
+            state["analysis"] = None
+            return state
+
         hypothesis = Hypothesis(**state["hypothesis"]) if state.get("hypothesis") else None
         decision = self.strategy_layer.decide(
             current_hypothesis=hypothesis,
@@ -272,6 +306,7 @@ class RedTeamGraph:
         else:
             state["done"] = False
             state["hypothesis"] = None
+            state["hypotheses_queue"] = []
             state["plan"] = None
             state["plan_branches"] = []
             state["current_branch_index"] = 0
@@ -285,6 +320,9 @@ class RedTeamGraph:
     def _should_continue(self, state: RedTeamGraphState) -> str:
         if state.get("done", False):
             return "end"
+        # Next hypothesis already loaded from queue — skip re-hunt
+        if state.get("hypothesis") and not state.get("plan"):
+            return "plan"
         if state.get("iteration", 0) >= state.get("max_iterations", 3):
             return "end"
         return "continue"
@@ -293,6 +331,7 @@ class RedTeamGraph:
         """Run the Red Team graph."""
         initial_state = {
             "hypothesis": None,
+            "hypotheses_queue": [],
             "plan": None,
             "plan_branches": [],
             "current_branch_index": 0,

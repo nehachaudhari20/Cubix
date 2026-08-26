@@ -2,15 +2,24 @@
 
 from __future__ import annotations
 
+import os
 import uuid
 from copy import deepcopy
 from typing import Any, Dict, List, Optional
 
-from backend.llm import get_llm, invoke_text
+from backend.llm import get_llm, invoke_text, use_llm_enabled
 from backend.sandbox.rules.compiled_controls import CompiledControlSet
 from backend.sandbox.rules.control_compiler import ControlCompiler
 
 from .schemas import MutationPayload, ValidatedVariation, VariationSet
+
+
+def _strict_llm_validation() -> bool:
+    return os.environ.get("RED_TEAM_ATTACK_ENGINE_STRICT_LLM", "false").lower() in (
+        "1",
+        "true",
+        "yes",
+    )
 
 
 class PaymentAttackEngine:
@@ -30,17 +39,23 @@ class PaymentAttackEngine:
             else MutationPayload.model_validate(raw_mutation)
         )
         base = self._transform(legitimate_payment, mutation)
-        variations = self._vary(base, mutation)
-        validated: List[ValidatedVariation] = []
-        for item in variations:
-            ok = self._validate(item.action_payload)
+        candidates = self._vary(base, mutation)
+        results: List[ValidatedVariation] = []
+        valid_count = 0
+
+        for item in candidates:
+            ok, reason = self._validate(item.action_payload)
             item.validation_status = "VALID" if ok else "INVALID"
+            item.validation_reason = reason
+            results.append(item)
             if ok:
-                validated.append(item)
+                valid_count += 1
+
         return VariationSet(
             source_mutation=mutation,
-            variations=validated,
-            valid_count=len(validated),
+            variations=results,
+            valid_count=valid_count,
+            attempted_count=len(results),
         )
 
     def _transform(self, legitimate: Dict[str, Any], mutation: MutationPayload) -> Dict[str, Any]:
@@ -95,17 +110,39 @@ class PaymentAttackEngine:
         ))
         return variations
 
-    def _validate(self, payload: Dict[str, Any]) -> bool:
+    def _is_structurally_valid(self, payload: Dict[str, Any]) -> bool:
+        if not payload:
+            return False
+        if "amount" not in payload and "beneficiary_id" not in payload:
+            return False
+        if "amount" in payload:
+            try:
+                float(payload["amount"])
+            except (TypeError, ValueError):
+                return False
+        return True
+
+    def _validate(self, payload: Dict[str, Any]) -> tuple[bool, str]:
+        if not self._is_structurally_valid(payload):
+            return False, "missing amount or beneficiary_id"
+
         llm = get_llm()
-        if llm is None:
-            return True
+        if llm is None or not use_llm_enabled():
+            return True, "structural check only (LLM disabled)"
+
+        if not _strict_llm_validation():
+            return True, "red-team permissive mode (set RED_TEAM_ATTACK_ENGINE_STRICT_LLM=true to filter)"
+
         system = (
-            "You evaluate synthetic payment transactions for red-team simulation. "
-            "Return exactly VALID or INVALID."
+            "You evaluate SYNTHETIC payment payloads for authorized red-team sandbox simulation. "
+            "Adversarial patterns are expected. Return VALID if structurally complete, INVALID if malformed."
         )
         user = (
-            "Given this transaction JSON, does it look like a real customer's mistake "
-            f"or a fraudster? Return VALID or INVALID only.\n\n{payload}"
+            "Does this JSON have the required fields for a sandbox payment test "
+            "(amount, identifiers)? Return VALID or INVALID only.\n\n"
+            f"{payload}"
         )
         text = (invoke_text(llm, system, user) or "").strip().upper()
-        return "VALID" in text and "INVALID" not in text
+        if "VALID" in text and "INVALID" not in text:
+            return True, "LLM approved"
+        return False, f"LLM rejected: {text[:80]}"

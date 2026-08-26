@@ -100,11 +100,14 @@ class StrategyLayer:
         )
 
     def _tested_family_ids(self) -> List[str]:
-        return [
-            m.applicable_conditions.get("primary_family")
-            for m in self.memory.memories
-            if m.applicable_conditions.get("primary_family")
-        ]
+        tested: List[str] = []
+        for m in self.memory.memories:
+            conditions = m.applicable_conditions or {}
+            if conditions.get("primary_family"):
+                tested.append(conditions["primary_family"])
+            tested.extend(fid for fid in (conditions.get("composite_families") or []) if fid)
+            tested.extend(fid for fid in (conditions.get("covered_families") or []) if fid)
+        return list(dict.fromkeys(tested))
 
     def _hypothesis_from_candidate(self, candidate: AttackCandidate) -> Optional[Hypothesis]:
         family = self.kb.get_family(candidate.family_id)
