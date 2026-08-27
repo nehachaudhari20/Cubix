@@ -1,0 +1,47 @@
+{
+  "registry_version": "1.0",
+  "note": "Metadata only. Model files remain artifacts under data/models/. Scores are outputs, never fraud labels.",
+  "models": [
+    {
+      "model_version": "fraudshield_v1",
+      "parent_model_version": null,
+      "dataset_version": "unversioned_master_dataset_json",
+      "feature_version": "sandbox_features_v1",
+      "algorithm": "LightGBM",
+      "training_config": {
+        "source": "src/scripts/train_model.py",
+        "mix": "legitimate baseline + known fraud via master_dataset.json"
+      },
+      "metrics": {
+        "file": "data/models/model_metrics.json"
+      },
+      "evaluation_run_id": null,
+      "deployment_status": "retired",
+      "artifact_path": "data/models/fraudshield_v1.txt",
+      "created_at": null
+    },
+    {
+      "model_version": "fraudshield_v2",
+      "parent_model_version": "fraudshield_v1",
+      "dataset_version": "unversioned_master_plus_buffer_17",
+      "feature_version": "sandbox_features_v1",
+      "algorithm": "LightGBM",
+      "training_config": {
+        "source": "src/backend/blue_team/trainer.py",
+        "mix": "sampled master_dataset.json + all buffer payment rows (label=1)",
+        "observed_training_sources_in_features_json": {
+          "baseline_rows": 8000,
+          "buffer_rows": 17,
+          "buffer_families": ["AML-001", "AML-002", "AML-003", "AML-004", "AML-006"]
+        }
+      },
+      "metrics": {
+        "file": "data/models/hardening_report.json"
+      },
+      "evaluation_run_id": null,
+      "deployment_status": "active",
+      "artifact_path": "data/models/fraudshield_v2.txt",
+      "created_at": "2026-08-23T06:45:14.230054+00:00"
+    }
+  ]
+}

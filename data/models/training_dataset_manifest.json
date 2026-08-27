@@ -1,0 +1,19 @@
+{
+  "dataset_version": "unversioned_master_plus_buffer_17",
+  "parent_dataset_version": "unversioned_master_dataset_json",
+  "created_at": "2026-08-23T06:45:14.230054+00:00",
+  "sources": {
+    "baseline_path": "master_dataset.json",
+    "baseline_rows": 8000,
+    "known_fraud_path": "master_dataset.json",
+    "known_fraud_rows": 8000,
+    "adversarial_buffer_path": "data/adversarial_buffer/evidence.jsonl",
+    "adversarial_rows": 17,
+    "hard_negative_path": null,
+    "hard_negative_rows": null
+  },
+  "selection_policy": "current_implementation: every initiate_payment observation, label=1. Target policy is curated (success, novelty, bypass, diversity) and is not yet enforced.",
+  "feature_version": "sandbox_features_v1",
+  "row_manifest_path": null,
+  "notes": "This is a reconstructed manifest from features.json / hardening_report.json. It is not a frozen snapshot of the exact 8017 rows. A real snapshot is required before claiming reproducible v2 training."
+}

@@ -12,11 +12,10 @@ from fastapi import FastAPI
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
-# Ensure project root and src are on path
-ROOT = Path(__file__).resolve().parents[3]
-SRC = ROOT / "src"
-if str(SRC) not in sys.path:
-    sys.path.insert(0, str(SRC))
+# Resolve paths from the flattened root/backend layout.
+ROOT = Path(__file__).resolve().parents[2]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
 os.chdir(ROOT)
 
 load_dotenv(ROOT / ".env")
@@ -26,7 +25,7 @@ from backend.platform.database import init_db  # noqa: E402
 from backend.platform.scheduler import LoopScheduler  # noqa: E402
 from backend.platform.s3_storage import is_configured as s3_is_configured  # noqa: E402
 
-FRONTEND_DIR = ROOT / "src" / "frontend"
+FRONTEND_DIR = ROOT / "frontend"
 STATIC_DIR = FRONTEND_DIR / "static"
 
 

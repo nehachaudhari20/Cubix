@@ -1,0 +1,25 @@
+{
+  "version": "v2",
+  "baseline_sample": 1000,
+  "buffer_rows": 17,
+  "buffer_stats": {
+    "total": 17,
+    "payment_records": 17,
+    "fraud_labeled": 17,
+    "bypassed": 0,
+    "blocked": 17,
+    "families": [
+      "AML-001",
+      "AML-002",
+      "AML-003",
+      "AML-004",
+      "AML-006"
+    ],
+    "path": "data\\adversarial_buffer\\evidence.jsonl"
+  },
+  "val_pr_auc": 0.8509636662245372,
+  "val_roc_auc": 0.8439015939015939,
+  "decision_threshold": 0.39814320728712554,
+  "model_path": "data\\models\\fraudshield_v2.txt",
+  "spec_path": "data\\models\\features_v2.json"
+}

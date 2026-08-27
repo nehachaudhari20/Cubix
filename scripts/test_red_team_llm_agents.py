@@ -19,7 +19,7 @@ from dotenv import load_dotenv
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, ROOT)
-os.chdir(os.path.dirname(ROOT))
+os.chdir(ROOT)
 load_dotenv()
 
 from backend.llm import llm_status, use_llm_enabled  # noqa: E402

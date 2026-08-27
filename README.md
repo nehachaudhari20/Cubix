@@ -21,6 +21,7 @@ The goal is to:
 9. Re-attack the hardened environment
 
 ---
+
 ## Repository Structure
 
 ```text
@@ -50,19 +51,25 @@ payment-defense-twin/
 │   │   └── canonical/
 │   └── models/
 │
-├── src/
-│   ├── backend/
-│   │   ├── api/
-│   │   ├── knowledge/
-│   │   ├── sandbox/
-│   │   ├── red_team/
-│   │   └── blue_team/
-│   ├── frontend/
-│   └── scripts/
+├── backend/
+│   ├── api/
+│   ├── knowledge/
+│   ├── sandbox/
+│   ├── red_team/
+│   └── blue_team/
+├── frontend/
+│   ├── app/
+│   ├── components/
+│   └── public/
+├── scripts/
+│   ├── run_full_loop.py
+│   ├── test_red_team_llm_agents.py
+│   └── ...
 │
 └── .github/
     └── workflows/
 ```
+
 ---
 
 ## Product Architecture
@@ -88,3 +95,4 @@ Primary output:
 
 ```text
 Adversarial Payment Campaign
+```
