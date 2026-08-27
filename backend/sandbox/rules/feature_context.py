@@ -78,6 +78,7 @@ def build_rule_context(
     )
 
     journey_feats = build_journey_features(journey, control_triggers)
+    surface_feats = build_cross_surface_features(state, customer_id)
 
     ctx: Dict[str, Any] = {
         "amount": amount,
@@ -133,5 +134,86 @@ def build_rule_context(
         "genai_amplified_flag": bool(genai.get("genai_amplified_flag")),
         **{k: v for k, v in genai.items() if isinstance(v, (int, float, bool))},
         **journey_feats,
+        **surface_feats,
     }
     return ctx
+
+
+def build_cross_surface_features(state: Any, customer_id: Optional[str]) -> Dict[str, Any]:
+    """
+    Signals a payment inherits from earlier attacks on *other* surfaces.
+
+    Without these, a payment is scored as if nothing happened before it: an agent
+    whose instructions were hijacked, a session under remote control, a victim who
+    just disclosed an OTP, and a consent escalated to payments.initiate all look
+    identical to a clean transaction. That is the gap composite campaigns exploit,
+    so the payment rule context has to carry it.
+
+    All values are derived from durable sandbox state, not from the request.
+    """
+    empty: Dict[str, Any] = {
+        "session_compromised": False,
+        "session_automated": False,
+        "agent_mediated_session": False,
+        "agent_memory_integrity": 1.0,
+        "agent_instruction_fidelity": 1.0,
+        "agent_poisoning_attempts": 0,
+        "otp_disclosed_recently": False,
+        "victim_coerced_recently": False,
+        "auth_attempts_24h": 0,
+        "consent_payment_scope_active": False,
+        "consent_scope_escalations": 0,
+        "identity_recently_upgraded": False,
+        "kyc_evidence_rejected_count": 0,
+        "prior_surface_attacks_24h": 0,
+        "compromised_surface_count": 0,
+    }
+    if state is None or not customer_id:
+        return empty
+
+    out = dict(empty)
+
+    # --- agent state ------------------------------------------------------
+    agents = [a for a in getattr(state, "agents", {}).values() if a.customer_id == customer_id]
+    if agents:
+        out["agent_mediated_session"] = True
+        out["agent_memory_integrity"] = round(min(a.memory_integrity for a in agents), 4)
+        out["agent_instruction_fidelity"] = round(min(a.instruction_fidelity for a in agents), 4)
+        out["agent_poisoning_attempts"] = max(a.poisoning_attempts for a in agents)
+
+    # --- authentication / social engineering ------------------------------
+    if hasattr(state, "get_auth_events"):
+        events = state.get_auth_events(customer_id, hours=24)
+        out["auth_attempts_24h"] = len(events)
+        out["otp_disclosed_recently"] = any(e.otp_disclosed for e in events)
+        out["victim_coerced_recently"] = any(e.victim_coerced for e in events)
+
+    # --- consent ----------------------------------------------------------
+    if hasattr(state, "get_customer_consents"):
+        consents = state.get_customer_consents(customer_id)
+        out["consent_payment_scope_active"] = any(
+            c.is_active and "payments.initiate" in (c.scopes or []) for c in consents
+        )
+        out["consent_scope_escalations"] = sum(c.scope_escalations for c in consents)
+
+    # --- identity evidence -------------------------------------------------
+    if hasattr(state, "get_kyc_submissions"):
+        submissions = state.get_kyc_submissions(customer_id)
+        out["identity_recently_upgraded"] = any(s.accepted for s in submissions)
+        out["kyc_evidence_rejected_count"] = sum(1 for s in submissions if not s.accepted)
+
+    # --- session integrity + surface history ------------------------------
+    surface_log = getattr(state, "surface_log", []) or []
+    mine = [e for e in surface_log if e.get("customer_id") == customer_id]
+    out["prior_surface_attacks_24h"] = len(mine)
+    compromised: Set[str] = set()
+    for event in mine:
+        flags = set(event.get("flags") or [])
+        if event.get("decision") in ("ALLOW", "CHALLENGE"):
+            compromised.add(str(event.get("surface")))
+        if {"dev_remote_access_detected", "dev_accessibility_abuse"} & flags:
+            out["session_compromised"] = True
+        if {"dev_machine_speed_interaction", "dev_automation_indicators"} & flags:
+            out["session_automated"] = True
+    out["compromised_surface_count"] = len(compromised)
+    return out

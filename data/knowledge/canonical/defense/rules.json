@@ -1,13 +1,13 @@
 {
   "registry_version": "2.0",
-  "built_at": "2026-08-27T17:08:03.675739+00:00",
+  "built_at": "2026-08-27T17:25:17.941430+00:00",
   "description": "Data-driven sandbox rules compiled from KB signals, controls, and parameter bindings.",
   "counts": {
-    "total": 359,
+    "total": 369,
     "threshold": 19,
     "composite": 6,
     "signal": 276,
-    "surface": 58
+    "surface": 68
   },
   "rules": [
     {
@@ -15180,6 +15180,330 @@
         "CTL-0046",
         "CTL-0047",
         "CTL-0320"
+      ],
+      "risk_cap": 0.85,
+      "enabled": true,
+      "origin": "surface_control_mapped"
+    },
+    {
+      "rule_id": "RUL-SURF-XS-SESSION-COMPROMISED",
+      "name": "Payment from a compromised session",
+      "rule_type": "surface",
+      "engines": [
+        "risk"
+      ],
+      "signal_ids": [],
+      "logic": "all",
+      "conditions": [
+        {
+          "field": "session_compromised",
+          "op": "truthy"
+        }
+      ],
+      "risk_contribution": {
+        "param": "amount_tier1_risk",
+        "registry": "payment_initiation",
+        "default": 0.34
+      },
+      "trigger": "xs_session_compromised",
+      "control_id": "CTL-0279",
+      "expected_control_ids": [
+        "CTL-0139",
+        "CTL-0279"
+      ],
+      "risk_cap": 0.85,
+      "enabled": true,
+      "origin": "surface_control_mapped"
+    },
+    {
+      "rule_id": "RUL-SURF-XS-SESSION-AUTOMATED",
+      "name": "Payment from an automated session",
+      "rule_type": "surface",
+      "engines": [
+        "risk"
+      ],
+      "signal_ids": [],
+      "logic": "all",
+      "conditions": [
+        {
+          "field": "session_automated",
+          "op": "truthy"
+        }
+      ],
+      "risk_contribution": {
+        "param": "amount_tier1_risk",
+        "registry": "payment_initiation",
+        "default": 0.26
+      },
+      "trigger": "xs_session_automated",
+      "control_id": "CTL-0282",
+      "expected_control_ids": [
+        "CTL-0137",
+        "CTL-0282"
+      ],
+      "risk_cap": 0.85,
+      "enabled": true,
+      "origin": "surface_control_mapped"
+    },
+    {
+      "rule_id": "RUL-SURF-XS-OTP-DISCLOSED",
+      "name": "Payment after recent OTP disclosure",
+      "rule_type": "surface",
+      "engines": [
+        "risk"
+      ],
+      "signal_ids": [],
+      "logic": "all",
+      "conditions": [
+        {
+          "field": "otp_disclosed_recently",
+          "op": "truthy"
+        }
+      ],
+      "risk_contribution": {
+        "param": "amount_tier1_risk",
+        "registry": "payment_initiation",
+        "default": 0.34
+      },
+      "trigger": "xs_otp_disclosed_recently",
+      "control_id": "CTL-0249",
+      "expected_control_ids": [
+        "CTL-0249",
+        "CTL-0250"
+      ],
+      "risk_cap": 0.85,
+      "enabled": true,
+      "origin": "surface_control_mapped"
+    },
+    {
+      "rule_id": "RUL-SURF-XS-VICTIM-COERCED",
+      "name": "Payment after recent coercion",
+      "rule_type": "surface",
+      "engines": [
+        "risk"
+      ],
+      "signal_ids": [],
+      "logic": "all",
+      "conditions": [
+        {
+          "field": "victim_coerced_recently",
+          "op": "truthy"
+        }
+      ],
+      "risk_contribution": {
+        "param": "amount_tier1_risk",
+        "registry": "payment_initiation",
+        "default": 0.3
+      },
+      "trigger": "xs_victim_coerced_recently",
+      "control_id": "CTL-0250",
+      "expected_control_ids": [
+        "CTL-0250"
+      ],
+      "risk_cap": 0.85,
+      "enabled": true,
+      "origin": "surface_control_mapped"
+    },
+    {
+      "rule_id": "RUL-SURF-XS-AGENT-INTEGRITY",
+      "name": "Payment under degraded agent integrity",
+      "rule_type": "surface",
+      "engines": [
+        "risk"
+      ],
+      "signal_ids": [],
+      "logic": "all",
+      "conditions": [
+        {
+          "field": "agent_memory_integrity",
+          "op": "exists"
+        },
+        {
+          "field": "agent_memory_integrity",
+          "op": "<",
+          "param": "memory_integrity_floor",
+          "registry": "agent",
+          "default": 0.6
+        }
+      ],
+      "risk_contribution": {
+        "param": "amount_tier1_risk",
+        "registry": "payment_initiation",
+        "default": 0.32
+      },
+      "trigger": "xs_agent_memory_degraded",
+      "control_id": "CTL-0240",
+      "expected_control_ids": [
+        "CTL-0240"
+      ],
+      "risk_cap": 0.85,
+      "enabled": true,
+      "origin": "surface_control_mapped"
+    },
+    {
+      "rule_id": "RUL-SURF-XS-AGENT-FIDELITY",
+      "name": "Payment under broken agent instruction fidelity",
+      "rule_type": "surface",
+      "engines": [
+        "risk"
+      ],
+      "signal_ids": [],
+      "logic": "all",
+      "conditions": [
+        {
+          "field": "agent_instruction_fidelity",
+          "op": "exists"
+        },
+        {
+          "field": "agent_instruction_fidelity",
+          "op": "<",
+          "param": "memory_integrity_floor",
+          "registry": "agent",
+          "default": 0.6
+        }
+      ],
+      "risk_contribution": {
+        "param": "amount_tier1_risk",
+        "registry": "payment_initiation",
+        "default": 0.32
+      },
+      "trigger": "xs_agent_fidelity_broken",
+      "control_id": "CTL-0236",
+      "expected_control_ids": [
+        "CTL-0236",
+        "CTL-0237"
+      ],
+      "risk_cap": 0.85,
+      "enabled": true,
+      "origin": "surface_control_mapped"
+    },
+    {
+      "rule_id": "RUL-SURF-XS-CONSENT-PAYMENT-SCOPE",
+      "name": "Payment under a third-party consent scope",
+      "rule_type": "surface",
+      "engines": [
+        "risk"
+      ],
+      "signal_ids": [],
+      "logic": "all",
+      "conditions": [
+        {
+          "field": "consent_payment_scope_active",
+          "op": "truthy"
+        }
+      ],
+      "risk_contribution": {
+        "param": "amount_tier1_risk",
+        "registry": "payment_initiation",
+        "default": 0.28
+      },
+      "trigger": "xs_consent_payment_scope",
+      "control_id": "CTL-0215",
+      "expected_control_ids": [
+        "CTL-0213",
+        "CTL-0215"
+      ],
+      "risk_cap": 0.85,
+      "enabled": true,
+      "origin": "surface_control_mapped"
+    },
+    {
+      "rule_id": "RUL-SURF-XS-CONSENT-ESCALATED",
+      "name": "Payment under an escalated consent",
+      "rule_type": "surface",
+      "engines": [
+        "risk"
+      ],
+      "signal_ids": [],
+      "logic": "all",
+      "conditions": [
+        {
+          "field": "consent_scope_escalations",
+          "op": ">=",
+          "param": "typical_scope_count",
+          "registry": "consent",
+          "default": 1
+        }
+      ],
+      "risk_contribution": {
+        "param": "amount_tier1_risk",
+        "registry": "payment_initiation",
+        "default": 0.28
+      },
+      "trigger": "xs_consent_escalated",
+      "control_id": "CTL-0215",
+      "expected_control_ids": [
+        "CTL-0215"
+      ],
+      "risk_cap": 0.85,
+      "enabled": true,
+      "origin": "surface_control_mapped"
+    },
+    {
+      "rule_id": "RUL-SURF-XS-IDENTITY-FRESH-UPGRADE",
+      "name": "Payment right after an identity upgrade",
+      "rule_type": "surface",
+      "engines": [
+        "risk"
+      ],
+      "signal_ids": [],
+      "logic": "all",
+      "conditions": [
+        {
+          "field": "identity_recently_upgraded",
+          "op": "truthy"
+        },
+        {
+          "field": "account_age_days",
+          "op": "<",
+          "param": "young_account_days",
+          "registry": "identity_kyc",
+          "default": 30
+        }
+      ],
+      "risk_contribution": {
+        "param": "amount_tier1_risk",
+        "registry": "payment_initiation",
+        "default": 0.3
+      },
+      "trigger": "xs_identity_fresh_upgrade",
+      "control_id": "CTL-0336",
+      "expected_control_ids": [
+        "CTL-0336",
+        "CTL-0337"
+      ],
+      "risk_cap": 0.85,
+      "enabled": true,
+      "origin": "surface_control_mapped"
+    },
+    {
+      "rule_id": "RUL-SURF-XS-MULTI-SURFACE",
+      "name": "Payment after attacks on multiple surfaces",
+      "rule_type": "surface",
+      "engines": [
+        "risk"
+      ],
+      "signal_ids": [],
+      "logic": "all",
+      "conditions": [
+        {
+          "field": "compromised_surface_count",
+          "op": ">=",
+          "param": "structuring_count_threshold",
+          "registry": "aml_compliance",
+          "default": 2
+        }
+      ],
+      "risk_contribution": {
+        "param": "amount_tier1_risk",
+        "registry": "payment_initiation",
+        "default": 0.34
+      },
+      "trigger": "xs_multi_surface_campaign",
+      "control_id": "CTL-0321",
+      "expected_control_ids": [
+        "CTL-0319",
+        "CTL-0321"
       ],
       "risk_cap": 0.85,
       "enabled": true,

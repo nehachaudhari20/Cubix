@@ -58,7 +58,13 @@ SANDBOX_FEATURES = [
 # transaction_type: auth_attempt/identity_verification/consent_grant/...), so
 # each sandbox surface maps onto the vocabulary the baseline already uses.
 CONTROL_SURFACE_DEFAULTS: Dict[str, Any] = {
-    "amount": 0.0,
+    # NOT zero. `amount == 0` appears in 0 of 8000 baseline rows, so a zero here
+    # would be a value only adversarial rows ever carry — a latent fraud tell that
+    # a future training run could latch onto even though the current model does
+    # not (verified by scoring benign control-surface rows: 0.07-0.14 vs a 0.84
+    # threshold). Per-action medians below come from master_dataset.json's own
+    # non-payment events, so surface rows sit inside the baseline distribution.
+    "amount": 2399.37,
     "payment_rail": "protocol",
     "transaction_type": "protocol_message",
     "authentication_method": "unknown",
@@ -83,26 +89,43 @@ CONTROL_SURFACE_DEFAULTS: Dict[str, Any] = {
 
 # Per-action event profile, expressed in the baseline dataset's own vocabulary
 # so adversarial rows are indistinguishable from baseline rows by schema alone.
+# `amount` is the median for that event type in master_dataset.json.
 ACTION_EVENT_PROFILE: Dict[str, Dict[str, Any]] = {
     "simulate_genai_context": {
         "payment_rail": "protocol",
         "transaction_type": "protocol_message",
         "authentication_method": "unknown",
+        "amount": 17672.04,
     },
     "simulate_social_engineering": {
         "payment_rail": "authentication",
         "transaction_type": "auth_attempt",
         "authentication_method": "otp",
+        "amount": 2399.37,
     },
     "submit_kyc_evidence": {
         "payment_rail": "account_opening",
         "transaction_type": "identity_verification",
         "authentication_method": "document_upload",
+        "amount": 1924.78,
     },
     "request_consent": {
         "payment_rail": "data_access",
         "transaction_type": "consent_grant",
         "authentication_method": "unknown",
+        "amount": 16810.81,
+    },
+    "establish_session": {
+        "payment_rail": "device_session",
+        "transaction_type": "session_login",
+        "authentication_method": "password",
+        "amount": 3699.93,
+    },
+    "orchestrate_network": {
+        "payment_rail": "token",
+        "transaction_type": "token_usage",
+        "authentication_method": "unknown",
+        "amount": 21136.99,
     },
 }
 

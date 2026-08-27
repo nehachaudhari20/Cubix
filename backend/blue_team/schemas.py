@@ -177,8 +177,20 @@ class CompositeCampaignMetrics(BaseModel):
     bypass_rate: float = 0.0
 
 
+class SurfaceRecall(BaseModel):
+    """Detection recall for one adjudicated control surface."""
+    surface: str = ""
+    samples: int = 0
+    recall: float = 0.0
+    mean_score: float = 0.0
+    sandbox_bypass_rate: float = 0.0
+
+
 class GeneralizationMetrics(BaseModel):
     """Generalization pillar — LOFO, unseen family/variant, composite (11c)."""
+    surface_recall: List[SurfaceRecall] = Field(default_factory=list)
+    mean_surface_recall: float = 0.0
+    min_surface_recall: float = 0.0
     buffer_families: List[str] = Field(default_factory=list)
     trained_families: List[str] = Field(default_factory=list)
     family_recall: List[FamilyRecall] = Field(default_factory=list)

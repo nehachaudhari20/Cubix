@@ -347,6 +347,58 @@ def build_surface_rules() -> List[Dict[str, Any]]:
               ["CTL-0046", "CTL-0047", "CTL-0320"], risk_default=0.34),
     ]
 
+    # ---------------------------------------------------- cross-surface payment
+    # These fire on the PAYMENT surface, driven by state left behind by an earlier
+    # attack on another surface. Without them a payment is scored as if nothing
+    # happened before it, and a composite campaign gains nothing from its upstream
+    # steps — which is exactly the gap composite attacks exploit in production.
+    P = "payment_initiation"
+    rules += [
+        _rule("XS-SESSION-COMPROMISED", "Payment from a compromised session", "risk", P,
+              [_flag("session_compromised")],
+              "amount_tier1_risk", "xs_session_compromised", "CTL-0279",
+              ["CTL-0139", "CTL-0279"], risk_default=0.34),
+        _rule("XS-SESSION-AUTOMATED", "Payment from an automated session", "risk", P,
+              [_flag("session_automated")],
+              "amount_tier1_risk", "xs_session_automated", "CTL-0282",
+              ["CTL-0137", "CTL-0282"], risk_default=0.26),
+        _rule("XS-OTP-DISCLOSED", "Payment after recent OTP disclosure", "risk", P,
+              [_flag("otp_disclosed_recently")],
+              "amount_tier1_risk", "xs_otp_disclosed_recently", "CTL-0249",
+              ["CTL-0249", "CTL-0250"], risk_default=0.34),
+        _rule("XS-VICTIM-COERCED", "Payment after recent coercion", "risk", P,
+              [_flag("victim_coerced_recently")],
+              "amount_tier1_risk", "xs_victim_coerced_recently", "CTL-0250",
+              ["CTL-0250"], risk_default=0.30),
+        _rule("XS-AGENT-INTEGRITY", "Payment under degraded agent integrity", "risk", P,
+              [{"field": "agent_memory_integrity", "op": "exists"},
+               _lt("agent_memory_integrity", "memory_integrity_floor", "agent", 0.60)],
+              "amount_tier1_risk", "xs_agent_memory_degraded", "CTL-0240",
+              ["CTL-0240"], risk_default=0.32),
+        _rule("XS-AGENT-FIDELITY", "Payment under broken agent instruction fidelity", "risk", P,
+              [{"field": "agent_instruction_fidelity", "op": "exists"},
+               _lt("agent_instruction_fidelity", "memory_integrity_floor", "agent", 0.60)],
+              "amount_tier1_risk", "xs_agent_fidelity_broken", "CTL-0236",
+              ["CTL-0236", "CTL-0237"], risk_default=0.32),
+        _rule("XS-CONSENT-PAYMENT-SCOPE", "Payment under a third-party consent scope", "risk", P,
+              [_flag("consent_payment_scope_active")],
+              "amount_tier1_risk", "xs_consent_payment_scope", "CTL-0215",
+              ["CTL-0213", "CTL-0215"], risk_default=0.28),
+        _rule("XS-CONSENT-ESCALATED", "Payment under an escalated consent", "risk", P,
+              [_gt("consent_scope_escalations", "typical_scope_count", "consent", 1)],
+              "amount_tier1_risk", "xs_consent_escalated", "CTL-0215",
+              ["CTL-0215"], risk_default=0.28),
+        _rule("XS-IDENTITY-FRESH-UPGRADE", "Payment right after an identity upgrade", "risk", P,
+              [_flag("identity_recently_upgraded"),
+               _lt("account_age_days", "young_account_days", "identity_kyc", 30)],
+              "amount_tier1_risk", "xs_identity_fresh_upgrade", "CTL-0336",
+              ["CTL-0336", "CTL-0337"], risk_default=0.30),
+        _rule("XS-MULTI-SURFACE", "Payment after attacks on multiple surfaces", "risk", P,
+              [_gt("compromised_surface_count", "structuring_count_threshold", "aml_compliance", 2)],
+              "amount_tier1_risk", "xs_multi_surface_campaign", "CTL-0321",
+              ["CTL-0319", "CTL-0321"], risk_default=0.34),
+    ]
+
     return rules
 
 

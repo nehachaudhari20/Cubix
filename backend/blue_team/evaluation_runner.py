@@ -132,10 +132,20 @@ class EvaluationRunner:
             else asr.ml_recall_lift
         )
 
+        # Holdout recall is also compared at a matched operating point.
+        # `recall_delta` uses each model's own threshold, so a model calibrated to
+        # a stricter FPR looks worse even when it ranks strictly better — the same
+        # artifact that made ASR read as a regression. recall_at_1pct_fpr is
+        # already a fixed-FPR metric, so it is the fair comparison; raw
+        # recall_delta is only allowed to veto when FPR also got worse.
+        recall_at_fpr_delta = holdout_delta.get("recall_at_1pct_fpr_delta", 0)
+        fpr_delta = holdout_delta.get("fpr_delta", 1)
+        recall_regressed_at_equal_fpr = recall_at_fpr_delta < -0.02
+
         recommend_hardening = (
             buffer_cmp.get("lift", 0) >= 0
-            and holdout_delta.get("recall_delta", 0) >= -0.05
-            and holdout_delta.get("fpr_delta", 1) <= 0.05
+            and not recall_regressed_at_equal_fpr
+            and fpr_delta <= 0.05
             and asr_lift >= 0
         )
 
@@ -144,6 +154,13 @@ class EvaluationRunner:
             "hardening_gate_metric": (
                 "asr_reduction_matched" if asr.matched_fpr is not None else "asr_reduction"
             ),
+            "gate_detail": {
+                "buffer_lift": buffer_cmp.get("lift", 0),
+                "recall_at_1pct_fpr_delta": recall_at_fpr_delta,
+                "recall_delta_native_threshold": holdout_delta.get("recall_delta", 0),
+                "fpr_delta": fpr_delta,
+                "asr_lift": asr_lift,
+            },
             "integrity_passed": integrity.all_passed,
             "integrity_score": f"{integrity.passed_count}/{integrity.total_checks}",
             "fidelity_passed": fidelity.all_checks_passed,
@@ -159,6 +176,11 @@ class EvaluationRunner:
             "matched_fpr": asr.matched_fpr,
             "asr_by_surface": {s.surface: s.asr_reduction for s in asr.per_surface},
             "mean_family_recall": generalization.mean_family_recall,
+            "mean_surface_recall": generalization.mean_surface_recall,
+            "min_surface_recall": generalization.min_surface_recall,
+            "recall_by_surface": {
+                s.surface: s.recall for s in generalization.surface_recall
+            },
             "mean_lofo_gap": generalization.mean_lofo_gap,
             "composite_campaign_count": generalization.composite_campaign_count,
             "score_separation": fidelity.score_separation,

@@ -62,11 +62,21 @@ def test_collector_stores_payment_evidence():
                 print(f"  Stored {record.evidence_id}: {record.action_type} → {record.sandbox_decision} ({record.evasion_outcome})")
 
         stats = buffer.stats()
-        assert stats["payment_records"] == stored
-        assert stats["payment_records"] >= 1
-        assert stats["fraud_labeled"] == stats["payment_records"]
+        # The collector stores every adjudicated surface, not payment only, so
+        # `stored` is compared against adjudicated_records. payment_records stays
+        # a payment-specific subset.
+        assert stats["adjudicated_records"] == stored, (stats, stored)
+        assert stats["adjudicated_records"] >= 1
+        assert stats["payment_records"] <= stats["adjudicated_records"]
+        assert stats["fraud_labeled"] == stats["adjudicated_records"]
         assert all(r.label == 1 for r in buffer.read_all())
-        print(f"  Buffer stats: {stats['payment_records']} payments, {stats['bypassed']} bypassed, {stats['blocked']} blocked")
+        # Every stored row is tagged with the surface that adjudicated it.
+        assert all(r.surface for r in buffer.read_all())
+        print(
+            f"  Buffer stats: {stats['adjudicated_records']} adjudicated "
+            f"({stats['payment_records']} payment), surfaces={stats['surfaces']}, "
+            f"{stats['bypassed']} bypassed, {stats['blocked']} blocked"
+        )
         print("  ✅ PASSED")
 
 

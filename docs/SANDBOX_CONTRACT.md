@@ -138,6 +138,65 @@ trade strength for stealth, and Blue only ever sees blocked attacks. Measured bo
 | 0.50 | CHALLENGE | ALLOW | ALLOW |
 | ≥ 0.60 | BLOCK | BLOCK | BLOCK |
 
+## Red Team: finding the boundary, not just firing at full strength
+
+A single full-strength attack per family tells you nothing: it is blocked, ASR is 0,
+and Blue receives only obvious blocks. The valuable attack is the **strongest one that
+still evades** — maximally aggressive while scoring below the decision threshold. Those
+near misses are the hard training examples.
+
+[deepteam/surface_mutator.py](../backend/red_team/deepteam/surface_mutator.py) declares
+each surface's attacker-controlled knobs, taken from what its engine actually reads:
+
+| Knob | Meaning | Examples |
+|------|---------|----------|
+| intensity | continuous GenAI feature scores | `prompt_injection_risk`, `voice_cloning_score` |
+| inverted | features that go *down* as the attack gets stronger | `identity_consistency_score`, `behavioural_variance` |
+| toggles | discrete capabilities, causing step-changes in the verdict | `remote_access_active`, `stolen_token`, `recovery_flow` |
+| ladders | numeric params with an aggressive and a stealth end | `requested_amount` vs mandate limit, `ring_size`, interaction timing |
+
+[evasion_search.py](../backend/red_team/evasion_search.py) then searches that space:
+
+1. **ablate** — drop one capability at a time at full strength, to find which control is
+   actually doing the blocking
+2. **bisect** — binary-search intensity for the highest value that still gets through
+3. **report** — every probe plus the boundary goes to Blue
+
+Measured across 20 surface families: **387 probes, 143 evaded, ASR 37.0%**, boundary
+intensity per surface (agent ≈0.34–0.37, kyc ≈0.31–0.40, auth_se/device ≈0.49,
+network ≈0.54). `OB-001` reports `closed` — no intensity evades, and only a
+narrowed-scope categorical probe gets through. Red never labels its own success; every
+probe is adjudicated by the sandbox.
+
+## Composite campaigns: attacks that cross surfaces
+
+[composite_campaign.py](../backend/red_team/composite_campaign.py) runs ordered chains
+against **one** sandbox instance, so each step inherits the state the last one left.
+Each chain is measured twice — the full chain, and the cash-out step alone on fresh
+state. The difference is what the upstream attack bought the attacker.
+
+Two things this exposed:
+
+- A composite only works in a **narrow intensity band**. Too stealthy and the upstream
+  step evades but achieves nothing (no compromise to inherit); too loud and it is blocked
+  upstream. `run_best` sweeps intensity and ranks by whether a compromise actually
+  landed, which is why a fixed intensity reports a misleading "no change".
+- Comparing raw risk scores is wrong when one side hard-blocks. A payment that fails an
+  unverified-KYC check never reaches scoring and reports risk `0.0` — numerically the
+  lowest risk, semantically the worst outcome for the attacker. `attacker_gain` uses
+  decision severity instead.
+
+The payment surface reads cross-surface state via
+`feature_context.build_cross_surface_features` (`session_compromised`,
+`otp_disclosed_recently`, `agent_memory_integrity`, `consent_payment_scope_active`,
+`identity_recently_upgraded`, …), and 10 `RUL-SURF-XS-*` rules act on it. Without those,
+a payment is scored as if nothing happened before it — which is precisely the gap a
+multi-surface attacker exploits.
+
+Current result: the defense **catches** three of six chains harder than the isolated
+payment (`attacker_gain −1`), and the deepfake chain converts a hard KYC block into a
+risk-scored block. Full loop: `python scripts/run_multi_surface_loop.py`.
+
 ## Breadth asymmetry: dataset ⊃ KB ⊃ sandbox
 
 The three layers do not cover the same ground, and the sandbox is the narrowest:

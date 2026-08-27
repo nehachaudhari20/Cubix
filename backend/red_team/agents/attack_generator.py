@@ -20,12 +20,26 @@ from ..deepteam.mutation_builder import (
     mutation_from_plan_step,
 )
 from ..deepteam.strategy_config import use_attack_engine
+from ..deepteam.surface_mutator import SurfaceAttackEngine
 from backend.sandbox.rules.compiled_controls import CompiledControlSet, get_global_compiled_controls
 from backend.sandbox.rules.control_compiler import ControlCompiler
+from backend.taxonomy import SURFACE_ENTRY_ACTION, surface_for_action
+
+# Non-payment surface entry actions handled by _build_surface_payload.
+SURFACE_ACTIONS = frozenset(SURFACE_ENTRY_ACTION.values()) - {"initiate_payment"}
 
 
 def _execute_all_variations() -> bool:
     return os.environ.get("RED_TEAM_ENGINE_EXECUTE_ALL", "true").lower() in ("1", "true", "yes")
+
+
+def _max_surface_variations() -> int:
+    """Probes per surface step. Lower than the payment budget because a surface
+    campaign has fewer steps, so the total stays comparable."""
+    try:
+        return max(4, min(40, int(os.environ.get("RED_TEAM_SURFACE_MAX_VARIATIONS", "12"))))
+    except ValueError:
+        return 12
 
 
 def _engine_payment_mode() -> str:
@@ -52,6 +66,7 @@ class AttackGenerator:
         self.compiled = compiled_controls or get_global_compiled_controls() or ControlCompiler().compile()
         self.use_engine = use_attack_engine()
         self.attack_engine = PaymentAttackEngine(self.compiled) if self.use_engine else None
+        self.surface_engine = SurfaceAttackEngine(max_variations=_max_surface_variations())
 
     def generate_sequence(self, plan: AttackPlan) -> GeneratedSequence:
         ids = new_campaign_ids(plan.campaign_name.replace(" ", "_").lower()[:8])
@@ -89,6 +104,33 @@ class AttackGenerator:
         plan: AttackPlan,
     ) -> List[ActionPayload]:
         action_payload, meta = self._build_action_payload(step, ids, idx, plan)
+
+        # Surface steps expand through the surface mutation space, the same way
+        # payment steps expand through PaymentAttackEngine. Without this, every
+        # non-payment surface runs one full-strength attack and ASR is 0 by
+        # construction.
+        surface_variations = meta.get("surface_variations")
+        if surface_variations:
+            return [
+                ActionPayload(
+                    action_type=step.action_type,
+                    action_payload=var_payload,
+                    step=step.step,
+                    total_steps=len(plan.steps),
+                    is_final=False,
+                    campaign_id=ids["campaign_id"],
+                    attack_family=plan.primary_family,
+                    attack_variant=plan.selected_variant,
+                    target_control=step.target_control,
+                    expected_outcome=step.expected_outcome,
+                    narrative=self._build_narrative(
+                        step, plan, var_payload, {"variation_label": label}
+                    ),
+                    variation_label=label,
+                    engine_validated=True,
+                )
+                for label, var_payload in surface_variations
+            ]
 
         # Non-payment or no engine expansion → single payload
         if step.action_type != "initiate_payment" or not meta.get("engine_variations"):
@@ -197,21 +239,48 @@ class AttackGenerator:
                 "risk_score": float(tpl.get("risk_score", 0.25)),
             }, meta
 
-        if action_type == "simulate_genai_context":
-            return {
-                "attack_family": plan.primary_family,
-                "customer_id": ids.get("customer_id"),
-                "capability_ids": tpl.get("capability_ids") or [],
-                "channels": tpl.get("channels") or [],
-                "genai_features": tpl.get("genai_features") or {},
-                "victim_coerced": tpl.get("victim_coerced", False),
-                "agent_mediated": tpl.get("agent_mediated", False),
-            }, meta
+        if action_type in SURFACE_ACTIONS:
+            return self._build_surface_payload(action_type, step, ids, plan, tpl, meta)
 
         payment = self._build_payment_payload(step, ids, idx, plan, tpl)
         if self.attack_engine and self._should_apply_engine(step, plan):
             payment, meta = self._apply_attack_engine(payment, step)
         return payment, meta
+
+    def _build_surface_payload(
+        self,
+        action_type: str,
+        step: PlanStep,
+        ids: Dict[str, str],
+        plan: AttackPlan,
+        tpl: Dict[str, Any],
+        meta: Dict[str, Any],
+    ) -> tuple[Dict[str, Any], Dict[str, Any]]:
+        """
+        Build the payload for a non-payment surface action.
+
+        The planner already resolved the family's attacker-controlled parameters
+        into `step.payload_template`, so it is passed through rather than
+        re-derived — dropping it would discard the technique, the family's signal
+        and control ids, and the surface-specific knobs.
+        """
+        payload: Dict[str, Any] = dict(tpl)
+        payload.setdefault("attack_family", plan.primary_family)
+        payload.setdefault("customer_id", ids.get("customer_id"))
+        payload.setdefault("device_id", ids.get("device_id"))
+        if action_type == "orchestrate_network":
+            payload.setdefault("shared_beneficiary_id", ids.get("beneficiary_id"))
+
+        surface = surface_for_action(action_type)
+        if surface and self.surface_engine is not None and _execute_all_variations():
+            variations = self.surface_engine.generate(surface, payload)
+            if variations:
+                meta["surface_variations"] = [
+                    (v.label, v.action_payload) for v in variations
+                ]
+                meta["engine_validated"] = True
+                meta["variation_label"] = f"surface_expanded_{len(variations)}"
+        return payload, meta
 
     def _build_payment_payload(
         self,

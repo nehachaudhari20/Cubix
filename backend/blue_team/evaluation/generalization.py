@@ -10,7 +10,8 @@ from typing import Any, Dict, List, Set
 import numpy as np
 
 from ..metrics import evaluate_detection
-from ..schemas import (
+from ..schemas import (  # noqa: F401
+    SurfaceRecall,
     CompositeCampaignMetrics,
     FamilyRecall,
     GeneralizationMetrics,
@@ -31,7 +32,10 @@ def _trained_families(ctx: EvaluationContext, all_families: Set[str]) -> Set[str
 
 
 def run_generalization_suite(ctx: EvaluationContext) -> GeneralizationMetrics:
-    records = ctx.payment_records()
+    # All adjudicated surfaces, not payment only — otherwise agent, auth_se, kyc,
+    # consent, device and network attacks are invisible to the generalization
+    # pillar even though Blue now trains on them.
+    records = ctx.attack_records()
     if not records:
         return GeneralizationMetrics()
 
@@ -153,7 +157,42 @@ def run_generalization_suite(ctx: EvaluationContext) -> GeneralizationMetrics:
     composite_only = [c for c in composite_rows if c.is_composite]
     lofo_gaps = [r.recall_gap for r in lofo_rows]
 
+    # Per-surface recall — a headline number hides that the model may detect
+    # payment fraud well and agent or consent abuse not at all.
+    surface_rows: List[SurfaceRecall] = []
+    for surface in sorted({r.surface for r in records}):
+        subset = [r for r in records if r.surface == surface]
+        scores = ctx.score_records(subset, model)
+        if not scores:
+            continue
+        det = evaluate_detection(
+            f"surface_{surface}",
+            np.ones(len(scores), dtype=int),
+            scores,
+            threshold=model.threshold,
+        )
+        bypassed = sum(
+            1 for r in subset
+            if r.sandbox_decision == "ALLOW" or r.evasion_outcome == "bypassed"
+        )
+        surface_rows.append(
+            SurfaceRecall(
+                surface=surface,
+                samples=len(subset),
+                recall=round(det.recall, 6),
+                mean_score=round(float(np.mean(scores)), 6),
+                sandbox_bypass_rate=round(bypassed / len(subset), 6),
+            )
+        )
+
     return GeneralizationMetrics(
+        surface_recall=surface_rows,
+        mean_surface_recall=round(
+            float(np.mean([s.recall for s in surface_rows])), 6
+        ) if surface_rows else 0.0,
+        min_surface_recall=round(
+            float(np.min([s.recall for s in surface_rows])), 6
+        ) if surface_rows else 0.0,
         buffer_families=families,
         trained_families=sorted(train_families),
         family_recall=family_rows,
