@@ -52,13 +52,18 @@ If the sandbox merely echoed Red's own label, it would be an output box. It does
   (`data/knowledge/canonical/genai/capabilities.json`); the work is making the **57 KB
   attack families executable**, not documenting more of them.
 
-## Multi-surface requirement (current gap)
+## Multi-surface execution (implemented)
 
-The sandbox currently exposes 9 action types, of which only `initiate_payment` runs a
-full multi-engine journey. 21 of 57 KB families are marked
-`sandbox_executable: false` and point at `TPL-AGENTIC-NONEXEC`, a template with an
-**empty** `supported_action_types` list — so agentic, social-engineering, KYC-deepfake and
-open-banking-consent families can only be executed by forcing them through a payment leg.
+Before Phase 2 the sandbox exposed 9 action types, of which only `initiate_payment` ran a
+full multi-engine journey. 21 of 57 KB families were marked `sandbox_executable: false`
+and pointed at `TPL-AGENTIC-NONEXEC`, a template with an **empty**
+`supported_action_types` list — so agentic, social-engineering, KYC-deepfake and
+open-banking-consent families could only be "executed" by forcing them through a payment
+leg and scoring an agentic attack as a transaction.
+
+Now: **7 adjudicated surfaces, 35 techniques, 57/57 families and 363/363 vectors
+executable.** Each surface returns the same `SandboxObservation` shape, so Blue sees one
+evidence stream.
 
 ### Two levels, not one: surface vs technique
 
@@ -74,14 +79,18 @@ avoid. So the contract separates two levels:
 
 | Level | Count | Purpose | Where it lives |
 |-------|-------|---------|----------------|
-| **`surface`** | 6 | Which control chain adjudicates. One handler each. | orchestrator dispatch |
-| **`action_type`** (technique) | ~30 | What the attacker actually did. Red's routing key, Blue's label and report dimension. | KB-derived |
-| **controls** | per family | Which specific controls must fire. | `targeted_control_ids`, already KB-compiled |
+| **`surface`** | 7 | Which control chain adjudicates. One handler each. | [surface_adjudicator.py](../backend/sandbox/surface_adjudicator.py) |
+| **`action_type`** (technique) | 35 | What the attacker actually did. Red's routing key, Blue's label and report dimension. | [taxonomy/techniques.py](../backend/taxonomy/techniques.py) |
+| **controls** | per family | Which specific controls must fire. | `targeted_control_ids` + 58 surface rules in `rules.json` |
 
 Granular adjudication comes from **data, not code**: one handler per surface evaluates the
-*family's own* `targeted_control_ids` through the existing compiled control set
-(`rules/control_compiler.py`, `rules/rule_engine.py`). 6 handlers, ~30 techniques,
-21 distinct control verdicts.
+*family's own* `targeted_control_ids` through the compiled control set
+(`rules/control_compiler.py`, `rules/rule_engine.py`) plus 58 surface rules targeting 53
+distinct CTL ids. **7 handlers, 35 techniques, 21 distinct control verdicts.**
+
+Adding a technique needs no new handler, enum member, or dispatch entry — only a row in
+`techniques.py`. The orchestrator resolves a technique to its surface entry action and
+merges its KB axes (family, rail, channel, payload defaults) into the payload.
 
 Technique names are **derived from the KB, not invented** — the axes already exist:
 `family_id` (57) × `rails` (upi, card, bank_transfer, crypto, wallet) × `channels`
@@ -95,12 +104,39 @@ is the auth_se surface + `channel=voice`; `poison_agent_memory` is family AG-003
 | `agent` | `inject_prompt_agent` (AG-001), `impersonate_agent` (AG-002), `poison_agent_memory` (AG-003), `inject_a2a_communication` (AG-004), `adapt_autonomous_fraud` (AG-005) | `genai_engine` + KB controls | `TPL-AGENT` |
 | `auth_se` | `send_phishing_email` (AUTH-001), `execute_otp_social_engineering` (AUTH-002), `exploit_auth_recovery` (AUTH-003), `execute_vishing_call` (channel=voice) | `auth` + `genai_engine` | `TPL-AUTH-SE` |
 | `kyc` | `submit_deepfake_biometric` (SEP-001), `submit_recovery_document_fraud` (ATO-001), `submit_synthetic_identity_onboarding` (ATO-002) | `kyc` + `genai_engine` | `TPL-KYC-GENAI` |
-| `open_banking` | `request_broad_consent` (OB-001), `register_malicious_tpp` (OB-002) | `authorization` + `genai_engine` | `TPL-OB-CONSENT` |
-| `network` | `orchestrate_fraud_ring` (N-002), `coordinate_multi_stage_campaign` (N-003) | `aml` + graph signals | `TPL-NETWORK` |
+| `open_banking` | `request_broad_consent` (OB-001), `abuse_consent_scope_creep`, `replay_stolen_consent_token`, `register_malicious_tpp` (OB-002) | `consent` + `genai_engine` | `TPL-OB-CONSENT` |
+| `device` | `deploy_remote_access_trojan` (RAT-001), `execute_automated_bot_interaction` (BOT-001), `evade_behavioral_biometrics` (BBE-001) | `session_integrity` + `genai_engine` | `TPL-SESSION` |
+| `network` | `orchestrate_fraud_ring` (N-002), `coordinate_multi_stage_campaign` (N-003), `socially_engineer_aml_investigator` (AML-005) | `network` + graph signals | `TPL-NETWORK` |
 
 A family flips to `sandbox_executable: true` only once its template has non-empty
 `supported_action_types` **and** its own `targeted_control_ids` produce a real
 ALLOW/CHALLENGE/BLOCK.
+
+### Durable cross-surface state
+
+Surfaces mutate state that later surfaces read — that is what a payment-only sandbox
+cannot represent:
+
+- accepted KYC evidence sets `verified` and raises `trust_score`, so a deepfake that
+  passes makes every subsequent payment look legitimate
+- memory poisoning permanently lowers an agent's `memory_integrity`, so a second attempt
+  against the same agent starts from a weaker position
+- a disclosed OTP lowers the victim's resistance to the next social-engineering attempt
+- a granted consent persists, which is the only reason scope creep and token replay mean
+  anything
+
+### Attacker-controlled attack strength
+
+The KB describes what a family is *capable* of; the payload describes how hard the
+attacker is pushing on *this* attempt, and attacker values take precedence. Without that
+precedence the capability profile pins every attempt to the same score, Red can never
+trade strength for stealth, and Blue only ever sees blocked attacks. Measured boundary:
+
+| Attack strength | agent | auth_se | kyc |
+|---|---|---|---|
+| 0.10 – 0.40 | ALLOW | ALLOW | ALLOW |
+| 0.50 | CHALLENGE | ALLOW | ALLOW |
+| ≥ 0.60 | BLOCK | BLOCK | BLOCK |
 
 ## Breadth asymmetry: dataset ⊃ KB ⊃ sandbox
 
@@ -110,11 +146,15 @@ The three layers do not cover the same ground, and the sandbox is the narrowest:
 |-------|----------|----------|
 | Baseline dataset | 67 attack families, 28 event types, 17 lifecycle stages, 15 taxonomies, 107,100 rows | `master_dataset.json` |
 | Canonical KB | 57 families (all 57 also in the dataset), 363 vectors, 49 stages | `data/knowledge/canonical/` |
-| Sandbox | **1 adjudicated event type** (payment), 9 actions, 36/57 families executable | `backend/sandbox/` |
+| Sandbox (before Phase 2) | **1 adjudicated event type** (payment), 9 actions, 36/57 families executable | `backend/sandbox/` |
+| Sandbox (after Phase 2) | **7 adjudicated surfaces**, 35 techniques, 57/57 families and 363/363 vectors executable | `backend/sandbox/` |
 
 Blue is trained on 28 event types (`consent_grant`, `video_kyc`, `auth_attempt`,
-`protocol_message`, `tpp_onboarding`, `scope_access`, …) while Red and the sandbox generate
-only one of them. The closed loop exercises a thin slice of the model's own input space.
+`protocol_message`, `tpp_onboarding`, `scope_access`, …). Before Phase 2, Red and the
+sandbox generated only one of them, so the closed loop exercised a thin slice of the
+model's own input space. The surfaces now emit `protocol_message`, `auth_attempt`,
+`identity_verification` and `consent_grant` events, mapped onto the vocabulary the
+baseline already uses.
 
 Two consequences that constrain Phase 2:
 

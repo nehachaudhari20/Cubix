@@ -16,17 +16,44 @@ from .lifecycle_engine_registry import PAYMENT_PATHS, STAGE_TO_ENGINE, ENGINE_CA
 STAGE_ID_TO_ACTION: Dict[str, str] = {
     "STG-0001": "simulate_genai_context",
     "STG-0002": "initiate_payment",
-    "STG-0004": "authenticate",
+    "STG-0003": "simulate_genai_context",
+    "STG-0004": "simulate_social_engineering",
     "STG-0005": "register_customer",
     "STG-0006": "open_account",
     "STG-0007": "link_beneficiary",
+    "STG-0009": "orchestrate_network",
     "STG-0015": "onboard_merchant",
     "STG-0016": "onboard_merchant",
     "STG-0017": "onboard_merchant",
     "STG-0018": "onboard_merchant",
-    "STG-0019": "verify_kyc",
+    "STG-0019": "submit_kyc_evidence",
     "STG-0020": "open_account",
-    "STG-0028": "register_device",
+    "STG-0028": "establish_session",
+    "STG-0039": "submit_kyc_evidence",
+    "STG-0042": "request_consent",
+    "STG-0043": "request_consent",
+    "STG-0048": "orchestrate_network",
+}
+
+# Surface → the template that drives it (kept in sync with scripts/enable_surface_families.py)
+SURFACE_TEMPLATE_IDS: Dict[str, str] = {
+    "agent": "TPL-AGENT",
+    "auth_se": "TPL-AUTH-SE",
+    "kyc": "TPL-KYC-GENAI",
+    "open_banking": "TPL-OB-CONSENT",
+    "device": "TPL-SESSION",
+    "network": "TPL-NETWORK",
+}
+
+# Entry point per non-payment surface — drives payload defaults and, for surfaces
+# with a cash-out leg, the payment path of the final step.
+SURFACE_ENTRY_POINTS: Dict[str, str] = {
+    "agent": "agent_surface",
+    "auth_se": "auth_se_surface",
+    "kyc": "kyc_surface",
+    "open_banking": "consent_surface",
+    "device": "device_surface",
+    "network": "network_surface",
 }
 
 ENTRY_POINTS = (
@@ -36,6 +63,12 @@ ENTRY_POINTS = (
     "social_engineering",
     "genai_proxy",
     "cross_stage",
+    "agent_surface",
+    "auth_se_surface",
+    "kyc_surface",
+    "consent_surface",
+    "device_surface",
+    "network_surface",
 )
 
 
@@ -45,6 +78,12 @@ def derive_entry_point(family: Dict[str, Any]) -> str:
     template_id = family.get("simulation_template_id") or ""
     stage_id = family.get("lifecycle_stage_id") or ""
     cross = family.get("cross_stage_lifecycle_stage_ids") or []
+
+    # A family carrying a surface is adjudicated by that surface's control chain,
+    # not by being forced through a payment leg.
+    surface = family.get("surface")
+    if surface and surface in SURFACE_ENTRY_POINTS:
+        return SURFACE_ENTRY_POINTS[surface]
 
     if family.get("sandbox_executable") is False:
         if attack_id.startswith("SEP") or "social" in (family.get("name") or "").lower():
@@ -76,6 +115,13 @@ def payment_path_for_entry(entry_point: str, payload: Optional[Dict[str, Any]] =
         "social_engineering": "genai_victim_payment",
         "genai_proxy": "risk_only",
         "cross_stage": "cross_stage_full",
+        # Non-payment surfaces only reach a payment path on a cash-out leg.
+        "agent_surface": "risk_only",
+        "auth_se_surface": "genai_victim_payment",
+        "kyc_surface": "full",
+        "consent_surface": "risk_only",
+        "device_surface": "existing_customer",
+        "network_surface": "cross_stage_full",
     }
     return mapping.get(entry_point, "full")
 
@@ -116,6 +162,9 @@ def stages_to_action_types(family: Dict[str, Any], stage_records: List[Dict[str,
     return ordered
 
 
+SURFACE_ENTRY_TO_SURFACE = {v: k for k, v in SURFACE_ENTRY_POINTS.items()}
+
+
 def template_action_types(template: Optional[Dict[str, Any]], entry_point: str) -> List[str]:
     """Return supported_action_types from KB template, adjusted for entry point."""
     if not template:
@@ -124,6 +173,10 @@ def template_action_types(template: Optional[Dict[str, Any]], entry_point: str) 
     actions = list(template.get("supported_action_types") or [])
     if not actions:
         return proxy_template_actions(entry_point)
+
+    # Surface templates already list the exact sequence for their control chain.
+    if entry_point in SURFACE_ENTRY_TO_SURFACE:
+        return actions
 
     if entry_point == "existing_customer":
         if "authenticate" not in actions:
@@ -139,13 +192,18 @@ def template_action_types(template: Optional[Dict[str, Any]], entry_point: str) 
 
 
 def proxy_template_actions(entry_point: str) -> List[str]:
+    surface = SURFACE_ENTRY_TO_SURFACE.get(entry_point)
+    if surface:
+        from backend.taxonomy import SURFACE_ENTRY_ACTION
+
+        return ["register_customer", SURFACE_ENTRY_ACTION[surface]]
     if entry_point == "social_engineering":
-        return ["register_customer", "simulate_genai_context", "initiate_payment"]
+        return ["register_customer", "simulate_social_engineering", "initiate_payment"]
     return ["simulate_genai_context", "register_customer", "initiate_payment"]
 
 
 def setup_flags_for_entry(entry_point: str) -> Dict[str, Any]:
-    """Default payload hints for register/payment steps by entry point."""
+    """Default payload hints for register/surface/payment steps by entry point."""
     if entry_point == "existing_customer":
         return {
             "trust_score": 0.88,
@@ -167,4 +225,51 @@ def setup_flags_for_entry(entry_point: str) -> Dict[str, Any]:
         return {"payment_path": "risk_only", "genai_proxy": True}
     if entry_point == "cross_stage":
         return {"payment_path": "cross_stage_full"}
+
+    # --- non-payment surfaces ---
+    if entry_point == "agent_surface":
+        return {
+            "trust_score": 0.75,
+            "verified": True,
+            "account_age_days": 365,
+            "payment_path": "risk_only",
+            "agent_mediated": True,
+        }
+    if entry_point == "auth_se_surface":
+        return {
+            "trust_score": 0.80,
+            "verified": True,
+            "account_age_days": 720,
+            "payment_path": "genai_victim_payment",
+            "victim_coerced": True,
+        }
+    if entry_point == "kyc_surface":
+        # Onboarding: no history, identity being established right now.
+        return {
+            "trust_score": 0.30,
+            "verified": False,
+            "account_age_days": 0,
+            "payment_path": "full",
+        }
+    if entry_point == "consent_surface":
+        return {
+            "trust_score": 0.78,
+            "verified": True,
+            "account_age_days": 540,
+            "payment_path": "risk_only",
+        }
+    if entry_point == "device_surface":
+        return {
+            "trust_score": 0.82,
+            "verified": True,
+            "account_age_days": 900,
+            "payment_path": "existing_customer",
+        }
+    if entry_point == "network_surface":
+        return {
+            "trust_score": 0.55,
+            "verified": True,
+            "account_age_days": 90,
+            "payment_path": "cross_stage_full",
+        }
     return {"payment_path": "full"}

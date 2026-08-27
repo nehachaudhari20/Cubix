@@ -5,7 +5,7 @@ Routes individual attack actions to the correct lifecycle engine(s).
 
 import uuid
 from datetime import datetime
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional
 
 from .schemas import ActionType, JourneyStep, SandboxObservation
 from .state import SandboxState, SyntheticCustomer, SyntheticDevice
@@ -24,8 +24,16 @@ from .engines.aml_compliance import AMLComplianceEngine
 from .engines.beneficiary_check import BeneficiaryCheckEngine
 from .engines.acquirer import AcquirerEngine
 from .engines.mule_cashout import MuleCashoutEngine
+from .engines.agent_trust import AgentTrustEngine
+from .engines.social_engineering import SocialEngineeringEngine
+from .engines.kyc_evidence import KYCEvidenceEngine
+from .engines.consent import ConsentEngine
+from .engines.session_integrity import SessionIntegrityEngine
+from .engines.network_orchestration import NetworkOrchestrationEngine
 from .lifecycle_router import resolve_payment_path
 from .lifecycle_engine_registry import PAYMENT_PATHS, JOURNEY_STEP_NAMES, payment_path_engines
+from .surface_adjudicator import SurfaceAdjudicator, SurfaceSpec, SURFACE_SPECS
+from backend.taxonomy import SURFACE_ENTRY_ACTION, resolve_technique
 
 
 class SandboxOrchestrator:
@@ -49,6 +57,12 @@ class SandboxOrchestrator:
         acquirer_engine: AcquirerEngine | None = None,
         mule_engine: MuleCashoutEngine | None = None,
         compiled_controls: CompiledControlSet | None = None,
+        agent_engine: AgentTrustEngine | None = None,
+        se_engine: SocialEngineeringEngine | None = None,
+        kyc_evidence_engine: KYCEvidenceEngine | None = None,
+        consent_engine: ConsentEngine | None = None,
+        session_engine: SessionIntegrityEngine | None = None,
+        network_engine: NetworkOrchestrationEngine | None = None,
     ):
         self.state = state
         self.compiled_controls = compiled_controls
@@ -66,12 +80,43 @@ class SandboxOrchestrator:
         self.beneficiary_engine = beneficiary_engine or BeneficiaryCheckEngine(state)
         self.acquirer_engine = acquirer_engine or AcquirerEngine(state)
         self.mule_engine = mule_engine or MuleCashoutEngine(state)
+
+        # Non-payment control surfaces
+        self.agent_engine = agent_engine or AgentTrustEngine(state)
+        self.se_engine = se_engine or SocialEngineeringEngine(state)
+        self.kyc_evidence_engine = kyc_evidence_engine or KYCEvidenceEngine(state)
+        self.consent_engine = consent_engine or ConsentEngine(state)
+        self.session_engine = session_engine or SessionIntegrityEngine(state)
+        self.network_engine = network_engine or NetworkOrchestrationEngine(state)
+
+        self.adjudicator = SurfaceAdjudicator(
+            state=state,
+            genai_engine=self.genai_engine,
+            compiled_controls=compiled_controls,
+        )
+        self._surface_engines: Dict[str, Any] = {
+            "agent": self.agent_engine.evaluate,
+            "auth_se": self.se_engine.evaluate,
+            "kyc": self.kyc_evidence_engine.evaluate,
+            "open_banking": self.consent_engine.evaluate,
+            "device": self.session_engine.evaluate,
+            "network": self.network_engine.evaluate,
+        }
         self.execution_log: List[Dict[str, Any]] = []
 
     def execute(self, action_type: str, payload: Dict[str, Any]) -> SandboxObservation:
-        """Route an action to the appropriate engine handler."""
+        """
+        Route an action to the appropriate engine handler.
+
+        Granular techniques (`poison_agent_memory`, `execute_vishing_call`, ...)
+        resolve to their surface's entry action, and their KB axes (family, rail,
+        channel, payload defaults) are merged into the payload. So the technique
+        vocabulary can grow without touching this dispatch table.
+        """
         action_id = payload.get("action_id") or payload.get("transaction_id") or f"act_{uuid.uuid4().hex[:8]}"
         timestamp = datetime.now().isoformat()
+
+        resolved_action, payload = self._resolve_technique(action_type, payload)
 
         handlers = {
             ActionType.REGISTER_CUSTOMER.value: self._register_customer,
@@ -82,10 +127,15 @@ class SandboxOrchestrator:
             ActionType.ONBOARD_MERCHANT.value: self._onboard_merchant,
             ActionType.LINK_BENEFICIARY.value: self._link_beneficiary,
             ActionType.INITIATE_PAYMENT.value: self._initiate_payment,
-            ActionType.SIMULATE_GENAI_CONTEXT.value: self._simulate_genai_context,
+            ActionType.SIMULATE_GENAI_CONTEXT.value: self._surface_handler("agent"),
+            ActionType.SIMULATE_SOCIAL_ENGINEERING.value: self._surface_handler("auth_se"),
+            ActionType.SUBMIT_KYC_EVIDENCE.value: self._surface_handler("kyc"),
+            ActionType.REQUEST_CONSENT.value: self._surface_handler("open_banking"),
+            ActionType.ESTABLISH_SESSION.value: self._surface_handler("device"),
+            ActionType.ORCHESTRATE_NETWORK.value: self._surface_handler("network"),
         }
 
-        handler = handlers.get(action_type)
+        handler = handlers.get(resolved_action)
         if not handler:
             observation = SandboxObservation(
                 action_id=action_id,
@@ -99,8 +149,88 @@ class SandboxOrchestrator:
             return observation
 
         observation = handler(action_id, payload, timestamp)
+        # Report the technique the caller asked for, not the surface entry action.
+        if resolved_action != action_type:
+            observation = observation.model_copy(
+                update={"action_type": action_type, "technique": action_type}
+            )
         self._record(action_type, payload, observation)
         return observation
+
+    def _resolve_technique(
+        self, action_type: str, payload: Dict[str, Any]
+    ) -> tuple[str, Dict[str, Any]]:
+        """Expand a granular technique into (surface entry action, enriched payload)."""
+        technique = resolve_technique(action_type)
+        if technique is None:
+            return action_type, payload
+
+        enriched = dict(technique.payload_defaults)
+        enriched.update(payload)  # explicit payload always wins
+        enriched["technique"] = technique.action_type
+        enriched["surface"] = technique.surface
+        if technique.family_id:
+            enriched.setdefault("attack_family", technique.family_id)
+        if technique.rail:
+            enriched.setdefault("payment_rail", technique.rail)
+        if technique.channel:
+            enriched.setdefault("channel", technique.channel)
+        if technique.mutation:
+            enriched.setdefault("mutation_dimension", technique.mutation)
+        return technique.entry_action, enriched
+
+    def _surface_handler(self, surface: str):
+        """Build a handler closure for one adjudicated non-payment surface."""
+
+        def handler(action_id: str, payload: Dict[str, Any], timestamp: str) -> SandboxObservation:
+            return self._adjudicate_surface(surface, action_id, payload, timestamp)
+
+        return handler
+
+    def _adjudicate_surface(
+        self,
+        surface: str,
+        action_id: str,
+        payload: Dict[str, Any],
+        timestamp: str,
+    ) -> SandboxObservation:
+        spec = SURFACE_SPECS[surface]
+        engine_fn = self._surface_engines[surface]
+        family = self._load_family(payload.get("attack_family") or payload.get("family_id"))
+
+        verdict = self.adjudicator.adjudicate(spec, payload, engine_fn, family=family)
+
+        return SandboxObservation(
+            action_id=action_id,
+            action_type=spec.entry_action,
+            surface=surface,
+            technique=payload.get("technique"),
+            attack_family=payload.get("attack_family"),
+            decision=verdict.decision,
+            reason=verdict.reason,
+            message=(
+                f"{surface} {verdict.decision.lower()} at risk {verdict.risk_score:.3f} "
+                f"({len(verdict.control_triggers)} triggers)"
+            ),
+            risk_score=verdict.risk_score,
+            rule_risk=verdict.rule_risk,
+            control_triggers=verdict.control_triggers,
+            control_gaps=verdict.control_gaps,
+            journey=verdict.journey,
+            state_snapshot=verdict.state_snapshot,
+            timestamp=timestamp,
+        )
+
+    @staticmethod
+    def _load_family(family_id: Optional[str]) -> Optional[Dict[str, Any]]:
+        if not family_id:
+            return None
+        try:
+            from backend.knowledge.canonical_loader import CanonicalKnowledgeLoader
+
+            return CanonicalKnowledgeLoader().get_family(family_id)
+        except Exception:
+            return None
 
     def _record(self, action_type: str, payload: Dict[str, Any], observation: SandboxObservation) -> None:
         self.execution_log.append(
@@ -291,42 +421,6 @@ class SandboxOrchestrator:
             state_snapshot={
                 "beneficiary_id": payload.get("beneficiary_id"),
                 "customer_id": payload.get("customer_id"),
-            },
-            timestamp=timestamp,
-        )
-
-    def _simulate_genai_context(
-        self, action_id: str, payload: Dict[str, Any], timestamp: str
-    ) -> SandboxObservation:
-        """Simulate GenAI / social-engineering / agentic context (pre-payment or standalone)."""
-        result = self.genai_engine.evaluate(payload, sandbox_state=self.state)
-        features = result.get("genai_features") or {}
-        triggers = list(result.get("triggered_rules") or [])
-        risk = float(result.get("genai_risk_contribution") or 0)
-
-        if self.compiled_controls is not None:
-            triggers = self.compiled_controls.resolve_triggers(triggers)
-
-        decision = "PASS"
-        if risk >= 0.75:
-            decision = "CHALLENGE"
-        if risk >= 0.90:
-            decision = "BLOCK"
-
-        return SandboxObservation(
-            action_id=action_id,
-            action_type=ActionType.SIMULATE_GENAI_CONTEXT.value,
-            decision=decision,
-            reason="genai_context_evaluated",
-            message=f"GenAI context scored {risk:.3f} ({len(triggers)} signals)",
-            risk_score=round(risk, 4),
-            control_triggers=triggers,
-            journey=[JourneyStep(step="GenAI Context", result=result)],
-            state_snapshot={
-                "genai_features": features,
-                "channels": result.get("channels") or [],
-                "capability_ids": result.get("capability_ids") or [],
-                "attack_family": payload.get("attack_family"),
             },
             timestamp=timestamp,
         )

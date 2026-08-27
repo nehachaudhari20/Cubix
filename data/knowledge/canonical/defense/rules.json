@@ -1,12 +1,13 @@
 {
   "registry_version": "2.0",
-  "built_at": "2026-08-25T16:38:28.469885+00:00",
+  "built_at": "2026-08-27T17:08:03.675739+00:00",
   "description": "Data-driven sandbox rules compiled from KB signals, controls, and parameter bindings.",
   "counts": {
-    "total": 301,
+    "total": 359,
     "threshold": 19,
     "composite": 6,
-    "signal": 276
+    "signal": 276,
+    "surface": 58
   },
   "rules": [
     {
@@ -13372,6 +13373,1817 @@
         "distinct_beneficiaries_last_24h",
         "payment_rail"
       ]
+    },
+    {
+      "rule_id": "RUL-SURF-AGENT-INJECTION",
+      "name": "Agent instruction injection",
+      "rule_type": "surface",
+      "engines": [
+        "agent"
+      ],
+      "signal_ids": [],
+      "logic": "all",
+      "conditions": [
+        {
+          "field": "prompt_injection_risk",
+          "op": ">=",
+          "param": "injection_risk_threshold",
+          "registry": "agent",
+          "default": 0.6
+        }
+      ],
+      "risk_contribution": {
+        "param": "injection_risk",
+        "registry": "agent",
+        "default": 0.3
+      },
+      "trigger": "agent_prompt_injection",
+      "control_id": "CTL-0236",
+      "expected_control_ids": [
+        "CTL-0236",
+        "CTL-0237"
+      ],
+      "risk_cap": 0.85,
+      "enabled": true,
+      "origin": "surface_control_mapped"
+    },
+    {
+      "rule_id": "RUL-SURF-AGENT-HIDDEN-INSTRUCTION",
+      "name": "Hidden instruction density",
+      "rule_type": "surface",
+      "engines": [
+        "agent"
+      ],
+      "signal_ids": [],
+      "logic": "all",
+      "conditions": [
+        {
+          "field": "hidden_instruction_density",
+          "op": ">=",
+          "param": "injection_risk_threshold",
+          "registry": "agent",
+          "default": 0.6
+        }
+      ],
+      "risk_contribution": {
+        "param": "injection_risk",
+        "registry": "agent",
+        "default": 0.3
+      },
+      "trigger": "agent_hidden_instructions",
+      "control_id": "CTL-0236",
+      "expected_control_ids": [
+        "CTL-0236"
+      ],
+      "risk_cap": 0.85,
+      "enabled": true,
+      "origin": "surface_control_mapped"
+    },
+    {
+      "rule_id": "RUL-SURF-AGENT-GOAL-DIVERGENCE",
+      "name": "Agent goal divergence from user intent",
+      "rule_type": "surface",
+      "engines": [
+        "agent"
+      ],
+      "signal_ids": [],
+      "logic": "all",
+      "conditions": [
+        {
+          "field": "goal_hacking_score",
+          "op": ">=",
+          "param": "goal_divergence_threshold",
+          "registry": "agent",
+          "default": 0.6
+        }
+      ],
+      "risk_contribution": {
+        "param": "goal_divergence_risk",
+        "registry": "agent",
+        "default": 0.25
+      },
+      "trigger": "agent_goal_divergence",
+      "control_id": "CTL-0237",
+      "expected_control_ids": [
+        "CTL-0236",
+        "CTL-0237"
+      ],
+      "risk_cap": 0.85,
+      "enabled": true,
+      "origin": "surface_control_mapped"
+    },
+    {
+      "rule_id": "RUL-SURF-AGENT-IMPERSONATION",
+      "name": "Unverified agent identity",
+      "rule_type": "surface",
+      "engines": [
+        "agent"
+      ],
+      "signal_ids": [],
+      "logic": "all",
+      "conditions": [
+        {
+          "field": "agent_unverified_identity",
+          "op": "truthy"
+        }
+      ],
+      "risk_contribution": {
+        "param": "impersonation_risk",
+        "registry": "agent",
+        "default": 0.24
+      },
+      "trigger": "agent_unverified_identity",
+      "control_id": "CTL-0238",
+      "expected_control_ids": [
+        "CTL-0238",
+        "CTL-0239"
+      ],
+      "risk_cap": 0.85,
+      "enabled": true,
+      "origin": "surface_control_mapped"
+    },
+    {
+      "rule_id": "RUL-SURF-AGENT-COUNTERPARTY",
+      "name": "Unverified counterparty agent",
+      "rule_type": "surface",
+      "engines": [
+        "agent"
+      ],
+      "signal_ids": [],
+      "logic": "all",
+      "conditions": [
+        {
+          "field": "agent_counterparty_unverified",
+          "op": "truthy"
+        }
+      ],
+      "risk_contribution": {
+        "param": "impersonation_risk",
+        "registry": "agent",
+        "default": 0.24
+      },
+      "trigger": "agent_counterparty_unverified",
+      "control_id": "CTL-0239",
+      "expected_control_ids": [
+        "CTL-0238",
+        "CTL-0239"
+      ],
+      "risk_cap": 0.85,
+      "enabled": true,
+      "origin": "surface_control_mapped"
+    },
+    {
+      "rule_id": "RUL-SURF-AGENT-MEMORY-POISON",
+      "name": "Agent memory / context poisoning",
+      "rule_type": "surface",
+      "engines": [
+        "agent"
+      ],
+      "signal_ids": [],
+      "logic": "all",
+      "conditions": [
+        {
+          "field": "memory_poisoning_score",
+          "op": ">=",
+          "param": "memory_poisoning_threshold",
+          "registry": "agent",
+          "default": 0.55
+        }
+      ],
+      "risk_contribution": {
+        "param": "memory_poisoning_risk",
+        "registry": "agent",
+        "default": 0.28
+      },
+      "trigger": "agent_memory_poisoning",
+      "control_id": "CTL-0240",
+      "expected_control_ids": [
+        "CTL-0240"
+      ],
+      "risk_cap": 0.85,
+      "enabled": true,
+      "origin": "surface_control_mapped"
+    },
+    {
+      "rule_id": "RUL-SURF-AGENT-MEMORY-INTEGRITY",
+      "name": "Agent memory integrity degraded",
+      "rule_type": "surface",
+      "engines": [
+        "agent"
+      ],
+      "signal_ids": [],
+      "logic": "all",
+      "conditions": [
+        {
+          "field": "memory_integrity",
+          "op": "<",
+          "param": "memory_integrity_floor",
+          "registry": "agent",
+          "default": 0.6
+        }
+      ],
+      "risk_contribution": {
+        "param": "memory_poisoning_risk",
+        "registry": "agent",
+        "default": 0.28
+      },
+      "trigger": "agent_memory_integrity_degraded",
+      "control_id": "CTL-0240",
+      "expected_control_ids": [
+        "CTL-0240"
+      ],
+      "risk_cap": 0.85,
+      "enabled": true,
+      "origin": "surface_control_mapped"
+    },
+    {
+      "rule_id": "RUL-SURF-AGENT-A2A",
+      "name": "Unauthenticated agent-to-agent channel",
+      "rule_type": "surface",
+      "engines": [
+        "agent"
+      ],
+      "signal_ids": [],
+      "logic": "all",
+      "conditions": [
+        {
+          "field": "agent_a2a_channel_unauthenticated",
+          "op": "truthy"
+        }
+      ],
+      "risk_contribution": {
+        "param": "a2a_risk",
+        "registry": "agent",
+        "default": 0.22
+      },
+      "trigger": "agent_a2a_channel_unauthenticated",
+      "control_id": "CTL-0241",
+      "expected_control_ids": [
+        "CTL-0241"
+      ],
+      "risk_cap": 0.85,
+      "enabled": true,
+      "origin": "surface_control_mapped"
+    },
+    {
+      "rule_id": "RUL-SURF-AGENT-TOOL-ABUSE",
+      "name": "Unauthorized agent tool call",
+      "rule_type": "surface",
+      "engines": [
+        "agent"
+      ],
+      "signal_ids": [],
+      "logic": "all",
+      "conditions": [
+        {
+          "field": "agentic_tool_abuse_score",
+          "op": ">=",
+          "param": "tool_abuse_threshold",
+          "registry": "agent",
+          "default": 0.6
+        }
+      ],
+      "risk_contribution": {
+        "param": "tool_scope_risk",
+        "registry": "agent",
+        "default": 0.26
+      },
+      "trigger": "agent_unauthorized_tool_call",
+      "control_id": "CTL-0239",
+      "expected_control_ids": [
+        "CTL-0239"
+      ],
+      "risk_cap": 0.85,
+      "enabled": true,
+      "origin": "surface_control_mapped"
+    },
+    {
+      "rule_id": "RUL-SURF-AGENT-TOOL-SCOPE",
+      "name": "Agent tool scope violation",
+      "rule_type": "surface",
+      "engines": [
+        "agent"
+      ],
+      "signal_ids": [],
+      "logic": "all",
+      "conditions": [
+        {
+          "field": "agent_tool_scope_violation",
+          "op": "truthy"
+        }
+      ],
+      "risk_contribution": {
+        "param": "tool_scope_risk",
+        "registry": "agent",
+        "default": 0.26
+      },
+      "trigger": "agent_tool_scope_violation",
+      "control_id": "CTL-0289",
+      "expected_control_ids": [
+        "CTL-0289"
+      ],
+      "risk_cap": 0.85,
+      "enabled": true,
+      "origin": "surface_control_mapped"
+    },
+    {
+      "rule_id": "RUL-SURF-AGENT-ADAPTIVE",
+      "name": "Autonomous adaptive evasion by agent",
+      "rule_type": "surface",
+      "engines": [
+        "agent"
+      ],
+      "signal_ids": [],
+      "logic": "all",
+      "conditions": [
+        {
+          "field": "adaptive_evasion_score",
+          "op": ">=",
+          "param": "goal_divergence_threshold",
+          "registry": "agent",
+          "default": 0.6
+        }
+      ],
+      "risk_contribution": {
+        "param": "goal_divergence_risk",
+        "registry": "agent",
+        "default": 0.25
+      },
+      "trigger": "agent_adaptive_evasion",
+      "control_id": "CTL-0242",
+      "expected_control_ids": [
+        "CTL-0242"
+      ],
+      "risk_cap": 0.85,
+      "enabled": true,
+      "origin": "surface_control_mapped"
+    },
+    {
+      "rule_id": "RUL-SURF-AGENT-MANDATE",
+      "name": "Agent mandate spend limit exceeded",
+      "rule_type": "surface",
+      "engines": [
+        "agent"
+      ],
+      "signal_ids": [],
+      "logic": "all",
+      "conditions": [
+        {
+          "field": "agent_mandate_limit_exceeded",
+          "op": "truthy"
+        }
+      ],
+      "risk_contribution": {
+        "param": "protocol_abuse_risk",
+        "registry": "agent",
+        "default": 0.24
+      },
+      "trigger": "agent_mandate_limit_exceeded",
+      "control_id": "CTL-0288",
+      "expected_control_ids": [
+        "CTL-0155",
+        "CTL-0287",
+        "CTL-0288"
+      ],
+      "risk_cap": 0.85,
+      "enabled": true,
+      "origin": "surface_control_mapped"
+    },
+    {
+      "rule_id": "RUL-SURF-AGENT-PROTOCOL-API",
+      "name": "Agentic payment protocol manipulation",
+      "rule_type": "surface",
+      "engines": [
+        "agent"
+      ],
+      "signal_ids": [],
+      "logic": "all",
+      "conditions": [
+        {
+          "field": "api_manipulation_score",
+          "op": ">=",
+          "param": "tool_abuse_threshold",
+          "registry": "agent",
+          "default": 0.6
+        }
+      ],
+      "risk_contribution": {
+        "param": "protocol_abuse_risk",
+        "registry": "agent",
+        "default": 0.24
+      },
+      "trigger": "agent_protocol_manipulation",
+      "control_id": "CTL-0287",
+      "expected_control_ids": [
+        "CTL-0155",
+        "CTL-0287"
+      ],
+      "risk_cap": 0.85,
+      "enabled": true,
+      "origin": "surface_control_mapped"
+    },
+    {
+      "rule_id": "RUL-SURF-SE-PHISHING",
+      "name": "Phishing content detected",
+      "rule_type": "surface",
+      "engines": [
+        "auth_se"
+      ],
+      "signal_ids": [],
+      "logic": "all",
+      "conditions": [
+        {
+          "field": "phishing_content_risk",
+          "op": ">=",
+          "param": "phishing_content_threshold",
+          "registry": "auth_se",
+          "default": 0.6
+        }
+      ],
+      "risk_contribution": {
+        "param": "phishing_content_risk_contribution",
+        "registry": "auth_se",
+        "default": 0.28
+      },
+      "trigger": "se_phishing_content",
+      "control_id": "CTL-0244",
+      "expected_control_ids": [
+        "CTL-0244",
+        "CTL-0245"
+      ],
+      "risk_cap": 0.85,
+      "enabled": true,
+      "origin": "surface_control_mapped"
+    },
+    {
+      "rule_id": "RUL-SURF-SE-BEC",
+      "name": "Business email compromise content",
+      "rule_type": "surface",
+      "engines": [
+        "auth_se"
+      ],
+      "signal_ids": [],
+      "logic": "all",
+      "conditions": [
+        {
+          "field": "bec_content_risk",
+          "op": ">=",
+          "param": "phishing_content_threshold",
+          "registry": "auth_se",
+          "default": 0.6
+        }
+      ],
+      "risk_contribution": {
+        "param": "phishing_content_risk_contribution",
+        "registry": "auth_se",
+        "default": 0.28
+      },
+      "trigger": "se_bec_content",
+      "control_id": "CTL-0245",
+      "expected_control_ids": [
+        "CTL-0245"
+      ],
+      "risk_cap": 0.85,
+      "enabled": true,
+      "origin": "surface_control_mapped"
+    },
+    {
+      "rule_id": "RUL-SURF-SE-CHANNEL-SPOOF",
+      "name": "Spoofed contact channel",
+      "rule_type": "surface",
+      "engines": [
+        "auth_se"
+      ],
+      "signal_ids": [],
+      "logic": "all",
+      "conditions": [
+        {
+          "field": "se_channel_spoofed",
+          "op": "truthy"
+        }
+      ],
+      "risk_contribution": {
+        "param": "channel_spoof_risk_contribution",
+        "registry": "auth_se",
+        "default": 0.24
+      },
+      "trigger": "se_channel_spoofed",
+      "control_id": "CTL-0246",
+      "expected_control_ids": [
+        "CTL-0246"
+      ],
+      "risk_cap": 0.85,
+      "enabled": true,
+      "origin": "surface_control_mapped"
+    },
+    {
+      "rule_id": "RUL-SURF-SE-REPEAT-ATTEMPTS",
+      "name": "Repeated authentication attempts in 24h",
+      "rule_type": "surface",
+      "engines": [
+        "auth_se"
+      ],
+      "signal_ids": [],
+      "logic": "all",
+      "conditions": [
+        {
+          "field": "prior_attempts_24h",
+          "op": ">=",
+          "param": "max_auth_attempts_24h",
+          "registry": "auth_se",
+          "default": 3
+        }
+      ],
+      "risk_contribution": {
+        "param": "repeat_attempt_risk",
+        "registry": "auth_se",
+        "default": 0.2
+      },
+      "trigger": "se_repeated_auth_attempts",
+      "control_id": "CTL-0247",
+      "expected_control_ids": [
+        "CTL-0247"
+      ],
+      "risk_cap": 0.85,
+      "enabled": true,
+      "origin": "surface_control_mapped"
+    },
+    {
+      "rule_id": "RUL-SURF-SE-VOICE-CLONE",
+      "name": "Synthetic / cloned voice on call",
+      "rule_type": "surface",
+      "engines": [
+        "auth_se"
+      ],
+      "signal_ids": [],
+      "logic": "all",
+      "conditions": [
+        {
+          "field": "voice_cloning_score",
+          "op": ">=",
+          "param": "voice_clone_threshold",
+          "registry": "auth_se",
+          "default": 0.55
+        }
+      ],
+      "risk_contribution": {
+        "param": "voice_clone_risk",
+        "registry": "auth_se",
+        "default": 0.3
+      },
+      "trigger": "se_synthetic_voice",
+      "control_id": "CTL-0248",
+      "expected_control_ids": [
+        "CTL-0248",
+        "CTL-0249",
+        "CTL-0250"
+      ],
+      "risk_cap": 0.85,
+      "enabled": true,
+      "origin": "surface_control_mapped"
+    },
+    {
+      "rule_id": "RUL-SURF-SE-OTP-DISCLOSURE",
+      "name": "OTP disclosed to third party",
+      "rule_type": "surface",
+      "engines": [
+        "auth_se"
+      ],
+      "signal_ids": [],
+      "logic": "all",
+      "conditions": [
+        {
+          "field": "otp_disclosed",
+          "op": "truthy"
+        }
+      ],
+      "risk_contribution": {
+        "param": "otp_disclosure_risk",
+        "registry": "auth_se",
+        "default": 0.35
+      },
+      "trigger": "se_otp_disclosed",
+      "control_id": "CTL-0249",
+      "expected_control_ids": [
+        "CTL-0248",
+        "CTL-0249",
+        "CTL-0250"
+      ],
+      "risk_cap": 0.85,
+      "enabled": true,
+      "origin": "surface_control_mapped"
+    },
+    {
+      "rule_id": "RUL-SURF-SE-SOCIAL-PRESSURE",
+      "name": "Social pressure exceeds victim resistance",
+      "rule_type": "surface",
+      "engines": [
+        "auth_se"
+      ],
+      "signal_ids": [],
+      "logic": "all",
+      "conditions": [
+        {
+          "field": "social_pressure",
+          "op": ">=",
+          "param": "social_pressure_threshold",
+          "registry": "auth_se",
+          "default": 0.6
+        }
+      ],
+      "risk_contribution": {
+        "param": "otp_disclosure_risk",
+        "registry": "auth_se",
+        "default": 0.35
+      },
+      "trigger": "se_social_pressure_high",
+      "control_id": "CTL-0250",
+      "expected_control_ids": [
+        "CTL-0250"
+      ],
+      "risk_cap": 0.85,
+      "enabled": true,
+      "origin": "surface_control_mapped"
+    },
+    {
+      "rule_id": "RUL-SURF-SE-RECOVERY-FRAUD",
+      "name": "Authentication recovery fraud indicators",
+      "rule_type": "surface",
+      "engines": [
+        "auth_se"
+      ],
+      "signal_ids": [],
+      "logic": "all",
+      "conditions": [
+        {
+          "field": "se_recovery_fraud_indicators",
+          "op": "truthy"
+        }
+      ],
+      "risk_contribution": {
+        "param": "recovery_fraud_risk_contribution",
+        "registry": "auth_se",
+        "default": 0.28
+      },
+      "trigger": "se_recovery_fraud",
+      "control_id": "CTL-0251",
+      "expected_control_ids": [
+        "CTL-0091",
+        "CTL-0103",
+        "CTL-0251",
+        "CTL-0252"
+      ],
+      "risk_cap": 0.85,
+      "enabled": true,
+      "origin": "surface_control_mapped"
+    },
+    {
+      "rule_id": "RUL-SURF-SE-RECOVERY-FLOW",
+      "name": "Recovery flow invoked under pressure",
+      "rule_type": "surface",
+      "engines": [
+        "auth_se"
+      ],
+      "signal_ids": [],
+      "logic": "all",
+      "conditions": [
+        {
+          "field": "se_recovery_flow_invoked",
+          "op": "truthy"
+        },
+        {
+          "field": "social_pressure",
+          "op": ">=",
+          "param": "social_pressure_threshold",
+          "registry": "auth_se",
+          "default": 0.6
+        }
+      ],
+      "risk_contribution": {
+        "param": "recovery_fraud_risk_contribution",
+        "registry": "auth_se",
+        "default": 0.28
+      },
+      "trigger": "se_recovery_under_pressure",
+      "control_id": "CTL-0253",
+      "expected_control_ids": [
+        "CTL-0253",
+        "CTL-0254",
+        "CTL-0255"
+      ],
+      "risk_cap": 0.85,
+      "enabled": true,
+      "origin": "surface_control_mapped"
+    },
+    {
+      "rule_id": "RUL-SURF-KYC-DEEPFAKE",
+      "name": "Deepfake biometric at identity check",
+      "rule_type": "surface",
+      "engines": [
+        "kyc_genai"
+      ],
+      "signal_ids": [],
+      "logic": "all",
+      "conditions": [
+        {
+          "field": "deepfake_identity_score",
+          "op": ">=",
+          "param": "deepfake_threshold",
+          "registry": "kyc_genai",
+          "default": 0.6
+        }
+      ],
+      "risk_contribution": {
+        "param": "deepfake_risk",
+        "registry": "kyc_genai",
+        "default": 0.35
+      },
+      "trigger": "kyc_deepfake_biometric",
+      "control_id": "CTL-0305",
+      "expected_control_ids": [
+        "CTL-0304",
+        "CTL-0305",
+        "CTL-0306"
+      ],
+      "risk_cap": 0.85,
+      "enabled": true,
+      "origin": "surface_control_mapped"
+    },
+    {
+      "rule_id": "RUL-SURF-KYC-BIOMETRIC-SPOOF",
+      "name": "Biometric spoofing indicators",
+      "rule_type": "surface",
+      "engines": [
+        "kyc_genai"
+      ],
+      "signal_ids": [],
+      "logic": "all",
+      "conditions": [
+        {
+          "field": "biometric_spoof_risk",
+          "op": ">=",
+          "param": "deepfake_threshold",
+          "registry": "kyc_genai",
+          "default": 0.6
+        }
+      ],
+      "risk_contribution": {
+        "param": "deepfake_risk",
+        "registry": "kyc_genai",
+        "default": 0.35
+      },
+      "trigger": "kyc_biometric_spoof",
+      "control_id": "CTL-0306",
+      "expected_control_ids": [
+        "CTL-0305",
+        "CTL-0306"
+      ],
+      "risk_cap": 0.85,
+      "enabled": true,
+      "origin": "surface_control_mapped"
+    },
+    {
+      "rule_id": "RUL-SURF-KYC-LIVENESS",
+      "name": "Liveness bypass attempt",
+      "rule_type": "surface",
+      "engines": [
+        "kyc_genai"
+      ],
+      "signal_ids": [],
+      "logic": "all",
+      "conditions": [
+        {
+          "field": "liveness_bypass_score",
+          "op": ">=",
+          "param": "liveness_bypass_threshold",
+          "registry": "kyc_genai",
+          "default": 0.55
+        }
+      ],
+      "risk_contribution": {
+        "param": "liveness_bypass_risk",
+        "registry": "kyc_genai",
+        "default": 0.32
+      },
+      "trigger": "kyc_liveness_bypass",
+      "control_id": "CTL-0307",
+      "expected_control_ids": [
+        "CTL-0307"
+      ],
+      "risk_cap": 0.85,
+      "enabled": true,
+      "origin": "surface_control_mapped"
+    },
+    {
+      "rule_id": "RUL-SURF-KYC-DOC-FORGERY",
+      "name": "Forged identity document",
+      "rule_type": "surface",
+      "engines": [
+        "kyc_genai"
+      ],
+      "signal_ids": [],
+      "logic": "all",
+      "conditions": [
+        {
+          "field": "document_forgery_score",
+          "op": ">=",
+          "param": "document_forgery_threshold",
+          "registry": "kyc_genai",
+          "default": 0.6
+        }
+      ],
+      "risk_contribution": {
+        "param": "document_forgery_risk",
+        "registry": "kyc_genai",
+        "default": 0.32
+      },
+      "trigger": "kyc_document_forgery",
+      "control_id": "CTL-0308",
+      "expected_control_ids": [
+        "CTL-0308",
+        "CTL-0309"
+      ],
+      "risk_cap": 0.85,
+      "enabled": true,
+      "origin": "surface_control_mapped"
+    },
+    {
+      "rule_id": "RUL-SURF-KYC-DOC-TEMPLATE",
+      "name": "Document template reuse across submissions",
+      "rule_type": "surface",
+      "engines": [
+        "kyc_genai"
+      ],
+      "signal_ids": [],
+      "logic": "all",
+      "conditions": [
+        {
+          "field": "kyc_document_template_reuse",
+          "op": "truthy"
+        }
+      ],
+      "risk_contribution": {
+        "param": "document_forgery_risk",
+        "registry": "kyc_genai",
+        "default": 0.32
+      },
+      "trigger": "kyc_document_template_reuse",
+      "control_id": "CTL-0309",
+      "expected_control_ids": [
+        "CTL-0309"
+      ],
+      "risk_cap": 0.85,
+      "enabled": true,
+      "origin": "surface_control_mapped"
+    },
+    {
+      "rule_id": "RUL-SURF-KYC-RECOVERY-EVIDENCE",
+      "name": "Identity evidence submitted in recovery flow",
+      "rule_type": "surface",
+      "engines": [
+        "kyc_genai"
+      ],
+      "signal_ids": [],
+      "logic": "all",
+      "conditions": [
+        {
+          "field": "kyc_recovery_evidence_submitted",
+          "op": "truthy"
+        }
+      ],
+      "risk_contribution": {
+        "param": "resubmission_risk",
+        "registry": "kyc_genai",
+        "default": 0.2
+      },
+      "trigger": "kyc_recovery_evidence",
+      "control_id": "CTL-0252",
+      "expected_control_ids": [
+        "CTL-0252",
+        "CTL-0308"
+      ],
+      "risk_cap": 0.85,
+      "enabled": true,
+      "origin": "surface_control_mapped"
+    },
+    {
+      "rule_id": "RUL-SURF-KYC-SYNTHETIC-IDENTITY",
+      "name": "Synthetic identity onboarding",
+      "rule_type": "surface",
+      "engines": [
+        "kyc_genai"
+      ],
+      "signal_ids": [],
+      "logic": "all",
+      "conditions": [
+        {
+          "field": "synthetic_identity_score",
+          "op": ">=",
+          "param": "synthetic_identity_threshold",
+          "registry": "kyc_genai",
+          "default": 0.55
+        }
+      ],
+      "risk_contribution": {
+        "param": "synthetic_identity_risk_contribution",
+        "registry": "kyc_genai",
+        "default": 0.28
+      },
+      "trigger": "kyc_synthetic_identity",
+      "control_id": "CTL-0336",
+      "expected_control_ids": [
+        "CTL-0103",
+        "CTL-0336",
+        "CTL-0337"
+      ],
+      "risk_cap": 0.85,
+      "enabled": true,
+      "origin": "surface_control_mapped"
+    },
+    {
+      "rule_id": "RUL-SURF-KYC-CONSISTENCY",
+      "name": "Identity inconsistent across evidence",
+      "rule_type": "surface",
+      "engines": [
+        "kyc_genai"
+      ],
+      "signal_ids": [],
+      "logic": "all",
+      "conditions": [
+        {
+          "field": "identity_consistency_score",
+          "op": "<",
+          "param": "identity_consistency_floor",
+          "registry": "kyc_genai",
+          "default": 0.6
+        }
+      ],
+      "risk_contribution": {
+        "param": "synthetic_identity_risk_contribution",
+        "registry": "kyc_genai",
+        "default": 0.28
+      },
+      "trigger": "kyc_identity_inconsistent",
+      "control_id": "CTL-0338",
+      "expected_control_ids": [
+        "CTL-0338"
+      ],
+      "risk_cap": 0.85,
+      "enabled": true,
+      "origin": "surface_control_mapped"
+    },
+    {
+      "rule_id": "RUL-SURF-KYC-RESUBMISSION",
+      "name": "Repeated rejected identity submissions",
+      "rule_type": "surface",
+      "engines": [
+        "kyc_genai"
+      ],
+      "signal_ids": [],
+      "logic": "all",
+      "conditions": [
+        {
+          "field": "prior_rejected_submissions",
+          "op": ">=",
+          "param": "max_rejected_submissions",
+          "registry": "kyc_genai",
+          "default": 2
+        }
+      ],
+      "risk_contribution": {
+        "param": "resubmission_risk",
+        "registry": "kyc_genai",
+        "default": 0.2
+      },
+      "trigger": "kyc_repeated_rejections",
+      "control_id": "CTL-0304",
+      "expected_control_ids": [
+        "CTL-0304"
+      ],
+      "risk_cap": 0.85,
+      "enabled": true,
+      "origin": "surface_control_mapped"
+    },
+    {
+      "rule_id": "RUL-SURF-OB-SCOPE-BREADTH",
+      "name": "Consent scope too broad",
+      "rule_type": "surface",
+      "engines": [
+        "consent"
+      ],
+      "signal_ids": [],
+      "logic": "all",
+      "conditions": [
+        {
+          "field": "consent_scope_breadth",
+          "op": ">=",
+          "param": "scope_breadth_threshold",
+          "registry": "consent",
+          "default": 0.5
+        }
+      ],
+      "risk_contribution": {
+        "param": "excessive_scope_risk",
+        "registry": "consent",
+        "default": 0.28
+      },
+      "trigger": "ob_excessive_consent_scope",
+      "control_id": "CTL-0213",
+      "expected_control_ids": [
+        "CTL-0213",
+        "CTL-0214"
+      ],
+      "risk_cap": 0.85,
+      "enabled": true,
+      "origin": "surface_control_mapped"
+    },
+    {
+      "rule_id": "RUL-SURF-OB-SENSITIVE-SCOPE",
+      "name": "Sensitive consent scope requested",
+      "rule_type": "surface",
+      "engines": [
+        "consent"
+      ],
+      "signal_ids": [],
+      "logic": "all",
+      "conditions": [
+        {
+          "field": "ob_sensitive_scope_requested",
+          "op": "truthy"
+        }
+      ],
+      "risk_contribution": {
+        "param": "sensitive_scope_risk",
+        "registry": "consent",
+        "default": 0.3
+      },
+      "trigger": "ob_sensitive_scope",
+      "control_id": "CTL-0214",
+      "expected_control_ids": [
+        "CTL-0214"
+      ],
+      "risk_cap": 0.85,
+      "enabled": true,
+      "origin": "surface_control_mapped"
+    },
+    {
+      "rule_id": "RUL-SURF-OB-SCOPE-CREEP",
+      "name": "Consent scope escalated after grant",
+      "rule_type": "surface",
+      "engines": [
+        "consent"
+      ],
+      "signal_ids": [],
+      "logic": "all",
+      "conditions": [
+        {
+          "field": "scope_escalation",
+          "op": "truthy"
+        }
+      ],
+      "risk_contribution": {
+        "param": "scope_creep_risk",
+        "registry": "consent",
+        "default": 0.32
+      },
+      "trigger": "ob_consent_scope_creep",
+      "control_id": "CTL-0215",
+      "expected_control_ids": [
+        "CTL-0215"
+      ],
+      "risk_cap": 0.85,
+      "enabled": true,
+      "origin": "surface_control_mapped"
+    },
+    {
+      "rule_id": "RUL-SURF-OB-TOKEN-REPLAY",
+      "name": "Consent token replay",
+      "rule_type": "surface",
+      "engines": [
+        "consent"
+      ],
+      "signal_ids": [],
+      "logic": "all",
+      "conditions": [
+        {
+          "field": "token_replay",
+          "op": "truthy"
+        }
+      ],
+      "risk_contribution": {
+        "param": "token_replay_risk",
+        "registry": "consent",
+        "default": 0.35
+      },
+      "trigger": "ob_consent_token_replay",
+      "control_id": "CTL-0216",
+      "expected_control_ids": [
+        "CTL-0216"
+      ],
+      "risk_cap": 0.85,
+      "enabled": true,
+      "origin": "surface_control_mapped"
+    },
+    {
+      "rule_id": "RUL-SURF-OB-DECEPTIVE-CONSENT",
+      "name": "Deceptive consent presentation",
+      "rule_type": "surface",
+      "engines": [
+        "consent"
+      ],
+      "signal_ids": [],
+      "logic": "all",
+      "conditions": [
+        {
+          "field": "ob_deceptive_consent_presentation",
+          "op": "truthy"
+        }
+      ],
+      "risk_contribution": {
+        "param": "excessive_scope_risk",
+        "registry": "consent",
+        "default": 0.28
+      },
+      "trigger": "ob_deceptive_consent",
+      "control_id": "CTL-0213",
+      "expected_control_ids": [
+        "CTL-0213"
+      ],
+      "risk_cap": 0.85,
+      "enabled": true,
+      "origin": "surface_control_mapped"
+    },
+    {
+      "rule_id": "RUL-SURF-OB-UNLICENSED-TPP",
+      "name": "Unlicensed third-party provider",
+      "rule_type": "surface",
+      "engines": [
+        "consent"
+      ],
+      "signal_ids": [],
+      "logic": "all",
+      "conditions": [
+        {
+          "field": "ob_unlicensed_tpp",
+          "op": "truthy"
+        }
+      ],
+      "risk_contribution": {
+        "param": "unlicensed_tpp_risk",
+        "registry": "consent",
+        "default": 0.34
+      },
+      "trigger": "ob_unlicensed_tpp",
+      "control_id": "CTL-0217",
+      "expected_control_ids": [
+        "CTL-0217",
+        "CTL-0218"
+      ],
+      "risk_cap": 0.85,
+      "enabled": true,
+      "origin": "surface_control_mapped"
+    },
+    {
+      "rule_id": "RUL-SURF-OB-NEW-TPP",
+      "name": "Newly registered third-party provider",
+      "rule_type": "surface",
+      "engines": [
+        "consent"
+      ],
+      "signal_ids": [],
+      "logic": "all",
+      "conditions": [
+        {
+          "field": "ob_newly_registered_tpp",
+          "op": "truthy"
+        }
+      ],
+      "risk_contribution": {
+        "param": "new_tpp_risk",
+        "registry": "consent",
+        "default": 0.22
+      },
+      "trigger": "ob_newly_registered_tpp",
+      "control_id": "CTL-0218",
+      "expected_control_ids": [
+        "CTL-0218"
+      ],
+      "risk_cap": 0.85,
+      "enabled": true,
+      "origin": "surface_control_mapped"
+    },
+    {
+      "rule_id": "RUL-SURF-OB-SYNTHETIC-APP",
+      "name": "Synthetic TPP application content",
+      "rule_type": "surface",
+      "engines": [
+        "consent"
+      ],
+      "signal_ids": [],
+      "logic": "all",
+      "conditions": [
+        {
+          "field": "ob_synthetic_tpp_application",
+          "op": "truthy"
+        }
+      ],
+      "risk_contribution": {
+        "param": "unlicensed_tpp_risk",
+        "registry": "consent",
+        "default": 0.34
+      },
+      "trigger": "ob_synthetic_tpp_application",
+      "control_id": "CTL-0219",
+      "expected_control_ids": [
+        "CTL-0219",
+        "CTL-0220"
+      ],
+      "risk_cap": 0.85,
+      "enabled": true,
+      "origin": "surface_control_mapped"
+    },
+    {
+      "rule_id": "RUL-SURF-OB-USAGE-ANOMALY",
+      "name": "Consent usage volume anomaly",
+      "rule_type": "surface",
+      "engines": [
+        "consent"
+      ],
+      "signal_ids": [],
+      "logic": "all",
+      "conditions": [
+        {
+          "field": "ob_consent_usage_anomaly",
+          "op": "truthy"
+        }
+      ],
+      "risk_contribution": {
+        "param": "token_replay_risk",
+        "registry": "consent",
+        "default": 0.35
+      },
+      "trigger": "ob_consent_usage_anomaly",
+      "control_id": "CTL-0220",
+      "expected_control_ids": [
+        "CTL-0220"
+      ],
+      "risk_cap": 0.85,
+      "enabled": true,
+      "origin": "surface_control_mapped"
+    },
+    {
+      "rule_id": "RUL-SURF-DEV-REMOTE-ACCESS",
+      "name": "Remote access / RAT active in session",
+      "rule_type": "surface",
+      "engines": [
+        "session_integrity"
+      ],
+      "signal_ids": [],
+      "logic": "all",
+      "conditions": [
+        {
+          "field": "dev_remote_access_detected",
+          "op": "truthy"
+        }
+      ],
+      "risk_contribution": {
+        "param": "remote_access_risk",
+        "registry": "session_integrity",
+        "default": 0.38
+      },
+      "trigger": "dev_remote_access",
+      "control_id": "CTL-0279",
+      "expected_control_ids": [
+        "CTL-0139",
+        "CTL-0279",
+        "CTL-0280",
+        "CTL-0281"
+      ],
+      "risk_cap": 0.85,
+      "enabled": true,
+      "origin": "surface_control_mapped"
+    },
+    {
+      "rule_id": "RUL-SURF-DEV-ACCESSIBILITY",
+      "name": "Accessibility service abuse",
+      "rule_type": "surface",
+      "engines": [
+        "session_integrity"
+      ],
+      "signal_ids": [],
+      "logic": "all",
+      "conditions": [
+        {
+          "field": "dev_accessibility_abuse",
+          "op": "truthy"
+        }
+      ],
+      "risk_contribution": {
+        "param": "remote_access_risk",
+        "registry": "session_integrity",
+        "default": 0.38
+      },
+      "trigger": "dev_accessibility_abuse",
+      "control_id": "CTL-0280",
+      "expected_control_ids": [
+        "CTL-0280"
+      ],
+      "risk_cap": 0.85,
+      "enabled": true,
+      "origin": "surface_control_mapped"
+    },
+    {
+      "rule_id": "RUL-SURF-DEV-OVERLAY",
+      "name": "Screen overlay detected",
+      "rule_type": "surface",
+      "engines": [
+        "session_integrity"
+      ],
+      "signal_ids": [],
+      "logic": "all",
+      "conditions": [
+        {
+          "field": "dev_screen_overlay_detected",
+          "op": "truthy"
+        }
+      ],
+      "risk_contribution": {
+        "param": "remote_access_risk",
+        "registry": "session_integrity",
+        "default": 0.38
+      },
+      "trigger": "dev_screen_overlay",
+      "control_id": "CTL-0281",
+      "expected_control_ids": [
+        "CTL-0281"
+      ],
+      "risk_cap": 0.85,
+      "enabled": true,
+      "origin": "surface_control_mapped"
+    },
+    {
+      "rule_id": "RUL-SURF-DEV-MACHINE-SPEED",
+      "name": "Machine-speed interaction timing",
+      "rule_type": "surface",
+      "engines": [
+        "session_integrity"
+      ],
+      "signal_ids": [],
+      "logic": "all",
+      "conditions": [
+        {
+          "field": "dev_machine_speed_interaction",
+          "op": "truthy"
+        }
+      ],
+      "risk_contribution": {
+        "param": "automation_risk",
+        "registry": "session_integrity",
+        "default": 0.28
+      },
+      "trigger": "dev_machine_speed_interaction",
+      "control_id": "CTL-0282",
+      "expected_control_ids": [
+        "CTL-0013",
+        "CTL-0137",
+        "CTL-0282"
+      ],
+      "risk_cap": 0.85,
+      "enabled": true,
+      "origin": "surface_control_mapped"
+    },
+    {
+      "rule_id": "RUL-SURF-DEV-AUTOMATION",
+      "name": "Automation indicators in session",
+      "rule_type": "surface",
+      "engines": [
+        "session_integrity"
+      ],
+      "signal_ids": [],
+      "logic": "all",
+      "conditions": [
+        {
+          "field": "dev_automation_indicators",
+          "op": "truthy"
+        }
+      ],
+      "risk_contribution": {
+        "param": "automation_risk",
+        "registry": "session_integrity",
+        "default": 0.28
+      },
+      "trigger": "dev_automation_indicators",
+      "control_id": "CTL-0137",
+      "expected_control_ids": [
+        "CTL-0137"
+      ],
+      "risk_cap": 0.85,
+      "enabled": true,
+      "origin": "surface_control_mapped"
+    },
+    {
+      "rule_id": "RUL-SURF-DEV-BEHAVIOURAL-VARIANCE",
+      "name": "Behavioural variance below human floor",
+      "rule_type": "surface",
+      "engines": [
+        "session_integrity"
+      ],
+      "signal_ids": [],
+      "logic": "all",
+      "conditions": [
+        {
+          "field": "dev_behavioural_variance_too_low",
+          "op": "truthy"
+        }
+      ],
+      "risk_contribution": {
+        "param": "behavioural_synthesis_risk",
+        "registry": "session_integrity",
+        "default": 0.3
+      },
+      "trigger": "dev_behavioural_variance_low",
+      "control_id": "CTL-0283",
+      "expected_control_ids": [
+        "CTL-0283"
+      ],
+      "risk_cap": 0.85,
+      "enabled": true,
+      "origin": "surface_control_mapped"
+    },
+    {
+      "rule_id": "RUL-SURF-DEV-SYNTHETIC-BIOMETRIC",
+      "name": "Synthetic behavioural telemetry",
+      "rule_type": "surface",
+      "engines": [
+        "session_integrity"
+      ],
+      "signal_ids": [],
+      "logic": "all",
+      "conditions": [
+        {
+          "field": "dev_synthetic_biometric_telemetry",
+          "op": "truthy"
+        }
+      ],
+      "risk_contribution": {
+        "param": "behavioural_synthesis_risk",
+        "registry": "session_integrity",
+        "default": 0.3
+      },
+      "trigger": "dev_synthetic_biometrics",
+      "control_id": "CTL-0283",
+      "expected_control_ids": [
+        "CTL-0283"
+      ],
+      "risk_cap": 0.85,
+      "enabled": true,
+      "origin": "surface_control_mapped"
+    },
+    {
+      "rule_id": "RUL-SURF-DEV-UNKNOWN-DEVICE",
+      "name": "Session from unknown device",
+      "rule_type": "surface",
+      "engines": [
+        "session_integrity"
+      ],
+      "signal_ids": [],
+      "logic": "all",
+      "conditions": [
+        {
+          "field": "dev_unknown_device",
+          "op": "truthy"
+        }
+      ],
+      "risk_contribution": {
+        "param": "unknown_device_session_risk",
+        "registry": "session_integrity",
+        "default": 0.24
+      },
+      "trigger": "dev_unknown_device_session",
+      "control_id": "CTL-0139",
+      "expected_control_ids": [
+        "CTL-0139"
+      ],
+      "risk_cap": 0.85,
+      "enabled": true,
+      "origin": "surface_control_mapped"
+    },
+    {
+      "rule_id": "RUL-SURF-DEV-SESSION-CHURN",
+      "name": "Excessive sessions in 1h",
+      "rule_type": "surface",
+      "engines": [
+        "session_integrity"
+      ],
+      "signal_ids": [],
+      "logic": "all",
+      "conditions": [
+        {
+          "field": "recent_sessions_1h",
+          "op": ">=",
+          "param": "max_sessions_1h",
+          "registry": "session_integrity",
+          "default": 5
+        }
+      ],
+      "risk_contribution": {
+        "param": "session_churn_risk",
+        "registry": "session_integrity",
+        "default": 0.2
+      },
+      "trigger": "dev_session_churn",
+      "control_id": "CTL-0013",
+      "expected_control_ids": [
+        "CTL-0013"
+      ],
+      "risk_cap": 0.85,
+      "enabled": true,
+      "origin": "surface_control_mapped"
+    },
+    {
+      "rule_id": "RUL-SURF-NET-RING-STRUCTURE",
+      "name": "Coordinated account cluster",
+      "rule_type": "surface",
+      "engines": [
+        "network"
+      ],
+      "signal_ids": [],
+      "logic": "all",
+      "conditions": [
+        {
+          "field": "ring_size",
+          "op": ">=",
+          "param": "ring_size_threshold",
+          "registry": "network",
+          "default": 3
+        }
+      ],
+      "risk_contribution": {
+        "param": "ring_structure_risk",
+        "registry": "network",
+        "default": 0.3
+      },
+      "trigger": "net_coordinated_cluster",
+      "control_id": "CTL-0315",
+      "expected_control_ids": [
+        "CTL-0310",
+        "CTL-0315",
+        "CTL-0316"
+      ],
+      "risk_cap": 0.85,
+      "enabled": true,
+      "origin": "surface_control_mapped"
+    },
+    {
+      "rule_id": "RUL-SURF-NET-LARGE-RING",
+      "name": "Large fraud ring structure",
+      "rule_type": "surface",
+      "engines": [
+        "network"
+      ],
+      "signal_ids": [],
+      "logic": "all",
+      "conditions": [
+        {
+          "field": "ring_size",
+          "op": ">=",
+          "param": "large_ring_threshold",
+          "registry": "network",
+          "default": 8
+        }
+      ],
+      "risk_contribution": {
+        "param": "ring_structure_risk",
+        "registry": "network",
+        "default": 0.3
+      },
+      "trigger": "net_large_ring",
+      "control_id": "CTL-0316",
+      "expected_control_ids": [
+        "CTL-0316"
+      ],
+      "risk_cap": 0.85,
+      "enabled": true,
+      "origin": "surface_control_mapped"
+    },
+    {
+      "rule_id": "RUL-SURF-NET-BENEFICIARY-FANIN",
+      "name": "Shared beneficiary fan-in across payers",
+      "rule_type": "surface",
+      "engines": [
+        "network"
+      ],
+      "signal_ids": [],
+      "logic": "all",
+      "conditions": [
+        {
+          "field": "beneficiary_distinct_payer_count",
+          "op": ">=",
+          "param": "shared_beneficiary_payers_threshold",
+          "registry": "network",
+          "default": 3
+        }
+      ],
+      "risk_contribution": {
+        "param": "shared_beneficiary_risk_contribution",
+        "registry": "network",
+        "default": 0.32
+      },
+      "trigger": "net_shared_beneficiary_fan_in",
+      "control_id": "CTL-0310",
+      "expected_control_ids": [
+        "CTL-0310"
+      ],
+      "risk_cap": 0.85,
+      "enabled": true,
+      "origin": "surface_control_mapped"
+    },
+    {
+      "rule_id": "RUL-SURF-NET-SHARED-DEVICE",
+      "name": "Device shared across accounts",
+      "rule_type": "surface",
+      "engines": [
+        "network"
+      ],
+      "signal_ids": [],
+      "logic": "all",
+      "conditions": [
+        {
+          "field": "net_shared_device_across_accounts",
+          "op": "truthy"
+        }
+      ],
+      "risk_contribution": {
+        "param": "shared_device_risk",
+        "registry": "network",
+        "default": 0.28
+      },
+      "trigger": "net_shared_device",
+      "control_id": "CTL-0096",
+      "expected_control_ids": [
+        "CTL-0096"
+      ],
+      "risk_cap": 0.85,
+      "enabled": true,
+      "origin": "surface_control_mapped"
+    },
+    {
+      "rule_id": "RUL-SURF-NET-AI-COORDINATION",
+      "name": "AI-coordinated ring activity",
+      "rule_type": "surface",
+      "engines": [
+        "network"
+      ],
+      "signal_ids": [],
+      "logic": "all",
+      "conditions": [
+        {
+          "field": "fraud_ring_coordination_score",
+          "op": ">=",
+          "param": "coordination_score_threshold",
+          "registry": "network",
+          "default": 0.6
+        }
+      ],
+      "risk_contribution": {
+        "param": "coordination_risk",
+        "registry": "network",
+        "default": 0.3
+      },
+      "trigger": "net_ai_ring_coordination",
+      "control_id": "CTL-0317",
+      "expected_control_ids": [
+        "CTL-0317",
+        "CTL-0318"
+      ],
+      "risk_cap": 0.85,
+      "enabled": true,
+      "origin": "surface_control_mapped"
+    },
+    {
+      "rule_id": "RUL-SURF-NET-MULE-RECRUITMENT",
+      "name": "Mule recruitment activity",
+      "rule_type": "surface",
+      "engines": [
+        "network"
+      ],
+      "signal_ids": [],
+      "logic": "all",
+      "conditions": [
+        {
+          "field": "net_mule_recruitment_activity",
+          "op": "truthy"
+        }
+      ],
+      "risk_contribution": {
+        "param": "coordination_risk",
+        "registry": "network",
+        "default": 0.3
+      },
+      "trigger": "net_mule_recruitment",
+      "control_id": "CTL-0318",
+      "expected_control_ids": [
+        "CTL-0318"
+      ],
+      "risk_cap": 0.85,
+      "enabled": true,
+      "origin": "surface_control_mapped"
+    },
+    {
+      "rule_id": "RUL-SURF-NET-MULTI-STAGE",
+      "name": "Multi-stage campaign coordination",
+      "rule_type": "surface",
+      "engines": [
+        "network"
+      ],
+      "signal_ids": [],
+      "logic": "all",
+      "conditions": [
+        {
+          "field": "multi_stage_coordination_score",
+          "op": ">=",
+          "param": "coordination_score_threshold",
+          "registry": "network",
+          "default": 0.6
+        }
+      ],
+      "risk_contribution": {
+        "param": "coordination_risk",
+        "registry": "network",
+        "default": 0.3
+      },
+      "trigger": "net_multi_stage_coordination",
+      "control_id": "CTL-0319",
+      "expected_control_ids": [
+        "CTL-0319",
+        "CTL-0320",
+        "CTL-0321"
+      ],
+      "risk_cap": 0.85,
+      "enabled": true,
+      "origin": "surface_control_mapped"
+    },
+    {
+      "rule_id": "RUL-SURF-NET-AML-MANIPULATION",
+      "name": "AML review process manipulation",
+      "rule_type": "surface",
+      "engines": [
+        "network"
+      ],
+      "signal_ids": [],
+      "logic": "all",
+      "conditions": [
+        {
+          "field": "net_aml_process_manipulation",
+          "op": "truthy"
+        }
+      ],
+      "risk_contribution": {
+        "param": "aml_process_manipulation_risk",
+        "registry": "network",
+        "default": 0.34
+      },
+      "trigger": "net_aml_process_manipulation",
+      "control_id": "CTL-0035",
+      "expected_control_ids": [
+        "CTL-0035",
+        "CTL-0036",
+        "CTL-0041"
+      ],
+      "risk_cap": 0.85,
+      "enabled": true,
+      "origin": "surface_control_mapped"
+    },
+    {
+      "rule_id": "RUL-SURF-NET-LABEL-FLIPPING",
+      "name": "Label flipping / model poisoning attempt",
+      "rule_type": "surface",
+      "engines": [
+        "network"
+      ],
+      "signal_ids": [],
+      "logic": "all",
+      "conditions": [
+        {
+          "field": "net_label_flipping_attempt",
+          "op": "truthy"
+        }
+      ],
+      "risk_contribution": {
+        "param": "aml_process_manipulation_risk",
+        "registry": "network",
+        "default": 0.34
+      },
+      "trigger": "net_label_flipping",
+      "control_id": "CTL-0320",
+      "expected_control_ids": [
+        "CTL-0046",
+        "CTL-0047",
+        "CTL-0320"
+      ],
+      "risk_cap": 0.85,
+      "enabled": true,
+      "origin": "surface_control_mapped"
     }
   ]
 }

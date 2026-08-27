@@ -21,34 +21,76 @@ def test_all_families_simulatable():
 
 
 def test_entry_points():
+    """
+    Families now route to the surface that actually adjudicates them.
+
+    Previously SEP-001 (deepfake at video KYC) resolved to `social_engineering`
+    and was scored through a payment leg. It is an Identity/KYC attack, so it now
+    resolves to the KYC surface.
+    """
     kb = OfflineKnowledge()
     sep = kb.get_family("SEP-001")
     ag = kb.get_family("AG-001")
     acq = kb.get_family("ACQ-001")
-    assert derive_entry_point(sep) == "social_engineering"
-    assert derive_entry_point(ag) == "genai_proxy"
+    assert derive_entry_point(sep) == "kyc_surface", derive_entry_point(sep)
+    assert derive_entry_point(ag) == "agent_surface", derive_entry_point(ag)
     assert derive_entry_point(acq) == "merchant"
-    print("entry points: SEP=social AG=genai ACQ=merchant")
+    print("entry points: SEP=kyc AG=agent ACQ=merchant")
 
 
-def test_sep_plan_has_genai_and_payment():
+def test_sep_plan_uses_kyc_surface():
+    """SEP-001 is adjudicated by the KYC surface, not forced through payment."""
     kb = OfflineKnowledge()
     family = kb.get_family("SEP-001")
     plan = build_plan_from_family(family, kb.stages, kb.signals)
     actions = [s.action_type for s in plan.steps]
-    assert "simulate_genai_context" in actions
-    assert "initiate_payment" in actions
-    assert plan.entry_point == "social_engineering"
+    assert "submit_kyc_evidence" in actions, actions
+    assert plan.entry_point == "kyc_surface"
     print(f"SEP-001 plan: {actions}")
 
 
-def test_ag_plan_cross_stage():
+def test_ag_plan_uses_agent_surface():
     kb = OfflineKnowledge()
     family = kb.get_family("AG-001")
     plan = build_plan_from_family(family, kb.stages, kb.signals)
     actions = [s.action_type for s in plan.steps]
     assert "simulate_genai_context" in actions
+    assert plan.entry_point == "agent_surface"
     print(f"AG-001 plan: {actions} entry={plan.entry_point}")
+
+
+def test_network_plan_keeps_cashout_leg():
+    """Network families still end in a payment leg — that is the cash-out."""
+    kb = OfflineKnowledge()
+    family = kb.get_family("N-002")
+    plan = build_plan_from_family(family, kb.stages, kb.signals)
+    actions = [s.action_type for s in plan.steps]
+    assert "orchestrate_network" in actions, actions
+    assert "initiate_payment" in actions, actions
+    print(f"N-002 plan: {actions}")
+
+
+def test_every_surface_adjudicates():
+    """Each surface returns a real ALLOW/CHALLENGE/BLOCK, not PASS/FAIL."""
+    from backend.taxonomy import SURFACES, techniques_for_surface
+
+    sandbox = PaymentSandbox()
+    sandbox.add_customer("C_surf", "Surface", "PAN9", "1990-01-01", "City", trust_score=0.8)
+    sandbox.add_device("D_surf", "C_surf")
+
+    seen = {}
+    for surface in SURFACES:
+        if surface == "payment":
+            continue
+        technique = techniques_for_surface(surface)[0]
+        obs = sandbox.execute(
+            technique.action_type, {"customer_id": "C_surf", "device_id": "D_surf"}
+        )
+        assert obs.decision in ("ALLOW", "CHALLENGE", "BLOCK"), (surface, obs.decision)
+        assert obs.surface == surface, (obs.surface, surface)
+        assert obs.technique == technique.action_type
+        seen[surface] = obs.decision
+    print(f"surface verdicts: {seen}")
 
 
 def test_payment_paths():
@@ -167,8 +209,10 @@ def test_expanded_payment_journey():
 if __name__ == "__main__":
     test_all_families_simulatable()
     test_entry_points()
-    test_sep_plan_has_genai_and_payment()
-    test_ag_plan_cross_stage()
+    test_sep_plan_uses_kyc_surface()
+    test_ag_plan_uses_agent_surface()
+    test_network_plan_keeps_cashout_leg()
+    test_every_surface_adjudicates()
     test_payment_paths()
     test_genai_context_sandbox()
     test_risk_only_payment()

@@ -1,6 +1,6 @@
 {
   "registry_version": "2.0",
-  "built_at": "2026-08-24T21:39:33.516174+00:00",
+  "built_at": "2026-08-27T17:08:03.918513+00:00",
   "state_requirements": [
     {
       "requirement_id": "SRQ-MULE",
@@ -132,15 +132,86 @@
       "origin": "implementation_derived"
     },
     {
-      "requirement_id": "SRQ-AGENTIC-NONEXEC",
-      "name": "Agentic specification (not currently sandbox-executable) required state",
+      "requirement_id": "SRQ-AGENT",
+      "name": "Agentic commerce manipulation journey required state",
       "required_entities": [
         "customer",
-        "agent",
+        "agent"
+      ],
+      "required_state": {
+        "customer_id": true,
+        "agent_id": true
+      },
+      "notes": "Derived from the sandbox surface handler in backend/sandbox/surface_adjudicator.py. Not PDF-invented thresholds.",
+      "origin": "implementation_derived"
+    },
+    {
+      "requirement_id": "SRQ-AUTH-SE",
+      "name": "Authentication social-engineering journey required state",
+      "required_entities": [
+        "customer",
+        "device"
+      ],
+      "required_state": {
+        "customer_id": true
+      },
+      "notes": "Derived from the sandbox surface handler in backend/sandbox/surface_adjudicator.py. Not PDF-invented thresholds.",
+      "origin": "implementation_derived"
+    },
+    {
+      "requirement_id": "SRQ-KYC-GENAI",
+      "name": "GenAI identity-evidence submission journey required state",
+      "required_entities": [
+        "customer"
+      ],
+      "required_state": {
+        "customer_id": true
+      },
+      "notes": "Derived from the sandbox surface handler in backend/sandbox/surface_adjudicator.py. Not PDF-invented thresholds.",
+      "origin": "implementation_derived"
+    },
+    {
+      "requirement_id": "SRQ-OB-CONSENT",
+      "name": "Open-banking consent abuse journey required state",
+      "required_entities": [
+        "customer",
+        "tpp",
+        "consent"
+      ],
+      "required_state": {
+        "customer_id": true,
+        "tpp_id": true
+      },
+      "notes": "Derived from the sandbox surface handler in backend/sandbox/surface_adjudicator.py. Not PDF-invented thresholds.",
+      "origin": "implementation_derived"
+    },
+    {
+      "requirement_id": "SRQ-SESSION",
+      "name": "Device / session integrity attack journey required state",
+      "required_entities": [
+        "customer",
+        "device"
+      ],
+      "required_state": {
+        "customer_id": true,
+        "device_id": true
+      },
+      "notes": "Derived from the sandbox surface handler in backend/sandbox/surface_adjudicator.py. Not PDF-invented thresholds.",
+      "origin": "implementation_derived"
+    },
+    {
+      "requirement_id": "SRQ-NETWORK",
+      "name": "Cross-account network orchestration journey required state",
+      "required_entities": [
+        "customer",
+        "beneficiary",
         "payment"
       ],
-      "required_state": {},
-      "notes": "Copied from current sandbox campaign-builder patterns. Not PDF-invented thresholds.",
+      "required_state": {
+        "customer_id": true,
+        "member_customer_ids": true
+      },
+      "notes": "Derived from the sandbox surface handler in backend/sandbox/surface_adjudicator.py. Not PDF-invented thresholds.",
       "origin": "implementation_derived"
     }
   ]

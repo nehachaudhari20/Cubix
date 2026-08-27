@@ -1,6 +1,6 @@
 {
   "registry_version": "2.0",
-  "built_at": "2026-08-24T21:39:33.516174+00:00",
+  "built_at": "2026-08-27T17:08:03.919149+00:00",
   "attack_families": [
     {
       "attack_id": "AG-001",
@@ -58,8 +58,8 @@
       ],
       "confidence": "VERIFIED",
       "maturity": null,
-      "sandbox_executable": false,
-      "simulation_template_id": "TPL-AGENTIC-NONEXEC",
+      "sandbox_executable": true,
+      "simulation_template_id": "TPL-AGENT",
       "genai": {
         "classification": "genai_load_bearing",
         "load_bearing": true,
@@ -78,6 +78,10 @@
         "VAR-AG-001-03",
         "VAR-AG-001-04",
         "VAR-AG-001-05"
+      ],
+      "surface": "agent",
+      "technique_ids": [
+        "inject_prompt_agent"
       ]
     },
     {
@@ -137,8 +141,8 @@
       ],
       "confidence": "VERIFIED",
       "maturity": null,
-      "sandbox_executable": false,
-      "simulation_template_id": "TPL-AGENTIC-NONEXEC",
+      "sandbox_executable": true,
+      "simulation_template_id": "TPL-AGENT",
       "genai": {
         "classification": "genai_load_bearing",
         "load_bearing": true,
@@ -161,6 +165,10 @@
         "VAR-AG-002-05",
         "VAR-AG-002-06",
         "VAR-AG-002-07"
+      ],
+      "surface": "agent",
+      "technique_ids": [
+        "impersonate_agent"
       ]
     },
     {
@@ -216,8 +224,8 @@
       ],
       "confidence": "VERIFIED",
       "maturity": null,
-      "sandbox_executable": false,
-      "simulation_template_id": "TPL-AGENTIC-NONEXEC",
+      "sandbox_executable": true,
+      "simulation_template_id": "TPL-AGENT",
       "genai": {
         "classification": "genai_load_bearing",
         "load_bearing": true,
@@ -236,6 +244,10 @@
         "VAR-AG-003-03",
         "VAR-AG-003-04",
         "VAR-AG-003-05"
+      ],
+      "surface": "agent",
+      "technique_ids": [
+        "poison_agent_memory"
       ]
     },
     {
@@ -289,8 +301,8 @@
       ],
       "confidence": "VERIFIED",
       "maturity": null,
-      "sandbox_executable": false,
-      "simulation_template_id": "TPL-AGENTIC-NONEXEC",
+      "sandbox_executable": true,
+      "simulation_template_id": "TPL-AGENT",
       "genai": {
         "classification": "genai_load_bearing",
         "load_bearing": true,
@@ -305,6 +317,10 @@
         "VAR-AG-004-02",
         "VAR-AG-004-03",
         "VAR-AG-004-04"
+      ],
+      "surface": "agent",
+      "technique_ids": [
+        "inject_a2a_communication"
       ]
     },
     {
@@ -357,8 +373,8 @@
       ],
       "confidence": "VERIFIED",
       "maturity": null,
-      "sandbox_executable": false,
-      "simulation_template_id": "TPL-AGENTIC-NONEXEC",
+      "sandbox_executable": true,
+      "simulation_template_id": "TPL-AGENT",
       "genai": {
         "classification": "genai_load_bearing",
         "load_bearing": true,
@@ -374,6 +390,10 @@
         "VAR-AG-005-02",
         "VAR-AG-005-03",
         "VAR-AG-005-04"
+      ],
+      "surface": "agent",
+      "technique_ids": [
+        "adapt_autonomous_fraud"
       ]
     },
     {
@@ -811,8 +831,8 @@
       ],
       "confidence": "VERIFIED",
       "maturity": null,
-      "sandbox_executable": false,
-      "simulation_template_id": "TPL-AGENTIC-NONEXEC",
+      "sandbox_executable": true,
+      "simulation_template_id": "TPL-NETWORK",
       "genai": {
         "classification": "genai_amplified",
         "load_bearing": false,
@@ -835,6 +855,10 @@
         "VAR-AML-005-03",
         "VAR-AML-005-04",
         "VAR-AML-005-05"
+      ],
+      "surface": "network",
+      "technique_ids": [
+        "socially_engineer_aml_investigator"
       ]
     },
     {
@@ -1083,8 +1107,8 @@
       ],
       "confidence": "VERIFIED",
       "maturity": null,
-      "sandbox_executable": false,
-      "simulation_template_id": "TPL-AGENTIC-NONEXEC",
+      "sandbox_executable": true,
+      "simulation_template_id": "TPL-PAYMENT-PROBE",
       "genai": {
         "classification": "genai_load_bearing",
         "load_bearing": true,
@@ -1104,6 +1128,10 @@
         "VAR-ACQ-002-04",
         "VAR-ACQ-002-05",
         "VAR-ACQ-002-06"
+      ],
+      "surface": "payment",
+      "technique_ids": [
+        "evade_acquirer_monitoring"
       ]
     },
     {
@@ -1330,8 +1358,8 @@
       ],
       "confidence": "VERIFIED",
       "maturity": null,
-      "sandbox_executable": false,
-      "simulation_template_id": "TPL-AGENTIC-NONEXEC",
+      "sandbox_executable": true,
+      "simulation_template_id": "TPL-AUTH-SE",
       "genai": {
         "classification": "genai_load_bearing",
         "load_bearing": true,
@@ -1354,6 +1382,12 @@
         "VAR-AUTH-001-08",
         "VAR-AUTH-001-09",
         "VAR-AUTH-001-10"
+      ],
+      "surface": "auth_se",
+      "technique_ids": [
+        "send_phishing_email",
+        "send_smishing_message",
+        "send_bec_email"
       ]
     },
     {
@@ -1412,8 +1446,8 @@
       ],
       "confidence": "VERIFIED",
       "maturity": null,
-      "sandbox_executable": false,
-      "simulation_template_id": "TPL-AGENTIC-NONEXEC",
+      "sandbox_executable": true,
+      "simulation_template_id": "TPL-AUTH-SE",
       "genai": {
         "classification": "genai_load_bearing",
         "load_bearing": true,
@@ -1437,6 +1471,11 @@
         "VAR-AUTH-002-06",
         "VAR-AUTH-002-07",
         "VAR-AUTH-002-08"
+      ],
+      "surface": "auth_se",
+      "technique_ids": [
+        "execute_otp_social_engineering",
+        "execute_vishing_call"
       ]
     },
     {
@@ -1499,8 +1538,8 @@
       ],
       "confidence": "VERIFIED",
       "maturity": null,
-      "sandbox_executable": false,
-      "simulation_template_id": "TPL-AGENTIC-NONEXEC",
+      "sandbox_executable": true,
+      "simulation_template_id": "TPL-AUTH-SE",
       "genai": {
         "classification": "genai_load_bearing",
         "load_bearing": true,
@@ -1527,6 +1566,10 @@
         "VAR-AUTH-003-07",
         "VAR-AUTH-003-08",
         "VAR-AUTH-003-09"
+      ],
+      "surface": "auth_se",
+      "technique_ids": [
+        "exploit_auth_recovery"
       ]
     },
     {
@@ -2094,8 +2137,8 @@
       "simulation_type": "Hybrid",
       "attack_flow": [
         "Fraud Proceeds (from any fraud type)",
-        "First-Tier Mule Accounts (Receive from fraud sources — many-to-one)",
-        "Layering Phase 1 (Transfers between accounts — one-to-many, many-to-many)",
+        "First-Tier Mule Accounts (Receive from fraud sources \u2014 many-to-one)",
+        "Layering Phase 1 (Transfers between accounts \u2014 one-to-many, many-to-many)",
         "Layering Phase 2 (Cross-institution transfers)",
         "Layering Phase 3 (Cross-border transfers)",
         "Cash-Out Point (Crypto conversion, ATM withdrawal, merchant monetization)",
@@ -2470,8 +2513,8 @@
       ],
       "confidence": "VERIFIED",
       "maturity": null,
-      "sandbox_executable": false,
-      "simulation_template_id": "TPL-AGENTIC-NONEXEC",
+      "sandbox_executable": true,
+      "simulation_template_id": "TPL-SESSION",
       "genai": {
         "classification": "genai_amplified",
         "load_bearing": false,
@@ -2496,6 +2539,10 @@
         "VAR-RAT-001-06",
         "VAR-RAT-001-07",
         "VAR-RAT-001-08"
+      ],
+      "surface": "device",
+      "technique_ids": [
+        "deploy_remote_access_trojan"
       ]
     },
     {
@@ -2550,8 +2597,8 @@
       ],
       "confidence": "VERIFIED",
       "maturity": null,
-      "sandbox_executable": false,
-      "simulation_template_id": "TPL-AGENTIC-NONEXEC",
+      "sandbox_executable": true,
+      "simulation_template_id": "TPL-SESSION",
       "genai": {
         "classification": "genai_load_bearing",
         "load_bearing": true,
@@ -2570,6 +2617,10 @@
         "VAR-BOT-001-05",
         "VAR-BOT-001-06",
         "VAR-BOT-001-07"
+      ],
+      "surface": "device",
+      "technique_ids": [
+        "execute_automated_bot_interaction"
       ]
     },
     {
@@ -2624,8 +2675,8 @@
       ],
       "confidence": "VERIFIED",
       "maturity": null,
-      "sandbox_executable": false,
-      "simulation_template_id": "TPL-AGENTIC-NONEXEC",
+      "sandbox_executable": true,
+      "simulation_template_id": "TPL-SESSION",
       "genai": {
         "classification": "genai_load_bearing",
         "load_bearing": true,
@@ -2649,6 +2700,10 @@
         "VAR-BBE-001-06",
         "VAR-BBE-001-07",
         "VAR-BBE-001-08"
+      ],
+      "surface": "device",
+      "technique_ids": [
+        "evade_behavioral_biometrics"
       ]
     },
     {
@@ -2950,8 +3005,8 @@
       ],
       "confidence": "VERIFIED",
       "maturity": null,
-      "sandbox_executable": false,
-      "simulation_template_id": "TPL-AGENTIC-NONEXEC",
+      "sandbox_executable": true,
+      "simulation_template_id": "TPL-AGENT",
       "genai": {
         "classification": "genai_load_bearing",
         "load_bearing": true,
@@ -2969,6 +3024,10 @@
         "VAR-GP-004-04",
         "VAR-GP-004-05",
         "VAR-GP-004-06"
+      ],
+      "surface": "agent",
+      "technique_ids": [
+        "exploit_agent_payment_protocol"
       ]
     },
     {
@@ -3214,7 +3273,7 @@
         "Access to GenAI tools (GANs, diffusion models, LLMs)",
         "Breached PII datasets (real identity fragments)",
         "Understanding of KYC verification logic",
-        "Patience for cultivation period (30–365 days)"
+        "Patience for cultivation period (30\u2013365 days)"
       ],
       "traditional_mechanism": "Before GenAI, fraudsters created synthetic identities manually, combining real and fabricated information. This required access to breached data, patience for manual identity cultivation, and knowledge of credit system mechanics. The attack was labour-intensive and not easily scalable.",
       "genai_transformation": "GenAI enables industrial-scale generation of hyperrealistic synthetic personas with coherent digital footprints. Mastercard data from Q1 2025 shows synthetic identities surged 300%. Sumsub reports synthetic identity document fraud rose over 300% year-over-year in the U.S.. Why GenAI is load-bearing",
@@ -3479,8 +3538,8 @@
       ],
       "confidence": "VERIFIED",
       "maturity": null,
-      "sandbox_executable": false,
-      "simulation_template_id": "TPL-AGENTIC-NONEXEC",
+      "sandbox_executable": true,
+      "simulation_template_id": "TPL-KYC-GENAI",
       "genai": {
         "classification": "genai_load_bearing",
         "load_bearing": true,
@@ -3509,6 +3568,11 @@
         "VAR-SEP-001-09",
         "VAR-SEP-001-10",
         "VAR-SEP-001-11"
+      ],
+      "surface": "kyc",
+      "technique_ids": [
+        "submit_deepfake_biometric",
+        "submit_document_forgery"
       ]
     },
     {
@@ -3563,8 +3627,8 @@
       ],
       "confidence": "VERIFIED",
       "maturity": null,
-      "sandbox_executable": false,
-      "simulation_template_id": "TPL-AGENTIC-NONEXEC",
+      "sandbox_executable": true,
+      "simulation_template_id": "TPL-KYC-GENAI",
       "genai": {
         "classification": "genai_load_bearing",
         "load_bearing": true,
@@ -3584,6 +3648,10 @@
         "VAR-ATO-001-02",
         "VAR-ATO-001-03",
         "VAR-ATO-001-04"
+      ],
+      "surface": "kyc",
+      "technique_ids": [
+        "submit_recovery_document_fraud"
       ]
     },
     {
@@ -3607,7 +3675,7 @@
         "Infrastructure to manage thousands of accounts"
       ],
       "traditional_mechanism": "Before GenAI, synthetic i dentity creation was manual, using stolen PII fragments and basic forgeries. Each identity required significant effort, and networks were limited to dozens of identities. Detection was possible through document inconsistencies and manual KYC review.",
-      "genai_transformation": "GenAI enables industria l-scale generation of synthetic identities with flawless documents, autonomous KYC verification attempts, and APT-like persistence across thousands of accounts. Synthetic identity fraud grew eightfold in 2025, reaching 11% of global fraud. HARD Test Result: PASS -- Removing GenAI removes the ability to generate thousands of convincing synthetic identities, automate KYC, and coordinate networks at scale. Prerequisites: Access to GenAI tools (LLMs, image generation, document generation) Breached PII datasets or ability to fabricate complete personas Understanding of KYC verification workflows Infrastructure to manage thousands of accounts Conceptual Network Structure: Nodes: Synthetic identities, accounts, devices, IP addresses, documents Edges: Identity-account relationships, account-device relationships, shared infrastructure (IPs, devices, address clusters) Roles: Orchestrator (controls the network), Identity generator, Account opener, Seasoner (generates legitimate-looking activity), Seller (marketplace) Temporal Relationships: Identities are created in batches, seasoned over 30�365 days with AI-generated activity patterns, then activated in coordinated waves. Cross-Stage Flow: Identity Generation (KYC Stage 1) Document Generation (KYC Stage 1) Account Opening (Account Creation Stage 2) Device Registration (Device/Session Stage 3) Seasoning (Authentication + Payment Initiation Stages 4�5) Coordinated Activation (Payment Initiation Stage 5) Bust-out / Cash-out (Cash-out/Mule Stage 16) Why No Single-Stage Model Is Sufficient: Each individual identity",
+      "genai_transformation": "GenAI enables industria l-scale generation of synthetic identities with flawless documents, autonomous KYC verification attempts, and APT-like persistence across thousands of accounts. Synthetic identity fraud grew eightfold in 2025, reaching 11% of global fraud. HARD Test Result: PASS -- Removing GenAI removes the ability to generate thousands of convincing synthetic identities, automate KYC, and coordinate networks at scale. Prerequisites: Access to GenAI tools (LLMs, image generation, document generation) Breached PII datasets or ability to fabricate complete personas Understanding of KYC verification workflows Infrastructure to manage thousands of accounts Conceptual Network Structure: Nodes: Synthetic identities, accounts, devices, IP addresses, documents Edges: Identity-account relationships, account-device relationships, shared infrastructure (IPs, devices, address clusters) Roles: Orchestrator (controls the network), Identity generator, Account opener, Seasoner (generates legitimate-looking activity), Seller (marketplace) Temporal Relationships: Identities are created in batches, seasoned over 30\ufffd365 days with AI-generated activity patterns, then activated in coordinated waves. Cross-Stage Flow: Identity Generation (KYC Stage 1) Document Generation (KYC Stage 1) Account Opening (Account Creation Stage 2) Device Registration (Device/Session Stage 3) Seasoning (Authentication + Payment Initiation Stages 4\ufffd5) Coordinated Activation (Payment Initiation Stage 5) Bust-out / Cash-out (Cash-out/Mule Stage 16) Why No Single-Stage Model Is Sufficient: Each individual identity",
       "genai_classification": "genai_amplified",
       "genai_load_bearing": false,
       "simulation_type": "Hybrid",
@@ -3616,7 +3684,7 @@
         "Document Generation (KYC Stage 1)",
         "Account Opening (Account Creation Stage 2)",
         "Device Registration (Device/Session Stage 3)",
-        "Seasoning (Authentication + Payment Initiation Stages 4–5)",
+        "Seasoning (Authentication + Payment Initiation Stages 4\u20135)",
         "Coordinated Activation (Payment Initiation Stage 5)",
         "Bust-out / Cash-out (Cash-out/Mule Stage 16)"
       ],
@@ -3652,7 +3720,7 @@
       "genai": {
         "classification": "genai_amplified",
         "load_bearing": false,
-        "transformation": "GenAI enables industria l-scale generation of synthetic identities with flawless documents, autonomous KYC verification attempts, and APT-like persistence across thousands of accounts. Synthetic identity fraud grew eightfold in 2025, reaching 11% of global fraud. HARD Test Result: PASS -- Removing GenAI removes the ability to generate thousands of convincing synthetic identities, automate KYC, and coordinate networks at scale. Prerequisites: Access to GenAI tools (LLMs, image generation, document generation) Breached PII datasets or ability to fabricate complete personas Understanding of KYC verification workflows Infrastructure to manage thousands of accounts Conceptual Network Structure: Nodes: Synthetic identities, accounts, devices, IP addresses, documents Edges: Identity-account relationships, account-device relationships, shared infrastructure (IPs, devices, address clusters) Roles: Orchestrator (controls the network), Identity generator, Account opener, Seasoner (generates legitimate-looking activity), Seller (marketplace) Temporal Relationships: Identities are created in batches, seasoned over 30�365 days with AI-generated activity patterns, then activated in coordinated waves. Cross-Stage Flow: Identity Generation (KYC Stage 1) Document Generation (KYC Stage 1) Account Opening (Account Creation Stage 2) Device Registration (Device/Session Stage 3) Seasoning (Authentication + Payment Initiation Stages 4�5) Coordinated Activation (Payment Initiation Stage 5) Bust-out / Cash-out (Cash-out/Mule Stage 16) Why No Single-Stage Model Is Sufficient: Each individual identity",
+        "transformation": "GenAI enables industria l-scale generation of synthetic identities with flawless documents, autonomous KYC verification attempts, and APT-like persistence across thousands of accounts. Synthetic identity fraud grew eightfold in 2025, reaching 11% of global fraud. HARD Test Result: PASS -- Removing GenAI removes the ability to generate thousands of convincing synthetic identities, automate KYC, and coordinate networks at scale. Prerequisites: Access to GenAI tools (LLMs, image generation, document generation) Breached PII datasets or ability to fabricate complete personas Understanding of KYC verification workflows Infrastructure to manage thousands of accounts Conceptual Network Structure: Nodes: Synthetic identities, accounts, devices, IP addresses, documents Edges: Identity-account relationships, account-device relationships, shared infrastructure (IPs, devices, address clusters) Roles: Orchestrator (controls the network), Identity generator, Account opener, Seasoner (generates legitimate-looking activity), Seller (marketplace) Temporal Relationships: Identities are created in batches, seasoned over 30\ufffd365 days with AI-generated activity patterns, then activated in coordinated waves. Cross-Stage Flow: Identity Generation (KYC Stage 1) Document Generation (KYC Stage 1) Account Opening (Account Creation Stage 2) Device Registration (Device/Session Stage 3) Seasoning (Authentication + Payment Initiation Stages 4\ufffd5) Coordinated Activation (Payment Initiation Stage 5) Bust-out / Cash-out (Cash-out/Mule Stage 16) Why No Single-Stage Model Is Sufficient: Each individual identity",
         "capability_ids": [
           "CAP-0003",
           "CAP-0014",
@@ -3699,7 +3767,7 @@
         "Device Setup (Device/Session Stage 3)",
         "Authentication (Authentication Stage 4)",
         "Payment Initiation (Payment Initiation Stage 5)",
-        "Merchant/Acquirer Processing (Stages 6–7)",
+        "Merchant/Acquirer Processing (Stages 6\u20137)",
         "Gateway/Processor Infrastructure Exploitation (Stage 8)",
         "Payment Rail Cross-Rail Movement (Stage 9)",
         "Cash-out (Cash-out/Mule Stage 16)",
@@ -3728,8 +3796,8 @@
       ],
       "confidence": "VERIFIED",
       "maturity": null,
-      "sandbox_executable": false,
-      "simulation_template_id": "TPL-AGENTIC-NONEXEC",
+      "sandbox_executable": true,
+      "simulation_template_id": "TPL-NETWORK",
       "genai": {
         "classification": "genai_amplified",
         "load_bearing": false,
@@ -3754,6 +3822,10 @@
         "VAR-N-002-03",
         "VAR-N-002-04",
         "VAR-N-002-05"
+      ],
+      "surface": "network",
+      "technique_ids": [
+        "orchestrate_fraud_ring"
       ]
     },
     {
@@ -3776,7 +3848,7 @@
         "Capability to generate synthetic identities, documents, and transaction patterns"
       ],
       "traditional_mechanism": "Before GenAI, multi-stag e fraud campaigns required human coordination across specialists (identity forgers, account openers, money movers, etc.). Each stage had manual handoffs, leading to delays, errors, and detectable patterns. Campaigns were limited in scale and required significant human effort.",
-      "genai_transformation": "Autonomous planning and execution from reconnaissance to cash-out Real-time adaptation to detection feedback Seamless coordination across all lifecycle stages 24/7 operation, no human error or fatigue 4.5x profitability HARD Test Result: PASS -- Removing GenAI removes the autonomous orchestration and end-to-end execution capability. Prerequisites: Access to AI agent infrastructure Integration with multiple financial systems and payment rails Understanding of fraud detection systems (to evade) Capability to generate synthetic identities, documents, and transaction patterns Conceptual Network Structure: Nodes: AI Orchestrator, stage-specific entities (identities, accounts, devices, merchants, mules, crypto wallets) Edges: Control flows from AI orchestrator to each stage; payment flows from fraud to cash-out Roles: AI Orchestrator (plans, executes, adapts), Stage Executors (may be sub-agents or automated scripts) Temporal Relationships: Sequential flow from reconnaissance to cash-out, with coordinated timing to maximize success Cross-Stage Flow: Reconnaissance (OSINT, AI-powered) Synthetic Identity Generation (KYC Stage 1) Document Generation (KYC Stage 1) Account Creation (Account Creation Stage 2) Device Registration (Device/Session Stage 3) Authentication (Authentication Stage 4) Payment Initiation (Payment Initiation Stage 5) Merchant/Acquirer (Merchant/Acquirer Stages 6�7) Gateway/Processor (Stage 8) Payment Rail (Stage 9) Cash-out (Cash-out/Mule Stage 16) -- mule networks, crypto conversion Layering (AML/Compliance Stage 17) Why No Single-Stage Model Is Sufficient: Each ",
+      "genai_transformation": "Autonomous planning and execution from reconnaissance to cash-out Real-time adaptation to detection feedback Seamless coordination across all lifecycle stages 24/7 operation, no human error or fatigue 4.5x profitability HARD Test Result: PASS -- Removing GenAI removes the autonomous orchestration and end-to-end execution capability. Prerequisites: Access to AI agent infrastructure Integration with multiple financial systems and payment rails Understanding of fraud detection systems (to evade) Capability to generate synthetic identities, documents, and transaction patterns Conceptual Network Structure: Nodes: AI Orchestrator, stage-specific entities (identities, accounts, devices, merchants, mules, crypto wallets) Edges: Control flows from AI orchestrator to each stage; payment flows from fraud to cash-out Roles: AI Orchestrator (plans, executes, adapts), Stage Executors (may be sub-agents or automated scripts) Temporal Relationships: Sequential flow from reconnaissance to cash-out, with coordinated timing to maximize success Cross-Stage Flow: Reconnaissance (OSINT, AI-powered) Synthetic Identity Generation (KYC Stage 1) Document Generation (KYC Stage 1) Account Creation (Account Creation Stage 2) Device Registration (Device/Session Stage 3) Authentication (Authentication Stage 4) Payment Initiation (Payment Initiation Stage 5) Merchant/Acquirer (Merchant/Acquirer Stages 6\ufffd7) Gateway/Processor (Stage 8) Payment Rail (Stage 9) Cash-out (Cash-out/Mule Stage 16) -- mule networks, crypto conversion Layering (AML/Compliance Stage 17) Why No Single-Stage Model Is Sufficient: Each ",
       "genai_classification": "genai_amplified",
       "genai_load_bearing": false,
       "simulation_type": "Agentic",
@@ -3788,7 +3860,7 @@
         "Device Registration (Device/Session Stage 3)",
         "Authentication (Authentication Stage 4)",
         "Payment Initiation (Payment Initiation Stage 5)",
-        "Merchant/Acquirer Processing (Stages 6–7)",
+        "Merchant/Acquirer Processing (Stages 6\u20137)",
         "Gateway/Processor Exploitation (Stage 8)",
         "Payment Rail Movement (Stage 9)",
         "Cash-out (Cash-out/Mule Stage 16)",
@@ -3813,12 +3885,12 @@
       ],
       "confidence": "VERIFIED",
       "maturity": null,
-      "sandbox_executable": false,
-      "simulation_template_id": "TPL-AGENTIC-NONEXEC",
+      "sandbox_executable": true,
+      "simulation_template_id": "TPL-NETWORK",
       "genai": {
         "classification": "genai_amplified",
         "load_bearing": false,
-        "transformation": "Autonomous planning and execution from reconnaissance to cash-out Real-time adaptation to detection feedback Seamless coordination across all lifecycle stages 24/7 operation, no human error or fatigue 4.5x profitability HARD Test Result: PASS -- Removing GenAI removes the autonomous orchestration and end-to-end execution capability. Prerequisites: Access to AI agent infrastructure Integration with multiple financial systems and payment rails Understanding of fraud detection systems (to evade) Capability to generate synthetic identities, documents, and transaction patterns Conceptual Network Structure: Nodes: AI Orchestrator, stage-specific entities (identities, accounts, devices, merchants, mules, crypto wallets) Edges: Control flows from AI orchestrator to each stage; payment flows from fraud to cash-out Roles: AI Orchestrator (plans, executes, adapts), Stage Executors (may be sub-agents or automated scripts) Temporal Relationships: Sequential flow from reconnaissance to cash-out, with coordinated timing to maximize success Cross-Stage Flow: Reconnaissance (OSINT, AI-powered) Synthetic Identity Generation (KYC Stage 1) Document Generation (KYC Stage 1) Account Creation (Account Creation Stage 2) Device Registration (Device/Session Stage 3) Authentication (Authentication Stage 4) Payment Initiation (Payment Initiation Stage 5) Merchant/Acquirer (Merchant/Acquirer Stages 6�7) Gateway/Processor (Stage 8) Payment Rail (Stage 9) Cash-out (Cash-out/Mule Stage 16) -- mule networks, crypto conversion Layering (AML/Compliance Stage 17) Why No Single-Stage Model Is Sufficient: Each ",
+        "transformation": "Autonomous planning and execution from reconnaissance to cash-out Real-time adaptation to detection feedback Seamless coordination across all lifecycle stages 24/7 operation, no human error or fatigue 4.5x profitability HARD Test Result: PASS -- Removing GenAI removes the autonomous orchestration and end-to-end execution capability. Prerequisites: Access to AI agent infrastructure Integration with multiple financial systems and payment rails Understanding of fraud detection systems (to evade) Capability to generate synthetic identities, documents, and transaction patterns Conceptual Network Structure: Nodes: AI Orchestrator, stage-specific entities (identities, accounts, devices, merchants, mules, crypto wallets) Edges: Control flows from AI orchestrator to each stage; payment flows from fraud to cash-out Roles: AI Orchestrator (plans, executes, adapts), Stage Executors (may be sub-agents or automated scripts) Temporal Relationships: Sequential flow from reconnaissance to cash-out, with coordinated timing to maximize success Cross-Stage Flow: Reconnaissance (OSINT, AI-powered) Synthetic Identity Generation (KYC Stage 1) Document Generation (KYC Stage 1) Account Creation (Account Creation Stage 2) Device Registration (Device/Session Stage 3) Authentication (Authentication Stage 4) Payment Initiation (Payment Initiation Stage 5) Merchant/Acquirer (Merchant/Acquirer Stages 6\ufffd7) Gateway/Processor (Stage 8) Payment Rail (Stage 9) Cash-out (Cash-out/Mule Stage 16) -- mule networks, crypto conversion Layering (AML/Compliance Stage 17) Why No Single-Stage Model Is Sufficient: Each ",
         "capability_ids": [
           "CAP-0008",
           "CAP-0009",
@@ -3832,6 +3904,10 @@
         "VAR-N-003-01",
         "VAR-N-003-02",
         "VAR-N-003-03"
+      ],
+      "surface": "network",
+      "technique_ids": [
+        "coordinate_multi_stage_campaign"
       ]
     },
     {
@@ -3928,8 +4004,8 @@
       "target": "Account opening systems, onboarding workflows, KYC verification pipelines, risk engines",
       "prerequisites": [
         "Access to GenAI tools (LLMs, image generation models, document generators)",
-        "Breached PII datasets (real identity fragments) — or purely fabricated data",
-        "Understanding of target institution’s onboarding logic",
+        "Breached PII datasets (real identity fragments) \u2014 or purely fabricated data",
+        "Understanding of target institution\u2019s onboarding logic",
         "Access to account marketplaces (for farming)"
       ],
       "traditional_mechanism": "Before GenAI, fraudsters manually assembled synthetic identities using breached data (e.g., real SSNs with fake names) and forged documents using Photoshop or physical counterfeiting. Account opening was manual or semi-automated, and each identity required significant effort to cultivate. Account farming was small-scale, reliant on stolen physical documents or insider collusion.",
@@ -4012,8 +4088,8 @@
       "target": "Account opening systems, underwriting engines, credit decisioning, risk scoring",
       "prerequisites": [
         "Access to GenAI tools (LLMs, image generation, document generation)",
-        "Basic knowledge of the target institution’s underwriting requirements",
-        "No PII breach required — the applicant uses their own identity"
+        "Basic knowledge of the target institution\u2019s underwriting requirements",
+        "No PII breach required \u2014 the applicant uses their own identity"
       ],
       "traditional_mechanism": "Before GenAI, first-party misrepresentation involved manually inflating income on application forms, creating fake paystubs with basic office software (detectable by formatting errors), or providing inconsistent verbal explanations. These were relatively easy for underwriters to detect and difficult to scale.",
       "genai_transformation": "GenAI enables applicants to generate professional-grade fabricated documents with perfect formatting, authentic-looking logos, consistent data across multiple documents, and realistic aging/noise effects -- all in seconds. Multimodal LLMs can now generate entire financial histories (bank statements, tax returns) that appear completely legitimate. Why GenAI is load-bearing",
@@ -4121,8 +4197,8 @@
       ],
       "confidence": "VERIFIED",
       "maturity": null,
-      "sandbox_executable": false,
-      "simulation_template_id": "TPL-AGENTIC-NONEXEC",
+      "sandbox_executable": true,
+      "simulation_template_id": "TPL-KYC-GENAI",
       "genai": {
         "classification": "genai_load_bearing",
         "load_bearing": true,
@@ -4145,6 +4221,10 @@
         "VAR-ATO-002-05",
         "VAR-ATO-002-06",
         "VAR-ATO-002-07"
+      ],
+      "surface": "kyc",
+      "technique_ids": [
+        "submit_synthetic_identity_onboarding"
       ]
     },
     {
@@ -4213,8 +4293,8 @@
       ],
       "confidence": "VERIFIED",
       "maturity": null,
-      "sandbox_executable": false,
-      "simulation_template_id": "TPL-AGENTIC-NONEXEC",
+      "sandbox_executable": true,
+      "simulation_template_id": "TPL-OB-CONSENT",
       "genai": {
         "classification": "genai_amplified",
         "load_bearing": false,
@@ -4236,6 +4316,12 @@
         "VAR-OB-001-03",
         "VAR-OB-001-04",
         "VAR-OB-001-05"
+      ],
+      "surface": "open_banking",
+      "technique_ids": [
+        "request_broad_consent",
+        "abuse_consent_scope_creep",
+        "replay_stolen_consent_token"
       ]
     },
     {
@@ -4293,8 +4379,8 @@
       ],
       "confidence": "VERIFIED",
       "maturity": null,
-      "sandbox_executable": false,
-      "simulation_template_id": "TPL-AGENTIC-NONEXEC",
+      "sandbox_executable": true,
+      "simulation_template_id": "TPL-OB-CONSENT",
       "genai": {
         "classification": "genai_amplified",
         "load_bearing": false,
@@ -4315,6 +4401,10 @@
         "VAR-OB-002-03",
         "VAR-OB-002-04",
         "VAR-OB-002-05"
+      ],
+      "surface": "open_banking",
+      "technique_ids": [
+        "register_malicious_tpp"
       ]
     },
     {

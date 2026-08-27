@@ -10,7 +10,7 @@ from typing import Any, Dict, Optional
 
 from .evidence_buffer import EvidenceBuffer, DEFAULT_BUFFER_PATH
 from .features import FeatureBuilder
-from .schemas import ACTION_SURFACE, TRAINABLE_ACTION_TYPES, EvidenceRecord
+from .schemas import TRAINABLE_ACTION_TYPES, EvidenceRecord, action_surface
 
 
 class EvidenceCollector:
@@ -79,7 +79,11 @@ class EvidenceCollector:
             attack_family=self._field(plan, "primary_family", "unknown"),
             attack_variant=self._field(payload, "attack_variant"),
             action_type=action_type,
-            surface=ACTION_SURFACE.get(action_type, "payment"),
+            surface=(
+                sandbox_response.get("surface")
+                or state_snapshot.get("surface")
+                or action_surface(action_type)
+            ),
             scenario_type=(
                 action_payload.get("entry_point")
                 or self._field(plan, "entry_point")

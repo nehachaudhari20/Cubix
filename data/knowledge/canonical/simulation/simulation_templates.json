@@ -1,6 +1,6 @@
 {
   "registry_version": "2.0",
-  "built_at": "2026-08-24T21:39:33.516174+00:00",
+  "built_at": "2026-08-27T17:08:03.917459+00:00",
   "simulation_templates": [
     {
       "template_id": "TPL-MULE",
@@ -281,26 +281,214 @@
       "evidence": []
     },
     {
-      "template_id": "TPL-AGENTIC-NONEXEC",
-      "name": "Agentic specification (not currently sandbox-executable)",
+      "template_id": "TPL-AGENT",
+      "name": "Agentic commerce manipulation journey",
       "campaign_pattern": "agentic",
       "required_entities": [
         "customer",
-        "agent",
-        "payment"
+        "agent"
       ],
-      "supported_action_types": [],
-      "required_state_keys": [],
+      "supported_action_types": [
+        "register_customer",
+        "simulate_genai_context"
+      ],
+      "required_state_keys": [
+        "customer_id",
+        "agent_id"
+      ],
       "parameter_ids": [
-        "PAR-AMOUNT"
+        "PAR-AMOUNT",
+        "PAR-TIMING"
       ],
-      "state_requirement_id": "SRQ-AGENTIC-NONEXEC",
+      "state_requirement_id": "SRQ-AGENT",
       "parameter_schema_ref": null,
+      "mutation_dimensions": [
+        "agent_goal",
+        "tool_scope",
+        "timing"
+      ],
       "constraints": [
         "Do not independently randomize amount, device, merchant, beneficiary, geo, and velocity.",
         "Sample legitimate baseline first, then mutate attacker-controllable parameters."
       ],
-      "origin": "implementation_derived",
+      "surface": "agent",
+      "origin": "surface_enabled",
+      "evidence": []
+    },
+    {
+      "template_id": "TPL-AUTH-SE",
+      "name": "Authentication social-engineering journey",
+      "campaign_pattern": "auth_se",
+      "required_entities": [
+        "customer",
+        "device"
+      ],
+      "supported_action_types": [
+        "register_customer",
+        "register_device",
+        "simulate_social_engineering"
+      ],
+      "required_state_keys": [
+        "customer_id"
+      ],
+      "parameter_ids": [
+        "PAR-TIMING",
+        "PAR-SESSION-DURATION"
+      ],
+      "state_requirement_id": "SRQ-AUTH-SE",
+      "parameter_schema_ref": null,
+      "mutation_dimensions": [
+        "channel",
+        "pressure",
+        "timing"
+      ],
+      "constraints": [
+        "Do not independently randomize amount, device, merchant, beneficiary, geo, and velocity.",
+        "Sample legitimate baseline first, then mutate attacker-controllable parameters."
+      ],
+      "surface": "auth_se",
+      "origin": "surface_enabled",
+      "evidence": []
+    },
+    {
+      "template_id": "TPL-KYC-GENAI",
+      "name": "GenAI identity-evidence submission journey",
+      "campaign_pattern": "kyc_genai",
+      "required_entities": [
+        "customer"
+      ],
+      "supported_action_types": [
+        "register_customer",
+        "submit_kyc_evidence"
+      ],
+      "required_state_keys": [
+        "customer_id"
+      ],
+      "parameter_ids": [
+        "PAR-TRUST-SCORE",
+        "PAR-ACCOUNT-AGE"
+      ],
+      "state_requirement_id": "SRQ-KYC-GENAI",
+      "parameter_schema_ref": null,
+      "mutation_dimensions": [
+        "evidence_type",
+        "trust_score"
+      ],
+      "constraints": [
+        "Do not independently randomize amount, device, merchant, beneficiary, geo, and velocity.",
+        "Sample legitimate baseline first, then mutate attacker-controllable parameters."
+      ],
+      "surface": "kyc",
+      "origin": "surface_enabled",
+      "evidence": []
+    },
+    {
+      "template_id": "TPL-OB-CONSENT",
+      "name": "Open-banking consent abuse journey",
+      "campaign_pattern": "open_banking",
+      "required_entities": [
+        "customer",
+        "tpp",
+        "consent"
+      ],
+      "supported_action_types": [
+        "register_customer",
+        "request_consent"
+      ],
+      "required_state_keys": [
+        "customer_id",
+        "tpp_id"
+      ],
+      "parameter_ids": [
+        "PAR-TIMING"
+      ],
+      "state_requirement_id": "SRQ-OB-CONSENT",
+      "parameter_schema_ref": null,
+      "mutation_dimensions": [
+        "scope_breadth",
+        "token_state"
+      ],
+      "constraints": [
+        "Do not independently randomize amount, device, merchant, beneficiary, geo, and velocity.",
+        "Sample legitimate baseline first, then mutate attacker-controllable parameters."
+      ],
+      "surface": "open_banking",
+      "origin": "surface_enabled",
+      "evidence": []
+    },
+    {
+      "template_id": "TPL-SESSION",
+      "name": "Device / session integrity attack journey",
+      "campaign_pattern": "session",
+      "required_entities": [
+        "customer",
+        "device"
+      ],
+      "supported_action_types": [
+        "register_customer",
+        "register_device",
+        "establish_session"
+      ],
+      "required_state_keys": [
+        "customer_id",
+        "device_id"
+      ],
+      "parameter_ids": [
+        "PAR-DEVICE-AGE",
+        "PAR-SESSION-DURATION"
+      ],
+      "state_requirement_id": "SRQ-SESSION",
+      "parameter_schema_ref": null,
+      "mutation_dimensions": [
+        "interaction_timing",
+        "behavioural_variance"
+      ],
+      "constraints": [
+        "Do not independently randomize amount, device, merchant, beneficiary, geo, and velocity.",
+        "Sample legitimate baseline first, then mutate attacker-controllable parameters."
+      ],
+      "surface": "device",
+      "origin": "surface_enabled",
+      "evidence": []
+    },
+    {
+      "template_id": "TPL-NETWORK",
+      "name": "Cross-account network orchestration journey",
+      "campaign_pattern": "network",
+      "required_entities": [
+        "customer",
+        "beneficiary",
+        "payment"
+      ],
+      "supported_action_types": [
+        "register_customer",
+        "register_device",
+        "link_beneficiary",
+        "orchestrate_network",
+        "initiate_payment"
+      ],
+      "required_state_keys": [
+        "customer_id",
+        "member_customer_ids"
+      ],
+      "parameter_ids": [
+        "PAR-AMOUNT",
+        "PAR-VELOCITY",
+        "PAR-BENEFICIARY-NOVELTY"
+      ],
+      "state_requirement_id": "SRQ-NETWORK",
+      "parameter_schema_ref": null,
+      "mutation_dimensions": [
+        "ring_size",
+        "fan_in",
+        "timing"
+      ],
+      "constraints": [
+        "Do not independently randomize amount, device, merchant, beneficiary, geo, and velocity.",
+        "Sample legitimate baseline first, then mutate attacker-controllable parameters."
+      ],
+      "surface": "network",
+      "origin": "surface_enabled",
       "evidence": []
     }
   ]

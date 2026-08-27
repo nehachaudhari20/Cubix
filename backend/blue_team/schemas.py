@@ -8,32 +8,22 @@ from pydantic import BaseModel, Field
 # trainable row. Setup actions (register_customer, register_device, ...) only
 # mutate world state and are skipped by the evidence collector.
 #
-# The three non-payment surfaces below are wired in Phase 2; listing them here
-# means the collector and training mix need no further change when they land.
-#
-# NOTE: these are SURFACE-level entry actions, not the final technique taxonomy.
-# Phase 2 adds granular KB-derived techniques (inject_prompt_agent,
-# poison_agent_memory, execute_vishing_call, ...) that route to these surfaces
-# and carry their family's own targeted_control_ids. See docs/SANDBOX_CONTRACT.md
-# ("Two levels, not one: surface vs technique").
-TRAINABLE_ACTION_TYPES = frozenset(
-    {
-        "initiate_payment",
-        "simulate_genai_context",
-        "simulate_social_engineering",
-        "submit_kyc_evidence",
-        "request_consent",
-    }
-)
+# Sourced from the shared taxonomy so techniques and surface-entry actions stay in
+# one place: `backend/taxonomy/techniques.py`. Adding a technique there makes it
+# trainable here with no change to this module.
+from backend.taxonomy import all_action_types as _all_action_types  # noqa: E402
+from backend.taxonomy import surface_for_action as _surface_for_action  # noqa: E402
 
-# Attack surface each action belongs to — used for per-surface metric breakdown.
-ACTION_SURFACE = {
-    "initiate_payment": "payment",
-    "simulate_genai_context": "agent",
-    "simulate_social_engineering": "auth_se",
-    "submit_kyc_evidence": "kyc",
-    "request_consent": "open_banking",
-}
+TRAINABLE_ACTION_TYPES = _all_action_types()
+
+
+def action_surface(action_type: str) -> str:
+    """Surface that adjudicated an action; defaults to payment for legacy rows."""
+    return _surface_for_action(action_type) or "payment"
+
+
+# Backwards-compatible mapping view for callers that indexed a dict.
+ACTION_SURFACE = {action: action_surface(action) for action in TRAINABLE_ACTION_TYPES}
 
 
 class FraudShieldPrediction(BaseModel):

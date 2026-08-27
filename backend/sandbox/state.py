@@ -101,9 +101,85 @@ class SyntheticBeneficiary:
         return (datetime.now() - self.created_at).days < 7
 
 
+@dataclass
+class SyntheticAgent:
+    """An AI agent acting on a customer's behalf (agentic commerce)."""
+    agent_id: str
+    customer_id: str
+    created_at: datetime
+    mandate_scope: List[str] = field(default_factory=list)
+    tool_scope: List[str] = field(default_factory=list)
+    spend_limit: float = 25000.0
+    # Memory integrity degrades as poisoning attempts land — persists across turns
+    memory_integrity: float = 1.0
+    instruction_fidelity: float = 1.0
+    is_verified: bool = True
+    session_count: int = 0
+    poisoning_attempts: int = 0
+
+    def get_age_days(self) -> int:
+        return (datetime.now() - self.created_at).days
+
+
+@dataclass
+class SyntheticConsent:
+    """A third-party (TPP) data/payment consent grant."""
+    consent_id: str
+    customer_id: str
+    tpp_id: str
+    scopes: List[str]
+    created_at: datetime
+    expires_at: Optional[datetime] = None
+    is_active: bool = True
+    token_ref: Optional[str] = None
+    use_count: int = 0
+    scope_escalations: int = 0
+
+    @property
+    def is_expired(self) -> bool:
+        return self.expires_at is not None and datetime.now() > self.expires_at
+
+
+@dataclass
+class SyntheticTPP:
+    """A third-party provider registered against the open-banking surface."""
+    tpp_id: str
+    name: str
+    created_at: datetime
+    is_licensed: bool = True
+    registration_age_days: int = 0
+    risk_score: float = 0.2
+
+
+@dataclass
+class SyntheticKYCSubmission:
+    """One identity-evidence submission (document, biometric, liveness)."""
+    submission_id: str
+    customer_id: str
+    evidence_type: str  # document | biometric | liveness | video_kyc
+    created_at: datetime
+    accepted: bool = False
+    liveness_passed: bool = True
+    document_verified: bool = True
+    reason: str = ""
+
+
+@dataclass
+class AuthEvent:
+    """One authentication / social-engineering interaction."""
+    event_id: str
+    customer_id: str
+    channel: str
+    method: str
+    created_at: datetime
+    succeeded: bool = False
+    otp_disclosed: bool = False
+    victim_coerced: bool = False
+
+
 class SandboxState:
     """Manages all state in the payment sandbox."""
-    
+
     def __init__(self):
         self.customers: Dict[str, SyntheticCustomer] = {}
         self.devices: Dict[str, SyntheticDevice] = {}
@@ -111,7 +187,16 @@ class SandboxState:
         self.merchants: Dict[str, SyntheticMerchant] = {}
         self.beneficiaries: Dict[str, SyntheticBeneficiary] = {}
         self.transaction_log: List[Dict] = []
-        
+
+        # Non-payment surface state — carries forward between actions and rounds,
+        # so the same customer/agent is never a blank slate on the next attempt.
+        self.agents: Dict[str, SyntheticAgent] = {}
+        self.consents: Dict[str, SyntheticConsent] = {}
+        self.tpps: Dict[str, SyntheticTPP] = {}
+        self.kyc_submissions: Dict[str, SyntheticKYCSubmission] = {}
+        self.auth_events: List[AuthEvent] = []
+        self.surface_log: List[Dict] = []
+
     def get_customer(self, customer_id: str) -> Optional[SyntheticCustomer]:
         return self.customers.get(customer_id)
     
@@ -148,6 +233,70 @@ class SandboxState:
         customer_id = transaction.get("customer_id")
         if customer_id and customer_id in self.customers:
             self.customers[customer_id].transactions.append(transaction)
+
+    # ------------------------------------------------------------------
+    # Non-payment surface accessors
+    # ------------------------------------------------------------------
+
+    def get_agent(self, agent_id: str) -> Optional[SyntheticAgent]:
+        return self.agents.get(agent_id)
+
+    def get_consent(self, consent_id: str) -> Optional[SyntheticConsent]:
+        return self.consents.get(consent_id)
+
+    def get_tpp(self, tpp_id: str) -> Optional[SyntheticTPP]:
+        return self.tpps.get(tpp_id)
+
+    def get_or_create_agent(self, agent_id: str, customer_id: str, **kwargs) -> SyntheticAgent:
+        """Agents persist: repeated attacks accumulate against the same agent."""
+        agent = self.agents.get(agent_id)
+        if agent is None:
+            agent = SyntheticAgent(
+                agent_id=agent_id,
+                customer_id=customer_id,
+                created_at=datetime.now(),
+                **kwargs,
+            )
+            self.agents[agent_id] = agent
+        agent.session_count += 1
+        return agent
+
+    def add_auth_event(self, event: AuthEvent) -> AuthEvent:
+        self.auth_events.append(event)
+        return event
+
+    def get_auth_events(self, customer_id: str, hours: int = 24) -> List[AuthEvent]:
+        cutoff = datetime.now() - timedelta(hours=hours)
+        return [
+            e for e in self.auth_events
+            if e.customer_id == customer_id and e.created_at > cutoff
+        ]
+
+    def get_kyc_submissions(self, customer_id: str) -> List[SyntheticKYCSubmission]:
+        return [s for s in self.kyc_submissions.values() if s.customer_id == customer_id]
+
+    def get_customer_consents(self, customer_id: str) -> List[SyntheticConsent]:
+        return [c for c in self.consents.values() if c.customer_id == customer_id]
+
+    def record_surface_event(self, event: Dict[str, Any]) -> None:
+        """Append an adjudicated non-payment action to the surface history."""
+        if event.get("timestamp") is None:
+            event = {**event, "timestamp": datetime.now()}
+        self.surface_log.append(event)
+
+    def count_surface_events(
+        self,
+        customer_id: str,
+        surface: Optional[str] = None,
+        hours: int = 24,
+    ) -> int:
+        cutoff = datetime.now() - timedelta(hours=hours)
+        return len([
+            e for e in self.surface_log
+            if e.get("customer_id") == customer_id
+            and (surface is None or e.get("surface") == surface)
+            and (ts := e.get("timestamp")) is not None and ts > cutoff
+        ])
 
     def count_distinct_payers_to_beneficiary(self, beneficiary_id: str) -> int:
         """Count distinct customers who paid a given beneficiary."""

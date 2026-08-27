@@ -16,6 +16,14 @@ from .beneficiary_check import BeneficiaryCheckEngine
 from .acquirer import AcquirerEngine
 from .mule_cashout import MuleCashoutEngine
 
+# Non-payment control surfaces (Phase 2)
+from .agent_trust import AgentTrustEngine
+from .social_engineering import SocialEngineeringEngine
+from .kyc_evidence import KYCEvidenceEngine
+from .consent import ConsentEngine
+from .session_integrity import SessionIntegrityEngine
+from .network_orchestration import NetworkOrchestrationEngine
+
 __all__ = [
     "KYCStateEngine",
     "DeviceEngine",
@@ -32,4 +40,10 @@ __all__ = [
     "BeneficiaryCheckEngine",
     "AcquirerEngine",
     "MuleCashoutEngine",
+    "AgentTrustEngine",
+    "SocialEngineeringEngine",
+    "KYCEvidenceEngine",
+    "ConsentEngine",
+    "SessionIntegrityEngine",
+    "NetworkOrchestrationEngine",
 ]

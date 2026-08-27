@@ -12,8 +12,17 @@ from pydantic import BaseModel, Field
 
 
 class ActionType(str, Enum):
-    """Executable Red Team / Sandbox action types."""
+    """
+    Sandbox action types.
 
+    Setup actions mutate world state only. Surface-entry actions are adjudicated:
+    they run a control chain and return ALLOW / CHALLENGE / BLOCK. Granular
+    techniques (`poison_agent_memory`, `execute_vishing_call`, ...) are declared in
+    `backend/taxonomy/techniques.py` and route to the surface entry action listed
+    here, so adding a technique needs no new enum member or handler.
+    """
+
+    # --- setup (state only) ---
     REGISTER_CUSTOMER = "register_customer"
     REGISTER_DEVICE = "register_device"
     VERIFY_KYC = "verify_kyc"
@@ -21,8 +30,15 @@ class ActionType(str, Enum):
     OPEN_ACCOUNT = "open_account"
     ONBOARD_MERCHANT = "onboard_merchant"
     LINK_BENEFICIARY = "link_beneficiary"
+
+    # --- adjudicated surfaces ---
     INITIATE_PAYMENT = "initiate_payment"
     SIMULATE_GENAI_CONTEXT = "simulate_genai_context"
+    SIMULATE_SOCIAL_ENGINEERING = "simulate_social_engineering"
+    SUBMIT_KYC_EVIDENCE = "submit_kyc_evidence"
+    REQUEST_CONSENT = "request_consent"
+    ESTABLISH_SESSION = "establish_session"
+    ORCHESTRATE_NETWORK = "orchestrate_network"
 
 
 class JourneyStep(BaseModel):
@@ -35,11 +51,15 @@ class SandboxObservation(BaseModel):
 
     action_id: str
     action_type: str
+    surface: str = "payment"  # payment | agent | auth_se | kyc | open_banking | device | network
+    technique: Optional[str] = None  # granular KB-derived technique, when supplied
+    attack_family: Optional[str] = None
     decision: str  # ALLOW | CHALLENGE | BLOCK | PASS | FAIL
     reason: str
     message: str = ""
     risk_score: Optional[float] = None
     control_triggers: List[str] = Field(default_factory=list)
+    control_gaps: Optional[Dict[str, Any]] = None
     journey: List[JourneyStep] = Field(default_factory=list)
     state_snapshot: Dict[str, Any] = Field(default_factory=dict)
     timestamp: str

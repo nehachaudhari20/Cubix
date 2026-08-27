@@ -1,6 +1,6 @@
 {
   "registry_version": "2.0",
-  "built_at": "2026-08-24T21:39:33.516174+00:00",
+  "built_at": "2026-08-27T17:08:03.931146+00:00",
   "relationships": [
     {
       "relationship_id": "REL-00001",
@@ -4758,7 +4758,7 @@
       "relationship_id": "REL-00529",
       "from_ref": "VEC-AG-001-01",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-AGENT",
       "evidence": []
     },
     {
@@ -4783,7 +4783,7 @@
       "relationship_id": "REL-00532",
       "from_ref": "VEC-AG-001-02",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-AGENT",
       "evidence": []
     },
     {
@@ -4808,7 +4808,7 @@
       "relationship_id": "REL-00535",
       "from_ref": "VEC-AG-001-03",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-AGENT",
       "evidence": []
     },
     {
@@ -4833,7 +4833,7 @@
       "relationship_id": "REL-00538",
       "from_ref": "VEC-AG-001-04",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-AGENT",
       "evidence": []
     },
     {
@@ -4858,7 +4858,7 @@
       "relationship_id": "REL-00541",
       "from_ref": "VEC-AG-001-05",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-AGENT",
       "evidence": []
     },
     {
@@ -4883,7 +4883,7 @@
       "relationship_id": "REL-00544",
       "from_ref": "VEC-AG-002-01",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-AGENT",
       "evidence": []
     },
     {
@@ -4908,7 +4908,7 @@
       "relationship_id": "REL-00547",
       "from_ref": "VEC-AG-002-02",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-AGENT",
       "evidence": []
     },
     {
@@ -4933,7 +4933,7 @@
       "relationship_id": "REL-00550",
       "from_ref": "VEC-AG-002-03",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-AGENT",
       "evidence": []
     },
     {
@@ -4958,7 +4958,7 @@
       "relationship_id": "REL-00553",
       "from_ref": "VEC-AG-002-04",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-AGENT",
       "evidence": []
     },
     {
@@ -4983,7 +4983,7 @@
       "relationship_id": "REL-00556",
       "from_ref": "VEC-AG-002-05",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-AGENT",
       "evidence": []
     },
     {
@@ -5008,7 +5008,7 @@
       "relationship_id": "REL-00559",
       "from_ref": "VEC-AG-002-06",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-AGENT",
       "evidence": []
     },
     {
@@ -5033,7 +5033,7 @@
       "relationship_id": "REL-00562",
       "from_ref": "VEC-AG-002-07",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-AGENT",
       "evidence": []
     },
     {
@@ -5058,7 +5058,7 @@
       "relationship_id": "REL-00565",
       "from_ref": "VEC-AG-003-01",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-AGENT",
       "evidence": []
     },
     {
@@ -5083,7 +5083,7 @@
       "relationship_id": "REL-00568",
       "from_ref": "VEC-AG-003-02",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-AGENT",
       "evidence": []
     },
     {
@@ -5108,7 +5108,7 @@
       "relationship_id": "REL-00571",
       "from_ref": "VEC-AG-003-03",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-AGENT",
       "evidence": []
     },
     {
@@ -5133,7 +5133,7 @@
       "relationship_id": "REL-00574",
       "from_ref": "VEC-AG-003-04",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-AGENT",
       "evidence": []
     },
     {
@@ -5158,7 +5158,7 @@
       "relationship_id": "REL-00577",
       "from_ref": "VEC-AG-003-05",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-AGENT",
       "evidence": []
     },
     {
@@ -5183,7 +5183,7 @@
       "relationship_id": "REL-00580",
       "from_ref": "VEC-AG-004-01",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-AGENT",
       "evidence": []
     },
     {
@@ -5208,7 +5208,7 @@
       "relationship_id": "REL-00583",
       "from_ref": "VEC-AG-004-02",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-AGENT",
       "evidence": []
     },
     {
@@ -5233,7 +5233,7 @@
       "relationship_id": "REL-00586",
       "from_ref": "VEC-AG-004-03",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-AGENT",
       "evidence": []
     },
     {
@@ -5258,7 +5258,7 @@
       "relationship_id": "REL-00589",
       "from_ref": "VEC-AG-004-04",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-AGENT",
       "evidence": []
     },
     {
@@ -5283,7 +5283,7 @@
       "relationship_id": "REL-00592",
       "from_ref": "VEC-AG-005-01",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-AGENT",
       "evidence": []
     },
     {
@@ -5308,7 +5308,7 @@
       "relationship_id": "REL-00595",
       "from_ref": "VEC-AG-005-02",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-AGENT",
       "evidence": []
     },
     {
@@ -5333,7 +5333,7 @@
       "relationship_id": "REL-00598",
       "from_ref": "VEC-AG-005-03",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-AGENT",
       "evidence": []
     },
     {
@@ -5358,7 +5358,7 @@
       "relationship_id": "REL-00601",
       "from_ref": "VEC-AG-005-04",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-AGENT",
       "evidence": []
     },
     {
@@ -6247,7 +6247,7 @@
       "relationship_id": "REL-00712",
       "from_ref": "VEC-AML-005-01",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-NETWORK",
       "evidence": []
     },
     {
@@ -6272,7 +6272,7 @@
       "relationship_id": "REL-00715",
       "from_ref": "VEC-AML-005-02",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-NETWORK",
       "evidence": []
     },
     {
@@ -6297,7 +6297,7 @@
       "relationship_id": "REL-00718",
       "from_ref": "VEC-AML-005-03",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-NETWORK",
       "evidence": []
     },
     {
@@ -6322,7 +6322,7 @@
       "relationship_id": "REL-00721",
       "from_ref": "VEC-AML-005-04",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-NETWORK",
       "evidence": []
     },
     {
@@ -6347,7 +6347,7 @@
       "relationship_id": "REL-00724",
       "from_ref": "VEC-AML-005-05",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-NETWORK",
       "evidence": []
     },
     {
@@ -6916,7 +6916,7 @@
       "relationship_id": "REL-00795",
       "from_ref": "VEC-ACQ-002-01",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-PAYMENT-PROBE",
       "evidence": []
     },
     {
@@ -6941,7 +6941,7 @@
       "relationship_id": "REL-00798",
       "from_ref": "VEC-ACQ-002-02",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-PAYMENT-PROBE",
       "evidence": []
     },
     {
@@ -6966,7 +6966,7 @@
       "relationship_id": "REL-00801",
       "from_ref": "VEC-ACQ-002-03",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-PAYMENT-PROBE",
       "evidence": []
     },
     {
@@ -6991,7 +6991,7 @@
       "relationship_id": "REL-00804",
       "from_ref": "VEC-ACQ-002-04",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-PAYMENT-PROBE",
       "evidence": []
     },
     {
@@ -7016,7 +7016,7 @@
       "relationship_id": "REL-00807",
       "from_ref": "VEC-ACQ-002-05",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-PAYMENT-PROBE",
       "evidence": []
     },
     {
@@ -7041,7 +7041,7 @@
       "relationship_id": "REL-00810",
       "from_ref": "VEC-ACQ-002-06",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-PAYMENT-PROBE",
       "evidence": []
     },
     {
@@ -7482,7 +7482,7 @@
       "relationship_id": "REL-00865",
       "from_ref": "VEC-AUTH-001-01",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-AUTH-SE",
       "evidence": []
     },
     {
@@ -7507,7 +7507,7 @@
       "relationship_id": "REL-00868",
       "from_ref": "VEC-AUTH-001-02",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-AUTH-SE",
       "evidence": []
     },
     {
@@ -7532,7 +7532,7 @@
       "relationship_id": "REL-00871",
       "from_ref": "VEC-AUTH-001-03",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-AUTH-SE",
       "evidence": []
     },
     {
@@ -7557,7 +7557,7 @@
       "relationship_id": "REL-00874",
       "from_ref": "VEC-AUTH-001-04",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-AUTH-SE",
       "evidence": []
     },
     {
@@ -7582,7 +7582,7 @@
       "relationship_id": "REL-00877",
       "from_ref": "VEC-AUTH-001-05",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-AUTH-SE",
       "evidence": []
     },
     {
@@ -7607,7 +7607,7 @@
       "relationship_id": "REL-00880",
       "from_ref": "VEC-AUTH-001-06",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-AUTH-SE",
       "evidence": []
     },
     {
@@ -7632,7 +7632,7 @@
       "relationship_id": "REL-00883",
       "from_ref": "VEC-AUTH-001-07",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-AUTH-SE",
       "evidence": []
     },
     {
@@ -7657,7 +7657,7 @@
       "relationship_id": "REL-00886",
       "from_ref": "VEC-AUTH-001-08",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-AUTH-SE",
       "evidence": []
     },
     {
@@ -7682,7 +7682,7 @@
       "relationship_id": "REL-00889",
       "from_ref": "VEC-AUTH-001-09",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-AUTH-SE",
       "evidence": []
     },
     {
@@ -7707,7 +7707,7 @@
       "relationship_id": "REL-00892",
       "from_ref": "VEC-AUTH-001-10",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-AUTH-SE",
       "evidence": []
     },
     {
@@ -7732,7 +7732,7 @@
       "relationship_id": "REL-00895",
       "from_ref": "VEC-AUTH-002-01",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-AUTH-SE",
       "evidence": []
     },
     {
@@ -7757,7 +7757,7 @@
       "relationship_id": "REL-00898",
       "from_ref": "VEC-AUTH-002-02",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-AUTH-SE",
       "evidence": []
     },
     {
@@ -7782,7 +7782,7 @@
       "relationship_id": "REL-00901",
       "from_ref": "VEC-AUTH-002-03",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-AUTH-SE",
       "evidence": []
     },
     {
@@ -7807,7 +7807,7 @@
       "relationship_id": "REL-00904",
       "from_ref": "VEC-AUTH-002-04",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-AUTH-SE",
       "evidence": []
     },
     {
@@ -7832,7 +7832,7 @@
       "relationship_id": "REL-00907",
       "from_ref": "VEC-AUTH-002-05",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-AUTH-SE",
       "evidence": []
     },
     {
@@ -7857,7 +7857,7 @@
       "relationship_id": "REL-00910",
       "from_ref": "VEC-AUTH-002-06",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-AUTH-SE",
       "evidence": []
     },
     {
@@ -7882,7 +7882,7 @@
       "relationship_id": "REL-00913",
       "from_ref": "VEC-AUTH-002-07",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-AUTH-SE",
       "evidence": []
     },
     {
@@ -7907,7 +7907,7 @@
       "relationship_id": "REL-00916",
       "from_ref": "VEC-AUTH-002-08",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-AUTH-SE",
       "evidence": []
     },
     {
@@ -7932,7 +7932,7 @@
       "relationship_id": "REL-00919",
       "from_ref": "VEC-AUTH-003-01",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-AUTH-SE",
       "evidence": []
     },
     {
@@ -7957,7 +7957,7 @@
       "relationship_id": "REL-00922",
       "from_ref": "VEC-AUTH-003-02",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-AUTH-SE",
       "evidence": []
     },
     {
@@ -7982,7 +7982,7 @@
       "relationship_id": "REL-00925",
       "from_ref": "VEC-AUTH-003-03",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-AUTH-SE",
       "evidence": []
     },
     {
@@ -8007,7 +8007,7 @@
       "relationship_id": "REL-00928",
       "from_ref": "VEC-AUTH-003-04",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-AUTH-SE",
       "evidence": []
     },
     {
@@ -8032,7 +8032,7 @@
       "relationship_id": "REL-00931",
       "from_ref": "VEC-AUTH-003-05",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-AUTH-SE",
       "evidence": []
     },
     {
@@ -8057,7 +8057,7 @@
       "relationship_id": "REL-00934",
       "from_ref": "VEC-AUTH-003-06",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-AUTH-SE",
       "evidence": []
     },
     {
@@ -8082,7 +8082,7 @@
       "relationship_id": "REL-00937",
       "from_ref": "VEC-AUTH-003-07",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-AUTH-SE",
       "evidence": []
     },
     {
@@ -8107,7 +8107,7 @@
       "relationship_id": "REL-00940",
       "from_ref": "VEC-AUTH-003-08",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-AUTH-SE",
       "evidence": []
     },
     {
@@ -8132,7 +8132,7 @@
       "relationship_id": "REL-00943",
       "from_ref": "VEC-AUTH-003-09",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-AUTH-SE",
       "evidence": []
     },
     {
@@ -10621,7 +10621,7 @@
       "relationship_id": "REL-01254",
       "from_ref": "VEC-RAT-001-01",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-SESSION",
       "evidence": []
     },
     {
@@ -10646,7 +10646,7 @@
       "relationship_id": "REL-01257",
       "from_ref": "VEC-RAT-001-02",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-SESSION",
       "evidence": []
     },
     {
@@ -10671,7 +10671,7 @@
       "relationship_id": "REL-01260",
       "from_ref": "VEC-RAT-001-03",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-SESSION",
       "evidence": []
     },
     {
@@ -10696,7 +10696,7 @@
       "relationship_id": "REL-01263",
       "from_ref": "VEC-RAT-001-04",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-SESSION",
       "evidence": []
     },
     {
@@ -10721,7 +10721,7 @@
       "relationship_id": "REL-01266",
       "from_ref": "VEC-RAT-001-05",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-SESSION",
       "evidence": []
     },
     {
@@ -10746,7 +10746,7 @@
       "relationship_id": "REL-01269",
       "from_ref": "VEC-RAT-001-06",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-SESSION",
       "evidence": []
     },
     {
@@ -10771,7 +10771,7 @@
       "relationship_id": "REL-01272",
       "from_ref": "VEC-RAT-001-07",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-SESSION",
       "evidence": []
     },
     {
@@ -10796,7 +10796,7 @@
       "relationship_id": "REL-01275",
       "from_ref": "VEC-RAT-001-08",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-SESSION",
       "evidence": []
     },
     {
@@ -10821,7 +10821,7 @@
       "relationship_id": "REL-01278",
       "from_ref": "VEC-BOT-001-01",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-SESSION",
       "evidence": []
     },
     {
@@ -10846,7 +10846,7 @@
       "relationship_id": "REL-01281",
       "from_ref": "VEC-BOT-001-02",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-SESSION",
       "evidence": []
     },
     {
@@ -10871,7 +10871,7 @@
       "relationship_id": "REL-01284",
       "from_ref": "VEC-BOT-001-03",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-SESSION",
       "evidence": []
     },
     {
@@ -10896,7 +10896,7 @@
       "relationship_id": "REL-01287",
       "from_ref": "VEC-BOT-001-04",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-SESSION",
       "evidence": []
     },
     {
@@ -10921,7 +10921,7 @@
       "relationship_id": "REL-01290",
       "from_ref": "VEC-BOT-001-05",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-SESSION",
       "evidence": []
     },
     {
@@ -10946,7 +10946,7 @@
       "relationship_id": "REL-01293",
       "from_ref": "VEC-BOT-001-06",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-SESSION",
       "evidence": []
     },
     {
@@ -10971,7 +10971,7 @@
       "relationship_id": "REL-01296",
       "from_ref": "VEC-BOT-001-07",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-SESSION",
       "evidence": []
     },
     {
@@ -10996,7 +10996,7 @@
       "relationship_id": "REL-01299",
       "from_ref": "VEC-BBE-001-01",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-SESSION",
       "evidence": []
     },
     {
@@ -11021,7 +11021,7 @@
       "relationship_id": "REL-01302",
       "from_ref": "VEC-BBE-001-02",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-SESSION",
       "evidence": []
     },
     {
@@ -11046,7 +11046,7 @@
       "relationship_id": "REL-01305",
       "from_ref": "VEC-BBE-001-03",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-SESSION",
       "evidence": []
     },
     {
@@ -11071,7 +11071,7 @@
       "relationship_id": "REL-01308",
       "from_ref": "VEC-BBE-001-04",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-SESSION",
       "evidence": []
     },
     {
@@ -11096,7 +11096,7 @@
       "relationship_id": "REL-01311",
       "from_ref": "VEC-BBE-001-05",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-SESSION",
       "evidence": []
     },
     {
@@ -11121,7 +11121,7 @@
       "relationship_id": "REL-01314",
       "from_ref": "VEC-BBE-001-06",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-SESSION",
       "evidence": []
     },
     {
@@ -11146,7 +11146,7 @@
       "relationship_id": "REL-01317",
       "from_ref": "VEC-BBE-001-07",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-SESSION",
       "evidence": []
     },
     {
@@ -11171,7 +11171,7 @@
       "relationship_id": "REL-01320",
       "from_ref": "VEC-BBE-001-08",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-SESSION",
       "evidence": []
     },
     {
@@ -11676,7 +11676,7 @@
       "relationship_id": "REL-01383",
       "from_ref": "VEC-GP-004-01",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-AGENT",
       "evidence": []
     },
     {
@@ -11701,7 +11701,7 @@
       "relationship_id": "REL-01386",
       "from_ref": "VEC-GP-004-02",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-AGENT",
       "evidence": []
     },
     {
@@ -11726,7 +11726,7 @@
       "relationship_id": "REL-01389",
       "from_ref": "VEC-GP-004-03",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-AGENT",
       "evidence": []
     },
     {
@@ -11751,7 +11751,7 @@
       "relationship_id": "REL-01392",
       "from_ref": "VEC-GP-004-04",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-AGENT",
       "evidence": []
     },
     {
@@ -11776,7 +11776,7 @@
       "relationship_id": "REL-01395",
       "from_ref": "VEC-GP-004-05",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-AGENT",
       "evidence": []
     },
     {
@@ -11801,7 +11801,7 @@
       "relationship_id": "REL-01398",
       "from_ref": "VEC-GP-004-06",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-AGENT",
       "evidence": []
     },
     {
@@ -12818,7 +12818,7 @@
       "relationship_id": "REL-01525",
       "from_ref": "VEC-SEP-001-01",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-KYC-GENAI",
       "evidence": []
     },
     {
@@ -12843,7 +12843,7 @@
       "relationship_id": "REL-01528",
       "from_ref": "VEC-SEP-001-02",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-KYC-GENAI",
       "evidence": []
     },
     {
@@ -12868,7 +12868,7 @@
       "relationship_id": "REL-01531",
       "from_ref": "VEC-SEP-001-03",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-KYC-GENAI",
       "evidence": []
     },
     {
@@ -12893,7 +12893,7 @@
       "relationship_id": "REL-01534",
       "from_ref": "VEC-SEP-001-04",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-KYC-GENAI",
       "evidence": []
     },
     {
@@ -12918,7 +12918,7 @@
       "relationship_id": "REL-01537",
       "from_ref": "VEC-SEP-001-05",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-KYC-GENAI",
       "evidence": []
     },
     {
@@ -12943,7 +12943,7 @@
       "relationship_id": "REL-01540",
       "from_ref": "VEC-SEP-001-06",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-KYC-GENAI",
       "evidence": []
     },
     {
@@ -12968,7 +12968,7 @@
       "relationship_id": "REL-01543",
       "from_ref": "VEC-SEP-001-07",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-KYC-GENAI",
       "evidence": []
     },
     {
@@ -12993,7 +12993,7 @@
       "relationship_id": "REL-01546",
       "from_ref": "VEC-SEP-001-08",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-KYC-GENAI",
       "evidence": []
     },
     {
@@ -13018,7 +13018,7 @@
       "relationship_id": "REL-01549",
       "from_ref": "VEC-SEP-001-09",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-KYC-GENAI",
       "evidence": []
     },
     {
@@ -13043,7 +13043,7 @@
       "relationship_id": "REL-01552",
       "from_ref": "VEC-SEP-001-10",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-KYC-GENAI",
       "evidence": []
     },
     {
@@ -13068,7 +13068,7 @@
       "relationship_id": "REL-01555",
       "from_ref": "VEC-SEP-001-11",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-KYC-GENAI",
       "evidence": []
     },
     {
@@ -13093,7 +13093,7 @@
       "relationship_id": "REL-01558",
       "from_ref": "VEC-ATO-001-01",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-KYC-GENAI",
       "evidence": []
     },
     {
@@ -13118,7 +13118,7 @@
       "relationship_id": "REL-01561",
       "from_ref": "VEC-ATO-001-02",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-KYC-GENAI",
       "evidence": []
     },
     {
@@ -13143,7 +13143,7 @@
       "relationship_id": "REL-01564",
       "from_ref": "VEC-ATO-001-03",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-KYC-GENAI",
       "evidence": []
     },
     {
@@ -13168,7 +13168,7 @@
       "relationship_id": "REL-01567",
       "from_ref": "VEC-ATO-001-04",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-KYC-GENAI",
       "evidence": []
     },
     {
@@ -13353,7 +13353,7 @@
       "relationship_id": "REL-01590",
       "from_ref": "VEC-N-002-01",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-NETWORK",
       "evidence": []
     },
     {
@@ -13378,7 +13378,7 @@
       "relationship_id": "REL-01593",
       "from_ref": "VEC-N-002-02",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-NETWORK",
       "evidence": []
     },
     {
@@ -13403,7 +13403,7 @@
       "relationship_id": "REL-01596",
       "from_ref": "VEC-N-002-03",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-NETWORK",
       "evidence": []
     },
     {
@@ -13428,7 +13428,7 @@
       "relationship_id": "REL-01599",
       "from_ref": "VEC-N-002-04",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-NETWORK",
       "evidence": []
     },
     {
@@ -13453,7 +13453,7 @@
       "relationship_id": "REL-01602",
       "from_ref": "VEC-N-002-05",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-NETWORK",
       "evidence": []
     },
     {
@@ -13478,7 +13478,7 @@
       "relationship_id": "REL-01605",
       "from_ref": "VEC-N-003-01",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-NETWORK",
       "evidence": []
     },
     {
@@ -13503,7 +13503,7 @@
       "relationship_id": "REL-01608",
       "from_ref": "VEC-N-003-02",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-NETWORK",
       "evidence": []
     },
     {
@@ -13528,7 +13528,7 @@
       "relationship_id": "REL-01611",
       "from_ref": "VEC-N-003-03",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-NETWORK",
       "evidence": []
     },
     {
@@ -14065,7 +14065,7 @@
       "relationship_id": "REL-01678",
       "from_ref": "VEC-ATO-002-01",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-KYC-GENAI",
       "evidence": []
     },
     {
@@ -14090,7 +14090,7 @@
       "relationship_id": "REL-01681",
       "from_ref": "VEC-ATO-002-02",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-KYC-GENAI",
       "evidence": []
     },
     {
@@ -14115,7 +14115,7 @@
       "relationship_id": "REL-01684",
       "from_ref": "VEC-ATO-002-03",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-KYC-GENAI",
       "evidence": []
     },
     {
@@ -14140,7 +14140,7 @@
       "relationship_id": "REL-01687",
       "from_ref": "VEC-ATO-002-04",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-KYC-GENAI",
       "evidence": []
     },
     {
@@ -14165,7 +14165,7 @@
       "relationship_id": "REL-01690",
       "from_ref": "VEC-ATO-002-05",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-KYC-GENAI",
       "evidence": []
     },
     {
@@ -14190,7 +14190,7 @@
       "relationship_id": "REL-01693",
       "from_ref": "VEC-ATO-002-06",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-KYC-GENAI",
       "evidence": []
     },
     {
@@ -14215,7 +14215,7 @@
       "relationship_id": "REL-01696",
       "from_ref": "VEC-ATO-002-07",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-KYC-GENAI",
       "evidence": []
     },
     {
@@ -14240,7 +14240,7 @@
       "relationship_id": "REL-01699",
       "from_ref": "VEC-OB-001-01",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-OB-CONSENT",
       "evidence": []
     },
     {
@@ -14265,7 +14265,7 @@
       "relationship_id": "REL-01702",
       "from_ref": "VEC-OB-001-02",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-OB-CONSENT",
       "evidence": []
     },
     {
@@ -14290,7 +14290,7 @@
       "relationship_id": "REL-01705",
       "from_ref": "VEC-OB-001-03",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-OB-CONSENT",
       "evidence": []
     },
     {
@@ -14315,7 +14315,7 @@
       "relationship_id": "REL-01708",
       "from_ref": "VEC-OB-001-04",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-OB-CONSENT",
       "evidence": []
     },
     {
@@ -14340,7 +14340,7 @@
       "relationship_id": "REL-01711",
       "from_ref": "VEC-OB-001-05",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-OB-CONSENT",
       "evidence": []
     },
     {
@@ -14365,7 +14365,7 @@
       "relationship_id": "REL-01714",
       "from_ref": "VEC-OB-002-01",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-OB-CONSENT",
       "evidence": []
     },
     {
@@ -14390,7 +14390,7 @@
       "relationship_id": "REL-01717",
       "from_ref": "VEC-OB-002-02",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-OB-CONSENT",
       "evidence": []
     },
     {
@@ -14415,7 +14415,7 @@
       "relationship_id": "REL-01720",
       "from_ref": "VEC-OB-002-03",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-OB-CONSENT",
       "evidence": []
     },
     {
@@ -14440,7 +14440,7 @@
       "relationship_id": "REL-01723",
       "from_ref": "VEC-OB-002-04",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-OB-CONSENT",
       "evidence": []
     },
     {
@@ -14465,7 +14465,7 @@
       "relationship_id": "REL-01726",
       "from_ref": "VEC-OB-002-05",
       "relationship_type": "uses_template",
-      "to_ref": "TPL-AGENTIC-NONEXEC",
+      "to_ref": "TPL-OB-CONSENT",
       "evidence": []
     },
     {

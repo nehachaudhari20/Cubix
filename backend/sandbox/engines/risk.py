@@ -9,6 +9,22 @@ from ..rules.compiled_controls import CompiledControlSet
 from ..rules.rule_engine import RuleEngine
 from ..rules.feature_context import build_rule_context
 
+# Engine tags used by payment-lifecycle rules in rules.json. Surface engines are
+# deliberately excluded — see the comment at the evaluate() call below.
+PAYMENT_RULE_ENGINES = (
+    "payment_init",
+    "identity",
+    "device",
+    "auth",
+    "beneficiary",
+    "mule",
+    "aml",
+    "gateway",
+    "acquirer",
+    "agent_commerce",
+    "risk",
+)
+
 
 class RiskEngine:
     """Risk scoring with KB RuleEngine + FraudShield + isolation forest."""
@@ -64,7 +80,15 @@ class RiskEngine:
             or []
         )
 
-        rule_result = self.rule_engine.evaluate(context, expected_controls=expected)
+        # Restrict to payment-lifecycle engines. Non-payment surface rules
+        # (agent, auth_se, kyc_genai, consent, session_integrity, network) are
+        # adjudicated by their own surface handler; letting them evaluate here too
+        # would double-count their risk against every transaction.
+        rule_result = self.rule_engine.evaluate(
+            context,
+            expected_controls=expected,
+            engines=PAYMENT_RULE_ENGINES,
+        )
         rule_risk = float(rule_result.risk_contribution)
         rule_details = list(rule_result.rule_details)
 

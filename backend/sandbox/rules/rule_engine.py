@@ -25,6 +25,10 @@ OPS = {
     "in": lambda a, b: a in (b or []),
     "contains": lambda a, b: b in (a or []),
     "truthy": lambda a, _b: bool(a),
+    # Presence guard. `<` and `<=` coerce a missing field to 0, which satisfies
+    # any positive threshold — so a rule like "integrity < 0.6" would fire on
+    # every context that simply has no integrity field. Guard those with `exists`.
+    "exists": lambda a, _b: a is not None,
 }
 
 
@@ -308,6 +312,12 @@ class RuleEngine:
         try:
             if op == "truthy":
                 return bool(lhs), used
+            if op == "exists":
+                return lhs is not None, used
+            # A comparison against a missing field is not a match. Without this,
+            # "<" on an absent field reads as 0 and fires spuriously.
+            if op in ("<", "<=", ">", ">=") and lhs is None:
+                return False, used
             return bool(fn(lhs, rhs)), used
         except (TypeError, ValueError):
             return False, used

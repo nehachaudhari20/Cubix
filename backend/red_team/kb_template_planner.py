@@ -14,6 +14,7 @@ from backend.sandbox.lifecycle_router import (
     stages_to_action_types,
     template_action_types,
 )
+from backend.taxonomy import SURFACE_ENTRY_ACTION, techniques_for_family
 
 from .kb_campaign_builder import (
     _payment_steps,
@@ -33,7 +34,12 @@ ACTION_LABELS = {
     "open_account": "Open account",
     "onboard_merchant": "Onboard merchant",
     "link_beneficiary": "Link beneficiary",
-    "simulate_genai_context": "Simulate GenAI attack context",
+    "simulate_genai_context": "Manipulate AI agent context",
+    "simulate_social_engineering": "Run social-engineering contact",
+    "submit_kyc_evidence": "Submit identity evidence",
+    "request_consent": "Request open-banking consent",
+    "establish_session": "Establish device session",
+    "orchestrate_network": "Orchestrate account network",
     "initiate_payment": "Initiate payment",
 }
 
@@ -211,17 +217,130 @@ class KBTemplatePlanner:
             })
         elif action_type == "link_beneficiary":
             base.update({"risk_score": float(hints.get("beneficiary_risk_score", 0.25))})
-        elif action_type == "simulate_genai_context":
-            base.update({
-                "attack_family": family.get("attack_id"),
-                "capability_ids": genai_caps,
-                "channels": hints.get("channels", _default_channels(family)),
-                "genai_features": hints.get("genai_features", _default_genai_features(family, entry_point)),
-                "victim_coerced": hints.get("victim_coerced", entry_point == "social_engineering"),
-                "agent_mediated": entry_point in ("genai_proxy", "cross_stage"),
-            })
+        elif action_type in SURFACE_ACTIONS:
+            base.update(
+                _surface_payload(
+                    action_type=action_type,
+                    family=family,
+                    hints=hints,
+                    genai_caps=genai_caps,
+                    entry_point=entry_point,
+                )
+            )
 
         return base
+
+
+SURFACE_ACTIONS = frozenset(SURFACE_ENTRY_ACTION.values()) - {"initiate_payment"}
+
+
+def _surface_payload(
+    *,
+    action_type: str,
+    family: Dict[str, Any],
+    hints: Dict[str, Any],
+    genai_caps: List[str],
+    entry_point: str,
+) -> Dict[str, Any]:
+    """
+    Build the payload for a non-payment surface action.
+
+    Shared keys first, then surface-specific attacker-controlled parameters. Values
+    come from KB hints where available so the planner stays data-driven; the
+    literals here are the attacker's opening move, which mutation later varies.
+    """
+    family_id = family.get("attack_id")
+    techniques = techniques_for_family(family_id or "")
+    genai_features = hints.get(
+        "genai_features", _default_genai_features(family, entry_point)
+    )
+
+    payload: Dict[str, Any] = {
+        "attack_family": family_id,
+        "capability_ids": genai_caps,
+        "channels": hints.get("channels", _default_channels(family)),
+        "genai_features": genai_features,
+        "family_signal_ids": list(family.get("observable_signal_ids") or []),
+        "targeted_control_ids": list(family.get("targeted_control_ids") or []),
+    }
+    if techniques:
+        technique = techniques[0]
+        payload["technique"] = technique.action_type
+        if technique.channel:
+            payload["channel"] = technique.channel
+
+    if action_type == "simulate_genai_context":
+        payload.update({
+            "agent_id": f"agent_{family_id or 'x'}".lower(),
+            "agent_verified": hints.get("agent_verified", True),
+            "mandate_scope": hints.get("mandate_scope", ["read", "purchase"]),
+            "tool_scope": hints.get("tool_scope", ["search", "checkout"]),
+            "requested_tools": hints.get("requested_tools", ["payment_api"]),
+            "spend_limit": float(hints.get("spend_limit", 25000)),
+            "requested_amount": float(hints.get("requested_amount", 40000)),
+            "agent_mediated": True,
+            "a2a_channel": family_id == "AG-004",
+            "a2a_channel_authenticated": False,
+            "counterparty_agent_unverified": family_id == "AG-002",
+        })
+    elif action_type == "simulate_social_engineering":
+        payload.update({
+            "channel": payload.get("channel", "voice"),
+            "authentication_method": hints.get("authentication_method", "otp"),
+            "victim_coerced": hints.get("victim_coerced", True),
+            "recovery_flow": family_id == "AUTH-003",
+        })
+    elif action_type == "submit_kyc_evidence":
+        payload.update({
+            "evidence_type": hints.get(
+                "evidence_type",
+                "recovery_document" if family_id == "ATO-001" else "biometric",
+            ),
+        })
+    elif action_type == "request_consent":
+        broad = family_id == "OB-001"
+        payload.update({
+            "scopes": hints.get(
+                "scopes",
+                [
+                    "accounts.read",
+                    "accounts.write",
+                    "payments.initiate",
+                    "data.export_all",
+                ] if broad else ["accounts.read"],
+            ),
+            "tpp_licensed": hints.get("tpp_licensed", family_id != "OB-002"),
+            "tpp_registration_age_days": int(
+                hints.get("tpp_registration_age_days", 5 if family_id == "OB-002" else 400)
+            ),
+            "tpp_risk_score": float(hints.get("tpp_risk_score", 0.7 if family_id == "OB-002" else 0.2)),
+            "tpp_registration": family_id == "OB-002",
+        })
+    elif action_type == "establish_session":
+        payload.update({
+            "remote_access_active": family_id == "RAT-001",
+            "accessibility_service_active": family_id == "RAT-001",
+            "screen_overlay_active": family_id == "RAT-001",
+            "headless_client": family_id == "BOT-001",
+            "mean_interaction_interval_ms": float(
+                hints.get("mean_interaction_interval_ms", 40 if family_id == "BOT-001" else 300)
+            ),
+            "behavioural_variance": float(
+                hints.get("behavioural_variance", 0.04 if family_id == "BBE-001" else 0.4)
+            ),
+        })
+    elif action_type == "orchestrate_network":
+        ring_size = int(hints.get("ring_size", 5))
+        payload.update({
+            "member_customer_ids": hints.get(
+                "member_customer_ids",
+                [f"C_{(family_id or 'net').lower()}_{i}" for i in range(ring_size)],
+            ),
+            "shared_beneficiary_id": hints.get("shared_beneficiary_id", f"B_{(family_id or 'net').lower()}"),
+            "aml_narrative_submitted": family_id == "AML-005",
+        })
+
+    return payload
 
 
 def _default_channels(family: Dict[str, Any]) -> List[str]:
