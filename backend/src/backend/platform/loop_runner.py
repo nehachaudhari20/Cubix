@@ -20,7 +20,7 @@ from .models import CampaignEvent, LoopRun
 
 @dataclass
 class LoopRunConfig:
-    families: int = 5
+    families: int = 8
     skip_train_v1: bool = True
     swap_model: bool = True
     fresh_buffer: bool = True
@@ -206,10 +206,13 @@ class LoopRunner:
         run_id: str,
         on_event: Optional[Callable[[Dict[str, Any]], None]] = None,
     ) -> tuple[Dict[str, Any], List[Dict[str, Any]]]:
-        os.environ.setdefault("RED_TEAM_LINEAR_RETRIES", "2")
+        os.environ.setdefault("RED_TEAM_LINEAR_RETRIES", "3")
         os.environ.setdefault("RED_TEAM_USE_ATTACK_ENGINE", "true")
+        os.environ.setdefault("RED_TEAM_ENGINE_EXECUTE_ALL", "true")
+        os.environ.setdefault("RED_TEAM_ENGINE_MAX_VARIATIONS", "20")
+        os.environ.setdefault("RED_TEAM_MUTATE_BEFORE_JUMP", "2")
         os.environ.setdefault("RED_TEAM_HARD_NEGATIVES", "true")
-        os.environ.setdefault("RED_TEAM_HARD_NEGATIVE_COUNT", "3")
+        os.environ.setdefault("RED_TEAM_HARD_NEGATIVE_COUNT", "5")
 
         from backend.red_team.runner import run_red_team_for_loop
         from backend.blue_team.collector import EvidenceCollector

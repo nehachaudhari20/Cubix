@@ -1,4 +1,4 @@
-"""Transform -> Vary -> Validate attack engine (DeepTeam AttackEngine analogue). Phase 2."""
+"""Transform -> Vary -> Validate attack engine (DeepTeam AttackEngine analogue)."""
 
 from __future__ import annotations
 
@@ -13,6 +13,15 @@ from backend.sandbox.rules.control_compiler import ControlCompiler
 
 from .schemas import MutationPayload, ValidatedVariation, VariationSet
 
+PAYMENT_RAILS = ("upi", "card", "bank_transfer", "wallet", "imps", "neft")
+
+GENAI_FEATURE_PROFILES: Dict[str, Dict[str, float]] = {
+    "prompt_injection": {"prompt_injection_risk": 0.85, "agent_goal_anomaly": 0.72},
+    "social_engineering": {"social_engineering_score": 0.82, "vishing_risk": 0.70, "victim_coerced": 1.0},
+    "doc_forgery": {"document_forgery_score": 0.78, "recovery_fraud_risk": 0.65},
+    "anomaly_spike": {"genai_anomaly_score": 0.88, "agent_goal_anomaly": 0.80},
+}
+
 
 def _strict_llm_validation() -> bool:
     return os.environ.get("RED_TEAM_ATTACK_ENGINE_STRICT_LLM", "false").lower() in (
@@ -20,6 +29,13 @@ def _strict_llm_validation() -> bool:
         "true",
         "yes",
     )
+
+
+def _max_variations() -> int:
+    try:
+        return max(3, min(40, int(os.environ.get("RED_TEAM_ENGINE_MAX_VARIATIONS", "20"))))
+    except ValueError:
+        return 20
 
 
 class PaymentAttackEngine:
@@ -76,39 +92,85 @@ class PaymentAttackEngine:
         return merged
 
     def _vary(self, base: Dict[str, Any], mutation: MutationPayload) -> List[ValidatedVariation]:
-        tier1 = ControlCompiler.get_threshold_for_parameter(
-            self.compiled, "PAR-AMOUNT", "amount_limit_tier1", 25000
+        tier1 = float(
+            ControlCompiler.get_threshold_for_parameter(
+                self.compiled, "PAR-AMOUNT", "amount_limit_tier1", 25000
+            )
         )
+        tier2 = float(
+            ControlCompiler.get_threshold_for_parameter(
+                self.compiled, "PAR-AMOUNT", "amount_limit_tier2", 50000
+            )
+        )
+        base_amount = float(base.get("amount") or tier1)
         variations: List[ValidatedVariation] = []
+        limit = _max_variations()
 
-        amount_2x = round(float(base.get("amount", tier1)) * 2 if base.get("amount") else float(tier1) * 2, 2)
-        v1 = deepcopy(base)
-        v1["amount"] = amount_2x
-        variations.append(ValidatedVariation(
-            variation_id=f"var_{uuid.uuid4().hex[:8]}",
-            label="amount_2x_threshold",
-            action_payload=v1,
-            validation_status="PENDING",
-        ))
+        def add(label: str, payload: Dict[str, Any]) -> None:
+            if len(variations) >= limit:
+                return
+            variations.append(
+                ValidatedVariation(
+                    variation_id=f"var_{uuid.uuid4().hex[:8]}",
+                    label=label,
+                    action_payload=payload,
+                    validation_status="PENDING",
+                )
+            )
 
-        v2 = deepcopy(base)
-        v2["hour"] = 2
-        variations.append(ValidatedVariation(
-            variation_id=f"var_{uuid.uuid4().hex[:8]}",
-            label="timing_2am",
-            action_payload=v2,
-            validation_status="PENDING",
-        ))
+        # --- Amount ladder (risk-score movers) ---
+        for label, amount in (
+            ("amount_just_below_tier1", round(tier1 * 0.95, 2)),
+            ("amount_just_above_tier1", round(tier1 * 1.05, 2)),
+            ("amount_2x_base", round(base_amount * 2, 2)),
+            ("amount_half_base", round(max(100.0, base_amount * 0.5), 2)),
+            ("amount_tier2_probe", round(tier2 * 0.98, 2)),
+            ("amount_tier2_breach", round(tier2 * 1.1, 2)),
+            ("amount_micro_probe", 2500.0),
+            ("amount_structuring", 9500.0),
+        ):
+            v = deepcopy(base)
+            v["amount"] = amount
+            add(label, v)
 
-        v3 = deepcopy(base)
-        v3["beneficiary_id"] = mutation.beneficiary_id or f"BEN_SYN_{uuid.uuid4().hex[:6]}"
-        variations.append(ValidatedVariation(
-            variation_id=f"var_{uuid.uuid4().hex[:8]}",
-            label="new_beneficiary",
-            action_payload=v3,
-            validation_status="PENDING",
-        ))
-        return variations
+        # --- Timing ---
+        for hour, label in ((2, "timing_2am"), (14, "timing_afternoon"), (23, "timing_late")):
+            v = deepcopy(base)
+            v["hour"] = hour
+            add(label, v)
+
+        # --- Beneficiary ---
+        v = deepcopy(base)
+        v["beneficiary_id"] = mutation.beneficiary_id or f"BEN_SYN_{uuid.uuid4().hex[:6]}"
+        add("new_beneficiary", v)
+
+        # --- Payment rails ---
+        current_rail = str(base.get("payment_rail") or "upi").lower()
+        for rail in PAYMENT_RAILS:
+            if rail == current_rail:
+                continue
+            v = deepcopy(base)
+            v["payment_rail"] = rail
+            add(f"rail_{rail}", v)
+
+        # --- GenAI feature profiles (risk movers for GenAI engine) ---
+        for name, feats in GENAI_FEATURE_PROFILES.items():
+            v = deepcopy(base)
+            existing = dict(v.get("genai_features") or {})
+            existing.update(feats)
+            v["genai_features"] = existing
+            if feats.get("victim_coerced"):
+                v["victim_coerced"] = True
+            add(f"genai_{name}", v)
+
+        # --- Combined high-risk: night + high amount + alt rail ---
+        v = deepcopy(base)
+        v["amount"] = round(max(base_amount, tier1) * 1.5, 2)
+        v["hour"] = 2
+        v["payment_rail"] = "wallet" if current_rail != "wallet" else "upi"
+        add("combo_night_high_alt_rail", v)
+
+        return variations[:limit]
 
     def _is_structurally_valid(self, payload: Dict[str, Any]) -> bool:
         if not payload:

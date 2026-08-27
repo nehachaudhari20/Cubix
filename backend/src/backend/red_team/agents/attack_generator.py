@@ -1,14 +1,15 @@
 """
 Attack Generator Agent — builds executable sandbox sequences.
 
-Payment steps optionally pass through PaymentAttackEngine (Transform -> Vary -> Validate).
+Payment steps optionally expand through PaymentAttackEngine into ALL valid
+variations (rails, amounts, GenAI features, timing) for sandbox execution.
 """
 
 from __future__ import annotations
 
 import os
 import uuid
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Tuple
 
 from ..schemas import AttackPlan, ActionPayload, GeneratedSequence, PlanStep
 from ..agent_helpers import new_campaign_ids
@@ -17,11 +18,26 @@ from ..deepteam.attack_engine import PaymentAttackEngine
 from ..deepteam.mutation_builder import (
     merge_variation_into_payment,
     mutation_from_plan_step,
-    pick_variation_for_step,
 )
 from ..deepteam.strategy_config import use_attack_engine
 from backend.sandbox.rules.compiled_controls import CompiledControlSet, get_global_compiled_controls
 from backend.sandbox.rules.control_compiler import ControlCompiler
+
+
+def _execute_all_variations() -> bool:
+    return os.environ.get("RED_TEAM_ENGINE_EXECUTE_ALL", "true").lower() in ("1", "true", "yes")
+
+
+def _engine_payment_mode() -> str:
+    """final | all — which payment steps receive attack-engine expansion.
+
+    Default is ``final`` when executing all variations (avoids N_payments × 20 explosion).
+    Set RED_TEAM_ENGINE_PAYMENTS_ONLY=all to expand every payment step.
+    """
+    explicit = os.environ.get("RED_TEAM_ENGINE_PAYMENTS_ONLY")
+    if explicit is not None and explicit.strip() != "":
+        return explicit.strip().lower()
+    return "final" if _execute_all_variations() else "all"
 
 
 class AttackGenerator:
@@ -40,33 +56,82 @@ class AttackGenerator:
     def generate_sequence(self, plan: AttackPlan) -> GeneratedSequence:
         ids = new_campaign_ids(plan.campaign_name.replace(" ", "_").lower()[:8])
         payloads: List[ActionPayload] = []
-        num_steps = len(plan.steps)
 
         for idx, step in enumerate(plan.steps):
-            action_payload, meta = self._build_action_payload(step, ids, idx, plan)
-            narrative = self._build_narrative(step, plan, action_payload, meta)
+            expanded = self._expand_step(step, ids, idx, plan)
+            payloads.extend(expanded)
 
-            payloads.append(ActionPayload(
-                action_type=step.action_type,
-                action_payload=action_payload,
-                step=step.step,
-                total_steps=num_steps,
-                is_final=idx == num_steps - 1,
-                campaign_id=ids["campaign_id"],
-                attack_family=plan.primary_family,
-                attack_variant=plan.selected_variant,
-                target_control=step.target_control,
-                expected_outcome=step.expected_outcome,
-                narrative=narrative,
-                variation_label=meta.get("variation_label"),
-                engine_validated=bool(meta.get("engine_validated")),
-            ))
+        # Renumber for stable step indices after variation expansion
+        total = len(payloads)
+        renumbered: List[ActionPayload] = []
+        for i, p in enumerate(payloads):
+            renumbered.append(
+                p.model_copy(
+                    update={
+                        "step": i + 1,
+                        "total_steps": total,
+                        "is_final": i == total - 1,
+                    }
+                )
+            )
 
         return GeneratedSequence(
             campaign_id=ids["campaign_id"],
-            payloads=payloads,
-            total_payloads=len(payloads),
+            payloads=renumbered,
+            total_payloads=len(renumbered),
         )
+
+    def _expand_step(
+        self,
+        step: PlanStep,
+        ids: Dict[str, str],
+        idx: int,
+        plan: AttackPlan,
+    ) -> List[ActionPayload]:
+        action_payload, meta = self._build_action_payload(step, ids, idx, plan)
+
+        # Non-payment or no engine expansion → single payload
+        if step.action_type != "initiate_payment" or not meta.get("engine_variations"):
+            return [
+                ActionPayload(
+                    action_type=step.action_type,
+                    action_payload=action_payload,
+                    step=step.step,
+                    total_steps=len(plan.steps),
+                    is_final=False,
+                    campaign_id=ids["campaign_id"],
+                    attack_family=plan.primary_family,
+                    attack_variant=plan.selected_variant,
+                    target_control=step.target_control,
+                    expected_outcome=step.expected_outcome,
+                    narrative=self._build_narrative(step, plan, action_payload, meta),
+                    variation_label=meta.get("variation_label"),
+                    engine_validated=bool(meta.get("engine_validated")),
+                )
+            ]
+
+        variations: List[Tuple[str, Dict[str, Any]]] = meta["engine_variations"]
+        out: List[ActionPayload] = []
+        for label, var_payload in variations:
+            var_meta = {"variation_label": label, "engine_validated": True}
+            out.append(
+                ActionPayload(
+                    action_type=step.action_type,
+                    action_payload=var_payload,
+                    step=step.step,
+                    total_steps=len(plan.steps),
+                    is_final=False,
+                    campaign_id=ids["campaign_id"],
+                    attack_family=plan.primary_family,
+                    attack_variant=plan.selected_variant,
+                    target_control=step.target_control,
+                    expected_outcome=step.expected_outcome,
+                    narrative=self._build_narrative(step, plan, var_payload, var_meta),
+                    variation_label=label,
+                    engine_validated=True,
+                )
+            )
+        return out
 
     def _build_action_payload(
         self,
@@ -213,10 +278,11 @@ class AttackGenerator:
     def _should_apply_engine(self, step: PlanStep, plan: AttackPlan) -> bool:
         if step.action_type != "initiate_payment":
             return False
-        if os.environ.get("RED_TEAM_ENGINE_PAYMENTS_ONLY", "final").lower() == "final":
-            payment_steps = [s for s in plan.steps if s.action_type == "initiate_payment"]
-            return payment_steps and step.step == payment_steps[-1].step
-        return True
+        mode = _engine_payment_mode()
+        if mode in ("all", "every", "true", "1"):
+            return True
+        payment_steps = [s for s in plan.steps if s.action_type == "initiate_payment"]
+        return bool(payment_steps and step.step == payment_steps[-1].step)
 
     def _apply_attack_engine(
         self,
@@ -229,19 +295,46 @@ class AttackGenerator:
         legitimate = {
             "customer_id": payment.get("customer_id"),
             "device_id": payment.get("device_id"),
-            "amount": self.baseline.sample_amount(),
+            "amount": payment.get("amount", self.baseline.sample_amount()),
             "payment_rail": payment.get("payment_rail", self.baseline.sample_rail()),
             "authentication_method": payment.get("authentication_method", "otp"),
             "merchant_risk_score": payment.get("merchant_risk_score", 0.3),
+            "beneficiary_id": payment.get("beneficiary_id"),
+            "merchant_id": payment.get("merchant_id"),
+            "account_id": payment.get("account_id"),
+            "genai_features": payment.get("genai_features") or {},
+            "capability_ids": payment.get("capability_ids") or [],
+            "attack_family": payment.get("attack_family"),
         }
         result = self.attack_engine.generate(mutation, legitimate)
-        if not result.variations:
+        valid = [
+            v for v in result.variations
+            if getattr(v, "validation_status", "VALID") == "VALID"
+        ]
+        if not valid:
             return payment, meta
-        picked = pick_variation_for_step(result.variations, step)
+
+        if _execute_all_variations():
+            # Include base payment + every valid variation for sandbox execution
+            engine_variations: List[Tuple[str, Dict[str, Any]]] = [
+                ("base_payment", dict(payment)),
+            ]
+            for v in valid:
+                merged = merge_variation_into_payment(payment, v.action_payload)
+                merged["transaction_id"] = f"txn_{uuid.uuid4().hex[:8]}"
+                engine_variations.append((v.label, merged))
+            meta["engine_variations"] = engine_variations
+            meta["engine_validated"] = True
+            meta["variation_label"] = f"expanded_{len(engine_variations)}"
+            return payment, meta
+
+        # Legacy: pick one
+        from ..deepteam.mutation_builder import pick_variation_for_step
+        picked = pick_variation_for_step(valid, step)
         if not picked:
             return payment, meta
         label = next(
-            (v.label for v in result.variations if v.action_payload == picked),
+            (v.label for v in valid if v.action_payload == picked),
             "engine_variation",
         )
         meta["variation_label"] = label
@@ -259,6 +352,7 @@ class AttackGenerator:
         if step.action_type == "initiate_payment":
             return (
                 f"Step {step.step}/{len(plan.steps)}: {plan.primary_family} payment of "
-                f"INR {action_payload.get('amount', 0)} targeting {step.target_control}{engine_note}"
+                f"INR {action_payload.get('amount', 0)} rail={action_payload.get('payment_rail')} "
+                f"targeting {step.target_control}{engine_note}"
             )
         return f"Step {step.step}: {step.action} ({step.action_type}){engine_note}"

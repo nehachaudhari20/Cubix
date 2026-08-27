@@ -141,7 +141,7 @@ class RedTeamGraph:
             memory_context=context,
             tested_families=list(dict.fromkeys(tested)),
             prefer_composites=True,
-            max_hypotheses=3,
+            max_hypotheses=5,
         )
 
         if output.hypotheses:
@@ -298,15 +298,31 @@ class RedTeamGraph:
             current_hypothesis=hypothesis,
             last_analysis=state.get("analysis"),
             iteration=state.get("iteration", 0),
-            max_iterations=state.get("max_iterations", 3),
+            max_iterations=state.get("max_iterations", 5),
         )
 
         if decision.action == "stop":
             state["done"] = True
+        elif decision.action == "mutate" and decision.next_hypothesis:
+            # Stay on same composite family with mutated strategy — go to plan
+            state["done"] = False
+            state["hypothesis"] = decision.next_hypothesis.model_dump()
+            state["plan"] = None
+            state["plan_branches"] = []
+            state["current_branch_index"] = 0
+            state["payloads"] = []
+            state["current_payload_index"] = 0
+            state["sandbox_response"] = None
+            state["analysis"] = None
         else:
             state["done"] = False
-            state["hypothesis"] = None
-            state["hypotheses_queue"] = []
+            # Prefer strategy next_hypothesis if provided; else clear for re-hunt
+            if decision.next_hypothesis:
+                state["hypothesis"] = decision.next_hypothesis.model_dump()
+                state["hypotheses_queue"] = list(state.get("hypotheses_queue") or [])
+            else:
+                state["hypothesis"] = None
+                state["hypotheses_queue"] = []
             state["plan"] = None
             state["plan_branches"] = []
             state["current_branch_index"] = 0
@@ -327,7 +343,7 @@ class RedTeamGraph:
             return "end"
         return "continue"
 
-    def run(self, max_iterations: int = 3):
+    def run(self, max_iterations: int = 5):
         """Run the Red Team graph."""
         initial_state = {
             "hypothesis": None,

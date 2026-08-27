@@ -7,6 +7,7 @@ import sys
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
 os.environ.setdefault("RED_TEAM_USE_LLM", "false")
+os.environ.setdefault("RED_TEAM_ENGINE_MAX_VARIATIONS", "20")
 
 from backend.red_team.deepteam.attack_engine import PaymentAttackEngine
 from backend.red_team.deepteam.schemas import MutationPayload
@@ -30,7 +31,7 @@ def test_transform_applies_mutation_fields():
     print("transform: OK")
 
 
-def test_vary_produces_three_variations():
+def test_vary_produces_expanded_variations():
     engine = PaymentAttackEngine()
     mutation = MutationPayload(amount=10000)
     baseline = {
@@ -38,15 +39,17 @@ def test_vary_produces_three_variations():
         "customer_id": "C1",
         "device_id": "D1",
         "amount": 10000,
-        "payment_rail": "UPI",
+        "payment_rail": "upi",
     }
     variations = engine._vary(baseline, mutation)
     labels = {v.label for v in variations}
-    assert len(variations) == 3
-    assert "amount_2x_threshold" in labels
+    assert len(variations) >= 15
+    assert any(l.startswith("amount_") for l in labels)
     assert "timing_2am" in labels
     assert "new_beneficiary" in labels
-    print(f"vary labels: {labels}")
+    assert any(l.startswith("rail_") for l in labels)
+    assert any(l.startswith("genai_") for l in labels)
+    print(f"vary count={len(variations)} sample={sorted(list(labels))[:8]}")
 
 
 def test_generate_validates_without_llm():
@@ -61,12 +64,12 @@ def test_generate_validates_without_llm():
         "authentication_method": "otp",
     }
     result = engine.generate(mutation, legitimate)
-    assert result.valid_count >= 1
-    assert len(result.variations) >= 1
+    assert result.valid_count >= 15
+    assert result.attempted_count == len(result.variations)
     for var in result.variations:
-        assert var.validation_status == "VALID"
-        assert "amount" in var.action_payload
-    print(f"generate: {result.valid_count} valid variations")
+        if var.validation_status == "VALID":
+            assert "amount" in var.action_payload
+    print(f"generate: {result.valid_count}/{result.attempted_count} valid variations")
 
 
 def test_cvss_scorer_integration():
@@ -91,7 +94,7 @@ def test_cvss_scorer_integration():
 
 def main() -> int:
     test_transform_applies_mutation_fields()
-    test_vary_produces_three_variations()
+    test_vary_produces_expanded_variations()
     test_generate_validates_without_llm()
     test_cvss_scorer_integration()
     print("OK: test_deepteam_attack_engine passed")

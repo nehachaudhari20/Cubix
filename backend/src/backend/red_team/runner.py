@@ -384,7 +384,7 @@ def run_family_campaign(
 
 def run_red_team_for_loop(
     *,
-    families: int = 5,
+    families: int = 8,
     collector: Optional[Any] = None,
     run_id: Optional[str] = None,
     on_event: Optional[Callable[[Dict[str, Any]], None]] = None,

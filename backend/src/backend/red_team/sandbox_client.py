@@ -125,6 +125,11 @@ class SandboxClient:
         legacy["control_triggers"] = obs.control_triggers
         legacy["action_type"] = obs.action_type
         legacy["state_snapshot"] = obs.state_snapshot
+        # Hoist defense scores to top-level for FailureAnalyzer / tests
+        legacy["risk_score"] = obs.risk_score
+        legacy["ml_score"] = obs.ml_score
+        legacy["rule_risk"] = obs.rule_risk
+        legacy["anomaly_score"] = obs.anomaly_score
         return legacy
 
     def get_sandbox(self) -> PaymentSandbox:

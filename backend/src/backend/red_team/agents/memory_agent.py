@@ -50,8 +50,16 @@ class MemoryAgent:
                 "target_stages": hypothesis.target_stages,
                 "outcome": analysis.outcome,
                 "blocking_control": analysis.blocking_control,
+                "is_mutation": "[mutate" in (hypothesis.name or "").lower()
+                or "[MUTATE" in (hypothesis.reasoning or ""),
+                "mutation_attempt": "[MUTATE#" in (hypothesis.reasoning or ""),
+                "strategy": hypothesis.jailbreak_strategy,
             },
-            strategy_used=None,
+            strategy_used=(
+                f"mutate:{hypothesis.jailbreak_strategy}"
+                if "[mutate" in (hypothesis.name or "").lower()
+                else hypothesis.jailbreak_strategy
+            ),
             last_validated=datetime.now().isoformat()
         )
         

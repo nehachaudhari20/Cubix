@@ -37,7 +37,7 @@ def sep(title: str, char: str = "=", width: int = 72):
 
 def main():
     parser = argparse.ArgumentParser(description="Run full Red↔Blue loop")
-    parser.add_argument("--families", type=int, default=5, help="Simulatable KB families to attack")
+    parser.add_argument("--families", type=int, default=8, help="Threat Hunter hypotheses / campaigns to run")
     parser.add_argument("--iterations", type=int, default=1, help="Reserved for graph iterations")
     parser.add_argument("--skip-train-v1", action="store_true", help="Skip v1 training if exists")
     parser.add_argument("--no-swap", action="store_true", help="Train v3 but keep prior active model")

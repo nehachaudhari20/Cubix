@@ -9,7 +9,7 @@ from pydantic import BaseModel, Field
 
 
 class LoopRunRequest(BaseModel):
-    families: int = Field(default=5, ge=1, le=36)
+    families: int = Field(default=8, ge=1, le=36)
     skip_train_v1: bool = True
     swap_model: bool = True
     fresh_buffer: bool = True

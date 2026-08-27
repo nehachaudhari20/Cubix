@@ -89,7 +89,7 @@ def main() -> None:
         memory_context="Prior run: velocity block on AF families",
         tested_families=[],
         prefer_composites=True,
-        max_hypotheses=3,
+        max_hypotheses=5,
     )
     if args.json:
         dump("threat_hunter", hunt, True)
@@ -150,41 +150,89 @@ def main() -> None:
             for b in branches[:2]:
                 print(f"    - {b.campaign_name} ({len(b.steps)} steps)")
 
-    # 4. Attack Generator — full concrete payloads
+    # 4. Attack Generator — full concrete payloads (all engine variations)
+    os.environ.setdefault("RED_TEAM_ENGINE_EXECUTE_ALL", "true")
+    os.environ.setdefault("RED_TEAM_ENGINE_MAX_VARIATIONS", "20")
     generator = AttackGenerator()
     sequence = generator.generate_sequence(llm_plan)
     if args.json:
         dump("attack_generator", sequence, True)
     else:
-        sep("4. ATTACK GENERATOR (concrete payloads)")
+        sep("4. ATTACK GENERATOR (concrete payloads + all variations)")
         print(f"  payloads: {len(sequence.payloads)}")
+        by_type: dict[str, int] = {}
+        rails: dict[str, int] = {}
         for p in sequence.payloads:
-            print(f"  step {p.step}/{p.total_steps} [{p.action_type}]")
-            print_payload_preview(p.action_type, p.action_payload)
+            by_type[p.action_type] = by_type.get(p.action_type, 0) + 1
+            if p.action_type == "initiate_payment":
+                rail = str((p.action_payload or {}).get("payment_rail") or "?")
+                rails[rail] = rails.get(rail, 0) + 1
+        print(f"  action_mix: {by_type}")
+        print(f"  payment_rails: {rails}")
+        # Print setup steps + a sample of payment variations
+        shown = 0
+        for p in sequence.payloads:
+            if p.action_type != "initiate_payment" or shown < 5:
+                print(f"  step {p.step}/{p.total_steps} [{p.action_type}] {p.variation_label or ''}")
+                print_payload_preview(p.action_type, p.action_payload)
+                if p.action_type == "initiate_payment":
+                    shown += 1
+        pay_n = by_type.get("initiate_payment", 0)
+        if pay_n > 5:
+            print(f"  ... +{pay_n - 5} more payment variations")
 
-    # 5. Failure Analyzer (LLM enhancement when enabled)
+    # 5. Failure Analyzer on REAL sandbox output (not mock risk)
+    from backend.red_team.sandbox_client import SandboxClient
+
     analyzer = FailureAnalyzer()
-    sample_payload = sequence.payloads[-1] if sequence.payloads else None
-    sandbox_response = {
-        "decision": "BLOCK",
-        "reason": "velocity_threshold_exceeded",
-        "control_triggers": ["velocity_burst", "amount_limit_tier2"],
-        "risk_score": 0.82,
-    }
+    client = SandboxClient()
+    sandbox_response = None
+    sample_payload = None
+    # Prefer a payment payload; fall back to last
+    for p in sequence.payloads:
+        if p.action_type == "initiate_payment":
+            sample_payload = p
+            break
+    if sample_payload is None and sequence.payloads:
+        sample_payload = sequence.payloads[-1]
+
     analysis = None
     if sample_payload:
+        # Execute prior setup steps so payment has state
+        for p in sequence.payloads:
+            if p.step >= sample_payload.step:
+                break
+            if p.action_type != "initiate_payment":
+                client.execute_payload(p.model_dump())
+        sandbox_response = client.execute_payload(sample_payload.model_dump())
         analysis = analyzer.analyze(sandbox_response, sample_payload, llm_plan)
         if args.json:
+            dump("sandbox_response", sandbox_response, True)
             dump("failure_analyzer", analysis, True)
         else:
-            sep(f"5. FAILURE ANALYZER (LLM={'yes' if use_llm() else 'rule-based'})")
+            sep(f"5. FAILURE ANALYZER (real sandbox, LLM={'yes' if use_llm() else 'rule-based'})")
+            print(
+                f"  sandbox decision={sandbox_response.get('decision')} "
+                f"risk_score={sandbox_response.get('risk_score')} "
+                f"ml_score={sandbox_response.get('ml_score')} "
+                f"triggers={sandbox_response.get('control_triggers')}"
+            )
             dump("AnalysisResult", analysis, False)
 
-    # 6. Payment Attack Engine LLM validator
+    # 6. Payment Attack Engine — expanded variation space
     engine = PaymentAttackEngine()
-    sample_payment = {"amount": 45000, "hour": 2, "beneficiary_id": "BEN_NEW_001"}
+    sample_payment = (sample_payload.action_payload if sample_payload else None) or {
+        "amount": 45000,
+        "hour": 2,
+        "beneficiary_id": "BEN_NEW_001",
+        "payment_rail": "card",
+    }
     variation_set = engine.generate(
-        {"amount": 45000, "beneficiary_id": "BEN_NEW_001"},
+        {
+            "amount": sample_payment.get("amount"),
+            "beneficiary_id": sample_payment.get("beneficiary_id"),
+            "payment_rail": sample_payment.get("payment_rail"),
+        },
         sample_payment,
     )
     if args.json:
@@ -195,45 +243,76 @@ def main() -> None:
             f"  variations: {variation_set.valid_count} valid / "
             f"{variation_set.attempted_count} attempted"
         )
-        for v in variation_set.variations:
+        for v in variation_set.variations[:12]:
+            rail = (v.action_payload or {}).get("payment_rail")
+            amt = (v.action_payload or {}).get("amount")
             reason = f" — {v.validation_reason}" if v.validation_reason else ""
-            print(f"    - {v.label}: {v.validation_status}{reason}")
+            print(f"    - {v.label}: {v.validation_status} amount={amt} rail={rail}{reason}")
+        if variation_set.attempted_count > 12:
+            print(f"    ... +{variation_set.attempted_count - 12} more")
 
-    # 7. Fraud Investigator Judge (LLM)
+    # 7. Fraud Investigator Judge on real sandbox response
     judge = FraudInvestigatorJudge()
+    if sandbox_response is None:
+        sandbox_response = {
+            "decision": "UNKNOWN",
+            "control_triggers": [],
+            "risk_score": None,
+        }
+    triggered = list(sandbox_response.get("control_triggers") or [])
+    expected = triggered[:1] + ["amount_limit_tier2", "velocity_burst"]
+    expected = list(dict.fromkeys(expected))
     verdict = judge.evaluate(
         payload=sample_payment,
         sandbox_response=sandbox_response,
-        expected_control_ids=["velocity_burst", "amount_limit_tier2"],
-        triggered_control_ids=sandbox_response["control_triggers"],
+        expected_control_ids=expected,
+        triggered_control_ids=triggered,
     )
     if args.json:
         dump("fraud_judge", verdict, True)
     else:
-        sep(f"7. FRAUD INVESTIGATOR JUDGE (LLM={'yes' if use_llm() else 'template'})")
+        sep(f"7. FRAUD INVESTIGATOR JUDGE (real sandbox, LLM={'yes' if use_llm() else 'template'})")
+        print(f"  sandbox risk_score={sandbox_response.get('risk_score')}")
         dump("FraudJudgeVerdict", verdict, False)
 
-    # 8. Strategy Layer + Memory (rule-based CVSS)
+    # 8. Strategy Layer — mutate current before CVSS jump
     memory = MemoryAgent()
     strategy = StrategyLayer(memory)
     if analysis is not None:
         memory.store_analysis(analysis, hypothesis, {})
-    decision = strategy.decide(current_hypothesis=hypothesis, last_analysis=None)
+    last = analysis.model_dump() if analysis is not None else {
+        "outcome": "failure",
+        "blocking_control": "Risk",
+        "mutation_suggestions": ["Reduce amount below risk tier threshold"],
+        "risk_score": sandbox_response.get("risk_score"),
+    }
+    decision = strategy.decide(
+        current_hypothesis=hypothesis,
+        last_analysis=last,
+        iteration=1,
+        max_iterations=5,
+    )
     coverage = strategy.coverage_report()
     if args.json:
         dump("strategy_decision", decision, True)
         dump("strategy_coverage", coverage, True)
     else:
-        sep("8. STRATEGY LAYER (CVSS — rule-based, no LLM)")
+        sep("8. STRATEGY LAYER (mutate-before-jump)")
         dump("StrategyDecision", decision, False)
-        print(f"  threat_hunter picked: {hyp_family}")
-        print(f"  strategy_next: {decision.next_hypothesis.primary_family if decision.next_hypothesis else 'none'}")
+        print(f"  action={decision.action}")
+        print(f"  threat_hunter picked: {hyp_family} + {hypothesis.composite_families or []}")
+        nxt = decision.next_hypothesis
+        if nxt:
+            print(
+                f"  next: {nxt.primary_family} + {nxt.composite_families or []} "
+                f"strategy={nxt.jailbreak_strategy}"
+            )
         print(f"  coverage: tested={coverage['tested']} remaining={coverage['remaining']}")
 
     if not args.json:
         sep("DONE")
         if use_llm():
-            print("LLM agents exercised. Review sections 1, 2, 5, 6, 7 for Cohere-generated content.")
+            print("LLM agents exercised. Sections 5/7 use REAL sandbox risk_score.")
         else:
             print("Set RED_TEAM_USE_LLM=true to test live Cohere outputs.")
 

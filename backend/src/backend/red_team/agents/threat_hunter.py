@@ -36,7 +36,7 @@ class ThreatHunter:
         tested_families: Optional[List[str]] = None,
         *,
         prefer_composites: bool = True,
-        max_hypotheses: int = 3,
+        max_hypotheses: int = 5,
     ) -> ThreatHunterOutput:
         tested = set(tested_families or [])
         llm = get_llm()
@@ -74,7 +74,7 @@ class ThreatHunter:
         tested: set,
         *,
         prefer_composites: bool = True,
-        max_hypotheses: int = 3,
+        max_hypotheses: int = 5,
     ) -> ThreatHunterOutput:
         simulatable = self.kb.get_simulatable_families()
         if not simulatable:
@@ -166,7 +166,7 @@ class ThreatHunter:
         tested: List[str],
         *,
         prefer_composites: bool = True,
-        max_hypotheses: int = 3,
+        max_hypotheses: int = 5,
     ) -> Optional[ThreatHunterOutput]:
         llm = get_llm()
         if llm is None:

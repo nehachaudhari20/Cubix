@@ -10,13 +10,16 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 os.environ.setdefault("RED_TEAM_USE_LLM", "false")
 os.environ.setdefault("USE_KB_API", "false")
 os.environ.setdefault("RED_TEAM_USE_ATTACK_ENGINE", "true")
-os.environ.setdefault("RED_TEAM_LINEAR_RETRIES", "2")
+os.environ.setdefault("RED_TEAM_ENGINE_EXECUTE_ALL", "true")
+os.environ.setdefault("RED_TEAM_ENGINE_MAX_VARIATIONS", "20")
+os.environ.setdefault("RED_TEAM_MUTATE_BEFORE_JUMP", "2")
+os.environ.setdefault("RED_TEAM_LINEAR_RETRIES", "3")
 os.environ.setdefault("RED_TEAM_JAILBREAK_STRATEGY", "kb")
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Continuous Red Team payload generation")
-    parser.add_argument("--families", type=int, default=3)
+    parser.add_argument("--families", type=int, default=5, help="Number of Threat Hunter hypotheses/campaigns")
     parser.add_argument("--family", type=str, default=None)
     parser.add_argument("--strategy", choices=["kb", "crescendo", "tree", "sequential"], default=None)
     parser.add_argument("--linear-retries", type=int, default=None)
