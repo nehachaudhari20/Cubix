@@ -24,6 +24,9 @@ class LoopRunConfig:
     skip_train_v1: bool = True
     swap_model: bool = True
     fresh_buffer: bool = True
+    multi_surface: bool = True
+    multi_surface_families: int = 0  # 0 = all non-payment surfaces
+    multi_surface_composites: bool = True
     trigger: str = "manual"
     run_id: Optional[str] = None
     on_event: Optional[Callable[[Dict[str, Any]], None]] = None
@@ -35,6 +38,7 @@ class LoopRunResult:
     status: str
     kb_stats: Dict[str, Any] = field(default_factory=dict)
     buffer_stats: Dict[str, Any] = field(default_factory=dict)
+    multi_surface: Dict[str, Any] = field(default_factory=dict)
     hardening: Dict[str, Any] = field(default_factory=dict)
     comparison: Dict[str, Any] = field(default_factory=dict)
     evaluation: Dict[str, Any] = field(default_factory=dict)
@@ -46,7 +50,11 @@ class LoopRunResult:
 
 
 class LoopRunner:
-    """Execute the full KB → Red → Sandbox → Buffer → Harden → Verify pipeline."""
+    """Execute the full product loop:
+
+    KB → Red (Threat Hunter) → Multi-surface evasion/composites →
+    Buffer → Harden → Evaluate → Labs → Verify
+    """
 
     def __init__(self):
         self.settings = get_settings()
@@ -98,6 +106,16 @@ class LoopRunner:
                 )
                 result.buffer_stats = buffer_stats
                 events = campaign_events
+
+                if config.multi_surface:
+                    ms = self._step_multi_surface(
+                        family_limit=config.multi_surface_families,
+                        include_composites=config.multi_surface_composites,
+                        prior_buffer_stats=result.buffer_stats,
+                    )
+                    result.multi_surface = ms
+                    result.buffer_stats = ms.get("buffer_stats", result.buffer_stats)
+
                 hardening, comparison = self._step_harden(swap=config.swap_model)
                 result.hardening = hardening
                 result.comparison = comparison
@@ -247,6 +265,47 @@ class LoopRunner:
         )
 
         return stats, campaign_events
+
+    def _step_multi_surface(
+        self,
+        family_limit: int = 0,
+        include_composites: bool = True,
+        prior_buffer_stats: Optional[Dict[str, Any]] = None,
+    ) -> Dict[str, Any]:
+        """Append evasion-search probes (+ composites) into the shared evidence buffer."""
+        from backend.blue_team.collector import EvidenceCollector
+        from backend.blue_team.evidence_buffer import EvidenceBuffer
+        from backend.red_team.multi_surface import run_multi_surface_phase
+
+        buffer_path = os.environ["EVIDENCE_BUFFER_PATH"]
+        buffer = EvidenceBuffer(buffer_path)
+        collector = EvidenceCollector(buffer=buffer)
+
+        ms = run_multi_surface_phase(
+            collector,
+            family_limit=family_limit,
+            include_composites=include_composites,
+            print_sections=True,
+        )
+        stats = buffer.stats()
+        # Keep Threat Hunter extras (control gaps, campaign summaries) for labs/eval.
+        prior = prior_buffer_stats or {}
+        for key in (
+            "control_gap_report",
+            "memory_entries",
+            "hard_negatives",
+            "campaign_summaries",
+        ):
+            if key in prior and key not in stats:
+                stats[key] = prior[key]
+        ms["buffer_stats"] = stats
+        print(
+            f"\n  Multi-surface probes: {ms['total_probes']} "
+            f"(evaded {ms['total_evaded']}, ASR {ms['overall_asr']:.1%}) | "
+            f"buffer rows: {stats.get('adjudicated_records', 0)} | "
+            f"surfaces: {stats.get('surfaces', {})}"
+        )
+        return ms
 
     def _step_harden(self, swap: bool) -> tuple[Dict[str, Any], Dict[str, Any]]:
         from backend.blue_team.trainer import HardeningTrainer

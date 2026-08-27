@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import os
 from functools import lru_cache
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -13,6 +12,7 @@ class PlatformSettings(BaseSettings):
 
     # --- Database ---
     db_url: str = "sqlite:///./data/platform.db"
+    db_fallback_url: str = "sqlite:///./data/platform.db"
     db_pool_size: int = 5
     db_max_overflow: int = 10
     db_pool_recycle: int = 3600
@@ -66,24 +66,32 @@ def generate_iam_auth_token(settings: "PlatformSettings") -> str:
     )
 
 
+def _build_rds_url(settings: "PlatformSettings") -> str | None:
+    """Return a postgres URL when RDS params are set; otherwise None."""
+    if not (settings.rds_host and settings.rds_username):
+        return None
+    password = settings.rds_password or ""
+    if settings.db_auth_mode == "iam":
+        password = "iam-placeholder"
+    return (
+        f"postgresql+psycopg://{settings.rds_username}:{password}"
+        f"@{settings.rds_host}:{settings.rds_port}/{settings.rds_db_name}"
+    )
+
+
 def _build_db_url(settings: "PlatformSettings") -> str:
-    """If explicit RDS params are set, build a postgres:// URL from them.
-    Otherwise fall back to the DB_URL env var or SQLite default."""
-    if settings.rds_host and settings.rds_username:
-        # For IAM auth, embed a placeholder password; the real token is
-        # injected at connection time via an event listener in database.py.
-        password = settings.rds_password or ""
-        if settings.db_auth_mode == "iam":
-            password = "iam-placeholder"
-        return (
-            f"postgresql+psycopg://{settings.rds_username}:{password}"
-            f"@{settings.rds_host}:{settings.rds_port}/{settings.rds_db_name}"
-        )
-    return settings.db_url
+    """Prefer RDS when configured; else DB_URL / SQLite default."""
+    return _build_rds_url(settings) or settings.db_url
 
 
 @lru_cache
 def get_settings() -> PlatformSettings:
     raw = PlatformSettings()
+    # Preserve a SQLite fallback before RDS overrides db_url.
+    configured = raw.db_url
+    if configured.startswith("sqlite"):
+        raw.db_fallback_url = configured
+    else:
+        raw.db_fallback_url = "sqlite:///./data/platform.db"
     raw.db_url = _build_db_url(raw)
     return raw
