@@ -123,15 +123,27 @@ class EvaluationRunner:
         holdout_delta = detection.holdout.get("delta", {})
         buffer_cmp = detection.buffer.get("comparison", {})
 
+        # Judge the loop at the matched operating point: a conservative
+        # threshold on v3 must not read as "hardening failed". Fall back to the
+        # native lift when no matched point could be computed.
+        asr_lift = (
+            asr.ml_recall_lift_matched
+            if asr.matched_fpr is not None
+            else asr.ml_recall_lift
+        )
+
         recommend_hardening = (
             buffer_cmp.get("lift", 0) >= 0
             and holdout_delta.get("recall_delta", 0) >= -0.05
             and holdout_delta.get("fpr_delta", 1) <= 0.05
-            and asr.ml_recall_lift >= 0
+            and asr_lift >= 0
         )
 
         return {
             "recommend_hardening": recommend_hardening,
+            "hardening_gate_metric": (
+                "asr_reduction_matched" if asr.matched_fpr is not None else "asr_reduction"
+            ),
             "integrity_passed": integrity.all_passed,
             "integrity_score": f"{integrity.passed_count}/{integrity.total_checks}",
             "fidelity_passed": fidelity.all_checks_passed,
@@ -141,6 +153,11 @@ class EvaluationRunner:
             "asr_reduction": asr.asr_reduction,
             "before_ml_asr": asr.before_ml_asr,
             "after_ml_asr": asr.after_ml_asr,
+            "asr_reduction_matched": asr.asr_reduction_matched,
+            "before_ml_asr_matched": asr.before_ml_asr_matched,
+            "after_ml_asr_matched": asr.after_ml_asr_matched,
+            "matched_fpr": asr.matched_fpr,
+            "asr_by_surface": {s.surface: s.asr_reduction for s in asr.per_surface},
             "mean_family_recall": generalization.mean_family_recall,
             "mean_lofo_gap": generalization.mean_lofo_gap,
             "composite_campaign_count": generalization.composite_campaign_count,

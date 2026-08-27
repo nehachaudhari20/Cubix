@@ -45,6 +45,79 @@ SANDBOX_FEATURES = [
     "is_night",
 ]
 
+# Non-payment surfaces have no amount/rail/merchant. These defaults keep their
+# rows schema-compatible with the payment feature space so one model can score
+# every surface, while the surface's own signals carry the discriminative load.
+#
+# IMPORTANT: every categorical value below must already exist in the baseline
+# dataset's vocabulary. Inventing a value (e.g. transaction_type="control_surface")
+# creates a category that appears ONLY in adversarial rows, which the model can
+# then use as a perfect fraud tell — inflated metrics, zero real detection.
+# master_dataset.json already carries non-payment rails and event types
+# (payment_rail: authentication/account_opening/data_access/protocol/token/...,
+# transaction_type: auth_attempt/identity_verification/consent_grant/...), so
+# each sandbox surface maps onto the vocabulary the baseline already uses.
+CONTROL_SURFACE_DEFAULTS: Dict[str, Any] = {
+    "amount": 0.0,
+    "payment_rail": "protocol",
+    "transaction_type": "protocol_message",
+    "authentication_method": "unknown",
+    "card_present": 0,
+    "auth_success": 1,
+    "currency": "INR",
+    "merchant_category_code": "nan",
+    "merchant_risk_score": 0.0,
+    "merchant_familiarity_score": 0.5,
+    "is_new_beneficiary": 0,
+    "velocity_score": 0.0,
+    "transaction_count_last_1h": 0,
+    "transaction_count_last_24h": 0,
+    "avg_amount_last_1d": 0.0,
+    "avg_amount_last_7d": 0.0,
+    "amount_to_avg_7d_ratio": 1.0,
+    "amount_zscore_account": 0.0,
+    "seconds_since_prev_tx": 86400.0,
+    "distinct_beneficiaries_last_24h": 0,
+    "distinct_devices_last_7d": 0,
+}
+
+# Per-action event profile, expressed in the baseline dataset's own vocabulary
+# so adversarial rows are indistinguishable from baseline rows by schema alone.
+ACTION_EVENT_PROFILE: Dict[str, Dict[str, Any]] = {
+    "simulate_genai_context": {
+        "payment_rail": "protocol",
+        "transaction_type": "protocol_message",
+        "authentication_method": "unknown",
+    },
+    "simulate_social_engineering": {
+        "payment_rail": "authentication",
+        "transaction_type": "auth_attempt",
+        "authentication_method": "otp",
+    },
+    "submit_kyc_evidence": {
+        "payment_rail": "account_opening",
+        "transaction_type": "identity_verification",
+        "authentication_method": "document_upload",
+    },
+    "request_consent": {
+        "payment_rail": "data_access",
+        "transaction_type": "consent_grant",
+        "authentication_method": "unknown",
+    },
+}
+
+# Control-surface signals lifted out of the sandbox observation snapshot.
+SURFACE_SIGNAL_KEYS = (
+    "risk_score",
+    "kyc_risk",
+    "auth_risk",
+    "consent_risk",
+    "liveness_passed",
+    "document_verified",
+    "otp_shared",
+    "consent_scope_breadth",
+)
+
 
 class FeatureBuilder:
     """Build a feature dict from a sandbox transaction and SandboxState."""
@@ -140,6 +213,8 @@ class FeatureBuilder:
             "hour_of_day": now.hour,
             "day_of_week": now.weekday(),
             "is_night": int(now.hour < 6 or now.hour >= 22),
+            "meta_surface_action": "initiate_payment",
+            "meta_is_control_surface": 0,
         }
         row.update(graph_signals)
         if not graph_signals:
@@ -152,6 +227,71 @@ class FeatureBuilder:
                 if key not in row:
                     row[key] = val
 
+        return row
+
+    def build_control_surface(
+        self,
+        action_type: str,
+        payload: Dict[str, Any],
+        state: Any = None,
+        state_snapshot: Optional[Dict[str, Any]] = None,
+    ) -> Dict[str, Any]:
+        """
+        Build a feature row for a non-payment control surface (agent context,
+        social engineering, KYC evidence, consent).
+
+        Keeps the payment feature space intact via CONTROL_SURFACE_DEFAULTS so
+        rows from every surface can be concatenated into one training frame,
+        then layers on customer state and the surface's own GenAI/control
+        signals as returned by the sandbox observation.
+        """
+        state_snapshot = state_snapshot or {}
+        now = datetime.now()
+        row: Dict[str, Any] = dict(CONTROL_SURFACE_DEFAULTS)
+        row.update(ACTION_EVENT_PROFILE.get(action_type, {}))
+
+        customer_id = payload.get("customer_id")
+        customer = state.get_customer(customer_id) if customer_id and state else None
+        device_id = payload.get("device_id")
+        device = state.get_device(device_id) if device_id and state else None
+
+        account_age = getattr(customer, "account_age_days", 0) if customer else 0
+        if customer and account_age == 0 and hasattr(customer, "created_at"):
+            account_age = max(0, (now - customer.created_at).days)
+
+        row.update(
+            {
+                "account_age_days": int(account_age),
+                "device_age_days": int(device.get_age_days() if device else 0),
+                "is_new_device": int(device is None),
+                "account_tx_count_to_date": len(customer.transactions) if customer else 0,
+                "transaction_count_last_24h": customer.get_tx_count_24h() if customer else 0,
+                "campaign_step": int(payload.get("campaign_step", 1)),
+                "hour_of_day": now.hour,
+                "day_of_week": now.weekday(),
+                "is_night": int(now.hour < 6 or now.hour >= 22),
+            }
+        )
+
+        # GenAI feature vector — from the observation if the engine ran, else payload.
+        genai = (
+            state_snapshot.get("genai_features")
+            or payload.get("genai_features")
+            or payload.get("genai_context")
+            or {}
+        )
+        for key, val in genai.items():
+            row.setdefault(key, val)
+
+        for key in SURFACE_SIGNAL_KEYS:
+            if key in state_snapshot:
+                row.setdefault(key, state_snapshot[key])
+            elif key in payload:
+                row.setdefault(key, payload[key])
+
+        # meta_ prefix = label metadata, never a model feature (dataset convention)
+        row["meta_surface_action"] = action_type
+        row["meta_is_control_surface"] = 1
         return row
 
     def to_model_vector(

@@ -10,9 +10,13 @@ import numpy as np
 import pandas as pd
 
 from ..evaluator import HardeningEvaluator
-from ..schemas import EvidenceRecord
+from ..metrics import threshold_at_fpr
+from ..schemas import TRAINABLE_ACTION_TYPES, EvidenceRecord
 from ..trainer import FEATURE_DEFAULTS, HardeningTrainer
 from .manifest import load_training_manifest
+
+# FPR both models are pinned to when comparing at a matched operating point
+DEFAULT_MATCHED_FPR = 0.05
 
 
 @dataclass
@@ -58,6 +62,36 @@ class EvaluationContext:
             for r in self.evaluator.buffer.read_all()
             if r.action_type == "initiate_payment" and r.label == 1
         ]
+
+    def attack_records(self) -> List[EvidenceRecord]:
+        """Adversarial rows from every adjudicated surface, not just payment."""
+        return [
+            r
+            for r in self.evaluator.buffer.read_all()
+            if r.action_type in TRAINABLE_ACTION_TYPES and r.label == 1
+        ]
+
+    def matched_thresholds(
+        self,
+        target_fpr: float = DEFAULT_MATCHED_FPR,
+        n_legit: int = 2000,
+        n_fraud: int = 2000,
+    ) -> Tuple[float, float, float]:
+        """
+        Thresholds putting `before` and `after` at the same baseline FPR.
+
+        Comparing two models at their own calibrated thresholds conflates a
+        change in ranking quality with a change in operating point: v3 can rank
+        strictly better yet appear to "lose recall" purely because its threshold
+        was set more conservatively. Returns (before_thr, after_thr, actual_fpr).
+        """
+        df, before_proba = self.score_baseline(self.before, n_legit, n_fraud)
+        y = df["is_fraud"].astype(int).values
+        _, after_proba = self.score_baseline(self.after, n_legit, n_fraud)
+
+        before_thr = threshold_at_fpr(y, before_proba, target_fpr)
+        after_thr = threshold_at_fpr(y, after_proba, target_fpr)
+        return float(before_thr), float(after_thr), float(target_fpr)
 
     def record_to_row(self, record: EvidenceRecord, model: Any) -> Dict[str, Any]:
         row = dict(record.features)

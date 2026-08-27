@@ -16,7 +16,7 @@ import pandas as pd
 
 from .evidence_buffer import EvidenceBuffer, DEFAULT_BUFFER_PATH
 from .metrics import best_f1_threshold, evaluate_detection
-from .training_mix import build_hardening_dataset
+from .training_mix import SPLIT_METHOD, build_hardening_dataset
 
 DEFAULT_MODEL_DIR = os.environ.get("FRAUDSHIELD_MODEL_DIR", os.path.join("data", "models"))
 BASELINE_DATA = os.environ.get("FRAUDSHIELD_BASELINE_DATA", "master_dataset.json")
@@ -203,7 +203,7 @@ class HardeningTrainer:
                 "hard_negative_rows": manifest.get("hard_negative_rows", 0),
             },
             "training_manifest": manifest,
-            "split_method": manifest.get("split_method", "temporal_group"),
+            "split_method": manifest.get("split_method", SPLIT_METHOD),
             "feature_order": spec_v1["feature_order"],
             "categorical_features": spec_v1.get("categorical_features", []),
             "categorical_mappings": mappings,

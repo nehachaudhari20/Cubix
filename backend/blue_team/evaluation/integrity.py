@@ -10,7 +10,7 @@ import numpy as np
 from scipy.stats import ks_2samp
 
 from ..metrics import evaluate_detection, hard_negative_fpr
-from ..schemas import IntegrityCheck, IntegrityMetrics
+from ..schemas import TRAINABLE_ACTION_TYPES, IntegrityCheck, IntegrityMetrics
 from ..trainer import FEATURE_DEFAULTS
 from .context import EvaluationContext
 
@@ -80,7 +80,7 @@ def run_integrity_battery(
     hn_records = [
         r
         for r in ctx.evaluator.buffer.read_all()
-        if r.is_hard_negative and r.label == 0 and r.action_type == "initiate_payment"
+        if r.is_hard_negative and r.label == 0 and r.action_type in TRAINABLE_ACTION_TYPES
     ]
     hn_fpr = 0.0
     hn_count = len(hn_records)
@@ -109,7 +109,9 @@ def run_integrity_battery(
     # Temporal split
     split_method = manifest.get("split_method", "unknown")
     val_buffer_rows = int(manifest.get("val_buffer_rows", 0))
-    temporal_ok = split_method == "temporal_group"
+    train_buffer_rows = int(manifest.get("train_buffer_rows", 0))
+    known_splits = ("temporal_group", "temporal_baseline_campaign_holdout")
+    temporal_ok = split_method in known_splits
     checks.append(
         IntegrityCheck(
             name="temporal_split",
@@ -121,7 +123,7 @@ def run_integrity_battery(
     )
 
     # Leakage proxy
-    leakage_ok = (split_method == "temporal_group" and val_buffer_rows > 0) or split_method == "unknown"
+    leakage_ok = (temporal_ok and val_buffer_rows > 0) or split_method == "unknown"
     train_fraud_rate = float(manifest.get("train_fraud_rate", 0))
     val_fraud_rate = float(manifest.get("val_fraud_rate", 0))
     rate_gap = abs(train_fraud_rate - val_fraud_rate)
@@ -134,6 +136,37 @@ def run_integrity_battery(
             detail=(
                 f"Buffer in val={val_buffer_rows}; "
                 f"train/val fraud rate gap={rate_gap:.4f}"
+            ),
+        )
+    )
+
+    # Campaign disjointness — no attack campaign may span train and val, so a
+    # held-out campaign is genuinely unseen rather than a sibling of a trained step.
+    disjoint = manifest.get("campaign_disjoint")
+    checks.append(
+        IntegrityCheck(
+            name="adversarial_campaign_disjoint",
+            passed=bool(disjoint) if disjoint is not None else True,
+            value=float(manifest.get("adv_campaigns_val", 0)),
+            threshold=0.0,
+            detail=(
+                f"train_campaigns={manifest.get('adv_campaigns_train', 0)} "
+                f"val_campaigns={manifest.get('adv_campaigns_val', 0)} "
+                f"disjoint={disjoint}"
+            ),
+        )
+    )
+
+    # Blue must actually train on adversarial evidence, or the loop is open.
+    checks.append(
+        IntegrityCheck(
+            name="adversarial_rows_in_train",
+            passed=train_buffer_rows > 0 or val_buffer_rows == 0,
+            value=float(train_buffer_rows),
+            threshold=1.0,
+            detail=(
+                f"train_buffer_rows={train_buffer_rows}, val_buffer_rows={val_buffer_rows} "
+                "— zero in train means the hardened model never saw a Red Team attack"
             ),
         )
     )

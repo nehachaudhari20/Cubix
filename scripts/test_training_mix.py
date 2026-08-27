@@ -10,10 +10,12 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
 from backend.blue_team.schemas import EvidenceRecord
 from backend.blue_team.training_mix import (
+    SPLIT_METHOD,
     buffer_row_priority,
     build_hardening_dataset,
     cap_hard_negatives,
     select_buffer_records,
+    split_adversarial_by_campaign,
     temporal_train_val_split,
 )
 
@@ -74,21 +76,73 @@ def test_buffer_priority():
     print("buffer priority: OK")
 
 
-def test_temporal_split_puts_buffer_in_val():
+def test_split_trains_on_adversarial_and_holds_out_campaigns():
+    """Blue must TRAIN on some Red campaigns and validate on disjoint ones."""
     baseline = _baseline(200)
     records = [
-        _record("adv1", decision="ALLOW", outcome="bypassed", ts="2026-08-01T00:00:00Z", campaign="red-1"),
-        _record("adv2", decision="BLOCK", outcome="blocked", ts="2026-08-02T00:00:00Z", campaign="red-2"),
+        _record(
+            f"adv{i}",
+            decision="ALLOW" if i % 3 == 0 else "BLOCK",
+            outcome="bypassed" if i % 3 == 0 else "blocked",
+            ts=f"2026-08-{i + 1:02d}T00:00:00Z",
+            campaign=f"red-{i}",
+        )
+        for i in range(6)
     ]
     train_df, val_df, manifest = build_hardening_dataset(
         baseline, records, include_hard_negatives=False, val_frac=0.15
     )
-    assert manifest["split_method"] == "temporal_group"
+    assert manifest["split_method"] == SPLIT_METHOD
     assert len(train_df) + len(val_df) == manifest["total_rows"]
-    assert manifest["val_buffer_rows"] >= 1
-    val_sources = set(val_df.get("source", pd.Series(dtype=str)).tolist())
-    assert "adversarial_buffer" in val_sources or manifest["val_buffer_rows"] >= 1
-    print(f"temporal split: train={len(train_df)} val={len(val_df)} val_buffer={manifest['val_buffer_rows']}")
+
+    # The regression this guards: every adversarial row landing in validation,
+    # leaving the hardened model trained on baseline only.
+    assert manifest["train_buffer_rows"] >= 1, "Blue trained on zero Red Team attacks"
+    assert manifest["val_buffer_rows"] >= 1, "no adversarial rows held out for validation"
+    assert manifest["campaign_disjoint"] is True
+
+    train_campaigns = set(train_df[train_df["source"] == "adversarial_buffer"]["campaign_id"])
+    val_campaigns = set(val_df[val_df["source"] == "adversarial_buffer"]["campaign_id"])
+    assert not (train_campaigns & val_campaigns), "campaign spans train and val"
+    print(
+        f"campaign holdout: train_buffer={manifest['train_buffer_rows']} "
+        f"val_buffer={manifest['val_buffer_rows']} "
+        f"campaigns {manifest['adv_campaigns_train']}/{manifest['adv_campaigns_val']}"
+    )
+
+
+def test_single_campaign_goes_to_val():
+    """With one campaign there is no non-leaking way to both train and validate."""
+    df = pd.DataFrame(
+        {
+            "is_fraud": [1, 1],
+            "source": ["adversarial_buffer"] * 2,
+            "campaign_id": ["only-one"] * 2,
+            "timestamp": ["2026-08-01T00:00:00Z"] * 2,
+        }
+    )
+    train, val, meta = split_adversarial_by_campaign(df)
+    assert len(train) == 0 and len(val) == 2
+    assert meta["adv_campaigns_val"] == 1
+    print("single campaign -> val: OK")
+
+
+def test_non_payment_surfaces_are_trainable():
+    """Phase 1: agent/KYC/consent rows must reach the training mix."""
+    baseline = _baseline(100)
+    records = [
+        _record("g1", campaign="red-agent-1"),
+        _record("g2", campaign="red-agent-2"),
+    ]
+    records[0].action_type = "simulate_genai_context"
+    records[0].surface = "agent"
+    records[1].action_type = "submit_kyc_evidence"
+    records[1].surface = "kyc"
+
+    _, _, manifest = build_hardening_dataset(baseline, records, include_hard_negatives=False)
+    assert manifest["buffer_selected_rows"] == 2, "non-payment surfaces were dropped"
+    assert manifest["buffer_rows_by_surface"] == {"agent": 1, "kyc": 1}
+    print(f"multi-surface rows: {manifest['buffer_rows_by_surface']}")
 
 
 def test_hard_negative_cap():
@@ -132,7 +186,9 @@ def test_temporal_split_empty():
 
 if __name__ == "__main__":
     test_buffer_priority()
-    test_temporal_split_puts_buffer_in_val()
+    test_split_trains_on_adversarial_and_holds_out_campaigns()
+    test_single_campaign_goes_to_val()
+    test_non_payment_surfaces_are_trainable()
     test_hard_negative_cap()
     test_manifest_fields()
     test_temporal_split_empty()

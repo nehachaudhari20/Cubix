@@ -22,7 +22,7 @@ from sklearn.model_selection import StratifiedKFold
 
 from .evidence_buffer import EvidenceBuffer, DEFAULT_BUFFER_PATH
 from .metrics import best_f1_threshold, evaluate_detection, threshold_at_fpr
-from .training_mix import build_hardening_dataset
+from .training_mix import SPLIT_METHOD, build_hardening_dataset
 from .trainer import HardeningTrainer, DEFAULT_MODEL_DIR, BASELINE_DATA
 
 try:
@@ -336,7 +336,7 @@ class StackedEnsembleTrainer:
             },
             "training_sources": mix_stats,
             "training_manifest": mix_stats,
-            "split_method": mix_stats.get("split_method", "temporal_group"),
+            "split_method": mix_stats.get("split_method", SPLIT_METHOD),
             "feature_order": spec_v1["feature_order"],
             "categorical_features": spec_v1.get("categorical_features", []),
             "categorical_mappings": mappings,

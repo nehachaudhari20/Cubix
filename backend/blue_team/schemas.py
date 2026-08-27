@@ -4,6 +4,37 @@ from typing import Any, Dict, List, Optional
 
 from pydantic import BaseModel, Field
 
+# Sandbox actions that adjudicate a control surface and therefore produce a
+# trainable row. Setup actions (register_customer, register_device, ...) only
+# mutate world state and are skipped by the evidence collector.
+#
+# The three non-payment surfaces below are wired in Phase 2; listing them here
+# means the collector and training mix need no further change when they land.
+#
+# NOTE: these are SURFACE-level entry actions, not the final technique taxonomy.
+# Phase 2 adds granular KB-derived techniques (inject_prompt_agent,
+# poison_agent_memory, execute_vishing_call, ...) that route to these surfaces
+# and carry their family's own targeted_control_ids. See docs/SANDBOX_CONTRACT.md
+# ("Two levels, not one: surface vs technique").
+TRAINABLE_ACTION_TYPES = frozenset(
+    {
+        "initiate_payment",
+        "simulate_genai_context",
+        "simulate_social_engineering",
+        "submit_kyc_evidence",
+        "request_consent",
+    }
+)
+
+# Attack surface each action belongs to — used for per-surface metric breakdown.
+ACTION_SURFACE = {
+    "initiate_payment": "payment",
+    "simulate_genai_context": "agent",
+    "simulate_social_engineering": "auth_se",
+    "submit_kyc_evidence": "kyc",
+    "request_consent": "open_banking",
+}
+
 
 class FraudShieldPrediction(BaseModel):
     """ML fraud score for one transaction."""
@@ -21,6 +52,8 @@ class EvidenceRecord(BaseModel):
     campaign_id: str
     attack_family: str
     action_type: str
+    surface: str = "payment"  # payment | agent | auth_se | kyc | open_banking
+    scenario_type: Optional[str] = None  # KB entry point / template pattern
     sandbox_decision: str
     evasion_outcome: str = "unknown"  # bypassed | challenged | blocked
     analysis_outcome: Optional[str] = None
@@ -204,8 +237,26 @@ class FamilyASR(BaseModel):
     asr_reduction: float = 0.0
 
 
+class SurfaceASR(BaseModel):
+    """ASR broken out per sandbox control surface (payment, agent, kyc, ...)."""
+    surface: str = ""
+    attacks: int = 0
+    historical_bypass_rate: float = 0.0
+    before_ml_recall: float = 0.0
+    after_ml_recall: float = 0.0
+    asr_reduction: float = 0.0
+
+
 class ASRMetrics(BaseModel):
-    """Attack Success Rate — sandbox bypass before vs ML catch after (11e)."""
+    """
+    Attack Success Rate — sandbox bypass before vs ML catch after (11e).
+
+    Reported at two operating points:
+      - native:  each model at its own decision threshold (deployment view)
+      - matched: both models at the threshold giving the same baseline FPR
+                 (apples-to-apples view; a model is not "worse" merely because
+                 its threshold was calibrated more conservatively)
+    """
     payment_attacks: int = 0
     historical_bypass_count: int = 0
     historical_bypass_rate: float = 0.0
@@ -217,7 +268,20 @@ class ASRMetrics(BaseModel):
     after_ml_asr: float = 0.0
     projected_bypass_rate_after: float = 0.0
     asr_reduction: float = 0.0
+
+    # Matched operating point (equal baseline FPR for both models)
+    matched_fpr: Optional[float] = None
+    before_threshold_matched: Optional[float] = None
+    after_threshold_matched: Optional[float] = None
+    before_ml_recall_matched: float = 0.0
+    after_ml_recall_matched: float = 0.0
+    ml_recall_lift_matched: float = 0.0
+    before_ml_asr_matched: float = 0.0
+    after_ml_asr_matched: float = 0.0
+    asr_reduction_matched: float = 0.0
+
     per_family: List[FamilyASR] = Field(default_factory=list)
+    per_surface: List[SurfaceASR] = Field(default_factory=list)
 
 
 class GraphFidelityMetrics(BaseModel):
