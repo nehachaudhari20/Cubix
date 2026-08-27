@@ -397,4 +397,5 @@ class LoopRunner:
 
     @staticmethod
     def _project_root() -> str:
-        return os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", ".."))
+        # backend/platform/loop_runner.py -> repo root
+        return os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))

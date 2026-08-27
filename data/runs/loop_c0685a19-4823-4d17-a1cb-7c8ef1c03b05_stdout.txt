@@ -1,0 +1,68 @@
+bility_ids": ...
+    [4/13] request_consent [engine]: {"entry_point": "consent_surface", "attack_family": "OB-002", "capability_ids": ...
+    [5/13] request_consent [engine]: {"entry_point": "consent_surface", "attack_family": "OB-002", "capability_ids": ...
+    [6/13] request_consent [engine]: {"entry_point": "consent_surface", "attack_family": "OB-002", "capability_ids": ...
+    [7/13] request_consent [engine]: {"entry_point": "consent_surface", "attack_family": "OB-002", "capability_ids": ...
+    [8/13] request_consent [engine]: {"entry_point": "consent_surface", "attack_family": "OB-002", "capability_ids": ...
+    [9/13] request_consent [engine]: {"entry_point": "consent_surface", "attack_family": "OB-002", "capability_ids": ...
+    [10/13] request_consent [engine]: {"entry_point": "consent_surface", "attack_family": "OB-002", "capability_ids": ...
+    [11/13] request_consent [engine]: {"entry_point": "consent_surface", "attack_family": "OB-002", "capability_ids": ...
+    [12/13] request_consent [engine]: {"entry_point": "consent_surface", "attack_family": "OB-002", "capability_ids": ...
+    [13/13] request_consent [engine]: {"entry_point": "consent_surface", "attack_family": "OB-002", "capability_ids": ...
+
+------------------------------------------------------------------------
+SANDBOX OUTPUT - OB-002
+------------------------------------------------------------------------
+    Step 1 [register_customer]
+      decision=PASS  reason=customer_registered
+    Step 2 [request_consent] (intensity_0.15)
+      decision=ALLOW  reason=open_banking_low_risk
+    Step 3 [request_consent] (intensity_0.30)
+      decision=ALLOW  reason=open_banking_low_risk
+    Step 4 [request_consent] (intensity_0.45)
+      decision=ALLOW  reason=open_banking_low_risk
+    Step 5 [request_consent] (intensity_0.60)
+      decision=BLOCK  reason=open_banking_high_risk
+      triggers=CTL-0217, CTL-0219, ob_stolen_token_presented, CTL-0216
+    Step 6 [request_consent] (intensity_0.80)
+      decision=BLOCK  reason=open_banking_high_risk
+      triggers=CTL-0217, ob_high_risk_tpp, CTL-0219, CTL-0213
+    Step 7 [request_consent] (intensity_0.95)
+      decision=BLOCK  reason=open_banking_high_risk
+      triggers=CTL-0217, CTL-0218, ob_high_risk_tpp, CTL-0219
+    Step 8 [request_consent] (ablate_tpp_licensed)
+      decision=BLOCK  reason=open_banking_high_risk
+      triggers=CTL-0218, ob_high_risk_tpp, CTL-0219, CTL-0213
+    Step 9 [request_consent] (ablate_stolen_token)
+      decision=BLOCK  reason=open_banking_high_risk
+      triggers=CTL-0217, CTL-0218, ob_high_risk_tpp, CTL-0219
+    Step 10 [request_consent] (ablate_tpp_registration)
+      decision=BLOCK  reason=open_banking_high_risk
+      triggers=CTL-0217, CTL-0218, ob_high_risk_tpp, CTL-0213
+    Step 11 [request_consent] (scopes_accounts.read)
+      decision=BLOCK  reason=consent_control_failed
+      triggers=CTL-0217, CTL-0213, CTL-0214, ob_stolen_token_presented
+    Step 12 [request_consent] (scopes_accounts.read)
+      decision=BLOCK  reason=consent_control_failed
+      triggers=CTL-0217, CTL-0214, ob_stolen_token_presented, CTL-0216
+    Step 13 [request_consent] (scopes_accounts.read)
+      decision=BLOCK  reason=consent_control_failed
+      triggers=CTL-0217, CTL-0214, ob_stolen_token_presented, CTL-0216
+  Branch 1 final: BLOCK
+
+  Final decision=BLOCK  gaps=0  payloads=13
+  Memory entries: 1126 | Control gaps: 0 | Hard negatives: 30
+
+--- Training FraudShield v3 (stacked ensemble + anomaly) ---
+  v1 buffer mean: 0.6474 -> v3: 0.9103 (lift +0.2629)
+  Active model swapped to v3
+
+--- Phase 11-14 Evaluation ---
+  Integrity:       9/9
+  Holdout PR-AUC:  0.9647
+  ASR reduction:   0.1037 (ML 0.3285 -> 0.2248)
+  Graph recall +Δ: 0.0000  clusters=0
+  CTL gap controls:41
+  Report:          C:\Users\DELL\Desktop\MastercardGFF\RedBlue\data\evaluation\loop_c0685a19-4823-4d17-a1cb-7c8ef1c03b05.json
+
+[evaluation] C:\Users\DELL\Desktop\MastercardGFF\RedBlue\data\evaluation\loop_c0685a19-4823-4d17-a1cb-7c8ef1c03b05.json
