@@ -143,6 +143,36 @@ class ModelVersion(Base):
     report_json: Mapped[str] = mapped_column(Text, default="{}")
 
 
+class RedTeamRun(Base):
+    """One Red Team Lab generate+score pass against the frozen Blue detector."""
+
+    __tablename__ = "red_team_runs"
+
+    id: Mapped[str] = mapped_column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    mode: Mapped[str] = mapped_column(String(20), default="standard")
+    family_id: Mapped[str] = mapped_column(String(32), index=True)
+    family_name: Mapped[str] = mapped_column(String(200), default="")
+    variant: Mapped[str] = mapped_column(String(200), default="")
+    variant_code: Mapped[str] = mapped_column(String(40), default="")
+    difficulty: Mapped[str] = mapped_column(String(20), default="MEDIUM")
+    population: Mapped[str] = mapped_column(String(40), default="normal_customers")
+    scale: Mapped[int] = mapped_column(Integer, default=1000)
+    seed: Mapped[int] = mapped_column(Integer, default=424242)
+    is_novel: Mapped[bool] = mapped_column(Boolean, default=False)
+    generate_image: Mapped[bool] = mapped_column(Boolean, default=False)
+    generated: Mapped[int] = mapped_column(Integer, default=0)
+    detected: Mapped[int] = mapped_column(Integer, default=0)
+    missed: Mapped[int] = mapped_column(Integer, default=0)
+    attack_success: Mapped[float | None] = mapped_column(Float, nullable=True)
+    detection_rate: Mapped[float | None] = mapped_column(Float, nullable=True)
+    precision: Mapped[float | None] = mapped_column(Float, nullable=True)
+    pr_auc: Mapped[float | None] = mapped_column(Float, nullable=True)
+    threshold: Mapped[float] = mapped_column(Float, default=0.5)
+    model_version: Mapped[str] = mapped_column(String(20), default="")
+    result_json: Mapped[str] = mapped_column(Text, default="{}")
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_utcnow)
+
+
 class SchedulerConfig(Base):
     __tablename__ = "scheduler_config"
 

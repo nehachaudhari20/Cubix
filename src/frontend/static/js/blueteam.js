@@ -171,11 +171,45 @@
       .join("");
   }
 
+  async function renderHandoff() {
+    const box = document.getElementById("blue-handoff");
+    if (!box) return;
+    const runId = sessionStorage.getItem("pdt.redRun");
+    if (!runId) {
+      box.classList.add("hidden");
+      box.innerHTML = "";
+      return;
+    }
+    try {
+      const run = await PDT.get(`/api/red/runs/${encodeURIComponent(runId)}`);
+      box.classList.remove("hidden");
+      box.innerHTML = `
+        <section class="panel">
+          <div class="panel-head compact">
+            <div>
+              <h2>Handoff from Red Team</h2>
+              <p class="hint">${PDT.esc(run.family_id)} · ${PDT.esc(run.variant_code)} · ${run.missed} missed of ${run.generated}</p>
+            </div>
+            <a class="btn secondary tiny" href="#/red">Back to lab</a>
+          </div>
+          <div class="kv">
+            <div><dt>Detection on this run</dt><dd>${PDT.pct(run.detection_rate)}</dd></div>
+            <div><dt>Attack success</dt><dd>${PDT.pct(run.attack_success)}</dd></div>
+            <div><dt>PR-AUC of scored set</dt><dd>${PDT.num(run.pr_auc, 3)}</dd></div>
+            <div><dt>Threshold</dt><dd>${PDT.num(run.threshold, 2)}</dd></div>
+          </div>
+        </section>`;
+    } catch {
+      box.classList.add("hidden");
+    }
+  }
+
   async function load() {
     const filter = document.getElementById("buffer-filter");
     const outcome = filter ? filter.value : "";
 
     try {
+      await renderHandoff();
       const [models, importance, comparison, buffer] = await Promise.all([
         PDT.get("/api/blue/models"),
         PDT.get("/api/blue/feature-importance?top=18"),

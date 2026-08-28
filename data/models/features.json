@@ -3,7 +3,7 @@
   "model_type": "LightGBM",
   "version": "v2",
   "parent_version": "v2",
-  "trained_at": "2026-08-22T20:29:57.063140+00:00",
+  "trained_at": "2026-08-23T17:37:20.525126+00:00",
   "training_sources": {
     "baseline_rows": 8000,
     "buffer_rows": 17,
@@ -132,7 +132,8 @@
       "5812.0": 3,
       "5814.0": 4,
       "nan": 5,
-      "5411": 6
+      "5411": 6,
+      "NA": 7
     },
     "location_country": {
       "AE": 0,
@@ -164,10 +165,10 @@
     }
   },
   "unseen_category_code": -1,
-  "decision_threshold": 0.39626750388900883,
+  "decision_threshold": 0.47905903386214016,
   "threshold_tuned_on": "hardening validation split",
   "metrics": {
-    "pr_auc": 0.908360653473494,
-    "roc_auc": 0.9090838618940702
+    "pr_auc": 0.9122213816122297,
+    "roc_auc": 0.9098867389625167
   }
 }

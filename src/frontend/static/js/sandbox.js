@@ -59,17 +59,13 @@
 
       <div class="grid-2">
         <div>
-          <h4 style="font-size:0.66rem;text-transform:uppercase;letter-spacing:0.09em;color:var(--dim);margin-bottom:0.6rem">
-            Risk composition
-          </h4>
+          <h4 class="sublabel">Risk composition</h4>
           ${PDT.scoreBar("FraudShield ML score", o.ml_score, "ml")}
           ${PDT.scoreBar("Static rule risk", o.rule_risk, "rule")}
           ${PDT.scoreBar("Unified risk", o.risk_score, "unified")}
         </div>
         <div>
-          <h4 style="font-size:0.66rem;text-transform:uppercase;letter-spacing:0.09em;color:var(--dim);margin-bottom:0.6rem">
-            Controls triggered
-          </h4>
+          <h4 class="sublabel">Controls triggered</h4>
           ${PDT.chips(o.control_triggers, "amber")}
           ${
             o.blocking_control

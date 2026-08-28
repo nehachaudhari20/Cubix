@@ -57,7 +57,7 @@ async def get_stats():
 async def get_all_families(
     stage: Optional[str] = None,
     genai_class: Optional[str] = None,
-    limit: int = 100,
+    limit: int = 200,
 ):
     families = loader.families
     if stage:
