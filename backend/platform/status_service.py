@@ -122,7 +122,15 @@ def get_system_status(session: Session) -> SystemStatus:
     scheduler = LoopScheduler.get()
     sched_row = scheduler.get_config()
 
-    latest = session.query(LoopRun).order_by(desc(LoopRun.started_at)).first()
+    # Prefer the latest completed run; fall back to newest run of any status
+    latest = (
+        session.query(LoopRun)
+        .filter(LoopRun.status == "completed")
+        .order_by(desc(LoopRun.started_at))
+        .first()
+    )
+    if latest is None:
+        latest = session.query(LoopRun).order_by(desc(LoopRun.started_at)).first()
     latest_out = loop_run_out(session, latest, include_events=False) if latest else None
 
     return SystemStatus(

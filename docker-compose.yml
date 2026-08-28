@@ -1,0 +1,39 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: pdt-postgres
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: payment_defense_twin
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: pdt-backend
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      DB_URL: "postgresql+psycopg://postgres:postgres@postgres:5432/payment_defense_twin"
+      RED_TEAM_USE_LLM: "true"
+      LLM_PROVIDER: openrouter
+      OPENROUTER_API_KEY: "${OPENROUTER_API_KEY}"
+      OPENROUTER_MODEL: openai/gpt-4o
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+volumes:
+  pgdata:

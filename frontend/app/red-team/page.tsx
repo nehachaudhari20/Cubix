@@ -1,1 +1,2 @@
-import {RedTeam} from '@/components/data-pages'; export default RedTeam
+import {RedTeamView} from '@/components/redteam-view'
+export default RedTeamView

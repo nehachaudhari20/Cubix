@@ -9,6 +9,7 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
@@ -20,7 +21,7 @@ os.chdir(ROOT)
 
 load_dotenv(ROOT / ".env")
 
-from backend.api.routes import knowledge, platform  # noqa: E402
+from backend.api.routes import knowledge, platform, redteam, redteam_view  # noqa: E402
 from backend.platform.database import init_db  # noqa: E402
 from backend.platform.scheduler import LoopScheduler  # noqa: E402
 from backend.platform.s3_storage import is_configured as s3_is_configured  # noqa: E402
@@ -61,8 +62,18 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000", "http://localhost:5173", "http://localhost:8000", "http://127.0.0.1:3000", "http://127.0.0.1:8000"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 app.include_router(knowledge.router)
 app.include_router(platform.router)
+app.include_router(redteam.router)
+app.include_router(redteam_view.router)
 
 if STATIC_DIR.exists():
     app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
