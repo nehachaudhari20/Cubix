@@ -87,6 +87,14 @@ class FraudShieldModel:
     ) -> float:
         """Return fraud probability for a sandbox transaction."""
         row = self.feature_builder.build(transaction, state)
+        return self.predict_proba_from_features(row)
+
+    def predict_proba_from_features(self, features: Dict[str, Any]) -> float:
+        """Score a pre-built feature row (payment or control-surface)."""
+        row = dict(features)
+        for col in self.feature_order:
+            if col not in row:
+                row[col] = 0
         vector = self.feature_builder.to_model_vector(
             row,
             self.feature_order,
@@ -94,8 +102,6 @@ class FraudShieldModel:
             self.categorical_mappings,
             self.unseen_code,
         )
-        import numpy as np
-
         if self.model_type == "LightGBM":
             proba = float(self.model.predict([vector])[0])
         else:
@@ -107,7 +113,7 @@ class FraudShieldModel:
     def predict(self, transaction: Dict[str, Any], state: Any) -> FraudShieldPrediction:
         """Full prediction with metadata."""
         row = self.feature_builder.build(transaction, state)
-        proba = self.predict_proba_from_transaction(transaction, state)
+        proba = self.predict_proba_from_features(row)
         missing = [f for f in self.feature_order if f not in row]
 
         return FraudShieldPrediction(

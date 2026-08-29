@@ -37,11 +37,24 @@ function resolveSurface(r: EvidenceRecord | null): string {
 /** Never collapse ML into combined — that made scores look identical. */
 function scores(r: EvidenceRecord | null) {
   if (!r) return { combined: null as number | null, rule: null as number | null, ml: null as number | null }
+  const f = (r.features || {}) as Record<string, unknown>
   return {
-    combined: num(r.risk_score),
-    rule: num(r.rule_risk),
-    ml: num(r.ml_score),
+    combined: num(r.risk_score) ?? num(f.risk_score),
+    rule: num(r.rule_risk) ?? num(f.rule_risk),
+    ml: num(r.ml_score) ?? num(f.ml_score),
   }
+}
+
+function amountOf(r: EvidenceRecord | null): number | null {
+  if (!r) return null
+  // Prefer top-level amount; only fall back to features for payment rows
+  // (control-surface features carry a synthetic training default amount).
+  const top = num(r.amount)
+  if (top != null) return top
+  if (resolveSurface(r) === "payment") {
+    return num((r.features as any)?.amount)
+  }
+  return null
 }
 
 function hasGenai(r: EvidenceRecord): boolean {
@@ -54,7 +67,7 @@ function hasGenai(r: EvidenceRecord): boolean {
 
 function fmtMoney(n: number | null | undefined) {
   if (n == null) return "—"
-  return `₹${Number(n).toLocaleString()}`
+  return `₹${Number(n).toLocaleString("en-IN")}`
 }
 
 function fmtScore(n: number | null | undefined) {
@@ -133,7 +146,12 @@ export default function SandboxPage() {
   const decision = (selected?.sandbox_decision || "").toUpperCase()
   const isBypass = decision === "ALLOW"
   const isChallenge = decision === "CHALLENGE"
-  const earlyExit = !!(selected?.features as any)?.early_exit || (sc.ml == null && sc.combined != null && decision === "BLOCK")
+  const earlyExit =
+    !!(selected?.features as any)?.early_exit ||
+    (!!selected &&
+      resolveSurface(selected) === "payment" &&
+      sc.ml == null &&
+      (sc.combined != null || decision === "BLOCK"))
   const genaiOn = selected ? hasGenai(selected) : false
 
   // Prefer full-buffer surface counts (not just recent window)
@@ -192,7 +210,7 @@ export default function SandboxPage() {
           <h1 style={{ margin: "4px 0 4px", fontSize: 22, fontWeight: 700 }}>Payment Defense Twin</h1>
           <p style={{ margin: 0, color: "#6b7280", fontSize: 13, maxWidth: 720 }}>
             Evidence from every surface — payment, agent, social engineering, KYC, consent, device, network.
-            Scores are separate: combined risk ≠ ML (ML only runs on full payment scoring).
+            Click a row to load its scores. Combined risk ≠ ML; both run on every surface when FraudShield is loaded.
           </p>
         </div>
         <span
@@ -264,20 +282,28 @@ export default function SandboxPage() {
         })}
       </div>
 
-      {/* Selected evidence detail — no lifecycle path diagram */}
-      <div style={{ background: "#fff", border: "1px solid #e5e7eb", borderRadius: 14, padding: 18, marginBottom: 16 }}>
+      {/* Selected evidence detail — bound to selectedId; cards update on row click */}
+      <div
+        key={selected?.evidence_id || "empty"}
+        style={{ background: "#fff", border: "1px solid #e5e7eb", borderRadius: 14, padding: 18, marginBottom: 16 }}
+      >
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 12, flexWrap: "wrap", marginBottom: 14 }}>
           <div>
             <div style={{ fontSize: 11, color: "#6b7280", textTransform: "uppercase", letterSpacing: ".5px" }}>Selected evidence</div>
             <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 14, fontWeight: 600, marginTop: 4 }}>
-              {selected ? selected.evidence_id.slice(0, 18) : "—"}
+              {selected ? selected.evidence_id : "—"}
               {selected && (
                 <span style={{ fontWeight: 400, color: "#6b7280" }}>
                   {" "}
-                  · {selected.campaign_id?.slice(0, 8)} · {selected.attack_family}
+                  · {selected.campaign_id || "—"} · {selected.attack_family || "—"}
                 </span>
               )}
             </div>
+            {selected && (
+              <div style={{ marginTop: 4, fontSize: 12, color: "#4b5563" }}>
+                {selected.action_type || "—"} · step {selected.step ?? "—"} · {fmtTime(selected.timestamp)}
+              </div>
+            )}
             <div style={{ marginTop: 6, display: "flex", gap: 6, flexWrap: "wrap" }}>
               <span
                 style={{
@@ -344,13 +370,20 @@ export default function SandboxPage() {
               </div>
             )}
 
-            {/* Distinct score cards */}
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 8, marginBottom: 14 }}>
+            {/* Distinct score cards — values from the selected row */}
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))",
+                gap: 8,
+                marginBottom: 14,
+              }}
+            >
               {[
                 {
                   l: "Combined risk",
                   v: fmtScore(sc.combined),
-                  hint: sc.combined == null ? "Not scored (or missing on record)" : "risk_score used for decision",
+                  hint: sc.combined == null ? "Missing on this buffer row" : "risk_score used for decision",
                   c: sc.combined == null ? "#9ca3af" : decisionColor(decision),
                 },
                 {
@@ -364,15 +397,35 @@ export default function SandboxPage() {
                   v: fmtScore(sc.ml),
                   hint:
                     sc.ml == null
-                      ? isSurface
-                        ? "Surfaces don’t run FraudShield ML"
-                        : earlyExit
-                          ? "Blocked before RiskEngine/ML"
-                          : "No ML on this record"
-                      : "FraudShield probability",
+                      ? earlyExit
+                        ? "Blocked before RiskEngine/ML"
+                        : "No ML on this record (re-run after surface ML wiring)"
+                      : isSurface
+                        ? "FraudShield (control-surface features)"
+                        : "FraudShield probability",
                   c: sc.ml == null ? "#9ca3af" : "#111827",
                 },
-                { l: "Amount", v: fmtMoney(selected.amount), hint: selected.action_type || "—", c: "#111827" },
+                isSurface
+                  ? {
+                      l: "Surface risk",
+                      v: fmtScore(
+                        num((selected.features as any)?.surface_risk) ??
+                          num((selected.features as any)?.agent_risk) ??
+                          num((selected.features as any)?.auth_se_risk) ??
+                          num((selected.features as any)?.kyc_risk) ??
+                          num((selected.features as any)?.consent_risk) ??
+                          num((selected.features as any)?.session_risk) ??
+                          num((selected.features as any)?.network_risk)
+                      ),
+                      hint: selected.action_type || "non-payment",
+                      c: "#111827",
+                    }
+                  : {
+                      l: "Amount",
+                      v: fmtMoney(amountOf(selected)),
+                      hint: selected.action_type || "payment",
+                      c: "#111827",
+                    },
               ].map((m) => (
                 <div key={m.l} style={{ padding: 10, background: "#f9fafb", borderRadius: 8, border: "1px solid #e5e7eb" }}>
                   <div style={{ fontSize: 10, color: "#6b7280", textTransform: "uppercase" }}>{m.l}</div>
@@ -390,21 +443,22 @@ export default function SandboxPage() {
                 <div style={{ fontSize: 12, color: "#374151", lineHeight: 1.55 }}>
                   {isSurface ? (
                     <>
-                      Non-payment surface <strong>{surfMeta.label}</strong>: GenAI context → surface engine → KB rules →
-                      blended <code>risk_score</code> → ALLOW/CHALLENGE/BLOCK. No payment lifecycle diagram — this isn’t a pay cycle.
+                      Non-payment surface <strong>{surfMeta.label}</strong>: GenAI → surface engine → KB rules → FraudShield ML →
+                      blended <code>risk_score</code>.
                     </>
                   ) : (
                     <>
                       Payment adjudication for <strong>{selected.action_type}</strong>
                       {genaiOn ? " with GenAI features folded into risk" : ""}.
                       {earlyExit
-                        ? " Engine failed early (e.g. AML/mule/auth) — ML never ran, so ML stays empty."
+                        ? " Engine failed early — ML never ran, so ML stays empty."
                         : " Full path ran RiskEngine (rules + ML) then Authorization."}
                     </>
                   )}
                 </div>
                 <div style={{ marginTop: 10, fontSize: 11, color: "#6b7280" }}>
-                  Step {selected.step ?? "—"} · evasion {selected.evasion_outcome || "—"} · label {selected.label ?? "—"}
+                  Evasion {selected.evasion_outcome || "—"} · label {selected.label ?? "—"}
+                  {!isSurface && amountOf(selected) != null ? ` · ${fmtMoney(amountOf(selected))}` : ""}
                 </div>
               </div>
               <div>
@@ -413,9 +467,9 @@ export default function SandboxPage() {
                 </div>
                 <div style={{ display: "flex", flexWrap: "wrap", gap: 6, minHeight: 28 }}>
                   {(selected.control_triggers || []).length ? (
-                    selected.control_triggers.map((c) => (
+                    selected.control_triggers.map((c, i) => (
                       <span
-                        key={c}
+                        key={`${c}-${i}`}
                         style={{
                           fontSize: 11,
                           padding: "4px 8px",
@@ -475,19 +529,34 @@ export default function SandboxPage() {
             </select>
           </div>
           <div style={{ maxHeight: 440, overflow: "auto" }}>
-            <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12 }}>
+            <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12, tableLayout: "fixed" }}>
               <thead>
                 <tr style={{ background: "#f9fafb", textAlign: "left" }}>
-                  {["Time", "Family", "Surface", "Decision", "Risk", "ML"].map((h) => (
+                  {(
+                    [
+                      ["Time", "12%"],
+                      ["Family", "22%"],
+                      ["Surface", "14%"],
+                      ["Decision", "14%"],
+                      ["Risk", "12%"],
+                      ["ML", "12%"],
+                      ["Amt", "14%"],
+                    ] as const
+                  ).map(([h, w]) => (
                     <th
                       key={h}
                       style={{
-                        padding: "8px 10px",
+                        width: w,
+                        padding: "8px 8px",
                         fontSize: 10,
                         color: "#6b7280",
                         fontWeight: 600,
                         textTransform: "uppercase",
                         borderBottom: "1px solid #e5e7eb",
+                        position: "sticky",
+                        top: 0,
+                        background: "#f9fafb",
+                        zIndex: 1,
                       }}
                     >
                       {h}
@@ -500,17 +569,20 @@ export default function SandboxPage() {
                   const active = r.evidence_id === selected?.evidence_id
                   const surf = resolveSurface(r)
                   const s = scores(r)
+                  const amt = amountOf(r)
                   return (
                     <tr
                       key={r.evidence_id}
                       onClick={() => setSelectedId(r.evidence_id)}
                       style={{ cursor: "pointer", background: active ? "#eff6ff" : "#fff", borderBottom: "1px solid #f3f4f6" }}
                     >
-                      <td style={{ padding: "9px 10px", fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: "#6b7280" }}>
+                      <td style={{ padding: "9px 8px", fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: "#6b7280" }}>
                         {fmtTime(r.timestamp)}
                       </td>
-                      <td style={{ padding: "9px 10px", fontWeight: 500 }}>{r.attack_family}</td>
-                      <td style={{ padding: "9px 10px" }}>
+                      <td style={{ padding: "9px 8px", fontWeight: 500, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                        {r.attack_family}
+                      </td>
+                      <td style={{ padding: "9px 8px" }}>
                         <span
                           style={{
                             fontSize: 10,
@@ -524,7 +596,7 @@ export default function SandboxPage() {
                           {surf}
                         </span>
                       </td>
-                      <td style={{ padding: "9px 10px" }}>
+                      <td style={{ padding: "9px 8px" }}>
                         <span
                           style={{
                             padding: "2px 8px",
@@ -538,11 +610,14 @@ export default function SandboxPage() {
                           {r.sandbox_decision}
                         </span>
                       </td>
-                      <td style={{ padding: "9px 10px", fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: s.combined == null ? "#9ca3af" : "#111827" }}>
+                      <td style={{ padding: "9px 8px", fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: s.combined == null ? "#9ca3af" : "#111827" }}>
                         {fmtScore(s.combined)}
                       </td>
-                      <td style={{ padding: "9px 10px", fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: s.ml == null ? "#9ca3af" : "#111827" }}>
+                      <td style={{ padding: "9px 8px", fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: s.ml == null ? "#9ca3af" : "#111827" }}>
                         {fmtScore(s.ml)}
+                      </td>
+                      <td style={{ padding: "9px 8px", fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: amt == null ? "#9ca3af" : "#111827" }}>
+                        {amt == null ? "—" : fmtMoney(amt)}
                       </td>
                     </tr>
                   )
@@ -565,9 +640,9 @@ export default function SandboxPage() {
               <br />
               <strong>Rule risk</strong> = KB / engine rules.
               <br />
-              <strong>ML</strong> = FraudShield — only when payment reaches RiskEngine. Surfaces and early BLOCKs show ML as —.
+              <strong>ML</strong> = FraudShield. Surfaces use control-surface features; payments use RiskEngine. Early payment BLOCKs and older buffer rows may show —.
               <br />
-              Older rows may still have empty scores if blocked before scoring was persisted.
+              <strong>Amount</strong> is payment-only (many campaigns reuse ₹45,000). Surfaces show surface risk in the detail card instead.
             </div>
           </div>
 

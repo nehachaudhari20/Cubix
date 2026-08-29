@@ -93,6 +93,7 @@ class SandboxOrchestrator:
             state=state,
             genai_engine=self.genai_engine,
             compiled_controls=compiled_controls,
+            ml_model=getattr(risk_engine, "ml_model", None) if risk_engine else None,
         )
         self._surface_engines: Dict[str, Any] = {
             "agent": self.agent_engine.evaluate,
@@ -214,6 +215,7 @@ class SandboxOrchestrator:
             ),
             risk_score=verdict.risk_score,
             rule_risk=verdict.rule_risk,
+            ml_score=verdict.ml_score,
             control_triggers=verdict.control_triggers,
             control_gaps=verdict.control_gaps,
             journey=verdict.journey,

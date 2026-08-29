@@ -68,6 +68,9 @@ class PaymentSandbox:
             settlement_engine=self.settlement_engine,
             compiled_controls=self.compiled_controls,
         )
+        # Surfaces share the same FraudShield instance as payment RiskEngine.
+        if self.risk_engine.ml_model is not None:
+            self.orchestrator.adjudicator.set_ml_model(self.risk_engine.ml_model)
 
     def execute(self, action_type: str, payload: Dict[str, Any]) -> SandboxObservation:
         """Execute a single action via the Orchestrator."""

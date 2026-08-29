@@ -28,6 +28,10 @@ def _collect(collector, sandbox, observation, action_type, payload, family_id, c
             "control_triggers": observation.control_triggers,
             "state_snapshot": observation.state_snapshot,
             "surface": observation.surface,
+            "action_type": observation.action_type,
+            "risk_score": observation.risk_score,
+            "ml_score": observation.ml_score,
+            "rule_risk": observation.rule_risk,
         }
     )
     collector.collect(
