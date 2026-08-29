@@ -1,125 +1,623 @@
 "use client"
-import { useEffect, useState } from "react"
-import { Sandbox } from "@/components/data-pages"
-import { api } from "@/lib/api"
+import { useCallback, useEffect, useMemo, useState } from "react"
+import { api, EvidenceRecord, errorText } from "@/lib/api"
 
-type Tab = "evidence" | "stages" | "controls"
+const SURFACE_META: Record<string, { label: string; blurb: string }> = {
+  payment: { label: "Payment", blurb: "Payment rail — engines → rules+ML → authz" },
+  agent: { label: "AI-Agent", blurb: "GenAI → agent engine → rules → risk blend" },
+  auth_se: { label: "Social Eng.", blurb: "Voice-phish / SE surface (not payment cycle)" },
+  kyc: { label: "KYC", blurb: "Identity / deepfake evidence surface" },
+  open_banking: { label: "Open Banking", blurb: "Consent / third-party surface" },
+  device: { label: "Device", blurb: "Session integrity surface" },
+  network: { label: "Network", blurb: "Cross-stage network surface" },
+}
+
+const NON_PAYMENT = new Set(["agent", "auth_se", "kyc", "open_banking", "device", "network"])
+
+function num(v: unknown): number | null {
+  if (v == null || v === "") return null
+  const n = Number(v)
+  return Number.isFinite(n) ? n : null
+}
+
+function resolveSurface(r: EvidenceRecord | null): string {
+  if (!r) return "payment"
+  const s = (r.surface || "").toLowerCase()
+  if (s && SURFACE_META[s]) return s
+  const action = (r.action_type || "").toLowerCase()
+  if (action.includes("genai") || action.includes("agent")) return "agent"
+  if (action.includes("social")) return "auth_se"
+  if (action.includes("kyc")) return "kyc"
+  if (action.includes("consent")) return "open_banking"
+  if (action.includes("session")) return "device"
+  if (action.includes("orchestrate") || action.includes("network")) return "network"
+  return "payment"
+}
+
+/** Never collapse ML into combined — that made scores look identical. */
+function scores(r: EvidenceRecord | null) {
+  if (!r) return { combined: null as number | null, rule: null as number | null, ml: null as number | null }
+  return {
+    combined: num(r.risk_score),
+    rule: num(r.rule_risk),
+    ml: num(r.ml_score),
+  }
+}
+
+function hasGenai(r: EvidenceRecord): boolean {
+  const f = r.features || {}
+  if (f.genai_features || f.genai_context) return true
+  if (f.prompt_injection_risk != null || f.agent_goal_anomaly != null) return true
+  const surf = resolveSurface(r)
+  return surf === "agent" || (r.attack_family || "").toLowerCase().includes("genai")
+}
+
+function fmtMoney(n: number | null | undefined) {
+  if (n == null) return "—"
+  return `₹${Number(n).toLocaleString()}`
+}
+
+function fmtScore(n: number | null | undefined) {
+  if (n == null) return "—"
+  return Number(n).toFixed(3)
+}
+
+function fmtTime(iso: string | undefined) {
+  if (!iso) return "—"
+  try {
+    return new Date(iso).toLocaleTimeString()
+  } catch {
+    return "—"
+  }
+}
+
+function decisionColor(d: string) {
+  const u = (d || "").toUpperCase()
+  if (u === "BLOCK") return "#dc2626"
+  if (u === "CHALLENGE") return "#ea580c"
+  if (u === "ALLOW") return "#16a34a"
+  return "#6b7280"
+}
 
 export default function SandboxPage() {
-  const [tab, setTab] = useState<Tab>("evidence")
-  const [stages, setStages] = useState<any[]>([])
-  const [controls, setControls] = useState<any>(null)
+  const [records, setRecords] = useState<EvidenceRecord[]>([])
   const [buffer, setBuffer] = useState<any>(null)
+  const [stages, setStages] = useState<any[]>([])
+  const [controls, setControls] = useState<Record<string, string[]> | null>(null)
+  const [selectedId, setSelectedId] = useState<string | null>(null)
+  const [search, setSearch] = useState("")
+  const [filterDecision, setFilterDecision] = useState("")
+  const [filterSurface, setFilterSurface] = useState("")
+  const [live, setLive] = useState(false)
+  const [err, setErr] = useState("")
+  const [stageFocus, setStageFocus] = useState("")
 
-  useEffect(() => {
-    Promise.all([
-      api.stages().catch(() => []),
-      api.stageControls().catch(() => null),
-      api.buffer().catch(() => null),
-    ]).then(([st, ctrls, buf]) => {
-      setStages(Array.isArray(st) ? st : [])
-      setControls(ctrls)
+  const refresh = useCallback(async () => {
+    try {
+      const [rec, buf, st, ctrls, running] = await Promise.all([
+        api.recent(500).catch(() => []),
+        api.buffer().catch(() => null),
+        api.stages().catch(() => []),
+        api.stageControls().catch(() => null),
+        api.running().catch(() => ({ running: false })),
+      ])
+      setRecords(Array.isArray(rec) ? rec : [])
       setBuffer(buf)
-    })
+      setStages(Array.isArray(st) ? st : [])
+      setControls(ctrls && typeof ctrls === "object" ? ctrls : null)
+      setLive(!!running.running)
+      setErr("")
+    } catch (e) {
+      setErr(errorText(e))
+    }
   }, [])
 
+  useEffect(() => {
+    refresh()
+    const t = setInterval(refresh, live ? 1500 : 5000)
+    return () => clearInterval(t)
+  }, [refresh, live])
+
+  useEffect(() => {
+    if (!selectedId && records[0]) setSelectedId(records[0].evidence_id)
+    if (selectedId && records.length && !records.find((r) => r.evidence_id === selectedId)) {
+      setSelectedId(records[0]?.evidence_id ?? null)
+    }
+  }, [records, selectedId])
+
+  const selected = records.find((r) => r.evidence_id === selectedId) || records[0] || null
+  const sc = scores(selected)
+  const surface = resolveSurface(selected)
+  const surfMeta = SURFACE_META[surface] || SURFACE_META.payment
+  const isSurface = NON_PAYMENT.has(surface)
+  const decision = (selected?.sandbox_decision || "").toUpperCase()
+  const isBypass = decision === "ALLOW"
+  const isChallenge = decision === "CHALLENGE"
+  const earlyExit = !!(selected?.features as any)?.early_exit || (sc.ml == null && sc.combined != null && decision === "BLOCK")
+  const genaiOn = selected ? hasGenai(selected) : false
+
+  // Prefer full-buffer surface counts (not just recent window)
+  const surfaceCounts = useMemo(() => {
+    const fromBuf = buffer?.surfaces && typeof buffer.surfaces === "object" ? buffer.surfaces : null
+    if (fromBuf && Object.keys(fromBuf).length) {
+      const m: Record<string, number> = {}
+      for (const [k, v] of Object.entries(fromBuf)) m[k || "payment"] = Number(v) || 0
+      return m
+    }
+    const m: Record<string, number> = {}
+    for (const r of records) {
+      const s = resolveSurface(r)
+      m[s] = (m[s] || 0) + 1
+    }
+    return m
+  }, [buffer, records])
+
+  const filtered = useMemo(() => {
+    const q = search.trim().toLowerCase()
+    return records.filter((r) => {
+      const surf = resolveSurface(r)
+      if (filterDecision && r.sandbox_decision !== filterDecision) return false
+      if (filterSurface && surf !== filterSurface) return false
+      if (!q) return true
+      return `${r.evidence_id} ${r.campaign_id} ${r.attack_family} ${r.action_type} ${surf}`.toLowerCase().includes(q)
+    })
+  }, [records, search, filterDecision, filterSurface])
+
+  const stageNames = stages.map((s) => s.stage || s.stage_name || s.name).filter(Boolean)
+  const controlEntries = useMemo(() => (controls ? Object.entries(controls) : []), [controls])
+  const activeStage = stageFocus || stageNames[0] || controlEntries[0]?.[0] || ""
+  const focusedControls = useMemo(() => {
+    if (!controls) return [] as string[]
+    if (activeStage && controls[activeStage]) return controls[activeStage]
+    const hit = controlEntries.find(([k]) => k.toLowerCase() === activeStage.toLowerCase())
+    return hit ? hit[1] : []
+  }, [controls, activeStage, controlEntries])
+
+  const kpis = [
+    { label: "Evidence", value: buffer?.total ?? buffer?.payment_records ?? records.length, sub: `${records.length} loaded` },
+    { label: "Blocked", value: buffer?.blocked ?? "—", sub: "held" },
+    { label: "Bypassed", value: buffer?.bypassed ?? "—", sub: "→ Loop B" },
+    {
+      label: "Surfaces w/ data",
+      value: Object.values(surfaceCounts).filter((n) => n > 0).length,
+      sub: `${Object.keys(SURFACE_META).length} catalogued`,
+    },
+  ]
+
   return (
-    <div>
-      <div style={{ padding: "18px 28px 0", borderBottom: "1px solid #e5e7eb", background: "#fff" }}>
-        <div style={{ fontSize: 11, textTransform: "uppercase", letterSpacing: ".6px", color: "#6b7280", fontWeight: 500 }}>
-          Sandbox
+    <div style={{ padding: "22px 28px 48px" }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 16, flexWrap: "wrap", marginBottom: 18 }}>
+        <div>
+          <div style={{ fontSize: 11, textTransform: "uppercase", letterSpacing: ".6px", color: "#6b7280", fontWeight: 500 }}>Sandbox</div>
+          <h1 style={{ margin: "4px 0 4px", fontSize: 22, fontWeight: 700 }}>Payment Defense Twin</h1>
+          <p style={{ margin: 0, color: "#6b7280", fontSize: 13, maxWidth: 720 }}>
+            Evidence from every surface — payment, agent, social engineering, KYC, consent, device, network.
+            Scores are separate: combined risk ≠ ML (ML only runs on full payment scoring).
+          </p>
         </div>
-        <h1 style={{ margin: "4px 0 12px", fontSize: 22, fontWeight: 700 }}>Payment Sandbox</h1>
-        <div style={{ display: "flex", gap: 4 }}>
-          {[
-            { id: "evidence" as Tab, label: "Evidence" },
-            { id: "stages" as Tab, label: "Lifecycle Stages" },
-            { id: "controls" as Tab, label: "Controls" },
-          ].map((t) => (
-            <button
-              key={t.id}
-              onClick={() => setTab(t.id)}
-              style={{
-                padding: "10px 16px",
-                border: "none",
-                borderBottom: tab === t.id ? "2px solid #16a34a" : "2px solid transparent",
-                background: "transparent",
-                color: tab === t.id ? "#16a34a" : "#6b7280",
-                fontWeight: tab === t.id ? 600 : 400,
-                fontSize: 13,
-                cursor: "pointer",
-              }}
-            >
-              {t.label}
-            </button>
-          ))}
-        </div>
+        <span
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 8,
+            padding: "7px 14px",
+            borderRadius: 100,
+            background: "#f9fafb",
+            border: "1px solid #e5e7eb",
+            fontSize: 12,
+            color: "#6b7280",
+          }}
+        >
+          <span
+            style={{
+              width: 7,
+              height: 7,
+              borderRadius: "50%",
+              background: live ? "#16a34a" : "#9ca3af",
+              boxShadow: live ? "0 0 8px #16a34a" : "none",
+            }}
+          />
+          {live ? "LIVE · loop feeding evidence" : "IDLE · buffer"}
+        </span>
       </div>
 
-      {tab === "evidence" && <Sandbox />}
-
-      {tab === "stages" && (
-        <div style={{ padding: "22px 28px" }}>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: 12, marginBottom: 16 }}>
-            {[
-              { label: "Buffer payments", value: buffer?.payment_records ?? "—" },
-              { label: "Blocked", value: buffer?.blocked ?? "—" },
-              { label: "Bypassed", value: buffer?.bypassed ?? "—" },
-              { label: "Stages", value: stages.length || "—" },
-            ].map((k) => (
-              <div key={k.label} style={{ background: "#fff", border: "1px solid #e5e7eb", borderRadius: 12, padding: 16 }}>
-                <div style={{ fontSize: 10, color: "#6b7280", textTransform: "uppercase" }}>{k.label}</div>
-                <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 20, fontWeight: 700, marginTop: 4 }}>{k.value}</div>
-              </div>
-            ))}
-          </div>
-          <div style={{ background: "#fff", border: "1px solid #e5e7eb", borderRadius: 14, padding: 18 }}>
-            <div style={{ fontSize: 13, fontWeight: 600, marginBottom: 14 }}>Lifecycle stages</div>
-            {stages.length === 0 && <div style={{ color: "#6b7280", fontSize: 13 }}>No stages loaded from KB.</div>}
-            {stages.map((s: any, i: number) => (
-              <div key={i} style={{ padding: "12px 0", borderBottom: "1px solid #e5e7eb" }}>
-                <div style={{ fontSize: 13, fontWeight: 600 }}>{s.stage || s.stage_name || s.name || `Stage ${i + 1}`}</div>
-                <div style={{ fontSize: 11, color: "#6b7280", marginTop: 4 }}>
-                  {(s.controls || []).slice(0, 8).join(" · ") || "No controls listed"}
-                </div>
-              </div>
-            ))}
-          </div>
+      {err && (
+        <div style={{ background: "#fef2f2", border: "1px solid #fecaca", borderRadius: 8, padding: 12, marginBottom: 16, fontSize: 12, color: "#dc2626" }}>
+          {err}
         </div>
       )}
 
-      {tab === "controls" && (
-        <div style={{ padding: "22px 28px" }}>
-          <div style={{ background: "#fff", border: "1px solid #e5e7eb", borderRadius: 14, padding: 18 }}>
-            <div style={{ fontSize: 13, fontWeight: 600, marginBottom: 14 }}>Controls by stage</div>
-            {!controls && <div style={{ color: "#6b7280", fontSize: 13 }}>Loading controls…</div>}
-            {controls &&
-              Object.entries(controls).map(([stage, ctrls]: [string, any]) => (
-                <div key={stage} style={{ marginBottom: 16 }}>
-                  <div style={{ fontSize: 12, fontWeight: 600, marginBottom: 8 }}>{stage}</div>
-                  <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
-                    {(Array.isArray(ctrls) ? ctrls : []).map((c: string) => (
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 12, marginBottom: 16 }}>
+        {kpis.map((k) => (
+          <div key={k.label} style={{ background: "#fff", border: "1px solid #e5e7eb", borderRadius: 12, padding: "14px 16px", borderTop: "3px solid #2563eb" }}>
+            <div style={{ fontSize: 10, textTransform: "uppercase", letterSpacing: ".5px", color: "#6b7280" }}>{k.label}</div>
+            <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 22, fontWeight: 700, margin: "4px 0 2px" }}>{k.value}</div>
+            <div style={{ fontSize: 11, color: "#6b7280" }}>{k.sub}</div>
+          </div>
+        ))}
+      </div>
+
+      {/* Surface chips — counts from full buffer */}
+      <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 16 }}>
+        {Object.entries(SURFACE_META).map(([id, meta]) => {
+          const count = surfaceCounts[id] || 0
+          const active = filterSurface === id
+          return (
+            <button
+              key={id}
+              onClick={() => setFilterSurface(active ? "" : id)}
+              title={meta.blurb}
+              style={{
+                padding: "6px 10px",
+                borderRadius: 8,
+                border: active ? "1px solid #2563eb" : "1px solid #e5e7eb",
+                background: active ? "#eff6ff" : count ? "#fff" : "#f9fafb",
+                cursor: "pointer",
+                fontSize: 11,
+                opacity: count ? 1 : 0.65,
+              }}
+            >
+              <span style={{ fontWeight: 600, color: active ? "#2563eb" : "#111827" }}>{meta.label}</span>
+              <span style={{ color: "#6b7280", marginLeft: 6, fontFamily: "'JetBrains Mono', monospace" }}>{count}</span>
+            </button>
+          )
+        })}
+      </div>
+
+      {/* Selected evidence detail — no lifecycle path diagram */}
+      <div style={{ background: "#fff", border: "1px solid #e5e7eb", borderRadius: 14, padding: 18, marginBottom: 16 }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 12, flexWrap: "wrap", marginBottom: 14 }}>
+          <div>
+            <div style={{ fontSize: 11, color: "#6b7280", textTransform: "uppercase", letterSpacing: ".5px" }}>Selected evidence</div>
+            <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 14, fontWeight: 600, marginTop: 4 }}>
+              {selected ? selected.evidence_id.slice(0, 18) : "—"}
+              {selected && (
+                <span style={{ fontWeight: 400, color: "#6b7280" }}>
+                  {" "}
+                  · {selected.campaign_id?.slice(0, 8)} · {selected.attack_family}
+                </span>
+              )}
+            </div>
+            <div style={{ marginTop: 6, display: "flex", gap: 6, flexWrap: "wrap" }}>
+              <span
+                style={{
+                  padding: "2px 8px",
+                  borderRadius: 5,
+                  background: isSurface ? "#f5f3ff" : "#eff6ff",
+                  color: isSurface ? "#7c3aed" : "#2563eb",
+                  fontWeight: 600,
+                  fontSize: 11,
+                }}
+              >
+                {surfMeta.label}
+              </span>
+              {genaiOn && (
+                <span style={{ padding: "2px 8px", borderRadius: 5, background: "#f5f3ff", color: "#7c3aed", fontWeight: 600, fontSize: 11 }}>
+                  GenAI context
+                </span>
+              )}
+              {earlyExit && (
+                <span style={{ padding: "2px 8px", borderRadius: 5, background: "#fef2f2", color: "#dc2626", fontWeight: 600, fontSize: 11 }}>
+                  Early exit (pre-ML)
+                </span>
+              )}
+            </div>
+          </div>
+          {selected && (
+            <span
+              style={{
+                padding: "6px 14px",
+                borderRadius: 8,
+                fontWeight: 700,
+                fontSize: 13,
+                background: `${decisionColor(decision)}18`,
+                color: decisionColor(decision),
+                border: `1px solid ${decisionColor(decision)}44`,
+              }}
+            >
+              {decision || "—"}
+            </span>
+          )}
+        </div>
+
+        {!selected ? (
+          <div style={{ color: "#6b7280", fontSize: 13 }}>No evidence — run a loop or campaign.</div>
+        ) : (
+          <>
+            {(isBypass || isChallenge) && (
+              <div
+                style={{
+                  marginBottom: 14,
+                  padding: "12px 14px",
+                  borderRadius: 10,
+                  background: isBypass ? "#fef2f2" : "#fff7ed",
+                  border: `1px solid ${isBypass ? "#fecaca" : "#fed7aa"}`,
+                }}
+              >
+                <div style={{ fontSize: 12, fontWeight: 700, color: isBypass ? "#dc2626" : "#ea580c", marginBottom: 4 }}>
+                  {isBypass ? "Bypass — feeds Blue Team buffer" : "Challenge — step-up signal"}
+                </div>
+                <div style={{ fontSize: 12, color: "#4b5563", lineHeight: 1.5 }}>
+                  {surfMeta.blurb}. Outcome={selected.evasion_outcome || "—"}.
+                  {selected.blocking_control ? ` Blocking control: ${selected.blocking_control}.` : ""}
+                </div>
+              </div>
+            )}
+
+            {/* Distinct score cards */}
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 8, marginBottom: 14 }}>
+              {[
+                {
+                  l: "Combined risk",
+                  v: fmtScore(sc.combined),
+                  hint: sc.combined == null ? "Not scored (or missing on record)" : "risk_score used for decision",
+                  c: sc.combined == null ? "#9ca3af" : decisionColor(decision),
+                },
+                {
+                  l: "Rule risk",
+                  v: fmtScore(sc.rule),
+                  hint: sc.rule == null ? "No rule contribution stored" : "KB rules / early-exit",
+                  c: "#111827",
+                },
+                {
+                  l: "ML score",
+                  v: fmtScore(sc.ml),
+                  hint:
+                    sc.ml == null
+                      ? isSurface
+                        ? "Surfaces don’t run FraudShield ML"
+                        : earlyExit
+                          ? "Blocked before RiskEngine/ML"
+                          : "No ML on this record"
+                      : "FraudShield probability",
+                  c: sc.ml == null ? "#9ca3af" : "#111827",
+                },
+                { l: "Amount", v: fmtMoney(selected.amount), hint: selected.action_type || "—", c: "#111827" },
+              ].map((m) => (
+                <div key={m.l} style={{ padding: 10, background: "#f9fafb", borderRadius: 8, border: "1px solid #e5e7eb" }}>
+                  <div style={{ fontSize: 10, color: "#6b7280", textTransform: "uppercase" }}>{m.l}</div>
+                  <div style={{ fontFamily: "'JetBrains Mono', monospace", fontWeight: 700, fontSize: 15, color: m.c }}>{m.v}</div>
+                  <div style={{ fontSize: 10, color: "#9ca3af", marginTop: 2, lineHeight: 1.35 }}>{m.hint}</div>
+                </div>
+              ))}
+            </div>
+
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+              <div>
+                <div style={{ fontSize: 11, color: "#6b7280", textTransform: "uppercase", letterSpacing: ".5px", marginBottom: 8 }}>
+                  What happened
+                </div>
+                <div style={{ fontSize: 12, color: "#374151", lineHeight: 1.55 }}>
+                  {isSurface ? (
+                    <>
+                      Non-payment surface <strong>{surfMeta.label}</strong>: GenAI context → surface engine → KB rules →
+                      blended <code>risk_score</code> → ALLOW/CHALLENGE/BLOCK. No payment lifecycle diagram — this isn’t a pay cycle.
+                    </>
+                  ) : (
+                    <>
+                      Payment adjudication for <strong>{selected.action_type}</strong>
+                      {genaiOn ? " with GenAI features folded into risk" : ""}.
+                      {earlyExit
+                        ? " Engine failed early (e.g. AML/mule/auth) — ML never ran, so ML stays empty."
+                        : " Full path ran RiskEngine (rules + ML) then Authorization."}
+                    </>
+                  )}
+                </div>
+                <div style={{ marginTop: 10, fontSize: 11, color: "#6b7280" }}>
+                  Step {selected.step ?? "—"} · evasion {selected.evasion_outcome || "—"} · label {selected.label ?? "—"}
+                </div>
+              </div>
+              <div>
+                <div style={{ fontSize: 11, color: "#6b7280", textTransform: "uppercase", letterSpacing: ".5px", marginBottom: 6 }}>
+                  Controls triggered
+                </div>
+                <div style={{ display: "flex", flexWrap: "wrap", gap: 6, minHeight: 28 }}>
+                  {(selected.control_triggers || []).length ? (
+                    selected.control_triggers.map((c) => (
                       <span
                         key={c}
                         style={{
                           fontSize: 11,
                           padding: "4px 8px",
                           borderRadius: 6,
-                          background: "#f9fafb",
-                          border: "1px solid #e5e7eb",
+                          background: "#fff7ed",
+                          border: "1px solid #fed7aa",
+                          color: "#c2410c",
                           fontFamily: "'JetBrains Mono', monospace",
-                          color: "#374151",
                         }}
                       >
                         {c}
                       </span>
-                    ))}
-                  </div>
+                    ))
+                  ) : (
+                    <span style={{ fontSize: 12, color: "#9ca3af" }}>{isBypass ? "None — gap" : "None listed"}</span>
+                  )}
                 </div>
+              </div>
+            </div>
+          </>
+        )}
+      </div>
+
+      <div style={{ display: "grid", gridTemplateColumns: "1.65fr 1fr", gap: 16 }}>
+        <div style={{ background: "#fff", border: "1px solid #e5e7eb", borderRadius: 14, overflow: "hidden" }}>
+          <div style={{ padding: "14px 16px", borderBottom: "1px solid #e5e7eb", display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
+            <div style={{ fontSize: 13, fontWeight: 600 }}>
+              Evidence <span style={{ fontWeight: 400, color: "#6b7280", fontSize: 11 }}>{filtered.length}</span>
+            </div>
+            <input
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search…"
+              style={{ flex: 1, minWidth: 140, padding: "7px 10px", borderRadius: 8, border: "1px solid #e5e7eb", fontSize: 12 }}
+            />
+            <select
+              value={filterDecision}
+              onChange={(e) => setFilterDecision(e.target.value)}
+              style={{ padding: "7px 10px", borderRadius: 8, border: "1px solid #e5e7eb", fontSize: 12, background: "#f9fafb" }}
+            >
+              <option value="">All decisions</option>
+              <option value="BLOCK">BLOCK</option>
+              <option value="CHALLENGE">CHALLENGE</option>
+              <option value="ALLOW">ALLOW</option>
+            </select>
+            <select
+              value={filterSurface}
+              onChange={(e) => setFilterSurface(e.target.value)}
+              style={{ padding: "7px 10px", borderRadius: 8, border: "1px solid #e5e7eb", fontSize: 12, background: "#f9fafb" }}
+            >
+              <option value="">All surfaces</option>
+              {Object.entries(SURFACE_META).map(([id, meta]) => (
+                <option key={id} value={id}>
+                  {meta.label} ({surfaceCounts[id] || 0})
+                </option>
               ))}
+            </select>
+          </div>
+          <div style={{ maxHeight: 440, overflow: "auto" }}>
+            <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12 }}>
+              <thead>
+                <tr style={{ background: "#f9fafb", textAlign: "left" }}>
+                  {["Time", "Family", "Surface", "Decision", "Risk", "ML"].map((h) => (
+                    <th
+                      key={h}
+                      style={{
+                        padding: "8px 10px",
+                        fontSize: 10,
+                        color: "#6b7280",
+                        fontWeight: 600,
+                        textTransform: "uppercase",
+                        borderBottom: "1px solid #e5e7eb",
+                      }}
+                    >
+                      {h}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {filtered.map((r) => {
+                  const active = r.evidence_id === selected?.evidence_id
+                  const surf = resolveSurface(r)
+                  const s = scores(r)
+                  return (
+                    <tr
+                      key={r.evidence_id}
+                      onClick={() => setSelectedId(r.evidence_id)}
+                      style={{ cursor: "pointer", background: active ? "#eff6ff" : "#fff", borderBottom: "1px solid #f3f4f6" }}
+                    >
+                      <td style={{ padding: "9px 10px", fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: "#6b7280" }}>
+                        {fmtTime(r.timestamp)}
+                      </td>
+                      <td style={{ padding: "9px 10px", fontWeight: 500 }}>{r.attack_family}</td>
+                      <td style={{ padding: "9px 10px" }}>
+                        <span
+                          style={{
+                            fontSize: 10,
+                            padding: "2px 6px",
+                            borderRadius: 4,
+                            background: NON_PAYMENT.has(surf) ? "#f5f3ff" : "#eff6ff",
+                            color: NON_PAYMENT.has(surf) ? "#7c3aed" : "#2563eb",
+                            fontFamily: "'JetBrains Mono', monospace",
+                          }}
+                        >
+                          {surf}
+                        </span>
+                      </td>
+                      <td style={{ padding: "9px 10px" }}>
+                        <span
+                          style={{
+                            padding: "2px 8px",
+                            borderRadius: 5,
+                            fontSize: 10,
+                            fontWeight: 700,
+                            background: `${decisionColor(r.sandbox_decision)}18`,
+                            color: decisionColor(r.sandbox_decision),
+                          }}
+                        >
+                          {r.sandbox_decision}
+                        </span>
+                      </td>
+                      <td style={{ padding: "9px 10px", fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: s.combined == null ? "#9ca3af" : "#111827" }}>
+                        {fmtScore(s.combined)}
+                      </td>
+                      <td style={{ padding: "9px 10px", fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: s.ml == null ? "#9ca3af" : "#111827" }}>
+                        {fmtScore(s.ml)}
+                      </td>
+                    </tr>
+                  )
+                })}
+              </tbody>
+            </table>
+            {!filtered.length && (
+              <div style={{ padding: 28, textAlign: "center", color: "#6b7280", fontSize: 13 }}>
+                No rows for this filter. Try another surface — counts above use the full buffer.
+              </div>
+            )}
           </div>
         </div>
-      )}
+
+        <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+          <div style={{ background: "#fff", border: "1px solid #e5e7eb", borderRadius: 14, padding: 16 }}>
+            <div style={{ fontSize: 13, fontWeight: 600, marginBottom: 6 }}>Why scores differ</div>
+            <div style={{ fontSize: 11, color: "#4b5563", lineHeight: 1.55 }}>
+              <strong>Combined risk</strong> = <code>risk_score</code> (decision input).
+              <br />
+              <strong>Rule risk</strong> = KB / engine rules.
+              <br />
+              <strong>ML</strong> = FraudShield — only when payment reaches RiskEngine. Surfaces and early BLOCKs show ML as —.
+              <br />
+              Older rows may still have empty scores if blocked before scoring was persisted.
+            </div>
+          </div>
+
+          <div style={{ background: "#fff", border: "1px solid #e5e7eb", borderRadius: 14, padding: 16 }}>
+            <div style={{ fontSize: 13, fontWeight: 600, marginBottom: 4 }}>KB stages</div>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 6, maxHeight: 110, overflow: "auto" }}>
+              {(stageNames.length ? stageNames : controlEntries.map(([k]) => k)).map((name) => (
+                <button
+                  key={name}
+                  onClick={() => setStageFocus(name)}
+                  style={{
+                    fontSize: 11,
+                    padding: "5px 9px",
+                    borderRadius: 6,
+                    border: activeStage === name ? "1px solid #2563eb" : "1px solid #e5e7eb",
+                    background: activeStage === name ? "#eff6ff" : "#f9fafb",
+                    color: activeStage === name ? "#2563eb" : "#374151",
+                    cursor: "pointer",
+                    fontWeight: activeStage === name ? 600 : 400,
+                  }}
+                >
+                  {name}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div style={{ background: "#fff", border: "1px solid #e5e7eb", borderRadius: 14, padding: 16, flex: 1 }}>
+            <div style={{ fontSize: 13, fontWeight: 600, marginBottom: 4 }}>Controls · {activeStage || "—"}</div>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 6, maxHeight: 200, overflow: "auto" }}>
+              {focusedControls.slice(0, 40).map((c) => (
+                <span
+                  key={c}
+                  style={{
+                    fontSize: 10,
+                    padding: "4px 7px",
+                    borderRadius: 5,
+                    fontFamily: "'JetBrains Mono', monospace",
+                    background: "#f9fafb",
+                    border: "1px solid #e5e7eb",
+                    color: "#4b5563",
+                  }}
+                >
+                  {c}
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   )
 }

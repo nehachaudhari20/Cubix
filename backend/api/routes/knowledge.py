@@ -24,6 +24,11 @@ class AttackFamilyResponse(BaseModel):
     detection_signals: List[dict]
     controls_targeted: List[str]
     evidence_confidence: str
+    surface: Optional[str] = None
+    objective: Optional[str] = None
+    attacker: Optional[str] = None
+    target: Optional[str] = None
+    technique_ids: List[str] = []
 
 
 class SignalResponse(BaseModel):

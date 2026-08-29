@@ -24,7 +24,7 @@ class CampaignCreateRequest(BaseModel):
     attack_family: str
     composite_families: List[str] = Field(default_factory=list)
     strategy: str = "sequential"
-    campaign_size: int = 12
+    campaign_size: int = 20
     mutation_budget: int = 2
     max_events: int = 250
     execute: bool = True
@@ -32,7 +32,7 @@ class CampaignCreateRequest(BaseModel):
 
 class HypothesisRequest(BaseModel):
     tested_families: List[str] = Field(default_factory=list)
-    max_hypotheses: int = 5
+    max_hypotheses: int = 12
     prefer_composites: bool = True
 
 

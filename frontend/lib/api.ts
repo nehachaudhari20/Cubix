@@ -51,9 +51,12 @@ export interface EvidenceRecord {
   campaign_id: string
   attack_family: string
   action_type: string
+  surface?: string
   sandbox_decision: string
   evasion_outcome: string
   ml_score: number | null
+  rule_risk?: number | null
+  risk_score?: number | null
   amount: number | null
   step: number | null
   timestamp: string
@@ -62,6 +65,7 @@ export interface EvidenceRecord {
   control_triggers: string[]
   blocking_control: string | null
   is_hard_negative: boolean
+  attack_variant?: string | null
 }
 
 export const apiBase = () =>
@@ -121,7 +125,9 @@ export const api = {
     request<any>(`/api/platform/runs/${encodeURIComponent(id)}/evaluation`),
   failure: (id: string) =>
     request<any>(`/api/platform/runs/${encodeURIComponent(id)}/failure-analysis`),
-  redteamView: (id: string) => request<any>(`/api/redteam/view/${encodeURIComponent(id)}`),
+  redteamView: (id: string) =>
+    request<any>(`/api/redteam/view/${encodeURIComponent(id)}?limit=20`),
+  redteamLoops: (limit = 30) => request<any[]>(`/api/redteam/view/loops?limit=${limit}`),
   redteamFamilies: () => request<any[]>('/api/redteam/families'),
   redteamPropose: (body: { prompt: string; focus_family?: string }) =>
     request<any>('/api/redteam/propose', { method: 'POST', body: JSON.stringify(body) }),
