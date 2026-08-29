@@ -410,7 +410,9 @@ export function RedTeamView({embedded=false}:{embedded?:boolean}){
               <>
                 <div className="section-title">Memory Used — {selected.memory.length} entries</div>
                 <p style={{margin:'0 0 12px',fontSize:12,color:'#6b7280'}}>
-                  KB signals/controls + evaluation gaps + observed loop outcomes.
+                  Campaign tactics for this run (KB signals/controls + observed outcomes).
+                  Full closed-loop learnings (control gaps, buffer evidence, Blue harden signals) →{" "}
+                  <a href="/labs" style={{color:'#2563eb',fontWeight:600,textDecoration:'none'}}>Labs</a>.
                 </p>
                 {selected.memory.map((m,i)=>(
                   <div key={i} className="mem-row">

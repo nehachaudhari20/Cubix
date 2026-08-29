@@ -121,6 +121,10 @@ export const api = {
   signals: () => request<any[]>('/api/kb/signals'),
   stages: () => request<any[]>('/api/kb/stages'),
   stageControls: () => request<Record<string, string[]>>('/api/kb/stages/controls'),
+  controlsCatalog: () =>
+    request<{ count: number; controls: Record<string, { control_id: string; name: string; lifecycle_stage_ids?: string[] }> }>(
+      '/api/kb/controls/catalog'
+    ),
   evaluation: (id: string) =>
     request<any>(`/api/platform/runs/${encodeURIComponent(id)}/evaluation`),
   failure: (id: string) =>

@@ -10,8 +10,13 @@ export default function RedTeamHub() {
           Red Team
         </div>
         <h1 style={{ margin: "4px 0 4px", fontSize: 22, fontWeight: 700 }}>Attacks & Campaigns</h1>
-        <p style={{ margin: "0 0 12px", color: "#6b7280", fontSize: 13 }}>
+        <p style={{ margin: "0 0 12px", color: "#6b7280", fontSize: 13, maxWidth: 720 }}>
           Launch a campaign, then deep-dive loop executions — Threat Intelligence, Planner, Payloads, and Memory.
+          Control gaps and closed-loop learnings →{" "}
+          <a href="/labs" style={{ color: "#2563eb", fontWeight: 600, textDecoration: "none" }}>
+            Labs
+          </a>
+          .
         </p>
       </div>
 

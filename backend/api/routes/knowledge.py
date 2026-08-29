@@ -104,6 +104,37 @@ async def get_all_controls():
     return loader.get_all_controls()
 
 
+@router.get("/controls/catalog")
+async def get_controls_catalog():
+    """Flat control_id → name/stage map for UI (Labs, Evaluation)."""
+    catalog: dict = {}
+    # Prefer canonical defense/controls.json when available
+    try:
+        from backend.knowledge.canonical_loader import CanonicalKnowledgeLoader
+
+        canon = CanonicalKnowledgeLoader()
+        for item in canon.controls or []:
+            cid = item.get("control_id")
+            if not cid:
+                continue
+            catalog[cid] = {
+                "control_id": cid,
+                "name": item.get("name") or cid,
+                "lifecycle_stage_ids": item.get("lifecycle_stage_ids") or [],
+            }
+    except Exception:
+        pass
+
+    if not catalog:
+        # Fallback: stage → control name lists (no IDs)
+        for stage, names in (loader.get_all_controls() or {}).items():
+            for name in names or []:
+                key = str(name)
+                catalog[key] = {"control_id": key, "name": key, "lifecycle_stage_ids": [stage]}
+
+    return {"count": len(catalog), "controls": catalog}
+
+
 @router.get("/stages/{stage}/controls")
 async def get_controls_for_stage(stage: str):
     decoded_stage = unquote(stage)

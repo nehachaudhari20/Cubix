@@ -59,7 +59,12 @@ export default function BlueDefense() {
       {err && <div style={{ background: "#fef2f2", border: "1px solid #fecaca", borderRadius: 8, padding: 12, marginBottom: 16, fontSize: 12, color: "#dc2626" }}>{err}</div>}
 
       <p style={{ margin: "0 0 18px", color: "#6b7280", fontSize: 13 }}>
-        RedBlue model hardening — feature engineering, scoring, adversarial buffer, and the closed-loop pipeline.
+        Active FraudShield model, adversarial buffer feeding Loop B, and latest hardening snapshot.
+        Full control-gap / failure learnings →{" "}
+        <a href="/labs" style={{ color: "#2563eb", fontWeight: 600, textDecoration: "none" }}>Labs</a>
+        {" · "}
+        Scorecard →{" "}
+        <a href="/evaluation" style={{ color: "#2563eb", fontWeight: 600, textDecoration: "none" }}>Evaluation</a>.
       </p>
 
       <div style={{ background: "#fff", border: "1px solid #e5e7eb", borderRadius: 14, padding: 18, marginBottom: 16 }}>

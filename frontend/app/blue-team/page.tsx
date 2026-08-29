@@ -1,16 +1,12 @@
 "use client"
 import { useState } from "react"
 import BlueDefense from "./_defense"
-import ScoreConsole from "../fraudshield-console/page"
-import ClosedLoopArena from "../closed-loop/page"
 import ModelEvolution from "../model-evolution/page"
 
-type Tab = "defense" | "score" | "loop" | "models"
+type Tab = "defense" | "models"
 
 const TABS: { id: Tab; label: string }[] = [
   { id: "defense", label: "Defense" },
-  { id: "score", label: "Score Console" },
-  { id: "loop", label: "Closed Loop" },
   { id: "models", label: "Models" },
 ]
 
@@ -20,10 +16,25 @@ export default function BlueTeamHub() {
   return (
     <div>
       <div style={{ padding: "18px 28px 0", borderBottom: "1px solid #e5e7eb", background: "#fff" }}>
-        <div style={{ fontSize: 11, textTransform: "uppercase", letterSpacing: ".6px", color: "#6b7280", fontWeight: 500 }}>
-          Blue Team
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 16, flexWrap: "wrap" }}>
+          <div>
+            <div style={{ fontSize: 11, textTransform: "uppercase", letterSpacing: ".6px", color: "#6b7280", fontWeight: 500 }}>
+              Blue Team
+            </div>
+            <h1 style={{ margin: "4px 0 4px", fontSize: 22, fontWeight: 700 }}>RedBlue Defense</h1>
+            <p style={{ margin: "0 0 12px", color: "#6b7280", fontSize: 13, maxWidth: 640 }}>
+              Model ops and hardening. Control gaps, failure analysis, and closed-loop learnings live in{" "}
+              <a href="/labs" style={{ color: "#2563eb", fontWeight: 600, textDecoration: "none" }}>
+                Labs
+              </a>
+              ; loop scorecards in{" "}
+              <a href="/evaluation" style={{ color: "#2563eb", fontWeight: 600, textDecoration: "none" }}>
+                Evaluation
+              </a>
+              .
+            </p>
+          </div>
         </div>
-        <h1 style={{ margin: "4px 0 12px", fontSize: 22, fontWeight: 700 }}>RedBlue Defense</h1>
         <div style={{ display: "flex", gap: 4 }}>
           {TABS.map((t) => (
             <button
@@ -47,8 +58,6 @@ export default function BlueTeamHub() {
       </div>
 
       {tab === "defense" && <BlueDefense />}
-      {tab === "score" && <ScoreConsole />}
-      {tab === "loop" && <ClosedLoopArena />}
       {tab === "models" && <ModelEvolution />}
     </div>
   )
