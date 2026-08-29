@@ -3,17 +3,12 @@ import { usePathname } from "next/navigation"
 
 const navItems = [
   { href: "/mission-control", label: "Mission Control", icon: "M" },
-  { href: "/campaign-lab", label: "Campaign Lab", icon: "C" },
-  { href: "/novel-attack", label: "Novel Attacks", icon: "N" },
-  { href: "/fraudshield-console", label: "FraudShield", icon: "F" },
-  { href: "/closed-loop", label: "Closed Loop", icon: "L" },
-  { href: "/model-evolution", label: "Model Evolution", icon: "E" },
-  { href: "/labs", label: "Labs", icon: "X" },
-  { href: "/evaluation", label: "Evaluation", icon: "V" },
-  { href: "/governance", label: "Governance", icon: "G" },
-  { href: "/red-team", label: "Red Team", icon: "R" },
-  { href: "/blue-team", label: "Blue Team", icon: "B" },
-  { href: "/sandbox", label: "Sandbox", icon: "S" },
+  { href: "/red-team", label: "Red Team Campaign", icon: "R" },
+  { href: "/red-team/chat", label: "Attack Designer", icon: "A" },
+  { href: "/sandbox", label: "Sandbox Evidence", icon: "S" },
+  { href: "/blue-team", label: "Blue Team Defense", icon: "B" },
+  { href: "/labs", label: "Failure Analysis", icon: "F" },
+  { href: "/evaluation", label: "Evaluation", icon: "E" },
 ]
 
 export default function Sidebar() {
@@ -56,7 +51,7 @@ export default function Sidebar() {
       {/* Nav */}
       <nav style={{ flex: 1, padding: "16px 12px", overflowY: "auto" }}>
         {navItems.map(item => {
-          const active = pathname === item.href || pathname.startsWith(item.href + "/")
+          const active = pathname === item.href || (item.href !== "/mission-control" && pathname.startsWith(item.href))
           return (
             <a
               key={item.href}
