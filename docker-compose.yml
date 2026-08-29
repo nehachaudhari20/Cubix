@@ -6,13 +6,17 @@ services:
     ports:
       - "5432:5432"
     environment:
-      POSTGRES_DB: payment_defense_twin
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: ${POSTGRES_DB:-payment_defense_twin}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-change_me_now}
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-payment_defense_twin}",
+        ]
       interval: 5s
       timeout: 3s
       retries: 5
@@ -26,7 +30,7 @@ services:
     ports:
       - "8000:8000"
     environment:
-      DB_URL: "postgresql+psycopg://postgres:postgres@postgres:5432/payment_defense_twin"
+      DB_URL: "postgresql+psycopg://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-change_me_now}@postgres:5432/${POSTGRES_DB:-payment_defense_twin}"
       RED_TEAM_USE_LLM: "true"
       LLM_PROVIDER: openrouter
       OPENROUTER_API_KEY: "${OPENROUTER_API_KEY}"
