@@ -325,7 +325,7 @@ export function Sandbox(){
             {t:'State retrieved',d:`Customer trust, device (${selected.features?.new_device?'new':'known'}), merchant + journey context loaded.`,cls:'pass'},
             {t:'Payment Initiation',d:`Transaction context — ${selected.features?.payment_rail||'—'} · ${fmtMoney(selected.amount)} · ${selected.attack_family}.`,cls:'pass'},
             {t:'Risk Engine — feature vector built',d:'amount, device_age, velocity_1h/24h, merchant_risk, graph_flag, behavioral_flag computed.',cls:'pass'},
-            {t:'FraudShield scored',d:`fraud_probability = ${fmtNum(risk)}`,cls:risk>0.5?'trig':'pass'},
+            {t:'RedBlue scored',d:`fraud_probability = ${fmtNum(risk)}`,cls:risk>0.5?'trig':'pass'},
             {t:'Controls evaluated',d:selected.control_triggers?.length?`${selected.control_triggers.length} control(s) triggered — see below.`:'No controls triggered.',cls:selected.control_triggers?.length?'trig':'pass'},
             {t:'Authorization — final decision',d:`Unified risk ${risk.toFixed(2)} → ${selected.sandbox_decision}`,cls:'final'},
           ]
@@ -388,7 +388,7 @@ export function BlueTeam(){
   ]
 
   return<Shell>
-    <PageHead eyebrow="Blue Team / Hardening" title="Blue Team" subtitle="FraudShield — feature engineering, scoring, adversarial buffer and the hardening pipeline."/>
+    <PageHead eyebrow="Blue Team / Hardening" title="Blue Team" subtitle="RedBlue — feature engineering, scoring, adversarial buffer and the hardening pipeline."/>
 
     <div className="panel">
       <div className="panel-head">
@@ -407,7 +407,7 @@ export function BlueTeam(){
 
     <div className="grid2">
       <div className="panel">
-        <div className="panel-title" style={{marginBottom:14}}>Feature importance <span className="tag">FraudShield {m?.version||'v3'}</span></div>
+        <div className="panel-title" style={{marginBottom:14}}>Feature importance <span className="tag">RedBlue {m?.version||'v3'}</span></div>
         {features.map(([name,value])=><div key={String(name)} className="bar-row">
           <div className="bar-label">{String(name)}</div>
           <div className="bar-track"><div className="bar-fill" style={{width:`${(value as number)*100}%`}}/></div>
@@ -570,7 +570,7 @@ function EvaluationReport({report,run,completedRuns,id,setId}:{report:any;run:Lo
 
     <div className="grid3">
       <div className="panel">
-        <div className="panel-title" style={{marginBottom:14}}>Detection metrics <span className="tag">FraudShield v3</span></div>
+        <div className="panel-title" style={{marginBottom:14}}>Detection metrics <span className="tag">RedBlue v3</span></div>
         <table><tbody>
           <tr><td>Precision</td><td style={{color:'var(--green)',textAlign:'right'}}>{report?.precision?.toFixed(3)||'0.958'}</td></tr>
           <tr><td>Recall</td><td style={{color:'var(--green)',textAlign:'right'}}>{report?.recall?.toFixed(3)||'0.926'}</td></tr>

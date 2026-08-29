@@ -33,21 +33,18 @@ export function RedTeamView(){
 
   // Load KB families from the backend
   useEffect(()=>{
-    fetch((process.env.NEXT_PUBLIC_API_BASE_URL||'http://localhost:8000')+'/api/kb/stats')
-      .then(r=>r.json())
-      .then(d=>{
-        // Get all family IDs from simulatable_ids
-        const ids = d.simulatable_ids || []
-        // Fetch each family detail
-        return Promise.all(ids.slice(0,20).map((fid:string)=>
-          fetch((process.env.NEXT_PUBLIC_API_BASE_URL||'http://localhost:8000')+'/api/kb/families/'+encodeURIComponent(fid))
-            .then(r=>r.json()).catch(()=>null)
-        ))
-      })
+    api.families(40)
       .then(families=>{
-        setKbFamilies(families.filter(Boolean))
+        setKbFamilies(Array.isArray(families)?families:[])
       })
-      .catch(()=>{})
+      .catch(()=>{
+        // Fallback: stats.simulatable_ids → individual family fetches
+        api.stats().then(async d=>{
+          const ids:string[]=d.simulatable_ids||[]
+          const rows=await Promise.all(ids.slice(0,20).map(fid=>api.family(fid).catch(()=>null)))
+          setKbFamilies(rows.filter(Boolean))
+        }).catch(()=>{})
+      })
   },[])
 
   useEffect(()=>{
@@ -76,7 +73,7 @@ export function RedTeamView(){
 
   return(
     <div style={{padding:'22px 28px 0'}}>
-      <PageHead eyebrow="Red Team / Campaign" title="Red Team" subtitle="Threat Hunter -> Planner -> Generator -> Memory. How the system discovers, plans, and adapts attacks."/>
+      <PageHead eyebrow="Red Team / Campaigns" title="Campaign Replay" subtitle="Threat Hunter → Planner → Generator → Memory across completed loop runs."/>
 
       {err&&<div style={{background:'#fef2f2',border:'1px solid #fecaca',borderRadius:8,padding:12,marginBottom:16,fontSize:12,color:'#dc2626'}}>{err}</div>}
 

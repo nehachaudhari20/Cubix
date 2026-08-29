@@ -24,15 +24,15 @@ export default function FraudShieldConsole() {
   return (
     <div style={{ background: "#f8f9fa", color: "#111827", minHeight: "100vh", fontFamily: "'Space Grotesk', sans-serif" }}>
       <div style={{ maxWidth: 1400, margin: "0 auto", padding: "22px 28px 60px" }}>
-        <h2 style={{ margin: "0 0 4px", fontSize: 20 }}>Blue Team — FraudShield Console</h2>
-        <p style={{ margin: "0 0 20px", color: "#6b7280", fontSize: 13 }}>Score, explain, and audit payment decisions through the full FraudShield v3 ensemble.</p>
+        <h2 style={{ margin: "0 0 4px", fontSize: 20 }}>Blue Team — Score Console</h2>
+        <p style={{ margin: "0 0 20px", color: "#6b7280", fontSize: 13 }}>Score, explain, and audit payment decisions through the RedBlue ensemble.</p>
 
         {/* Score input */}
         <div style={{ background: "#ffffff", border: `1px solid ${"#e5e7eb"}`, borderRadius: 14, padding: 18, marginBottom: 16 }}>
           <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
             <input value={eventId} onChange={e => setEventId(e.target.value)} placeholder="Event ID" style={{ flex: 1, padding: "10px 14px", borderRadius: 8, border: `1px solid ${"#e5e7eb"}`, background: "#f9fafb", color: "#111827", fontSize: 13, fontFamily: "'JetBrains Mono', monospace" }} />
             <button onClick={handleScore} disabled={loading} style={{ padding: "10px 24px", borderRadius: 8, background: `linear-gradient(135deg, ${"#2563eb"}, ${"#7c3aed"})`, color: "#fff", fontWeight: 600, fontSize: 13, border: "none", cursor: "pointer" }}>
-              {loading ? "Scoring…" : "Score with FraudShield"}
+              {loading ? "Scoring…" : "Score with RedBlue"}
             </button>
           </div>
         </div>
@@ -49,6 +49,11 @@ export default function FraudShieldConsole() {
               </div>
               <div style={{ fontSize: 12, color: "#6b7280", marginTop: 8 }}>
                 Model: {result.model.version} · Latency: {result.latency_ms}ms · Policy: {result.decision.threshold}
+                {result.source && (
+                  <span style={{ marginLeft: 8, padding: "2px 8px", borderRadius: 100, background: result.source.includes("fraudshield") || result.source.includes("evidence") ? "rgba(22,163,74,.12)" : "#f3f4f6", color: result.source.includes("fraudshield") || result.source.includes("evidence") ? "#16a34a" : "#6b7280", fontSize: 10, fontFamily: "'JetBrains Mono', monospace" }}>
+                    {result.source}
+                  </span>
+                )}
               </div>
             </div>
 

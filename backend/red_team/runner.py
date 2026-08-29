@@ -389,8 +389,11 @@ def run_red_team_for_loop(
     run_id: Optional[str] = None,
     on_event: Optional[Callable[[Dict[str, Any]], None]] = None,
     print_sections: bool = False,
+    should_cancel: Optional[Callable[[], bool]] = None,
 ) -> Dict[str, Any]:
     """Red team step for LoopRunner — Threat Hunter composites + multi-hypothesis execution."""
+    from backend.platform.loop_runner import LoopCancelled
+
     kb = OfflineKnowledge()
     memory = MemoryAgent()
     hunter = ThreatHunter()
@@ -399,6 +402,9 @@ def run_red_team_for_loop(
     client = SandboxClient()
     analyzer = FailureAnalyzer()
     mutator = LinearMutator()
+
+    if should_cancel and should_cancel():
+        raise LoopCancelled("Loop stop requested before Red Team")
 
     tested = sorted(_tested_family_ids(memory))
     hunt = hunter.discover(
@@ -423,6 +429,8 @@ def run_red_team_for_loop(
 
     summaries: List[dict] = []
     for hypothesis in hypotheses:
+        if should_cancel and should_cancel():
+            raise LoopCancelled("Loop stop requested during Red Team campaigns")
         summaries.append(
             run_hypothesis_campaign(
                 hypothesis,
@@ -438,6 +446,9 @@ def run_red_team_for_loop(
                 run_id=run_id,
             )
         )
+
+    if should_cancel and should_cancel():
+        raise LoopCancelled("Loop stop requested after Red Team campaigns")
 
     gap_report = analyzer.control_gap_lab.export_report()
     hn_report: Dict[str, Any] = {}

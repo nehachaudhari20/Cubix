@@ -42,10 +42,16 @@ class LifecycleStageResponse(BaseModel):
 
 @router.get("/stats")
 async def get_stats():
+    from backend.red_team.kb_campaign_builder import is_simulatable
+
+    simulatable = [f for f in loader.families if is_simulatable(f)]
+    simulatable_ids = [f.get("attack_id") for f in simulatable if f.get("attack_id")]
     return {
         "total_families": len(loader.families),
         "total_signals": len(loader.signals),
         "total_stages": len(loader.stages),
+        "simulatable_families": len(simulatable),
+        "simulatable_ids": simulatable_ids,
         "families_by_stage": {
             stage: len(loader.get_families_by_stage(stage))
             for stage in loader.get_all_controls().keys()

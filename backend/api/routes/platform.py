@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 import math
 import os
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, List
 
@@ -94,9 +95,46 @@ async def trigger_loop(request: LoopRunRequest):
 
 
 @router.get("/loop/running")
-async def running_loop():
+async def running_loop(db: Session = Depends(get_db)):
     scheduler = LoopScheduler.get()
-    return {"running": scheduler.running_loop_id is not None, "run_id": scheduler.running_loop_id}
+    run_id = scheduler.running_loop_id
+    # Reconcile orphaned DB rows left as "running" after process restart / hard stop
+    if not run_id:
+        stuck = (
+            db.query(LoopRun)
+            .filter(LoopRun.status == "running")
+            .all()
+        )
+        if stuck:
+            now = datetime.now(timezone.utc)
+            for row in stuck:
+                row.status = "stopped"
+                row.error_message = row.error_message or "Cleared — no active scheduler thread"
+                row.finished_at = now
+            db.commit()
+    return {"running": run_id is not None, "run_id": run_id}
+
+
+@router.post("/loop/stop")
+async def stop_loop(db: Session = Depends(get_db)):
+    scheduler = LoopScheduler.get()
+    run_id = scheduler.request_stop()
+    if not run_id:
+        # Nothing in-memory — still clear any stuck DB rows so UI can Start again
+        stuck = db.query(LoopRun).filter(LoopRun.status == "running").all()
+        if stuck:
+            now = datetime.now(timezone.utc)
+            cleared = []
+            for row in stuck:
+                row.status = "stopped"
+                row.error_message = "Stopped (no active thread)"
+                row.finished_at = now
+                cleared.append(row.id)
+            db.commit()
+            return {"run_id": cleared[0] if cleared else None, "status": "cleared"}
+        raise HTTPException(status_code=404, detail="No loop is currently running")
+    return {"run_id": run_id, "status": "stopping"}
+
 
 
 @router.get("/scheduler", response_model=SchedulerConfigOut)

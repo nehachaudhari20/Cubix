@@ -8,7 +8,7 @@ const space = Space_Grotesk({ subsets: ['latin'], variable: '--font-space' })
 const jet = JetBrains_Mono({ subsets: ['latin'], variable: '--font-jetbrains' })
 
 export const metadata: Metadata = {
-  title: 'FraudForge | Payment Defense Twin',
+  title: 'RedBlue | Payment Defense Twin',
   description: 'Closed-loop adversarial payment defense lab - Mastercard Innovation Challenge 2026',
 }
 

@@ -1,6 +1,7 @@
 'use client'
 import {useEffect,useState,useRef} from 'react'
 import {Shell,PageHead,Badge,Empty} from './dashboard'
+import {api,errorText} from '@/lib/api'
 
 interface ChatMessage {
   role: 'user'|'assistant'
@@ -36,8 +37,7 @@ export function AttackDesigner(){
   const[showSidebar,setShowSidebar]=useState(true)
 
   useEffect(()=>{
-    fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL||'http://localhost:8000'}/api/redteam/families`)
-      .then(r=>r.json())
+    api.redteamFamilies()
       .then(setFamilies)
       .catch(()=>{})
   },[])
@@ -55,26 +55,17 @@ export function AttackDesigner(){
     setLoading(true)
 
     try{
-      const res=await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL||'http://localhost:8000'}/api/redteam/propose`,{
-        method:'POST',
-        headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({prompt:text,focus_family:focusFamily||undefined})
-      })
-      if(!res.ok){
-        const err=await res.json().catch(()=>({detail:'Request failed'}))
-        throw new Error(err.detail||`HTTP ${res.status}`)
-      }
-      const data=await res.json()
+      const data=await api.redteamPropose({prompt:text,focus_family:focusFamily||undefined})
       setMessages(prev=>[...prev,{
         role:'assistant',
         content:data.raw_llm_output,
         proposal:data.proposal
       }])
     }catch(e:any){
-      setError(e.message||'Failed to generate proposal')
+      setError(errorText(e)||'Failed to generate proposal')
       setMessages(prev=>[...prev,{
         role:'assistant',
-        content:`⚠ Error: ${e.message||'Failed to connect to LLM. Make sure OPENROUTER_API_KEY is set.'}`
+        content:`⚠ Error: ${errorText(e)||'Failed to connect to LLM. Make sure the API key is set.'}`
       }])
     }finally{
       setLoading(false)
@@ -101,7 +92,7 @@ export function AttackDesigner(){
             key={f.attack_id}
             className={`chip ${focusFamily===f.attack_id?'selected':''}`}
             style={{textAlign:'left',width:'100%'}}
-            onClick={()=>setFocusFamily(f.focus_family===f.attack_id?'':f.attack_id)}
+            onClick={()=>setFocusFamily(focusFamily===f.attack_id?'':f.attack_id)}
           >
             <strong style={{fontSize:11}}>{f.attack_id}</strong>
             <small style={{fontSize:10,color:'#9ca3af',display:'block',marginTop:2}}>{f.name?.slice(0,40)}</small>

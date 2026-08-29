@@ -1,5 +1,7 @@
 "use client"
 import { useState } from "react"
+import { novelAttack } from "@/lib/api-v1"
+import { errorText } from "@/lib/api"
 
 
 
@@ -34,24 +36,19 @@ export default function NovelAttackPage() {
     setError("")
     setResult(null)
     try {
-      const res = await fetch("http://localhost:8000/api/v1/novel-attack/generate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          focus_area: focusArea,
-          model: model,
-          num_attacks: numAttacks,
-          include_kb_context: true,
-        }),
+      const data = await novelAttack.generate({
+        focus_area: focusArea,
+        model,
+        num_attacks: numAttacks,
+        include_kb_context: true,
       })
-      const data = await res.json()
       if (data.error) {
         setError(data.error)
       } else {
         setResult(data)
       }
     } catch (e: any) {
-      setError(e.message)
+      setError(errorText(e))
     }
     setLoading(false)
   }

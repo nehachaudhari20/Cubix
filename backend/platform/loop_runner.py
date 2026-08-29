@@ -19,6 +19,10 @@ from .database import SessionLocal, init_db
 from .models import CampaignEvent, LoopRun
 
 
+class LoopCancelled(Exception):
+    """Raised when a running loop is stopped via API."""
+
+
 @dataclass
 class LoopRunConfig:
     families: int = 8
@@ -31,6 +35,7 @@ class LoopRunConfig:
     trigger: str = "manual"
     run_id: Optional[str] = None
     on_event: Optional[Callable[[Dict[str, Any]], None]] = None
+    should_cancel: Optional[Callable[[], bool]] = None
 
 
 @dataclass
@@ -75,6 +80,10 @@ class LoopRunner:
         os.environ.setdefault("EVIDENCE_BUFFER_PATH", self.settings.evidence_buffer_path)
         os.environ.setdefault("FRAUDSHIELD_MODEL_DIR", self.settings.fraudshield_model_dir)
 
+    def _check_cancel(self, config: LoopRunConfig) -> None:
+        if config.should_cancel and config.should_cancel():
+            raise LoopCancelled("Loop stop requested")
+
     def run(self, config: LoopRunConfig) -> LoopRunResult:
         init_db()
         run_id = config.run_id or str(uuid.uuid4())
@@ -97,17 +106,22 @@ class LoopRunner:
 
         try:
             with redirect_stdout(log_buffer):
+                self._check_cancel(config)
                 result.kb_stats = self._step_kb()
+                self._check_cancel(config)
                 self._step_train_v1(skip=config.skip_train_v1)
+                self._check_cancel(config)
                 buffer_stats, campaign_events = self._step_red_team(
                     families=config.families,
                     fresh_buffer=config.fresh_buffer,
                     run_id=run_id,
                     on_event=config.on_event,
+                    should_cancel=config.should_cancel,
                 )
                 result.buffer_stats = buffer_stats
                 events = campaign_events
 
+                self._check_cancel(config)
                 if config.multi_surface:
                     ms = self._step_multi_surface(
                         family_limit=config.multi_surface_families,
@@ -117,20 +131,50 @@ class LoopRunner:
                     result.multi_surface = ms
                     result.buffer_stats = ms.get("buffer_stats", result.buffer_stats)
 
+                self._check_cancel(config)
                 hardening, comparison = self._step_harden(swap=config.swap_model)
                 result.hardening = hardening
                 result.comparison = comparison
+                self._check_cancel(config)
                 result.evaluation = self._step_evaluation(
                     run_id=run_id,
                     buffer_stats=result.buffer_stats,
                 )
                 result.failure_analysis = result.evaluation.get("failure_analysis", {})
+                self._check_cancel(config)
                 result.verify = self._step_verify()
 
             result.status = "completed"
             result.events = events
             result.log = log_buffer.getvalue()
             self._persist_success(session, loop_row, result, events)
+        except LoopCancelled as exc:
+            result.status = "stopped"
+            result.error = str(exc)
+            result.events = events
+            result.log = log_buffer.getvalue()
+            loop_row.status = "stopped"
+            loop_row.error_message = "Stopped by user"
+            loop_row.finished_at = datetime.now(timezone.utc)
+            loop_row.buffer_payments = (result.buffer_stats or {}).get("payment_records", 0)
+            loop_row.buffer_bypassed = (result.buffer_stats or {}).get("bypassed", 0)
+            loop_row.buffer_blocked = (result.buffer_stats or {}).get("blocked", 0)
+            loop_row.log_summary = result.log[-4000:] if result.log else None
+            for ev in events:
+                session.add(
+                    CampaignEvent(
+                        loop_run_id=loop_row.id,
+                        family_id=ev["family_id"],
+                        family_name=ev.get("family_name", ""),
+                        step=ev.get("step"),
+                        sandbox_decision=ev.get("sandbox_decision", ""),
+                        evasion_outcome=ev.get("evasion_outcome", ""),
+                        ml_score=ev.get("ml_score"),
+                        amount=ev.get("amount"),
+                    )
+                )
+            session.commit()
+            print("  Loop stopped by user request")
         except Exception as exc:
             result.status = "failed"
             result.error = str(exc)
@@ -244,6 +288,7 @@ class LoopRunner:
         fresh_buffer: bool,
         run_id: str,
         on_event: Optional[Callable[[Dict[str, Any]], None]] = None,
+        should_cancel: Optional[Callable[[], bool]] = None,
     ) -> tuple[Dict[str, Any], List[Dict[str, Any]]]:
         os.environ.setdefault("RED_TEAM_LINEAR_RETRIES", "3")
         os.environ.setdefault("RED_TEAM_USE_ATTACK_ENGINE", "true")
@@ -270,6 +315,7 @@ class LoopRunner:
             run_id=run_id,
             on_event=on_event,
             print_sections=True,
+            should_cancel=should_cancel,
         )
         campaign_events = result["campaign_events"]
 

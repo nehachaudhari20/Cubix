@@ -67,7 +67,7 @@ export default function GovernancePage() {
           {registry?.registry?.map((model: any, i: number) => (
             <div key={i} style={{ display: "flex", justifyContent: "space-between", padding: "10px 0", borderBottom: `1px solid ${"#e5e7eb"}`, fontSize: 12 }}>
               <div>
-                <span style={{ fontFamily: "'JetBrains Mono', monospace", fontWeight: 600, marginRight: 12 }}>FraudShield {model.version}</span>
+                <span style={{ fontFamily: "'JetBrains Mono', monospace", fontWeight: 600, marginRight: 12 }}>RedBlue {model.version}</span>
                 <span style={{ color: "#6b7280" }}>{model.model_type}</span>
               </div>
               <div>
@@ -77,6 +77,22 @@ export default function GovernancePage() {
             </div>
           ))}
         </div>
+
+        {/* Safety Gate Checks from API */}
+        {safety?.gate_checks?.length > 0 && (
+          <div style={{ background: "#ffffff", border: "1px solid #e5e7eb", borderRadius: 14, padding: 18 }}>
+            <div style={{ fontSize: 13, fontWeight: 600, marginBottom: 14 }}>
+              Safety Gate Checks <span style={{ color: "#16a34a", fontWeight: 500, fontSize: 12 }}>{safety.gate_checks.length} enforced</span>
+            </div>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 8 }}>
+              {safety.gate_checks.map((c: any, i: number) => (
+                <div key={i} style={{ display: "flex", alignItems: "center", gap: 8, padding: "8px 10px", background: "#f0fdf4", borderRadius: 8, fontSize: 12, color: "#166534" }}>
+                  <span>{c.icon || "✓"}</span> {c.check}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   )
