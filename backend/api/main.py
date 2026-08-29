@@ -22,6 +22,7 @@ os.chdir(ROOT)
 load_dotenv(ROOT / ".env")
 
 from backend.api.routes import knowledge, platform, redteam, redteam_view  # noqa: E402
+from backend.api.routes import blue_team_v1, red_team_campaign, closed_loop, governance, novel_attack  # noqa: E402
 from backend.platform.database import init_db  # noqa: E402
 from backend.platform.scheduler import LoopScheduler  # noqa: E402
 from backend.platform.s3_storage import is_configured as s3_is_configured  # noqa: E402
@@ -70,10 +71,18 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Existing routers
 app.include_router(knowledge.router)
 app.include_router(platform.router)
 app.include_router(redteam.router)
 app.include_router(redteam_view.router)
+
+# New v1 routers
+app.include_router(blue_team_v1.router)
+app.include_router(red_team_campaign.router)
+app.include_router(closed_loop.router)
+app.include_router(governance.router)
+app.include_router(novel_attack.router)
 
 if STATIC_DIR.exists():
     app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")

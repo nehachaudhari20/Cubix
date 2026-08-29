@@ -1,7 +1,6 @@
 'use client'
-import Link from 'next/link'; import {usePathname} from 'next/navigation'; import {useEffect,useState} from 'react'; import {api,errorText,fmtDate,fmtId,fmtLift,fmtMoney,fmtNum,LoopRun,SystemStatus,EvidenceRecord} from '@/lib/api'
-
-const tabs=[['/','Overview'],['/red-team','Red Team'],['/red-team/chat','Attack Designer'],['/sandbox','Sandbox'],['/blue-team','Blue Team'],['/labs','Labs'],['/evaluation','Evaluation']]
+import {useEffect,useState} from 'react'
+import {api,errorText,fmtDate,fmtId,fmtLift,fmtMoney,fmtNum,LoopRun,SystemStatus,EvidenceRecord} from '@/lib/api'
 
 export function useStatus(){
   const[status,setStatus]=useState<SystemStatus|null>(null)
@@ -14,19 +13,9 @@ export function useStatus(){
   return{status,error}
 }
 
-export function TopBar(){
-  const path=usePathname();const{status,error}=useStatus();const running=!!status?.running_loop
-  const state=running?'LOOP RUNNING':status?.scheduler?.enabled?'SCHEDULED':'IDLE'
-  return<header className="topbar">
-    <div className="brand"><div className="mark">PT</div><div><h1>PAYMENT DEFENSE TWIN</h1><div className="sub mono">Mastercard Innovation Challenge 2026 · AI Defense Lab</div></div></div>
-    <nav className="nav-links">{tabs.map(([href,label])=><Link className={`${path===href||path===href+'/chat'?'active':''}`} href={href} key={href}>{label}</Link>)}</nav>
-    <div className="status-pill" title={status?.scheduler?.next_run_at?`Next run ${fmtDate(status.scheduler.next_run_at)}`:error||undefined}>
-      <span className="dot-live"></span> {state} <span className="mono" style={{color:'var(--muted-2)',marginLeft:4}}>· env v1.4 · seed #A118</span>
-    </div>
-  </header>
-}
-
-export function Shell({children}:{children:React.ReactNode}){return<><TopBar/><main className="main">{children}</main></>}
+/* Shell and TopBar are now no-ops — Sidebar in layout.tsx handles navigation */
+export function TopBar(){return null}
+export function Shell({children}:{children:React.ReactNode}){return<>{children}</>}
 
 export function PageHead({eyebrow,title,subtitle}:{eyebrow:string;title:string;subtitle:string}){
   return<div className="pagehead"><span className="eyebrow">{eyebrow}</span><h1>{title}</h1><p>{subtitle}</p></div>
