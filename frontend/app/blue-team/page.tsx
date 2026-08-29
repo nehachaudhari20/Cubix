@@ -2,6 +2,7 @@
 import { useState } from "react"
 import BlueDefense from "./_defense"
 import ModelEvolution from "../model-evolution/page"
+import ModelLearningChart from "@/components/model-learning-chart"
 
 type Tab = "defense" | "models"
 
@@ -57,7 +58,14 @@ export default function BlueTeamHub() {
         </div>
       </div>
 
-      {tab === "defense" && <BlueDefense />}
+      {tab === "defense" && (
+        <div style={{ padding: "20px 28px" }}>
+          <ModelLearningChart />
+          <div style={{ marginTop: 20 }}>
+            <BlueDefense />
+          </div>
+        </div>
+      )}
       {tab === "models" && <ModelEvolution />}
     </div>
   )

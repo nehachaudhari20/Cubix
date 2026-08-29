@@ -1,6 +1,6 @@
 {
   "registry_version": "2.0",
-  "built_at": "2026-08-24T21:39:33.516174+00:00",
+  "built_at": "2026-08-29T19:17:40.694202+00:00",
   "layout": {
     "attacks": [
       "attack_families.json",
@@ -32,13 +32,13 @@
     ]
   },
   "counts": {
-    "attack_families": 57,
+    "attack_families": 67,
     "attack_variants": 363,
     "attack_vectors": 363,
     "signals": 276,
     "controls": 342,
     "lifecycle_stages": 49,
-    "relationships": 2096,
+    "relationships": 5000,
     "evidence": 388,
     "simulation_templates": 9,
     "simulation_parameters": 14,

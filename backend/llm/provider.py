@@ -163,7 +163,7 @@ def get_llm(model: Optional[str] = None, temperature: float = 0.4) -> Any | None
                 temperature=temperature,
                 api_key=api_key,
                 base_url="https://openrouter.ai/api/v1",
-                max_tokens=2048,
+                max_tokens=512,
             )
     except Exception as exc:
         logger.warning("Failed to initialize LLM provider %s: %s", provider.value, exc)

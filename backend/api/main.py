@@ -22,7 +22,7 @@ os.chdir(ROOT)
 load_dotenv(ROOT / ".env")
 
 from backend.api.routes import knowledge, platform, redteam, redteam_view  # noqa: E402
-from backend.api.routes import blue_team_v1, red_team_campaign, closed_loop, governance, novel_attack  # noqa: E402
+from backend.api.routes import blue_team_v1, red_team_campaign, closed_loop, governance, novel_attack, attack_gen  # noqa: E402
 from backend.platform.database import init_db  # noqa: E402
 from backend.platform.scheduler import LoopScheduler  # noqa: E402
 from backend.platform.s3_storage import is_configured as s3_is_configured  # noqa: E402
@@ -65,7 +65,7 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://localhost:5173", "http://localhost:8000", "http://127.0.0.1:3000", "http://127.0.0.1:8000"],
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -83,6 +83,7 @@ app.include_router(red_team_campaign.router)
 app.include_router(closed_loop.router)
 app.include_router(governance.router)
 app.include_router(novel_attack.router)
+app.include_router(attack_gen.router)
 
 if STATIC_DIR.exists():
     app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
