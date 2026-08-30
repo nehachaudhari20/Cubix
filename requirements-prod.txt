@@ -1,0 +1,55 @@
+# ==========================================
+# Production API dependencies (lean)
+# ==========================================
+
+# Backend / API
+fastapi>=0.115,<1.0
+uvicorn[standard]>=0.30,<1.0
+pydantic>=2.8,<3.0
+pydantic-settings>=2.4,<3.0
+python-dotenv>=1.0,<2.0
+httpx>=0.27,<1.0
+requests>=2.32,<3.0
+APScheduler>=3.10,<4.0
+
+# Database / State
+SQLAlchemy>=2.0,<3.0
+psycopg[binary]>=3.2,<4.0
+psycopg2-binary>=2.9,<3.0
+
+# Data Processing
+pandas>=2.2,<3.0
+numpy>=1.26,<3.0
+
+# ML (lazy-imported by blue_team at runtime)
+scikit-learn>=1.5,<2.0
+xgboost>=2.1,<4.0
+lightgbm>=4.5,<5.0
+scipy>=1.13,<2.0
+
+# Agentic AI / LLM
+langgraph>=0.2,<2.0
+langchain>=0.2,<2.0
+langchain-core>=0.2,<2.0
+
+# LLM provider integrations (used by provider.py)
+openai>=1.40,<3.0
+cohere>=5.0,<6.0
+langchain-openai>=0.1,<2.0
+langchain-cohere>=0.3,<1.0
+langchain-anthropic>=0.1,<1.0
+langchain-google-genai>=1.0,<3.0
+langchain-aws>=0.2,<1.0
+langchain-nvidia-ai-endpoints>=0.3,<1.0
+
+# Knowledge / Vector Memory
+chromadb>=0.5,<2.0
+
+# Graph / Attack Journey Analysis
+networkx>=3.3,<4.0
+
+# AWS / Cloud
+boto3>=1.34,<2.0
+
+# API / Security Utilities
+PyJWT>=2.9,<3.0
