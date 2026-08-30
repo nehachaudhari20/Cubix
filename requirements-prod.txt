@@ -33,8 +33,8 @@ langchain==0.3.14
 langchain-core==0.3.29
 
 # LLM providers
-openai==1.57.0
-cohere==5.13.0
+openai==1.58.1
+cohere==5.12.0
 langchain-openai==0.3.0
 langchain-cohere==0.3.2
 langchain-anthropic==0.3.4
