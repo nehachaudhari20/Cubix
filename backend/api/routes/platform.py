@@ -74,10 +74,10 @@ async def get_run(run_id: str, db: Session = Depends(get_db)):
 @router.post("/loop/run")
 async def trigger_loop(request: LoopRunRequest):
     scheduler = LoopScheduler.get()
-    if scheduler.running_loop_id:
+    if scheduler.running_loop_id or scheduler.is_busy():
         raise HTTPException(
             status_code=409,
-            detail=f"Loop already running: {scheduler.running_loop_id}",
+            detail="A loop is still active or winding down. Hit Stop and wait a few seconds.",
         )
     try:
         run_id = scheduler.run_with_config(
@@ -86,6 +86,9 @@ async def trigger_loop(request: LoopRunRequest):
                 skip_train_v1=request.skip_train_v1,
                 swap_model=request.swap_model,
                 fresh_buffer=request.fresh_buffer,
+                # Multi-surface probes dominate wall time — keep off for MC Start Loop
+                multi_surface=False,
+                multi_surface_composites=False,
                 trigger="manual",
             )
         )
@@ -117,23 +120,12 @@ async def running_loop(db: Session = Depends(get_db)):
 
 @router.post("/loop/stop")
 async def stop_loop(db: Session = Depends(get_db)):
+    """Force-stop: clear scheduler state immediately so UI / refresh are not stuck."""
     scheduler = LoopScheduler.get()
-    run_id = scheduler.request_stop()
+    run_id = scheduler.force_stop()
     if not run_id:
-        # Nothing in-memory — still clear any stuck DB rows so UI can Start again
-        stuck = db.query(LoopRun).filter(LoopRun.status == "running").all()
-        if stuck:
-            now = datetime.now(timezone.utc)
-            cleared = []
-            for row in stuck:
-                row.status = "stopped"
-                row.error_message = "Stopped (no active thread)"
-                row.finished_at = now
-                cleared.append(row.id)
-            db.commit()
-            return {"run_id": cleared[0] if cleared else None, "status": "cleared"}
         raise HTTPException(status_code=404, detail="No loop is currently running")
-    return {"run_id": run_id, "status": "stopping"}
+    return {"run_id": run_id, "status": "cleared"}
 
 
 

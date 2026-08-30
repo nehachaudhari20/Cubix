@@ -11,16 +11,20 @@ export default function BlueDefense() {
   const [err, setErr] = useState("")
 
   useEffect(() => {
-    Promise.all([
-      api.status().catch((e) => { setErr(e.message); return null }),
-      blueTeamV1.models().catch(() => null),
-      api.recent(12).catch(() => []),
-    ]).then(([s, m, rec]) => {
-      setStatus(s)
-      setModels(m)
-      setRecent(Array.isArray(rec) ? rec : [])
-      setLoading(false)
-    })
+    const load = () =>
+      Promise.all([
+        api.status().catch((e) => { setErr(e.message); return null }),
+        blueTeamV1.models().catch(() => null),
+        api.recent(12).catch(() => []),
+      ]).then(([s, m, rec]) => {
+        setStatus(s)
+        setModels(m)
+        setRecent(Array.isArray(rec) ? rec : [])
+        setLoading(false)
+      })
+    load()
+    const t = setInterval(load, 8000)
+    return () => clearInterval(t)
   }, [])
 
   if (loading) return <div style={{ color: "#6b7280", padding: 40 }}>Loading...</div>
@@ -32,7 +36,12 @@ export default function BlueDefense() {
   const det = hr.detection || m?.metrics || {}
   const tm = hr.training_manifest || null
 
-  const fi = det?.feature_importance || {}
+  const fi =
+    (m?.feature_importance && Object.keys(m.feature_importance).length > 0
+      ? m.feature_importance
+      : null) ||
+    det?.feature_importance ||
+    {}
   const features = Object.keys(fi).length > 0
     ? Object.entries(fi).sort((a: any, b: any) => b[1] - a[1]).slice(0, 10)
     : []
@@ -53,6 +62,8 @@ export default function BlueDefense() {
     { l: "AUC", old: v1Metrics.roc_auc?.toFixed(3) || "--", new: v3Metrics.roc_auc?.toFixed(3) || "--" },
     { l: "FPR", old: v1Metrics.fpr != null ? (v1Metrics.fpr * 100).toFixed(1) + "%" : "--", new: v3Metrics.fpr != null ? (v3Metrics.fpr * 100).toFixed(1) + "%" : "--" },
   ]
+
+  const latestUsable = r && (r.status === "completed" || r.status === "stopped")
 
   return (
     <div style={{ padding: "22px 28px 0" }}>
@@ -166,7 +177,7 @@ export default function BlueDefense() {
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
         <div style={{ background: "#fff", border: "1px solid #e5e7eb", borderRadius: 14, padding: 18 }}>
           <div style={{ fontSize: 13, fontWeight: 600, marginBottom: 14 }}>Latest Completed Run</div>
-          {r && r.status === "completed" ? (
+          {latestUsable ? (
             <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 10 }}>
               {[
                 ["Buffer Payments", r.buffer_payments],
@@ -183,7 +194,7 @@ export default function BlueDefense() {
               ))}
             </div>
           ) : (
-            <div style={{ color: "#6b7280", fontSize: 13 }}>No completed run found.</div>
+            <div style={{ color: "#6b7280", fontSize: 13 }}>No previous loop data found — run a loop to populate.</div>
           )}
         </div>
 

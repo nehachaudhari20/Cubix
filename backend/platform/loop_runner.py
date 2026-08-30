@@ -28,7 +28,7 @@ class LoopRunConfig:
     families: int = 8
     skip_train_v1: bool = True
     swap_model: bool = True
-    fresh_buffer: bool = True
+    fresh_buffer: bool = False
     multi_surface: bool = True
     multi_surface_families: int = 0  # 0 = all non-payment surfaces
     multi_surface_composites: bool = True

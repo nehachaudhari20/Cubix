@@ -9,10 +9,10 @@ from pydantic import BaseModel, Field
 
 
 class LoopRunRequest(BaseModel):
-    families: int = Field(default=8, ge=1, le=36)
+    families: int = Field(default=8, ge=1, le=80)
     skip_train_v1: bool = True
     swap_model: bool = True
-    fresh_buffer: bool = True
+    fresh_buffer: bool = False
 
 
 class CampaignEventOut(BaseModel):
@@ -69,7 +69,7 @@ class SchedulerConfigOut(BaseModel):
 class SchedulerConfigUpdate(BaseModel):
     enabled: Optional[bool] = None
     interval_minutes: Optional[int] = Field(default=None, ge=5, le=1440)
-    families: Optional[int] = Field(default=None, ge=1, le=36)
+    families: Optional[int] = Field(default=None, ge=1, le=80)
     skip_train_v1: Optional[bool] = None
     auto_swap: Optional[bool] = None
     fresh_buffer: Optional[bool] = None

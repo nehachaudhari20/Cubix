@@ -42,7 +42,14 @@ class LoopScheduler:
 
     @property
     def running_loop_id(self) -> Optional[str]:
+        # Once stop is requested, UI should show IDLE even while the worker winds down
+        if self._cancel_event.is_set():
+            return None
         return self._running_loop_id
+
+    def is_busy(self) -> bool:
+        """True while a worker thread is still alive (including after force-stop)."""
+        return bool(self._thread and self._thread.is_alive())
 
     def request_stop(self) -> Optional[str]:
         """Signal the active loop to stop at the next safe checkpoint."""
@@ -51,6 +58,34 @@ class LoopScheduler:
         run_id = self._running_loop_id
         self._cancel_event.set()
         logger.info("Stop requested for loop %s", run_id)
+        return run_id
+
+    def force_stop(self) -> Optional[str]:
+        """Signal cancel + mark DB stopped. UI becomes idle immediately via running_loop_id.
+
+        The worker thread may still finish the current step; is_busy() blocks a new Start
+        until it exits so we never run two loops at once.
+        """
+        from .models import LoopRun
+
+        run_id = self._running_loop_id
+        self._cancel_event.set()
+        if run_id:
+            logger.warning("Force-stop requested for loop %s", run_id)
+
+        session = SessionLocal()
+        try:
+            now = datetime.now(timezone.utc)
+            stuck = session.query(LoopRun).filter(LoopRun.status == "running").all()
+            for row in stuck:
+                row.status = "stopped"
+                row.error_message = row.error_message or "Force-stopped by user"
+                row.finished_at = now
+                if not run_id:
+                    run_id = row.id
+            session.commit()
+        finally:
+            session.close()
         return run_id
 
     def start(self) -> None:
@@ -166,8 +201,10 @@ class LoopScheduler:
     def _execute(self, config: LoopRunConfig) -> str:
         from uuid import uuid4
 
-        if self._running_loop_id:
-            raise RuntimeError(f"Loop already running: {self._running_loop_id}")
+        if self._running_loop_id or self.is_busy():
+            raise RuntimeError(
+                f"Loop already running: {self._running_loop_id or 'winding down'}. Hit Stop and wait a moment."
+            )
 
         run_id = config.run_id or str(uuid4())
         config.run_id = run_id

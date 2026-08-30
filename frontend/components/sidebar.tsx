@@ -4,7 +4,6 @@ import { usePathname } from "next/navigation"
 const navItems = [
   { href: "/mission-control", label: "Overview", icon: "O" },
   { href: "/red-team", label: "Red Team", icon: "R" },
-  { href: "/red-team/chat", label: "Attack Designer", icon: "A" },
   { href: "/sandbox", label: "Sandbox", icon: "S" },
   { href: "/blue-team", label: "Blue Team", icon: "B" },
   { href: "/labs", label: "Labs", icon: "L" },
