@@ -31,6 +31,9 @@ COPY backend/ backend/
 COPY scripts/ scripts/
 COPY master_dataset.json .
 
+# Copy knowledge base
+COPY data/knowledge/ data/knowledge/
+
 # Create data directories
 RUN mkdir -p data/chroma_kb data/models data/adversarial_buffer && \
     chown -R appuser:appuser /app
