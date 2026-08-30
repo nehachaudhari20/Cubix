@@ -31,8 +31,7 @@ langgraph==0.2.62
 langchain==0.3.14
 langchain-core==0.3.29
 
-# LLM providers
-langchain-cohere==0.3.4
+# LLM provider — OpenRouter only
 langchain-openai==0.3.0
 
 # Knowledge / Vector Memory
