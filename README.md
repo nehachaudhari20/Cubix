@@ -30,47 +30,61 @@ EC2 host: `13.51.196.173` · SSH user: `ec2-user` · Stack: Docker Compose (`pos
 
 ---
 
-## What you get in the UI
+## Features
 
-| Page | Route | Purpose |
-|------|-------|---------|
-| **Overview** | `/mission-control` | KPIs, start/stop platform loop, live experiment stream, history |
-| **Red Team** | `/red-team` | Attack families + selected loop campaign view |
-| **Sandbox** | `/sandbox` | Payment-environment evidence for a loop |
-| **Blue Team** | `/blue-team` | Model learning / feature importance |
-| **Labs** | `/labs` | Per-run lab table (completed + stopped) |
-| **Evaluation** | `/evaluation` | Scorecards / radar from `data/evaluation` |
+### Closed-loop platform run
+- Start a full **Red → Sandbox → Buffer → Blue → Evaluation** loop from Mission Control.
+- Choose how many attack families to run: **8 / 15 / 20 / 35 / 40 / All (67)**.
+- Live experiment stream updates while the loop is running (families rotate in batches).
+- **Force Stop** clears stuck “running” state after refresh or abort (`POST /api/platform/loop/stop`).
+- `fresh_buffer=false` by default so demo evidence is not wiped on every start.
+
+### Overview (Mission Control) — `/mission-control`
+- Demo KPIs (loop runs, money saved, families / variants / relationships) plus **real buffer payment** counts from the evidence store.
+- Loop **history** prefers rich completed/stopped runs (not empty stubs).
+- Live feed of sandbox decisions without a fake auto-incrementing risk column.
+
+### Red Team — `/red-team`
+- Browse the knowledge-base attack family catalog (surfaces, stages, capabilities).
+- Pick a past **loop run** and inspect that loop’s campaign / family outcomes.
+- Launch / Attack Designer clutter removed from the primary nav for a cleaner demo flow.
+
+### Sandbox — `/sandbox`
+- Inspect what actually happened in the synthetic payment environment for a selected loop.
+- Defaults to the **best** completed/stopped run when available.
+- Shows rails, decisions, risk/authz path, and evidence tied to buffer payments.
+
+### Blue Team — `/blue-team`
+- FraudShield model view with **feature importance** from platform status.
+- Model-learning chart uses **Day 1–4** labels (loop generations), not calendar months.
+- Surfaces the latest meaningful completed/stopped hardening run.
+
+### Labs — `/labs`
+- Tabular lab view over loop experiments.
+- Includes **completed and stopped** runs so remote demos with partial runs still show content.
+
+### Evaluation — `/evaluation`
+- Loads real per-loop reports from `data/evaluation/` (no hardcoded radar overrides).
+- Scorecard / judging radar for selected completed or stopped runs.
+- Failure-analysis payloads available via API for deeper drill-down.
+
+### Knowledge & defense stack
+- Canonical attack knowledge base (families, variants, relationships, control surfaces).
+- Stateful sandbox with risk engine + authorization path on synthetic payments.
+- Adversarial evidence buffer feeding Blue Team training / hardening (FraudShield v3).
+- Multi-provider LLM support for Red Team agents (Cohere, OpenRouter, OpenAI, Gemini, …).
+
+### Ops / deploy
+- Local **uvicorn + Next.js** for development.
+- **Docker Compose** stack: Postgres + API + frontend.
+- Demo snapshot baked into the backend image and seeded into Postgres on first boot.
+- One-shot EC2 deploy helper: `scripts/deploy-ec2.sh`.
 
 ---
 
-## Architecture (high level)
+## Architecture
 
-```text
-┌─────────────┐     campaigns      ┌──────────────────┐
-│  Red Team   │ ─────────────────► │ Synthetic Sandbox│
-│  (LLM+KB)   │                    │ + Risk / Authz   │
-└──────┬──────┘                    └────────┬─────────┘
-       │                                    │ evidence.jsonl
-       │                           ┌────────▼─────────┐
-       │                           │ Adversarial Buffer│
-       │                           └────────┬─────────┘
-       │                                    │ train / harden
-       │                           ┌────────▼─────────┐
-       └────────────────────────── │ Blue Team        │
-                                   │ FraudShield v3   │
-                                   └────────┬─────────┘
-                                            │ reports
-                                   ┌────────▼─────────┐
-                                   │ Evaluation JSON  │
-                                   └──────────────────┘
-```
-
-**Data stores**
-
-| Environment | Runs / history | Buffer / files |
-|-------------|----------------|----------------|
-| Local `uvicorn` (typical) | SQLite `data/platform.db` (or RDS if reachable) | `data/adversarial_buffer/evidence.jsonl` |
-| Docker / EC2 | Postgres service `pdt-postgres` | Baked into backend image (+ seed on boot) |
+![RedBlue / Payment Defense Twin architecture](docs/architecture.png)
 
 ---
 
