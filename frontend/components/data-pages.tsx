@@ -298,7 +298,7 @@ export function Sandbox(){
                 <td className="mono" style={{fontSize:11}}>{r.evidence_id.slice(0,10)}</td>
                 <td className="mono" style={{fontSize:11}}>{r.campaign_id?.slice(0,8)}</td>
                 <td style={{fontFamily:'var(--font-space)',fontWeight:500,fontSize:12}}>{r.attack_family}</td>
-                <td className="mono" style={{fontSize:11}}>{r.features?.payment_rail||'—'}</td>
+                <td className="mono" style={{fontSize:11}}>{String(r.features?.payment_rail||'—')}</td>
                 <td className="mono">{fmtMoney(r.amount)}</td>
                 <td><Badge tone={r.sandbox_decision}>{r.sandbox_decision}</Badge></td>
                 <td>
@@ -332,7 +332,7 @@ export function Sandbox(){
           return<>
             <div className="tx-head">
               <div><div className="id">{selected.evidence_id.slice(0,16)}</div><div className="sub mono">{selected.campaign_id?.slice(0,8)} · {selected.attack_family}</div></div>
-              <Badge tone={selected.sandbox_decision} style={{fontSize:11,padding:'5px 12px'}}>{selected.sandbox_decision}</Badge>
+              <span style={{fontSize:11,padding:'5px 12px'}}><Badge tone={selected.sandbox_decision}>{selected.sandbox_decision}</Badge></span>
             </div>
             <div className="metric-row">
               <div className="metric"><div className="l">Risk score</div><div className="v" style={{color:col}}>{fmtNum(risk)}</div></div>
@@ -546,7 +546,7 @@ function EvaluationReport({report,run,completedRuns,id,setId}:{report:any;run:Lo
 
   return<Shell>
     <PageHead eyebrow="Evaluation / Reports" title="Evaluation" subtitle="Diversity · Fidelity · Detection · Novelty · Feasibility — the five judging dimensions, with live evidence."/>
-    <Panel title="Selected loop" action={completedRuns.length?<RunSelector runs={completedRuns} value={id} onChange={setId}/>:null}/>
+    <Panel title="Selected loop" action={completedRuns.length?<RunSelector runs={completedRuns} value={id} onChange={setId}/>:null}>{null}</Panel>
 
     <div className="grid-top">
       <div className="panel">
