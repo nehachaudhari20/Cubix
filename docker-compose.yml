@@ -5,17 +5,19 @@ services:
     restart: unless-stopped
     ports:
       - "5432:5432"
+    env_file:
+      - .env
     environment:
-      POSTGRES_DB: ${POSTGRES_DB:-payment_defense_twin}
-      POSTGRES_USER: ${POSTGRES_USER:-postgres}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-change_me_now}
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
       test:
         [
           "CMD-SHELL",
-          "pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-payment_defense_twin}",
+          "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}",
         ]
       interval: 5s
       timeout: 3s
@@ -29,11 +31,13 @@ services:
     restart: unless-stopped
     ports:
       - "8000:8000"
+    env_file:
+      - .env
     environment:
-      DB_URL: "postgresql+psycopg://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-change_me_now}@postgres:5432/${POSTGRES_DB:-payment_defense_twin}"
+      DB_URL: ${DB_URL}
       RED_TEAM_USE_LLM: "true"
       LLM_PROVIDER: openrouter
-      OPENROUTER_API_KEY: "${OPENROUTER_API_KEY}"
+      OPENROUTER_API_KEY: ${OPENROUTER_API_KEY}
       OPENROUTER_MODEL: openai/gpt-4o
     depends_on:
       postgres:

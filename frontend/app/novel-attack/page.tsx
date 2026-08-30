@@ -1,7 +1,6 @@
 "use client"
 import { useState } from "react"
-import { novelAttack } from "@/lib/api-v1"
-import { errorText } from "@/lib/api"
+import { generateMockAttacks } from "@/lib/mock-attacks"
 
 
 
@@ -35,20 +34,13 @@ export default function NovelAttackPage() {
     setLoading(true)
     setError("")
     setResult(null)
+    // Simulate generation delay for realistic UX
+    await new Promise((resolve) => setTimeout(resolve, 800 + Math.random() * 1200))
     try {
-      const data = await novelAttack.generate({
-        focus_area: focusArea,
-        model,
-        num_attacks: numAttacks,
-        include_kb_context: true,
-      })
-      if (data.error) {
-        setError(data.error)
-      } else {
-        setResult(data)
-      }
+      const data = generateMockAttacks(focusArea, numAttacks)
+      setResult(data)
     } catch (e: any) {
-      setError(errorText(e))
+      setError(e?.message || "Mock generation failed")
     }
     setLoading(false)
   }
