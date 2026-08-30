@@ -29,6 +29,7 @@ RUN groupadd -r appuser && useradd -r -g appuser -d /app -s /sbin/nologin appuse
 # Copy application code
 COPY backend/ backend/
 COPY scripts/ scripts/
+COPY master_dataset.json .
 
 # Create data directories
 RUN mkdir -p data/chroma_kb data/models data/adversarial_buffer && \
