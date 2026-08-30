@@ -19,6 +19,7 @@ psycopg[binary]==3.2.4
 # Data Processing
 pandas==2.2.3
 numpy==2.2.1
+matplotlib==3.10.0
 
 # ML (lazy-imported by blue_team at runtime)
 scikit-learn==1.6.1
