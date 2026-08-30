@@ -1,0 +1,59 @@
+# Git
+.git
+.gitignore
+
+# Python
+__pycache__
+*.pyc
+*.pyo
+.venv
+venv
+.pytest_cache
+.coverage
+htmlcov
+
+# Node / Frontend
+frontend/node_modules
+frontend/.next
+frontend/dist
+frontend/build
+frontend/pnpm-lock.yaml
+frontend/package-lock.json
+
+# Data / Models (large, mount as volumes instead)
+data/chroma_kb
+data/models
+data/synthetic_generated
+data/generated
+data/adversarial_buffer
+data/platform.db
+*.db
+*.sqlite
+*.sqlite3
+mlruns
+mlartifacts
+
+# IDE / Editor
+.vscode
+.idea
+*.swp
+*.swo
+.DS_Store
+
+# Environment (never bake secrets into image)
+.env
+.env.*
+!.env.example
+
+# Logs / Temp
+*.log
+tmp
+temp
+reports
+
+# Docs / Images
+*.md
+*.png
+*.jpg
+*.html
+model_evaluation.png
