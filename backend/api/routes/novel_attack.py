@@ -20,7 +20,7 @@ _novel_attacks: Dict[str, Dict[str, Any]] = {}
 class NovelAttackRequest(BaseModel):
     focus_area: str = "AI-agent payment fraud"
     num_attacks: int = 3
-    model: str = "openai/gpt-4o-mini"  # Default to fastest
+    model: str = "command-r-08-2024"  # Cohere default
     include_kb_context: bool = True
     target_surface: Optional[str] = None  # payment, auth, device, kyc, etc.
 
@@ -85,22 +85,15 @@ Requirements:
 
 Return ONLY a JSON array of attack objects."""
 
-    # Resolve model
-    model_map = {
-        "gpt-4o-mini": "openai/gpt-4o-mini",
-        "gpt-4o": "openai/gpt-4o",
-        "grok": "x-ai/grok-4.6",
-        "deepseek": "deepseek/deepseek-chat",
-        "claude": "anthropic/claude-3-haiku",
-    }
-    model_id = model_map.get(req.model, req.model)
+    # Resolve model — pass None to use provider default
+    model_id = req.model if req.model else None
     
     start_time = time.time()
     
     try:
         llm = get_llm(model=model_id, temperature=0.6)
         if not llm:
-            return {"error": "LLM not configured", "hint": "Set OPENROUTER_API_KEY and RED_TEAM_USE_LLM=true"}
+            return {"error": "LLM not configured", "hint": "Set COHERE_API_KEY and RED_TEAM_USE_LLM=true in .env"}
         
         response = invoke_text(llm, system_prompt, user_prompt)
         elapsed = time.time() - start_time

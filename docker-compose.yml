@@ -36,8 +36,8 @@ services:
     environment:
       DB_URL: ${DB_URL}
       RED_TEAM_USE_LLM: "true"
-      LLM_PROVIDER: openrouter
-      OPENROUTER_API_KEY: ${OPENROUTER_API_KEY}
+      LLM_PROVIDER: cohere
+      COHERE_API_KEY: ${COHERE_API_KEY}
     volumes:
       - app-data:/app/data
     depends_on:

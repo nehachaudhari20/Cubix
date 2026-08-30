@@ -109,7 +109,7 @@ async def propose_attack(req: ProposeRequest):
     if llm is None:
         raise HTTPException(
             status_code=503,
-            detail="LLM not available. Set OPENROUTER_API_KEY (or another provider key) and RED_TEAM_USE_LLM=true in .env",
+            detail="LLM not available. Set COHERE_API_KEY and RED_TEAM_USE_LLM=true in .env",
         )
 
     kb_context, context_families = _build_rag_context(req.prompt, req.focus_family)

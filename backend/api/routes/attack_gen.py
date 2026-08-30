@@ -154,7 +154,7 @@ async def rag_powered_attack(req: RAGQueryRequest):
     # Get LLM
     llm = get_llm()
     if not llm:
-        return {"error": "LLM not configured", "hint": "Set OPENROUTER_API_KEY and RED_TEAM_USE_LLM=true"}
+        return {"error": "LLM not configured", "hint": "Set COHERE_API_KEY and RED_TEAM_USE_LLM=true in .env"}
 
     system_prompt = """You are Dr. Shadow, a payment fraud Red Team researcher.
 Using the KB context provided, design a detailed attack scenario.
