@@ -248,10 +248,20 @@ async def get_comparison(loop_id: str, db: Session = Depends(get_db)):
         if not run:
             raise HTTPException(status_code=404, detail="No completed loop runs available")
     if run.status != "completed":
-        raise HTTPException(
-            status_code=409,
-            detail=f"Loop {run.id} status is '{run.status}' — wait until completed",
+        # Fall back to latest completed run instead of erroring
+        completed = (
+            db.query(LoopRun)
+            .filter(LoopRun.status == "completed")
+            .order_by(desc(LoopRun.started_at))
+            .first()
         )
+        if completed:
+            run = completed
+        else:
+            raise HTTPException(
+                status_code=409,
+                detail=f"Loop {run.id} status is '{run.status}' — no completed runs available",
+            )
     eval_data = _load_eval(run.id)
     return _comparison_from_run(run, eval_data)
 
