@@ -1,6 +1,6 @@
 "use client"
 import { useCallback, useEffect, useMemo, useState } from "react"
-import { api, EvidenceRecord, errorText } from "@/lib/api"
+import { api, EvidenceRecord, LoopRun, errorText } from "@/lib/api"
 
 const SURFACE_META: Record<string, { label: string; blurb: string }> = {
   payment: { label: "Payment", blurb: "Payment rail — engines → rules+ML → authz" },
@@ -92,11 +92,52 @@ function decisionColor(d: string) {
   return "#6b7280"
 }
 
+function pickBestLoop(loops: LoopRun[]): string {
+  const usable = loops.filter((r) => r.status === "completed" || r.status === "stopped")
+  if (!usable.length) return loops[0]?.id || ""
+  const scored = [...usable].sort((a, b) => {
+    const liftA = a.score_lift ?? -999
+    const liftB = b.score_lift ?? -999
+    if (liftB !== liftA) return liftB - liftA
+    const prA = a.val_pr_auc ?? -999
+    const prB = b.val_pr_auc ?? -999
+    if (prB !== prA) return prB - prA
+    return String(b.started_at || "").localeCompare(String(a.started_at || ""))
+  })
+  return scored[0].id
+}
+
+function eventsToEvidence(events: any[], loopId: string): EvidenceRecord[] {
+  return (events || []).map((e) => ({
+    evidence_id: e.id,
+    campaign_id: e.loop_run_id || loopId,
+    attack_family: e.family_name || e.family_id || "—",
+    action_type: e.family_id || "",
+    surface: "payment",
+    sandbox_decision: e.sandbox_decision || "—",
+    evasion_outcome: e.evasion_outcome || "",
+    ml_score: e.ml_score ?? null,
+    rule_risk: null,
+    risk_score: e.ml_score ?? null,
+    amount: e.amount ?? null,
+    step: e.step ?? null,
+    timestamp: e.created_at || "",
+    label: null,
+    features: {},
+    control_triggers: [],
+    blocking_control: null,
+    is_hard_negative: false,
+  }))
+}
+
 export default function SandboxPage() {
   const [records, setRecords] = useState<EvidenceRecord[]>([])
+  const [allRecords, setAllRecords] = useState<EvidenceRecord[]>([])
   const [buffer, setBuffer] = useState<any>(null)
   const [stages, setStages] = useState<any[]>([])
   const [controls, setControls] = useState<Record<string, string[]> | null>(null)
+  const [loops, setLoops] = useState<LoopRun[]>([])
+  const [selectedLoop, setSelectedLoop] = useState("")
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const [search, setSearch] = useState("")
   const [filterDecision, setFilterDecision] = useState("")
@@ -107,19 +148,23 @@ export default function SandboxPage() {
 
   const refresh = useCallback(async () => {
     try {
-      const [rec, buf, st, ctrls, running] = await Promise.all([
+      const [rec, buf, st, ctrls, running, runList] = await Promise.all([
         api.recent(500).catch(() => []),
         api.buffer().catch(() => null),
         api.stages().catch(() => []),
         api.stageControls().catch(() => null),
         api.running().catch(() => ({ running: false })),
+        api.runs(30).catch(() => []),
       ])
-      setRecords(Array.isArray(rec) ? rec : [])
+      const list = Array.isArray(runList) ? runList : []
+      setLoops(list)
+      setAllRecords(Array.isArray(rec) ? rec : [])
       setBuffer(buf)
       setStages(Array.isArray(st) ? st : [])
       setControls(ctrls && typeof ctrls === "object" ? ctrls : null)
       setLive(!!running.running)
       setErr("")
+      setSelectedLoop((prev) => prev || pickBestLoop(list))
     } catch (e) {
       setErr(errorText(e))
     }
@@ -130,6 +175,38 @@ export default function SandboxPage() {
     const t = setInterval(refresh, live ? 1500 : 5000)
     return () => clearInterval(t)
   }, [refresh, live])
+
+  // When a loop is selected (and not live), prefer that loop's campaign events;
+  // fall back to buffer rows whose campaign_id matches the loop id.
+  useEffect(() => {
+    let cancelled = false
+    const apply = async () => {
+      if (live || !selectedLoop) {
+        setRecords(allRecords)
+        return
+      }
+      const matched = allRecords.filter(
+        (r) =>
+          r.campaign_id === selectedLoop ||
+          (r.campaign_id || "").startsWith(selectedLoop.slice(0, 8))
+      )
+      if (matched.length >= 8) {
+        if (!cancelled) setRecords(matched)
+        return
+      }
+      try {
+        const detail = await api.run(selectedLoop)
+        const fromEvents = eventsToEvidence(detail.events || [], selectedLoop)
+        if (!cancelled) setRecords(fromEvents.length ? fromEvents : matched.length ? matched : allRecords)
+      } catch {
+        if (!cancelled) setRecords(matched.length ? matched : allRecords)
+      }
+    }
+    apply()
+    return () => {
+      cancelled = true
+    }
+  }, [selectedLoop, allRecords, live])
 
   useEffect(() => {
     if (!selectedId && records[0]) setSelectedId(records[0].evidence_id)
@@ -192,15 +269,20 @@ export default function SandboxPage() {
   }, [controls, activeStage, controlEntries])
 
   const kpis = [
-    { label: "Evidence", value: buffer?.total ?? buffer?.payment_records ?? records.length, sub: `${records.length} loaded` },
-    { label: "Blocked", value: buffer?.blocked ?? "—", sub: "held" },
-    { label: "Bypassed", value: buffer?.bypassed ?? "—", sub: "→ Loop B" },
+    { label: "Evidence", value: records.length, sub: selectedLoop ? `loop ${selectedLoop.slice(0, 8)}` : `${allRecords.length} buffer` },
+    { label: "Blocked", value: records.filter((r) => r.sandbox_decision === "BLOCK").length, sub: "in view" },
+    { label: "Bypassed", value: records.filter((r) => r.sandbox_decision === "ALLOW" || r.evasion_outcome === "bypassed").length, sub: "in view" },
     {
       label: "Surfaces w/ data",
       value: Object.values(surfaceCounts).filter((n) => n > 0).length,
       sub: `${Object.keys(SURFACE_META).length} catalogued`,
     },
   ]
+
+  const loopOptions = useMemo(
+    () => loops.filter((r) => r.status === "completed" || r.status === "stopped" || r.status === "failed"),
+    [loops]
+  )
 
   return (
     <div style={{ padding: "22px 28px 48px" }}>
@@ -213,30 +295,54 @@ export default function SandboxPage() {
             Click a row to load its scores. Combined risk ≠ ML; both run on every surface when FraudShield is loaded.
           </p>
         </div>
-        <span
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: 8,
-            padding: "7px 14px",
-            borderRadius: 100,
-            background: "#f9fafb",
-            border: "1px solid #e5e7eb",
-            fontSize: 12,
-            color: "#6b7280",
-          }}
-        >
+        <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
+          <select
+            value={selectedLoop}
+            onChange={(e) => setSelectedLoop(e.target.value)}
+            disabled={live}
+            style={{
+              padding: "8px 12px",
+              borderRadius: 8,
+              border: "1px solid #e5e7eb",
+              background: live ? "#f3f4f6" : "#f9fafb",
+              fontSize: 12,
+              minWidth: 260,
+              fontFamily: "'JetBrains Mono', monospace",
+            }}
+          >
+            {loopOptions.length === 0 && <option value="">No loop runs yet</option>}
+            {loopOptions.map((r) => (
+              <option key={r.id} value={r.id}>
+                {r.id.slice(0, 8)} · {r.status} · lift {r.score_lift != null ? r.score_lift.toFixed(3) : "—"}
+                {r.val_pr_auc != null ? ` · PR ${r.val_pr_auc.toFixed(3)}` : ""}
+              </option>
+            ))}
+          </select>
           <span
             style={{
-              width: 7,
-              height: 7,
-              borderRadius: "50%",
-              background: live ? "#16a34a" : "#9ca3af",
-              boxShadow: live ? "0 0 8px #16a34a" : "none",
+              display: "flex",
+              alignItems: "center",
+              gap: 8,
+              padding: "7px 14px",
+              borderRadius: 100,
+              background: "#f9fafb",
+              border: "1px solid #e5e7eb",
+              fontSize: 12,
+              color: "#6b7280",
             }}
-          />
-          {live ? "LIVE · loop feeding evidence" : "IDLE · buffer"}
-        </span>
+          >
+            <span
+              style={{
+                width: 7,
+                height: 7,
+                borderRadius: "50%",
+                background: live ? "#16a34a" : "#9ca3af",
+                boxShadow: live ? "0 0 8px #16a34a" : "none",
+              }}
+            />
+            {live ? "LIVE · loop feeding evidence" : "IDLE · selected loop"}
+          </span>
+        </div>
       </div>
 
       {err && (

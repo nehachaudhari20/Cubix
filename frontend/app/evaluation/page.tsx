@@ -57,7 +57,11 @@ export default function EvaluationPage() {
 
   useEffect(() => {
     Promise.all([api.runs(30).catch(() => []), api.stats().catch(() => null)]).then(([r, stats]) => {
-      const completed = (r || []).filter((run: any) => run.status === "completed")
+      // Include stopped runs — same as Mission Control history. Remote deployments
+      // often only have stopped/failed rows even when eval JSON exists.
+      const completed = (r || []).filter(
+        (run: any) => run.status === "completed" || run.status === "stopped"
+      )
       setRuns(completed)
       if (completed.length) setSelectedRun(completed[0].id)
       setKbStats(stats)
@@ -152,25 +156,17 @@ export default function EvaluationPage() {
     },
   ]
 
-  // Per-loop hardcoded overrides — makes each loop look distinct on the radar
-  const LOOP_OVERRIDES: Record<string, { diversity: number; fidelity: number; detection: number; novelty: number; feasibility: number }> = {
-    'c0685a19': { diversity: 0.88, fidelity: 0.92, detection: 0.85, novelty: 0.78, feasibility: 0.94 },
-    'a3f1b2c4': { diversity: 0.76, fidelity: 0.87, detection: 0.91, novelty: 0.82, feasibility: 0.89 },
-    'e5d2a9f8': { diversity: 0.93, fidelity: 0.79, detection: 0.88, novelty: 0.91, feasibility: 0.86 },
-    'b7c4e1d5': { diversity: 0.81, fidelity: 0.94, detection: 0.79, novelty: 0.85, feasibility: 0.92 },
-    'f9a8b3c7': { diversity: 0.85, fidelity: 0.83, detection: 0.93, novelty: 0.88, feasibility: 0.87 },
-    'd2e6f4a1': { diversity: 0.79, fidelity: 0.91, detection: 0.82, novelty: 0.94, feasibility: 0.90 },
-    'c8b5d3a2': { diversity: 0.90, fidelity: 0.86, detection: 0.87, novelty: 0.80, feasibility: 0.95 },
-    'a1f7e9c6': { diversity: 0.83, fidelity: 0.88, detection: 0.90, novelty: 0.86, feasibility: 0.84 },
-  }
-  const override = selectedRun ? LOOP_OVERRIDES[selectedRun.slice(0, 8)] || LOOP_OVERRIDES[selectedRun.slice(0, 4)] || { diversity: 0.87, fidelity: 0.89, detection: 0.84, novelty: 0.82, feasibility: 0.91 } : { diversity: 0.87, fidelity: 0.89, detection: 0.84, novelty: 0.82, feasibility: 0.91 }
-
+  // Radar dimensions are derived from the selected run's evaluation report (no hardcoded overrides).
   const fidelityScore = useMemo(() => {
-    if (override?.fidelity != null) return override.fidelity
-    if (!fidChecks.length) return num(fidelity.score_separation)
-    const passed = fidChecks.filter((c: any) => c.passed).length
-    return passed / fidChecks.length
-  }, [fidChecks, fidelity, override])
+    if (fidChecks.length) {
+      const passed = fidChecks.filter((c: any) => c.passed).length
+      return passed / fidChecks.length
+    }
+    const sep = num(fidelity.score_separation)
+    if (sep == null) return null
+    // score_separation is typically small; map into a 0–1 display range
+    return Math.max(0, Math.min(1, sep / 0.5))
+  }, [fidChecks, fidelity])
 
   const asrBefore = num(asr.before_ml_asr_matched) ?? num(summary.before_ml_asr_matched) ?? num(asr.before_ml_asr) ?? num(summary.before_ml_asr)
   const asrAfter = num(asr.after_ml_asr_matched) ?? num(summary.after_ml_asr_matched) ?? num(asr.after_ml_asr) ?? num(summary.after_ml_asr)
@@ -179,14 +175,14 @@ export default function EvaluationPage() {
   const integrityChecks: any[] = Array.isArray(integrity.checks) ? integrity.checks : []
   const integrityLabel = summary.integrity_score || `${integrity.passed_count ?? "—"}/${integrity.total_checks ?? "—"}`
 
-  const totalFamilies = kbStats?.total_families || 57
+  const totalFamilies = kbStats?.total_families || 67
   const familiesCovered = (generalization.buffer_families || []).length || null
 
   const dims = useMemo(() => {
     const diversityRaw =
       familiesCovered != null ? Math.min(1, familiesCovered / Math.max(1, totalFamilies)) : null
-    const diversity = override?.diversity ?? diversityRaw ?? 0.85
-    const detScore = override?.detection ?? (det.f1 ?? det.prAuc)
+    const diversity = diversityRaw
+    const detScore = det.f1 ?? det.prAuc
     const noveltyRaw =
       num(generalization.unseen_variant_recall) != null
         ? Math.min(
@@ -196,25 +192,23 @@ export default function EvaluationPage() {
               0.2 * Math.max(0, 1 - Math.abs(num(generalization.mean_lofo_gap) || 0))
           )
         : num(generalization.mean_family_recall)
-    const novelty = override?.novelty ?? noveltyRaw
+    const novelty = noveltyRaw
     const feasRaw =
       integrity.passed_count != null && integrity.total_checks
         ? integrity.passed_count / integrity.total_checks
         : summary.integrity_passed
           ? 0.9
           : null
-    const feas = override?.feasibility ?? feasRaw
+    const feas = feasRaw
 
     return [
       {
         name: "Diversity",
         score: diversity,
         desc:
-          override?.diversity != null
-            ? `${Math.round(override.diversity * totalFamilies)}/${totalFamilies} families across ${kbStats?.total_stages ?? 7} stages`
-            : familiesCovered != null
-              ? `${familiesCovered}/${totalFamilies} attack families in buffer · ${kbStats?.total_stages ?? "—"} stages`
-              : "Family coverage from generalization report",
+          familiesCovered != null
+            ? `${familiesCovered}/${totalFamilies} attack families in buffer · ${kbStats?.total_stages ?? "—"} stages`
+            : "Family coverage from generalization report",
         color: "#2563eb",
       },
       {
@@ -298,7 +292,9 @@ export default function EvaluationPage() {
             {runs.length === 0 && <option value="">No completed runs</option>}
             {runs.map((r) => (
               <option key={r.id} value={r.id}>
-                {r.id.slice(0, 8)} · {r.families_count} families · lift {r.score_lift != null ? r.score_lift.toFixed(3) : "—"}
+                {r.id.slice(0, 8)} · {r.status} · {r.families_count} fam · lift{" "}
+                {r.score_lift != null ? r.score_lift.toFixed(3) : "—"}
+                {r.started_at ? ` · ${new Date(r.started_at).toLocaleString()}` : ""}
               </option>
             ))}
           </select>
@@ -364,7 +360,7 @@ export default function EvaluationPage() {
                     )
                   })}
                   <polygon
-                    points={dims.map((d, i) => pt(i, R * (d.score ?? 0)).join(",")).join(" ")}
+                    points={dims.map((d, i) => pt(i, R * Math.max(0, Math.min(1, Number(d.score) || 0))).join(",")).join(" ")}
                     fill="rgba(77,168,255,.18)"
                     stroke="#2563eb"
                     strokeWidth="2"

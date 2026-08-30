@@ -18,12 +18,12 @@ const S = {
   mutedBg: "#f3f4f6",
 };
 
-// Hardcoded data: 12 months of model performance
-const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-const blockedAttacks = [42, 58, 67, 89, 112, 145, 178, 203, 245, 289, 334, 388];
-const fraudDetected = [35, 48, 59, 78, 95, 128, 156, 179, 218, 256, 298, 345];
-const modelAccuracy = [0.72, 0.75, 0.78, 0.82, 0.85, 0.88, 0.91, 0.93, 0.94, 0.95, 0.96, 0.97];
-const attackRuns = [120, 180, 210, 280, 350, 420, 480, 520, 580, 640, 710, 780];
+// Hardcoded data: 4-day model learning snapshot (demo)
+const months = ["Day 1", "Day 2", "Day 3", "Day 4"];
+const blockedAttacks = [112, 178, 245, 334];
+const fraudDetected = [95, 156, 218, 298];
+const modelAccuracy = [0.85, 0.91, 0.94, 0.97];
+const attackRuns = [350, 480, 580, 710];
 
 const W = 600;
 const H = 220;
@@ -49,7 +49,7 @@ export default function ModelLearningChart() {
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
         <div>
           <div style={{ fontSize: 14, fontWeight: 600 }}>Model Learning Progress</div>
-          <div style={{ fontSize: 12, color: S.muted }}>FraudShield v1 → v3 improvement over 12 months</div>
+          <div style={{ fontSize: 12, color: S.muted }}>FraudShield v1 → v3 improvement over recent days</div>
         </div>
         <div style={{ display: "flex", gap: 12, fontSize: 11 }}>
           <span style={{ display: "flex", alignItems: "center", gap: 4 }}>

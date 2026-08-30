@@ -1,7 +1,6 @@
 'use client'
-import {useEffect,useMemo,useRef,useState} from 'react'
-import {api, fmtId, fmtDate, LoopRun} from '@/lib/api'
-import {redTeamCampaignV1} from '@/lib/api-v1'
+import {useEffect,useMemo,useState} from 'react'
+import {api, LoopRun} from '@/lib/api'
 import {Badge,Empty} from './dashboard'
 
 interface CampaignStep {
@@ -43,6 +42,21 @@ function toneFor(status:string){
   return 'muted'
 }
 
+function pickBestLoop(loops: LoopRun[]): string {
+  const usable = loops.filter((r) => r.status === "completed" || r.status === "stopped")
+  if (!usable.length) return loops[0]?.id || ""
+  const scored = [...usable].sort((a, b) => {
+    const liftA = a.score_lift ?? -999
+    const liftB = b.score_lift ?? -999
+    if (liftB !== liftA) return liftB - liftA
+    const prA = a.val_pr_auc ?? -999
+    const prB = b.val_pr_auc ?? -999
+    if (prB !== prA) return prB - prA
+    return String(b.started_at || "").localeCompare(String(a.started_at || ""))
+  })
+  return scored[0].id
+}
+
 export function RedTeamView({embedded=false}:{embedded?:boolean}){
   const[loops,setLoops]=useState<LoopRun[]>([])
   const[id,setId]=useState('')
@@ -53,25 +67,21 @@ export function RedTeamView({embedded=false}:{embedded?:boolean}){
   const[loading,setLoading]=useState(false)
   const[err,setErr]=useState('')
   const[familyFilter,setFamilyFilter]=useState('')
-  const[strategy,setStrategy]=useState('sequential')
-  const[campaignSize,setCampaignSize]=useState(20)
-  const[launching,setLaunching]=useState(false)
-  const[campaign,setCampaign]=useState<any>(null)
-  const pollRef=useRef<ReturnType<typeof setInterval>|null>(null)
 
   useEffect(()=>{
     Promise.all([
       api.redteamLoops(40).catch(()=>api.runs(40)),
       api.families(200).catch(()=>[]),
     ]).then(([loopList, families])=>{
-      setLoops(Array.isArray(loopList)?loopList:[])
+      const list = Array.isArray(loopList)?loopList:[]
+      setLoops(list)
       setKbFamilies(Array.isArray(families)?families:[])
+      if (!id && list.length) setId(pickBestLoop(list))
     }).catch(e=>setErr(e.message||String(e)))
-    return ()=>{if(pollRef.current)clearInterval(pollRef.current)}
   },[])
 
   useEffect(()=>{
-    if(!id&&loops.length)setId(loops[0].id)
+    if(!id&&loops.length)setId(pickBestLoop(loops))
   },[loops,id])
 
   useEffect(()=>{
@@ -112,70 +122,44 @@ export function RedTeamView({embedded=false}:{embedded?:boolean}){
     })
   },[allFamilies,familyFilter])
 
-  const selectedKb=kbFamilies.find(f=>(f.attack_id||f.id)===selectedFamily)
-
-  const pollCampaign=(cid:string)=>{
-    if(pollRef.current)clearInterval(pollRef.current)
-    pollRef.current=setInterval(async()=>{
-      try{
-        const c=await redTeamCampaignV1.campaign(cid)
-        setCampaign(c)
-        if(['completed','failed','stopped'].includes(c.status)){
-          if(pollRef.current)clearInterval(pollRef.current)
-          setLaunching(false)
-        }
-      }catch{}
-    },1500)
-  }
-
-  const launchCampaign=async()=>{
-    if(!selectedFamily)return
-    setLaunching(true)
-    setErr('')
-    try{
-      const c=await redTeamCampaignV1.createCampaign({
-        attack_family:selectedFamily, strategy, campaign_size:campaignSize, execute:true,
-      })
-      setCampaign(c)
-      pollCampaign(c.campaign_id)
-    }catch(e){
-      setErr(e instanceof Error?e.message:String(e))
-      setLaunching(false)
-    }
-  }
-
-  const stopCampaign=async()=>{
-    if(!campaign?.campaign_id)return
-    try{
-      await redTeamCampaignV1.stopCampaign(campaign.campaign_id)
-      const c=await redTeamCampaignV1.campaign(campaign.campaign_id)
-      setCampaign(c)
-      setLaunching(false)
-    }catch(e){
-      setErr(e instanceof Error?e.message:String(e))
-    }
-  }
+  const loopOptions = useMemo(
+    () => loops.filter((r) => r.status === "completed" || r.status === "stopped" || r.status === "failed"),
+    [loops]
+  )
 
   return(
     <div style={{padding:embedded?'18px 28px 40px':'22px 28px 40px'}}>
       {err&&<div style={{background:'#fef2f2',border:'1px solid #fecaca',borderRadius:8,padding:12,marginBottom:16,fontSize:12,color:'#dc2626'}}>{err}</div>}
 
-      {/* ── Campaign Setup (at top) ── */}
+      {/* ── Loop + family selectors ── */}
       <div style={{background:'#fff',border:'1px solid #e5e7eb',borderRadius:14,padding:18,marginBottom:16}}>
         <div style={{fontSize:13,fontWeight:600,marginBottom:14}}>
-          Campaign Setup <span style={{fontWeight:400,color:'#6b7280'}}>({allFamilies.length} KB families)</span>
+          Browse loop campaigns <span style={{fontWeight:400,color:'#6b7280'}}>({allFamilies.length} KB families)</span>
         </div>
-        <div style={{display:'flex',gap:10,alignItems:'center',marginBottom:10}}>
+        <div style={{display:'flex',gap:10,alignItems:'center',marginBottom:10,flexWrap:'wrap'}}>
+          <select
+            value={id}
+            onChange={e=>setId(e.target.value)}
+            style={{padding:'10px 14px',borderRadius:8,border:'1px solid #e5e7eb',background:'#f9fafb',fontSize:13,minWidth:280,flex:'1 1 280px'}}
+          >
+            {loopOptions.length===0 && <option value="">No loop runs yet</option>}
+            {loopOptions.map(r=>(
+              <option key={r.id} value={r.id}>
+                {r.id.slice(0,8)} · {r.status} · {r.families_count} fam · lift {r.score_lift!=null?r.score_lift.toFixed(3):'—'}
+                {r.val_pr_auc!=null?` · PR ${r.val_pr_auc.toFixed(3)}`:''}
+              </option>
+            ))}
+          </select>
           <input
             value={familyFilter}
             onChange={e=>setFamilyFilter(e.target.value)}
             placeholder="Filter families…"
-            style={{padding:'10px 14px',borderRadius:8,border:'1px solid #e5e7eb',background:'#fff',fontSize:13,flex:'0 0 200px'}}
+            style={{padding:'10px 14px',borderRadius:8,border:'1px solid #e5e7eb',background:'#fff',fontSize:13,flex:'0 0 180px'}}
           />
           <select
             value={selectedFamily}
             onChange={e=>{setSelectedFamily(e.target.value);setTab('hyp')}}
-            style={{padding:'10px 14px',borderRadius:8,border:'1px solid #e5e7eb',background:'#f9fafb',fontSize:13,flex:1,minWidth:0}}
+            style={{padding:'10px 14px',borderRadius:8,border:'1px solid #e5e7eb',background:'#f9fafb',fontSize:13,flex:1,minWidth:220}}
           >
             <option value="">Select attack family…</option>
             {filteredFamilies.map(f=>{
@@ -192,53 +176,9 @@ export function RedTeamView({embedded=false}:{embedded?:boolean}){
             })}
           </select>
         </div>
-        <div style={{display:'flex',gap:10,alignItems:'center'}}>
-          <select
-            value={strategy}
-            onChange={e=>setStrategy(e.target.value)}
-            style={{padding:'10px 14px',borderRadius:8,border:'1px solid #e5e7eb',background:'#f9fafb',fontSize:13}}
-          >
-            <option value="sequential">Sequential</option>
-            <option value="tree">Tree</option>
-            <option value="crescendo">Crescendo</option>
-            <option value="kb">KB Direct</option>
-          </select>
-          <select
-            value={campaignSize}
-            onChange={e=>setCampaignSize(Number(e.target.value))}
-            style={{padding:'10px 14px',borderRadius:8,border:'1px solid #e5e7eb',background:'#f9fafb',fontSize:13}}
-          >
-            {[8,12,16,20,24].map(n=><option key={n} value={n}>{n} steps</option>)}
-          </select>
-          {!launching?(
-            <button
-              onClick={launchCampaign}
-              disabled={!selectedFamily}
-              style={{
-                padding:'10px 24px',borderRadius:8,whiteSpace:'nowrap',marginLeft:'auto',
-                background:'linear-gradient(135deg, #dc2626, #ea580c)',
-                color:'#fff',fontWeight:600,fontSize:13,border:'none',
-                cursor:!selectedFamily?'not-allowed':'pointer',
-                opacity:!selectedFamily?0.6:1,
-              }}
-            >▶ Launch</button>
-          ):(
-            <button
-              onClick={stopCampaign}
-              style={{
-                padding:'10px 24px',borderRadius:8,whiteSpace:'nowrap',marginLeft:'auto',
-                background:'#fef2f2',color:'#dc2626',fontWeight:600,fontSize:13,
-                border:'1px solid #fecaca',cursor:'pointer',
-              }}
-            >■ Stop</button>
-          )}
+        <div style={{fontSize:11,color:'#6b7280',fontFamily:"'JetBrains Mono',monospace"}}>
+          {id?`loop ${id.slice(0,8)} · ${data?.loop_status||'…'}`:'pick a loop'} · ● executed in this run
         </div>
-        {campaign?.status&&(
-          <div style={{marginTop:10,fontSize:11,color:'#6b7280',fontFamily:"'JetBrains Mono',monospace"}}>
-            {campaign.campaign_id} · {campaign.status}
-            {campaign.events_generated?` · ${campaign.events_generated} events generated`:''}
-          </div>
-        )}
       </div>
 
       {/* ── KPIs ── */}

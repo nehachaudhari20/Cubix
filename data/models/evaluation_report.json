@@ -1,7 +1,7 @@
 {
   "before_version": "v1",
   "after_version": "v3",
-  "generated_at": "2026-08-29T12:27:46.919397+00:00",
+  "generated_at": "2026-08-30T12:45:11.413562+00:00",
   "detection": {
     "holdout": {
       "before": {
@@ -29,33 +29,33 @@
         "model": "v3_holdout",
         "samples": 4000,
         "fraud_rate": 0.5,
-        "pr_auc": 0.961876,
-        "roc_auc": 0.962046,
-        "f1": 0.777039,
-        "precision": 0.981679,
-        "recall": 0.643,
-        "fpr": 0.012,
-        "recall_at_1pct_fpr": 0.6205,
-        "recall_at_0p1pct_fpr": 0.257,
+        "pr_auc": 0.959398,
+        "roc_auc": 0.959692,
+        "f1": 0.770258,
+        "precision": 0.979923,
+        "recall": 0.6345,
+        "fpr": 0.013,
+        "recall_at_1pct_fpr": 0.617,
+        "recall_at_0p1pct_fpr": 0.389,
         "queue_precision_top1pct": 1.0,
-        "brier": 0.08093,
-        "threshold": 0.852904,
-        "tn": 1976,
-        "fp": 24,
-        "fn": 714,
-        "tp": 1286,
+        "brier": 0.083404,
+        "threshold": 0.854152,
+        "tn": 1974,
+        "fp": 26,
+        "fn": 731,
+        "tp": 1269,
         "review_queue_size": 40
       },
       "delta": {
-        "pr_auc_delta": 0.017836,
-        "recall_delta": -0.1555,
-        "fpr_delta": -0.067,
-        "recall_at_1pct_fpr_delta": 0.183
+        "pr_auc_delta": 0.015358,
+        "recall_delta": -0.164,
+        "fpr_delta": -0.066,
+        "recall_at_1pct_fpr_delta": 0.1795
       },
       "hard_negative_stats": {
         "hard_negative_fpr": 0.0,
         "hard_negative_count": 199,
-        "ordinary_legit_fpr": 0.013326,
+        "ordinary_legit_fpr": 0.014436,
         "ordinary_legit_count": 1801
       }
     },
@@ -85,28 +85,28 @@
         "model": "v3_test",
         "samples": 592,
         "fraud_rate": 0.489865,
-        "pr_auc": 0.893435,
+        "pr_auc": 0.892773,
         "roc_auc": 0.891893,
-        "f1": 0.705628,
-        "precision": 0.947674,
-        "recall": 0.562069,
-        "fpr": 0.029801,
-        "recall_at_1pct_fpr": 0.42069,
-        "recall_at_0p1pct_fpr": 0.058621,
+        "f1": 0.706638,
+        "precision": 0.932203,
+        "recall": 0.568966,
+        "fpr": 0.039735,
+        "recall_at_1pct_fpr": 0.413793,
+        "recall_at_0p1pct_fpr": 0.048276,
         "queue_precision_top1pct": 1.0,
-        "brier": 0.139412,
-        "threshold": 0.852904,
-        "tn": 293,
-        "fp": 9,
-        "fn": 127,
-        "tp": 163,
+        "brier": 0.140016,
+        "threshold": 0.854152,
+        "tn": 290,
+        "fp": 12,
+        "fn": 125,
+        "tp": 165,
         "review_queue_size": 5
       },
       "delta": {
-        "pr_auc_delta": -0.011804,
-        "recall_delta": -0.213793,
-        "fpr_delta": -0.129139,
-        "recall_at_1pct_fpr_delta": 0.013793
+        "pr_auc_delta": -0.012466,
+        "recall_delta": -0.206896,
+        "fpr_delta": -0.119205,
+        "recall_at_1pct_fpr_delta": 0.006896
       },
       "split_meta": {
         "split_method": "temporal_group",
@@ -131,30 +131,30 @@
     "buffer": {
       "comparison": {
         "records": 660,
-        "v1_mean_score": 0.7353,
-        "v2_mean_score": 0.8723,
-        "lift": 0.137,
-        "v1_recall_at_threshold": 0.7636,
-        "v2_recall_at_threshold": 0.7424,
+        "v1_mean_score": 0.7968,
+        "v2_mean_score": 0.8769,
+        "lift": 0.0801,
+        "v1_recall_at_threshold": 0.8333,
+        "v2_recall_at_threshold": 0.8303,
         "v1_detection": {
           "model": "v1_buffer",
           "samples": 660,
           "fraud_rate": 1.0,
           "pr_auc": 1.0,
           "roc_auc": NaN,
-          "f1": 0.865979,
+          "f1": 0.909091,
           "precision": 1.0,
-          "recall": 0.763636,
+          "recall": 0.833333,
           "fpr": 0.0,
           "recall_at_1pct_fpr": NaN,
           "recall_at_0p1pct_fpr": NaN,
           "queue_precision_top1pct": 1.0,
-          "brier": 0.13426,
+          "brier": 0.106395,
           "threshold": 0.477868,
           "tn": 0,
           "fp": 0,
-          "fn": 156,
-          "tp": 504,
+          "fn": 110,
+          "tp": 550,
           "review_queue_size": 6
         },
         "v2_detection": {
@@ -163,26 +163,26 @@
           "fraud_rate": 1.0,
           "pr_auc": 1.0,
           "roc_auc": NaN,
-          "f1": 0.852174,
+          "f1": 0.907285,
           "precision": 1.0,
-          "recall": 0.742424,
+          "recall": 0.830303,
           "fpr": 0.0,
           "recall_at_1pct_fpr": NaN,
           "recall_at_0p1pct_fpr": NaN,
           "queue_precision_top1pct": 1.0,
-          "brier": 0.035778,
-          "threshold": 0.852904,
+          "brier": 0.047884,
+          "threshold": 0.854152,
           "tn": 0,
           "fp": 0,
-          "fn": 170,
-          "tp": 490,
+          "fn": 112,
+          "tp": 548,
           "review_queue_size": 6
         },
         "detection_delta": {
           "before_model": "v1_buffer",
           "after_model": "v2_buffer",
           "pr_auc_delta": 0.0,
-          "recall_delta": -0.021212,
+          "recall_delta": -0.00303,
           "fpr_delta": 0.0,
           "recall_at_1pct_fpr_delta": NaN,
           "buffer_recall_improved": false
@@ -195,19 +195,19 @@
         "fraud_rate": 1.0,
         "pr_auc": 1.0,
         "roc_auc": NaN,
-        "f1": 0.865979,
+        "f1": 0.909091,
         "precision": 1.0,
-        "recall": 0.763636,
+        "recall": 0.833333,
         "fpr": 0.0,
         "recall_at_1pct_fpr": NaN,
         "recall_at_0p1pct_fpr": NaN,
         "queue_precision_top1pct": 1.0,
-        "brier": 0.13426,
+        "brier": 0.106395,
         "threshold": 0.477868,
         "tn": 0,
         "fp": 0,
-        "fn": 156,
-        "tp": 504,
+        "fn": 110,
+        "tp": 550,
         "review_queue_size": 6
       },
       "after": {
@@ -216,24 +216,24 @@
         "fraud_rate": 1.0,
         "pr_auc": 1.0,
         "roc_auc": NaN,
-        "f1": 0.852174,
+        "f1": 0.907285,
         "precision": 1.0,
-        "recall": 0.742424,
+        "recall": 0.830303,
         "fpr": 0.0,
         "recall_at_1pct_fpr": NaN,
         "recall_at_0p1pct_fpr": NaN,
         "queue_precision_top1pct": 1.0,
-        "brier": 0.035778,
-        "threshold": 0.852904,
+        "brier": 0.047884,
+        "threshold": 0.854152,
         "tn": 0,
         "fp": 0,
-        "fn": 170,
-        "tp": 490,
+        "fn": 112,
+        "tp": 548,
         "review_queue_size": 6
       },
       "delta": {
         "pr_auc_delta": 0.0,
-        "recall_delta": -0.021212,
+        "recall_delta": -0.00303,
         "fpr_delta": 0.0,
         "recall_at_1pct_fpr_delta": NaN
       }
@@ -255,11 +255,11 @@
         "phase": "after",
         "model": "v3_holdout",
         "samples": 4000,
-        "pr_auc": 0.961876,
-        "recall": 0.643,
-        "fpr": 0.012,
-        "recall_at_1pct_fpr": 0.6205,
-        "f1": 0.777039
+        "pr_auc": 0.959398,
+        "recall": 0.6345,
+        "fpr": 0.013,
+        "recall_at_1pct_fpr": 0.617,
+        "f1": 0.770258
       },
       {
         "slice": "test",
@@ -277,11 +277,11 @@
         "phase": "after",
         "model": "v3_test",
         "samples": 592,
-        "pr_auc": 0.893435,
-        "recall": 0.562069,
-        "fpr": 0.029801,
-        "recall_at_1pct_fpr": 0.42069,
-        "f1": 0.705628
+        "pr_auc": 0.892773,
+        "recall": 0.568966,
+        "fpr": 0.039735,
+        "recall_at_1pct_fpr": 0.413793,
+        "f1": 0.706638
       },
       {
         "slice": "buffer",
@@ -289,10 +289,10 @@
         "model": "v1_buffer",
         "samples": 660,
         "pr_auc": 1.0,
-        "recall": 0.763636,
+        "recall": 0.833333,
         "fpr": 0.0,
         "recall_at_1pct_fpr": NaN,
-        "f1": 0.865979
+        "f1": 0.909091
       },
       {
         "slice": "buffer",
@@ -300,10 +300,10 @@
         "model": "v3_buffer",
         "samples": 660,
         "pr_auc": 1.0,
-        "recall": 0.742424,
+        "recall": 0.830303,
         "fpr": 0.0,
         "recall_at_1pct_fpr": NaN,
-        "f1": 0.852174
+        "f1": 0.907285
       }
     ],
     "summary_table": {
@@ -341,39 +341,39 @@
           "recall_at_1pct_fpr": NaN,
           "recall_at_0p1pct_fpr": NaN,
           "queue_precision_top1pct": 1.0,
-          "f1": 0.865979,
+          "f1": 0.909091,
           "precision": 1.0,
-          "recall": 0.763636,
+          "recall": 0.833333,
           "fpr": 0.0,
-          "brier": 0.13426
+          "brier": 0.106395
         }
       ],
       "after": [
         {
           "model": "v3_holdout",
-          "pr_auc": 0.961876,
-          "roc_auc": 0.962046,
-          "recall_at_1pct_fpr": 0.6205,
-          "recall_at_0p1pct_fpr": 0.257,
+          "pr_auc": 0.959398,
+          "roc_auc": 0.959692,
+          "recall_at_1pct_fpr": 0.617,
+          "recall_at_0p1pct_fpr": 0.389,
           "queue_precision_top1pct": 1.0,
-          "f1": 0.777039,
-          "precision": 0.981679,
-          "recall": 0.643,
-          "fpr": 0.012,
-          "brier": 0.08093
+          "f1": 0.770258,
+          "precision": 0.979923,
+          "recall": 0.6345,
+          "fpr": 0.013,
+          "brier": 0.083404
         },
         {
           "model": "v3_test",
-          "pr_auc": 0.893435,
+          "pr_auc": 0.892773,
           "roc_auc": 0.891893,
-          "recall_at_1pct_fpr": 0.42069,
-          "recall_at_0p1pct_fpr": 0.058621,
+          "recall_at_1pct_fpr": 0.413793,
+          "recall_at_0p1pct_fpr": 0.048276,
           "queue_precision_top1pct": 1.0,
-          "f1": 0.705628,
-          "precision": 0.947674,
-          "recall": 0.562069,
-          "fpr": 0.029801,
-          "brier": 0.139412
+          "f1": 0.706638,
+          "precision": 0.932203,
+          "recall": 0.568966,
+          "fpr": 0.039735,
+          "brier": 0.140016
         },
         {
           "model": "v3_buffer",
@@ -382,112 +382,112 @@
           "recall_at_1pct_fpr": NaN,
           "recall_at_0p1pct_fpr": NaN,
           "queue_precision_top1pct": 1.0,
-          "f1": 0.852174,
+          "f1": 0.907285,
           "precision": 1.0,
-          "recall": 0.742424,
+          "recall": 0.830303,
           "fpr": 0.0,
-          "brier": 0.035778
+          "brier": 0.047884
         }
       ]
     },
     "primary_metric": "pr_auc",
     "before_holdout_pr_auc": 0.94404,
-    "after_holdout_pr_auc": 0.961876,
-    "buffer_recall_lift": -0.0212
+    "after_holdout_pr_auc": 0.959398,
+    "buffer_recall_lift": -0.003
   },
   "fidelity": {
-    "legit_mean_score": 0.20962,
-    "legit_std_score": 0.19339,
-    "fraud_mean_score": 0.804977,
-    "score_separation": 0.595357,
-    "amount_score_correlation": -0.123704,
-    "amount_ks_stat": 0.16,
+    "legit_mean_score": 0.213127,
+    "legit_std_score": 0.197008,
+    "fraud_mean_score": 0.801571,
+    "score_separation": 0.588443,
+    "amount_score_correlation": -0.123463,
+    "amount_ks_stat": 0.159,
     "amount_buckets": [
       {
         "bucket": "(0.629, 687.418]",
         "count": 400,
-        "mean_score": 0.202363
+        "mean_score": 0.204971
       },
       {
         "bucket": "(687.418, 3149.18]",
         "count": 400,
-        "mean_score": 0.210456
+        "mean_score": 0.2124
       },
       {
         "bucket": "(3149.18, 16513.794]",
         "count": 400,
-        "mean_score": 0.225308
+        "mean_score": 0.228902
       },
       {
         "bucket": "(16513.794, 104390.978]",
         "count": 400,
-        "mean_score": 0.263034
+        "mean_score": 0.269399
       },
       {
         "bucket": "(104390.978, 10000000.0]",
         "count": 400,
-        "mean_score": 0.146939
+        "mean_score": 0.149965
       }
     ],
-    "hour_score_std": 0.031504,
+    "hour_score_std": 0.032745,
     "hour_profile": {
-      "0": 0.186637,
-      "1": 0.203353,
-      "2": 0.171036,
-      "3": 0.161455,
-      "4": 0.149551,
-      "5": 0.283317,
-      "6": 0.215051,
-      "7": 0.229977,
-      "8": 0.21373,
-      "9": 0.245721,
-      "10": 0.235097,
-      "11": 0.237494,
-      "12": 0.21131,
-      "13": 0.240345,
-      "14": 0.257041,
-      "15": 0.221189,
-      "16": 0.192942,
-      "17": 0.197651,
-      "18": 0.206782,
-      "19": 0.176022,
-      "20": 0.192285,
-      "21": 0.21347,
-      "22": 0.189276,
-      "23": 0.235233
+      "0": 0.191166,
+      "1": 0.203865,
+      "2": 0.171581,
+      "3": 0.163603,
+      "4": 0.148922,
+      "5": 0.288246,
+      "6": 0.215948,
+      "7": 0.233145,
+      "8": 0.215983,
+      "9": 0.256402,
+      "10": 0.236962,
+      "11": 0.238566,
+      "12": 0.214338,
+      "13": 0.243404,
+      "14": 0.26128,
+      "15": 0.226252,
+      "16": 0.198903,
+      "17": 0.199458,
+      "18": 0.212979,
+      "19": 0.176857,
+      "20": 0.197213,
+      "21": 0.220628,
+      "22": 0.192421,
+      "23": 0.242194
     },
-    "day_of_week_spread": 0.032341,
-    "timing_ks_stat": 0.304681,
-    "rail_score_spread": 0.260701,
-    "velocity_correlation": 0.166435,
+    "day_of_week_spread": 0.031633,
+    "timing_ks_stat": 0.316471,
+    "rail_score_spread": 0.247559,
+    "velocity_correlation": 0.171949,
     "legit_samples": 2000,
     "fraud_samples": 2000,
     "checks": [
       {
         "name": "amount_correlation",
         "passed": true,
-        "value": 0.123704,
+        "value": 0.123463,
         "threshold": 0.25,
         "detail": "Legit score vs amount should stay weakly correlated"
       },
       {
         "name": "amount_ks",
         "passed": true,
-        "value": 0.16,
+        "value": 0.159,
         "threshold": 0.35,
         "detail": "KS between low/high amount legit score distributions"
       },
       {
         "name": "timing_ks",
         "passed": true,
-        "value": 0.304681,
+        "value": 0.316471,
         "threshold": 0.4,
         "detail": "KS between night vs business-hour legit scores"
       },
       {
         "name": "velocity_correlation",
         "passed": true,
-        "value": 0.166435,
+        "value": 0.171949,
         "threshold": 0.3,
         "detail": "Legit score vs velocity/activity features"
       }
@@ -498,55 +498,55 @@
     "surface_recall": [
       {
         "surface": "agent",
-        "samples": 174,
+        "samples": 186,
         "recall": 1.0,
-        "mean_score": 0.931047,
+        "mean_score": 0.941395,
         "sandbox_bypass_rate": 0.0
       },
       {
         "surface": "auth_se",
         "samples": 63,
         "recall": 0.0,
-        "mean_score": 0.605918,
+        "mean_score": 0.595043,
         "sandbox_bypass_rate": 0.0
       },
       {
         "surface": "device",
         "samples": 47,
         "recall": 0.0,
-        "mean_score": 0.666484,
+        "mean_score": 0.735079,
         "sandbox_bypass_rate": 0.0
       },
       {
         "surface": "kyc",
         "samples": 63,
-        "recall": 1.0,
-        "mean_score": 0.879755,
+        "recall": 0.0,
+        "mean_score": 0.82909,
         "sandbox_bypass_rate": 0.0
       },
       {
         "surface": "network",
         "samples": 59,
         "recall": 1.0,
-        "mean_score": 0.925747,
+        "mean_score": 0.944914,
         "sandbox_bypass_rate": 0.0
       },
       {
         "surface": "open_banking",
         "samples": 42,
-        "recall": 0.285714,
-        "mean_score": 0.856296,
+        "recall": 1.0,
+        "mean_score": 0.92156,
         "sandbox_bypass_rate": 0.0
       },
       {
         "surface": "payment",
         "samples": 660,
-        "recall": 0.742424,
-        "mean_score": 0.872266,
+        "recall": 0.830303,
+        "mean_score": 0.876857,
         "sandbox_bypass_rate": 0.0
       }
     ],
-    "mean_surface_recall": 0.575448,
+    "mean_surface_recall": 0.547186,
     "min_surface_recall": 0.0,
     "buffer_families": [
       "AG-001",
@@ -558,13 +558,13 @@
       "AML-005",
       "ATO-001",
       "ATO-002",
-      "AUT-003",
       "AUTH-001",
       "AUTH-002",
       "AUTH-003",
       "BBE-001",
       "BOT-001",
-      "GP-002",
+      "FAM-062",
+      "FAM-065",
       "GP-004",
       "N-002",
       "N-003",
@@ -584,13 +584,13 @@
       "AML-005",
       "ATO-001",
       "ATO-002",
-      "AUT-003",
       "AUTH-001",
       "AUTH-002",
       "AUTH-003",
       "BBE-001",
       "BOT-001",
-      "GP-002",
+      "FAM-062",
+      "FAM-065",
       "GP-004",
       "HARD-NEGATIVE",
       "N-002",
@@ -606,402 +606,388 @@
         "family": "AG-001",
         "samples": 151,
         "recall": 0.986755,
-        "mean_score": 0.942034
+        "mean_score": 0.944002
       },
       {
         "family": "AG-002",
         "samples": 15,
         "recall": 1.0,
-        "mean_score": 0.91972
+        "mean_score": 0.936737
       },
       {
         "family": "AG-003",
         "samples": 15,
         "recall": 1.0,
-        "mean_score": 0.91972
+        "mean_score": 0.936737
       },
       {
         "family": "AG-004",
         "samples": 15,
         "recall": 1.0,
-        "mean_score": 0.91972
+        "mean_score": 0.936737
       },
       {
         "family": "AG-005",
         "samples": 15,
         "recall": 1.0,
-        "mean_score": 0.91972
+        "mean_score": 0.936737
       },
       {
         "family": "AML-004",
         "samples": 136,
-        "recall": 0.352941,
-        "mean_score": 0.767102
+        "recall": 0.147059,
+        "mean_score": 0.578506
       },
       {
         "family": "AML-005",
         "samples": 9,
         "recall": 1.0,
-        "mean_score": 0.913935
+        "mean_score": 0.942873
       },
       {
         "family": "ATO-001",
         "samples": 13,
-        "recall": 1.0,
-        "mean_score": 0.882148
+        "recall": 0.0,
+        "mean_score": 0.824561
       },
       {
         "family": "ATO-002",
         "samples": 13,
-        "recall": 1.0,
-        "mean_score": 0.882148
-      },
-      {
-        "family": "AUT-003",
-        "samples": 84,
-        "recall": 0.988095,
-        "mean_score": 0.949687
+        "recall": 0.0,
+        "mean_score": 0.824561
       },
       {
         "family": "AUTH-001",
         "samples": 17,
         "recall": 0.0,
-        "mean_score": 0.583027
+        "mean_score": 0.589663
       },
       {
         "family": "AUTH-002",
         "samples": 17,
         "recall": 0.0,
-        "mean_score": 0.583027
+        "mean_score": 0.589663
       },
       {
         "family": "AUTH-003",
         "samples": 17,
         "recall": 0.0,
-        "mean_score": 0.583027
+        "mean_score": 0.589663
       },
       {
         "family": "BBE-001",
         "samples": 12,
         "recall": 0.0,
-        "mean_score": 0.635193
+        "mean_score": 0.726962
       },
       {
         "family": "BOT-001",
         "samples": 12,
         "recall": 0.0,
-        "mean_score": 0.635193
+        "mean_score": 0.726962
       },
       {
-        "family": "GP-002",
+        "family": "FAM-062",
         "samples": 96,
-        "recall": 0.125,
-        "mean_score": 0.663787
+        "recall": 1.0,
+        "mean_score": 0.950985
+      },
+      {
+        "family": "FAM-065",
+        "samples": 96,
+        "recall": 1.0,
+        "mean_score": 0.95008
       },
       {
         "family": "GP-004",
         "samples": 15,
         "recall": 1.0,
-        "mean_score": 0.91972
+        "mean_score": 0.936737
       },
       {
         "family": "N-002",
         "samples": 9,
         "recall": 1.0,
-        "mean_score": 0.913935
+        "mean_score": 0.942873
       },
       {
         "family": "N-003",
         "samples": 9,
         "recall": 1.0,
-        "mean_score": 0.913935
+        "mean_score": 0.942873
       },
       {
         "family": "OB-001",
         "samples": 15,
-        "recall": 0.0,
-        "mean_score": 0.827504
+        "recall": 1.0,
+        "mean_score": 0.913573
       },
       {
         "family": "OB-002",
         "samples": 15,
-        "recall": 0.0,
-        "mean_score": 0.827504
+        "recall": 1.0,
+        "mean_score": 0.913573
       },
       {
         "family": "RAT-001",
         "samples": 151,
         "recall": 0.834437,
-        "mean_score": 0.906439
+        "mean_score": 0.915088
       },
       {
         "family": "SEP-001",
         "samples": 133,
-        "recall": 0.962406,
-        "mean_score": 0.929847
+        "recall": 0.781955,
+        "mean_score": 0.91886
       },
       {
         "family": "SIA-001",
         "samples": 124,
-        "recall": 1.0,
-        "mean_score": 0.937065
+        "recall": 0.903226,
+        "mean_score": 0.938395
       }
     ],
-    "mean_family_recall": 0.635401,
+    "mean_family_recall": 0.652226,
     "min_family_recall": 0.0,
     "unseen_family_count": 0,
     "unseen_family_recall": 0.0,
-    "seen_family_recall": 0.635401,
+    "seen_family_recall": 0.652226,
     "lofo": [
       {
         "held_out_family": "AG-001",
         "held_out_samples": 151,
         "held_out_recall": 0.986755,
-        "train_proxy_samples": 957,
-        "train_proxy_recall": 0.678161,
-        "recall_gap": 0.308594
+        "train_proxy_samples": 969,
+        "train_proxy_recall": 0.707946,
+        "recall_gap": 0.278809
       },
       {
         "held_out_family": "AG-002",
         "held_out_samples": 15,
         "held_out_recall": 1.0,
-        "train_proxy_samples": 1093,
-        "train_proxy_recall": 0.716377,
-        "recall_gap": 0.283623
+        "train_proxy_samples": 1105,
+        "train_proxy_recall": 0.742081,
+        "recall_gap": 0.257919
       },
       {
         "held_out_family": "AG-003",
         "held_out_samples": 15,
         "held_out_recall": 1.0,
-        "train_proxy_samples": 1093,
-        "train_proxy_recall": 0.716377,
-        "recall_gap": 0.283623
+        "train_proxy_samples": 1105,
+        "train_proxy_recall": 0.742081,
+        "recall_gap": 0.257919
       },
       {
         "held_out_family": "AG-004",
         "held_out_samples": 15,
         "held_out_recall": 1.0,
-        "train_proxy_samples": 1093,
-        "train_proxy_recall": 0.716377,
-        "recall_gap": 0.283623
+        "train_proxy_samples": 1105,
+        "train_proxy_recall": 0.742081,
+        "recall_gap": 0.257919
       },
       {
         "held_out_family": "AG-005",
         "held_out_samples": 15,
         "held_out_recall": 1.0,
-        "train_proxy_samples": 1093,
-        "train_proxy_recall": 0.716377,
-        "recall_gap": 0.283623
+        "train_proxy_samples": 1105,
+        "train_proxy_recall": 0.742081,
+        "recall_gap": 0.257919
       },
       {
         "held_out_family": "AML-004",
         "held_out_samples": 136,
-        "held_out_recall": 0.352941,
-        "train_proxy_samples": 972,
-        "train_proxy_recall": 0.771605,
-        "recall_gap": -0.418664
+        "held_out_recall": 0.147059,
+        "train_proxy_samples": 984,
+        "train_proxy_recall": 0.828252,
+        "recall_gap": -0.681193
       },
       {
         "held_out_family": "AML-005",
         "held_out_samples": 9,
         "held_out_recall": 1.0,
-        "train_proxy_samples": 1099,
-        "train_proxy_recall": 0.717925,
-        "recall_gap": 0.282075
+        "train_proxy_samples": 1111,
+        "train_proxy_recall": 0.743474,
+        "recall_gap": 0.256526
       },
       {
         "held_out_family": "ATO-001",
         "held_out_samples": 13,
-        "held_out_recall": 1.0,
-        "train_proxy_samples": 1095,
-        "train_proxy_recall": 0.716895,
-        "recall_gap": 0.283105
+        "held_out_recall": 0.0,
+        "train_proxy_samples": 1107,
+        "train_proxy_recall": 0.754291,
+        "recall_gap": -0.754291
       },
       {
         "held_out_family": "ATO-002",
         "held_out_samples": 13,
-        "held_out_recall": 1.0,
-        "train_proxy_samples": 1095,
-        "train_proxy_recall": 0.716895,
-        "recall_gap": 0.283105
-      },
-      {
-        "held_out_family": "AUT-003",
-        "held_out_samples": 84,
-        "held_out_recall": 0.988095,
-        "train_proxy_samples": 1024,
-        "train_proxy_recall": 0.698242,
-        "recall_gap": 0.289853
+        "held_out_recall": 0.0,
+        "train_proxy_samples": 1107,
+        "train_proxy_recall": 0.754291,
+        "recall_gap": -0.754291
       },
       {
         "held_out_family": "AUTH-001",
         "held_out_samples": 17,
         "held_out_recall": 0.0,
-        "train_proxy_samples": 1091,
-        "train_proxy_recall": 0.731439,
-        "recall_gap": -0.731439
+        "train_proxy_samples": 1103,
+        "train_proxy_recall": 0.757026,
+        "recall_gap": -0.757026
       },
       {
         "held_out_family": "AUTH-002",
         "held_out_samples": 17,
         "held_out_recall": 0.0,
-        "train_proxy_samples": 1091,
-        "train_proxy_recall": 0.731439,
-        "recall_gap": -0.731439
+        "train_proxy_samples": 1103,
+        "train_proxy_recall": 0.757026,
+        "recall_gap": -0.757026
       },
       {
         "held_out_family": "AUTH-003",
         "held_out_samples": 17,
         "held_out_recall": 0.0,
-        "train_proxy_samples": 1091,
-        "train_proxy_recall": 0.731439,
-        "recall_gap": -0.731439
+        "train_proxy_samples": 1103,
+        "train_proxy_recall": 0.757026,
+        "recall_gap": -0.757026
       },
       {
         "held_out_family": "BBE-001",
         "held_out_samples": 12,
         "held_out_recall": 0.0,
-        "train_proxy_samples": 1096,
-        "train_proxy_recall": 0.728102,
-        "recall_gap": -0.728102
+        "train_proxy_samples": 1108,
+        "train_proxy_recall": 0.75361,
+        "recall_gap": -0.75361
       },
       {
         "held_out_family": "BOT-001",
         "held_out_samples": 12,
         "held_out_recall": 0.0,
-        "train_proxy_samples": 1096,
-        "train_proxy_recall": 0.728102,
-        "recall_gap": -0.728102
+        "train_proxy_samples": 1108,
+        "train_proxy_recall": 0.75361,
+        "recall_gap": -0.75361
       },
       {
-        "held_out_family": "GP-002",
+        "held_out_family": "FAM-062",
         "held_out_samples": 96,
-        "held_out_recall": 0.125,
-        "train_proxy_samples": 1012,
-        "train_proxy_recall": 0.77668,
-        "recall_gap": -0.65168
+        "held_out_recall": 1.0,
+        "train_proxy_samples": 1024,
+        "train_proxy_recall": 0.72168,
+        "recall_gap": 0.27832
+      },
+      {
+        "held_out_family": "FAM-065",
+        "held_out_samples": 96,
+        "held_out_recall": 1.0,
+        "train_proxy_samples": 1024,
+        "train_proxy_recall": 0.72168,
+        "recall_gap": 0.27832
       },
       {
         "held_out_family": "GP-004",
         "held_out_samples": 15,
         "held_out_recall": 1.0,
-        "train_proxy_samples": 1093,
-        "train_proxy_recall": 0.716377,
-        "recall_gap": 0.283623
+        "train_proxy_samples": 1105,
+        "train_proxy_recall": 0.742081,
+        "recall_gap": 0.257919
       },
       {
         "held_out_family": "N-002",
         "held_out_samples": 9,
         "held_out_recall": 1.0,
-        "train_proxy_samples": 1099,
-        "train_proxy_recall": 0.717925,
-        "recall_gap": 0.282075
+        "train_proxy_samples": 1111,
+        "train_proxy_recall": 0.743474,
+        "recall_gap": 0.256526
       },
       {
         "held_out_family": "N-003",
         "held_out_samples": 9,
         "held_out_recall": 1.0,
-        "train_proxy_samples": 1099,
-        "train_proxy_recall": 0.717925,
-        "recall_gap": 0.282075
+        "train_proxy_samples": 1111,
+        "train_proxy_recall": 0.743474,
+        "recall_gap": 0.256526
       },
       {
         "held_out_family": "OB-001",
         "held_out_samples": 15,
-        "held_out_recall": 0.0,
-        "train_proxy_samples": 1093,
-        "train_proxy_recall": 0.730101,
-        "recall_gap": -0.730101
+        "held_out_recall": 1.0,
+        "train_proxy_samples": 1105,
+        "train_proxy_recall": 0.742081,
+        "recall_gap": 0.257919
       },
       {
         "held_out_family": "OB-002",
         "held_out_samples": 15,
-        "held_out_recall": 0.0,
-        "train_proxy_samples": 1093,
-        "train_proxy_recall": 0.730101,
-        "recall_gap": -0.730101
+        "held_out_recall": 1.0,
+        "train_proxy_samples": 1105,
+        "train_proxy_recall": 0.742081,
+        "recall_gap": 0.257919
       },
       {
         "held_out_family": "RAT-001",
         "held_out_samples": 151,
         "held_out_recall": 0.834437,
-        "train_proxy_samples": 957,
-        "train_proxy_recall": 0.702194,
-        "recall_gap": 0.132243
+        "train_proxy_samples": 969,
+        "train_proxy_recall": 0.731682,
+        "recall_gap": 0.102755
       },
       {
         "held_out_family": "SEP-001",
         "held_out_samples": 133,
-        "held_out_recall": 0.962406,
-        "train_proxy_samples": 975,
-        "train_proxy_recall": 0.687179,
-        "recall_gap": 0.275227
+        "held_out_recall": 0.781955,
+        "train_proxy_samples": 987,
+        "train_proxy_recall": 0.740628,
+        "recall_gap": 0.041327
       },
       {
         "held_out_family": "SIA-001",
         "held_out_samples": 124,
-        "held_out_recall": 1.0,
-        "train_proxy_samples": 984,
-        "train_proxy_recall": 0.684959,
-        "recall_gap": 0.315041
+        "held_out_recall": 0.903226,
+        "train_proxy_samples": 996,
+        "train_proxy_recall": 0.725904,
+        "recall_gap": 0.177322
       }
     ],
-    "mean_lofo_gap": -0.084565,
+    "mean_lofo_gap": -0.093175,
     "variant_recall": [
       {
         "variant": "Automated Transfer System (ATS) RATs",
         "samples": 139,
         "recall": 0.906475,
-        "mean_score": 0.929856,
+        "mean_score": 0.931329,
         "is_unseen": false
       },
       {
         "variant": "Credit-building / Bust-out accounts",
         "samples": 124,
-        "recall": 1.0,
-        "mean_score": 0.937065,
+        "recall": 0.903226,
+        "mean_score": 0.938395,
         "is_unseen": false
       },
       {
         "variant": "Identity obfuscation",
         "samples": 136,
-        "recall": 0.352941,
-        "mean_score": 0.767102,
+        "recall": 0.147059,
+        "mean_score": 0.578506,
         "is_unseen": false
       },
       {
         "variant": "Merchant-side manipulation",
         "samples": 136,
         "recall": 0.985294,
-        "mean_score": 0.944496,
-        "is_unseen": false
-      },
-      {
-        "variant": "Multi-account coordinated fraud",
-        "samples": 84,
-        "recall": 0.988095,
-        "mean_score": 0.949687,
+        "mean_score": 0.944804,
         "is_unseen": false
       },
       {
         "variant": "Phishing (email)",
         "samples": 120,
-        "recall": 0.958333,
-        "mean_score": 0.935015,
-        "is_unseen": false
-      },
-      {
-        "variant": "Stripe webhook signature bypass",
-        "samples": 96,
-        "recall": 0.125,
-        "mean_score": 0.663787,
+        "recall": 0.866667,
+        "mean_score": 0.929075,
         "is_unseen": false
       },
       {
         "variant": "default",
-        "samples": 273,
-        "recall": 0.571429,
-        "mean_score": 0.803228,
+        "samples": 465,
+        "recall": 0.729032,
+        "mean_score": 0.87758,
         "is_unseen": false
       }
     ],
@@ -1009,91 +995,91 @@
     "unseen_variant_recall": 0.0,
     "composite_campaigns": [
       {
-        "campaign_id": "identity_9e6771",
+        "campaign_id": "identity_9874e9",
         "steps": 124,
         "families": [
           "SIA-001"
         ],
         "is_composite": true,
-        "recall": 1.0,
-        "mean_score": 0.937065,
+        "recall": 0.903226,
+        "mean_score": 0.938395,
         "bypass_rate": 0.0
       },
       {
-        "campaign_id": "genai_ag_cd466b",
+        "campaign_id": "genai_ag_466b06",
         "steps": 124,
         "families": [
           "AG-001"
         ],
         "is_composite": true,
         "recall": 0.983871,
-        "mean_score": 0.944623,
+        "mean_score": 0.944711,
         "bypass_rate": 0.0
       },
       {
-        "campaign_id": "aml_laye_140994",
+        "campaign_id": "aml_laye_be7ad2",
         "steps": 136,
         "families": [
           "AML-004"
         ],
         "is_composite": true,
-        "recall": 0.352941,
-        "mean_score": 0.767102,
+        "recall": 0.147059,
+        "mean_score": 0.578506,
         "bypass_rate": 0.0
       },
       {
-        "campaign_id": "ato_soci_733609",
+        "campaign_id": "ato_soci_2acbee",
         "steps": 120,
         "families": [
           "SEP-001"
         ],
         "is_composite": true,
-        "recall": 0.958333,
-        "mean_score": 0.935015,
+        "recall": 0.866667,
+        "mean_score": 0.929075,
         "bypass_rate": 0.0
       },
       {
-        "campaign_id": "bot_velo_1eb068",
+        "campaign_id": "bot_velo_e39b74",
         "steps": 139,
         "families": [
           "RAT-001"
         ],
         "is_composite": true,
         "recall": 0.906475,
-        "mean_score": 0.929856,
+        "mean_score": 0.931329,
         "bypass_rate": 0.0
       },
       {
-        "campaign_id": "prompt_i_1102b8",
+        "campaign_id": "prompt_i_f75b36",
         "steps": 12,
         "families": [
           "AG-001"
         ],
         "is_composite": true,
         "recall": 1.0,
-        "mean_score": 0.943182,
+        "mean_score": 0.945763,
         "bypass_rate": 0.0
       },
       {
-        "campaign_id": "ai-enhan_0bd5e5",
+        "campaign_id": "merchant_00dcbb",
         "steps": 96,
         "families": [
-          "GP-002"
+          "FAM-062"
         ],
         "is_composite": true,
-        "recall": 0.125,
-        "mean_score": 0.663787,
+        "recall": 1.0,
+        "mean_score": 0.950985,
         "bypass_rate": 0.0
       },
       {
-        "campaign_id": "ai-coord_1ec3bd",
-        "steps": 84,
+        "campaign_id": "syntheti_edff50",
+        "steps": 96,
         "families": [
-          "AUT-003"
+          "FAM-065"
         ],
         "is_composite": true,
-        "recall": 0.988095,
-        "mean_score": 0.949687,
+        "recall": 1.0,
+        "mean_score": 0.95008,
         "bypass_rate": 0.0
       },
       {
@@ -1104,7 +1090,7 @@
         ],
         "is_composite": true,
         "recall": 1.0,
-        "mean_score": 0.91972,
+        "mean_score": 0.936737,
         "bypass_rate": 0.0
       },
       {
@@ -1115,7 +1101,7 @@
         ],
         "is_composite": true,
         "recall": 1.0,
-        "mean_score": 0.91972,
+        "mean_score": 0.936737,
         "bypass_rate": 0.0
       },
       {
@@ -1126,7 +1112,7 @@
         ],
         "is_composite": true,
         "recall": 1.0,
-        "mean_score": 0.91972,
+        "mean_score": 0.936737,
         "bypass_rate": 0.0
       },
       {
@@ -1137,7 +1123,7 @@
         ],
         "is_composite": true,
         "recall": 1.0,
-        "mean_score": 0.91972,
+        "mean_score": 0.936737,
         "bypass_rate": 0.0
       },
       {
@@ -1148,7 +1134,7 @@
         ],
         "is_composite": true,
         "recall": 1.0,
-        "mean_score": 0.91972,
+        "mean_score": 0.936737,
         "bypass_rate": 0.0
       },
       {
@@ -1159,7 +1145,7 @@
         ],
         "is_composite": true,
         "recall": 1.0,
-        "mean_score": 0.913935,
+        "mean_score": 0.942873,
         "bypass_rate": 0.0
       },
       {
@@ -1170,7 +1156,7 @@
         ],
         "is_composite": true,
         "recall": 0.0,
-        "mean_score": 0.583027,
+        "mean_score": 0.589663,
         "bypass_rate": 0.0
       },
       {
@@ -1181,7 +1167,7 @@
         ],
         "is_composite": true,
         "recall": 0.0,
-        "mean_score": 0.583027,
+        "mean_score": 0.589663,
         "bypass_rate": 0.0
       },
       {
@@ -1192,7 +1178,7 @@
         ],
         "is_composite": true,
         "recall": 0.0,
-        "mean_score": 0.583027,
+        "mean_score": 0.589663,
         "bypass_rate": 0.0
       },
       {
@@ -1203,7 +1189,7 @@
         ],
         "is_composite": true,
         "recall": 0.0,
-        "mean_score": 0.635193,
+        "mean_score": 0.726962,
         "bypass_rate": 0.0
       },
       {
@@ -1214,7 +1200,7 @@
         ],
         "is_composite": true,
         "recall": 0.0,
-        "mean_score": 0.635193,
+        "mean_score": 0.726962,
         "bypass_rate": 0.0
       },
       {
@@ -1225,7 +1211,7 @@
         ],
         "is_composite": true,
         "recall": 0.0,
-        "mean_score": 0.635193,
+        "mean_score": 0.726962,
         "bypass_rate": 0.0
       },
       {
@@ -1236,7 +1222,7 @@
         ],
         "is_composite": true,
         "recall": 1.0,
-        "mean_score": 0.91972,
+        "mean_score": 0.936737,
         "bypass_rate": 0.0
       },
       {
@@ -1246,8 +1232,8 @@
           "SEP-001"
         ],
         "is_composite": true,
-        "recall": 1.0,
-        "mean_score": 0.882148,
+        "recall": 0.0,
+        "mean_score": 0.824561,
         "bypass_rate": 0.0
       },
       {
@@ -1257,8 +1243,8 @@
           "ATO-001"
         ],
         "is_composite": true,
-        "recall": 1.0,
-        "mean_score": 0.882148,
+        "recall": 0.0,
+        "mean_score": 0.824561,
         "bypass_rate": 0.0
       },
       {
@@ -1269,7 +1255,7 @@
         ],
         "is_composite": true,
         "recall": 1.0,
-        "mean_score": 0.913935,
+        "mean_score": 0.942873,
         "bypass_rate": 0.0
       },
       {
@@ -1280,7 +1266,7 @@
         ],
         "is_composite": true,
         "recall": 1.0,
-        "mean_score": 0.913935,
+        "mean_score": 0.942873,
         "bypass_rate": 0.0
       },
       {
@@ -1290,8 +1276,8 @@
           "ATO-002"
         ],
         "is_composite": true,
-        "recall": 1.0,
-        "mean_score": 0.882148,
+        "recall": 0.0,
+        "mean_score": 0.824561,
         "bypass_rate": 0.0
       },
       {
@@ -1301,8 +1287,8 @@
           "OB-001"
         ],
         "is_composite": true,
-        "recall": 0.0,
-        "mean_score": 0.827504,
+        "recall": 1.0,
+        "mean_score": 0.913573,
         "bypass_rate": 0.0
       },
       {
@@ -1312,20 +1298,20 @@
           "OB-002"
         ],
         "is_composite": true,
-        "recall": 0.0,
-        "mean_score": 0.827504,
+        "recall": 1.0,
+        "mean_score": 0.913573,
         "bypass_rate": 0.0
       }
     ],
     "composite_campaign_count": 28,
-    "composite_mean_recall": 0.654097
+    "composite_mean_recall": 0.635975
   },
   "integrity": {
     "checks": [
       {
         "name": "null_control",
         "passed": true,
-        "value": 0.498653,
+        "value": 0.500006,
         "threshold": 0.65,
         "detail": "Shuffled-label PR-AUC should stay near chance (~0.5)"
       },
@@ -1348,40 +1334,40 @@
         "passed": true,
         "value": 0.0,
         "threshold": 0.1,
-        "detail": "25 hard-negative buffer rows"
+        "detail": "15 hard-negative buffer rows"
       },
       {
         "name": "temporal_split",
         "passed": true,
-        "value": 130.0,
+        "value": 198.0,
         "threshold": 0.0,
-        "detail": "split_method=temporal_baseline_campaign_holdout, val_buffer_rows=130"
+        "detail": "split_method=temporal_baseline_campaign_holdout, val_buffer_rows=198"
       },
       {
         "name": "leakage_proxy",
         "passed": true,
-        "value": 130.0,
+        "value": 198.0,
         "threshold": 1.0,
-        "detail": "Buffer in val=130; train/val fraud rate gap=0.0160"
+        "detail": "Buffer in val=198; train/val fraud rate gap=0.0436"
       },
       {
         "name": "adversarial_campaign_disjoint",
         "passed": true,
-        "value": 18.0,
+        "value": 15.0,
         "threshold": 0.0,
-        "detail": "train_campaigns=35 val_campaigns=18 disjoint=True"
+        "detail": "train_campaigns=28 val_campaigns=15 disjoint=True"
       },
       {
         "name": "adversarial_rows_in_train",
         "passed": true,
-        "value": 345.0,
+        "value": 287.0,
         "threshold": 1.0,
-        "detail": "train_buffer_rows=345, val_buffer_rows=130 \u2014 zero in train means the hardened model never saw a Red Team attack"
+        "detail": "train_buffer_rows=287, val_buffer_rows=198 \u2014 zero in train means the hardened model never saw a Red Team attack"
       },
       {
         "name": "amount_distribution_ks",
         "passed": true,
-        "value": 0.15999999999999998,
+        "value": 0.15900000000000003,
         "threshold": 0.35,
         "detail": "KS stat between low/high amount legit score distributions"
       }
@@ -1390,27 +1376,27 @@
     "total_checks": 9,
     "all_passed": true,
     "hard_negative_fpr": 0.0,
-    "hard_negative_count": 25,
+    "hard_negative_count": 15,
     "split_method": "temporal_baseline_campaign_holdout",
-    "val_buffer_rows": 130,
+    "val_buffer_rows": 198,
     "training_manifest": {
       "baseline_rows": 8000,
-      "buffer_selected_rows": 475,
+      "buffer_selected_rows": 485,
       "buffer_total_payment": 660,
-      "buffer_total_adjudicated": 1133,
+      "buffer_total_adjudicated": 1135,
       "buffer_rows_by_surface": {
-        "agent": 174,
+        "agent": 186,
         "kyc": 68,
-        "network": 64,
+        "network": 59,
         "payment": 660,
         "auth_se": 68,
         "device": 52,
-        "open_banking": 47
+        "open_banking": 42
       },
-      "buffer_bypassed_available": 25,
-      "hard_negative_rows": 25,
-      "hard_negative_before": 25,
-      "hard_negative_after": 25,
+      "buffer_bypassed_available": 15,
+      "hard_negative_rows": 15,
+      "hard_negative_before": 15,
+      "hard_negative_after": 15,
       "hard_negative_max_ratio": 0.25,
       "split_method": "temporal_baseline_campaign_holdout",
       "val_frac": 0.15,
@@ -1421,60 +1407,57 @@
         "val_rows": 1149
       },
       "adv_val_campaign_frac": 0.3,
-      "adv_campaigns_total": 53,
-      "adv_campaigns_train": 35,
-      "adv_campaigns_val": 18,
+      "adv_campaigns_total": 43,
+      "adv_campaigns_train": 28,
+      "adv_campaigns_val": 15,
       "adv_campaign_ids_val": [
-        "ai-enhan_0bd5e5",
-        "ato_soci_733609",
-        "hard_negative_auth_se_1_25fe",
-        "hard_negative_auth_se_4_8033",
-        "hard_negative_device_1_7f3a",
-        "hard_negative_device_4_400a",
-        "hard_negative_kyc_2_70c5",
-        "hard_negative_network_2_42d7",
-        "hard_negative_open_banking_0_3e9a",
-        "hard_negative_open_banking_3_8974",
-        "identity_9e6771",
-        "search_AG-001",
-        "search_AG-004",
-        "search_AUTH-001",
-        "search_GP-004",
-        "search_N-002",
-        "search_OB-001",
-        "search_RAT-001"
+        "ato_soci_2acbee",
+        "hard_negative_auth_se_1_0113",
+        "hard_negative_auth_se_4_3057",
+        "hard_negative_device_0_84ea",
+        "hard_negative_device_3_55cd",
+        "hard_negative_kyc_2_cef4",
+        "identity_9874e9",
+        "merchant_00dcbb",
+        "search_AG-002",
+        "search_AG-005",
+        "search_AUTH-002",
+        "search_BOT-001",
+        "search_N-003",
+        "search_OB-002",
+        "search_SEP-001"
       ],
-      "total_groups": 6269,
-      "val_groups": 950,
-      "train_rows": 7213,
-      "val_rows": 1287,
-      "train_fraud_rate": 0.524053791764869,
-      "val_fraud_rate": 0.54001554001554,
-      "train_buffer_rows": 345,
-      "val_buffer_rows": 130,
-      "train_hard_negative_rows": 17,
-      "val_hard_negative_rows": 8,
+      "total_groups": 6259,
+      "val_groups": 947,
+      "train_rows": 7148,
+      "val_rows": 1352,
+      "train_fraud_rate": 0.5207050923335199,
+      "val_fraud_rate": 0.5643491124260355,
+      "train_buffer_rows": 287,
+      "val_buffer_rows": 198,
+      "train_hard_negative_rows": 10,
+      "val_hard_negative_rows": 5,
       "train_sources": {
         "baseline": 6851,
-        "adversarial_buffer": 345,
-        "hard_negative": 17
+        "adversarial_buffer": 287,
+        "hard_negative": 10
       },
       "val_sources": {
         "baseline": 1149,
-        "adversarial_buffer": 130,
-        "hard_negative": 8
+        "adversarial_buffer": 198,
+        "hard_negative": 5
       },
       "campaign_disjoint": true,
       "total_rows": 8500,
-      "fraud_rows": 4475,
-      "legit_rows": 4025,
+      "fraud_rows": 4485,
+      "legit_rows": 4015,
       "buffer_stats": {
-        "total": 1133,
+        "total": 1135,
         "payment_records": 660,
-        "adjudicated_records": 1133,
-        "fraud_labeled": 1108,
-        "bypassed": 25,
-        "blocked": 1108,
+        "adjudicated_records": 1135,
+        "fraud_labeled": 1120,
+        "bypassed": 15,
+        "blocked": 1120,
         "families": [
           "AG-001",
           "AG-002",
@@ -1485,13 +1468,13 @@
           "AML-005",
           "ATO-001",
           "ATO-002",
-          "AUT-003",
           "AUTH-001",
           "AUTH-002",
           "AUTH-003",
           "BBE-001",
           "BOT-001",
-          "GP-002",
+          "FAM-062",
+          "FAM-065",
           "GP-004",
           "HARD-NEGATIVE",
           "N-002",
@@ -1503,13 +1486,13 @@
           "SIA-001"
         ],
         "surfaces": {
-          "agent": 174,
+          "agent": 186,
           "kyc": 68,
-          "network": 64,
+          "network": 59,
           "payment": 660,
           "auth_se": 68,
           "device": 52,
-          "open_banking": 47
+          "open_banking": 42
         },
         "path": "data\\adversarial_buffer\\evidence.jsonl"
       },
@@ -1517,34 +1500,34 @@
     }
   },
   "asr": {
-    "payment_attacks": 1108,
+    "payment_attacks": 1120,
     "historical_bypass_count": 0,
     "historical_bypass_rate": 0.0,
     "historical_block_rate": 1.0,
-    "before_ml_recall": 0.722022,
-    "after_ml_recall": 0.720217,
-    "ml_recall_lift": -0.001805,
-    "before_ml_asr": 0.277978,
-    "after_ml_asr": 0.279783,
-    "projected_bypass_rate_after": 0.279783,
-    "asr_reduction": -0.001805,
+    "before_ml_recall": 0.803571,
+    "after_ml_recall": 0.745536,
+    "ml_recall_lift": -0.058035,
+    "before_ml_asr": 0.196429,
+    "after_ml_asr": 0.254464,
+    "projected_bypass_rate_after": 0.254464,
+    "asr_reduction": -0.058035,
     "matched_fpr": 0.05,
     "before_threshold_matched": 0.575977,
-    "after_threshold_matched": 0.684534,
-    "before_ml_recall_matched": 0.666968,
-    "after_ml_recall_matched": 0.826715,
-    "ml_recall_lift_matched": 0.159747,
-    "before_ml_asr_matched": 0.333032,
-    "after_ml_asr_matched": 0.173285,
-    "asr_reduction_matched": 0.159747,
+    "after_threshold_matched": 0.707572,
+    "before_ml_recall_matched": 0.765179,
+    "after_ml_recall_matched": 0.855357,
+    "ml_recall_lift_matched": 0.090178,
+    "before_ml_asr_matched": 0.234821,
+    "after_ml_asr_matched": 0.144643,
+    "asr_reduction_matched": 0.090178,
     "per_family": [
       {
         "family": "AG-001",
         "attacks": 151,
         "historical_bypass_rate": 0.0,
-        "before_ml_recall": 0.980132,
+        "before_ml_recall": 0.986755,
         "after_ml_recall": 0.986755,
-        "asr_reduction": 0.006623
+        "asr_reduction": 0.0
       },
       {
         "family": "AG-002",
@@ -1582,9 +1565,9 @@
         "family": "AML-004",
         "attacks": 136,
         "historical_bypass_rate": 0.0,
-        "before_ml_recall": 0.330882,
-        "after_ml_recall": 0.352941,
-        "asr_reduction": 0.022059
+        "before_ml_recall": 0.147059,
+        "after_ml_recall": 0.147059,
+        "asr_reduction": 0.0
       },
       {
         "family": "AML-005",
@@ -1599,24 +1582,16 @@
         "attacks": 13,
         "historical_bypass_rate": 0.0,
         "before_ml_recall": 1.0,
-        "after_ml_recall": 1.0,
-        "asr_reduction": 0.0
+        "after_ml_recall": 0.0,
+        "asr_reduction": -1.0
       },
       {
         "family": "ATO-002",
         "attacks": 13,
         "historical_bypass_rate": 0.0,
         "before_ml_recall": 1.0,
-        "after_ml_recall": 1.0,
-        "asr_reduction": 0.0
-      },
-      {
-        "family": "AUT-003",
-        "attacks": 84,
-        "historical_bypass_rate": 0.0,
-        "before_ml_recall": 1.0,
-        "after_ml_recall": 0.988095,
-        "asr_reduction": -0.011905
+        "after_ml_recall": 0.0,
+        "asr_reduction": -1.0
       },
       {
         "family": "AUTH-001",
@@ -1659,12 +1634,20 @@
         "asr_reduction": 0.0
       },
       {
-        "family": "GP-002",
+        "family": "FAM-062",
         "attacks": 96,
         "historical_bypass_rate": 0.0,
-        "before_ml_recall": 0.302083,
-        "after_ml_recall": 0.125,
-        "asr_reduction": -0.177083
+        "before_ml_recall": 1.0,
+        "after_ml_recall": 1.0,
+        "asr_reduction": 0.0
+      },
+      {
+        "family": "FAM-065",
+        "attacks": 96,
+        "historical_bypass_rate": 0.0,
+        "before_ml_recall": 1.0,
+        "after_ml_recall": 1.0,
+        "asr_reduction": 0.0
       },
       {
         "family": "GP-004",
@@ -1694,47 +1677,47 @@
         "family": "OB-001",
         "attacks": 15,
         "historical_bypass_rate": 0.0,
-        "before_ml_recall": 0.0,
-        "after_ml_recall": 0.0,
+        "before_ml_recall": 1.0,
+        "after_ml_recall": 1.0,
         "asr_reduction": 0.0
       },
       {
         "family": "OB-002",
         "attacks": 15,
         "historical_bypass_rate": 0.0,
-        "before_ml_recall": 0.0,
-        "after_ml_recall": 0.0,
+        "before_ml_recall": 1.0,
+        "after_ml_recall": 1.0,
         "asr_reduction": 0.0
       },
       {
         "family": "RAT-001",
         "attacks": 151,
         "historical_bypass_rate": 0.0,
-        "before_ml_recall": 0.748344,
+        "before_ml_recall": 0.847682,
         "after_ml_recall": 0.834437,
-        "asr_reduction": 0.086093
+        "asr_reduction": -0.013245
       },
       {
         "family": "SEP-001",
         "attacks": 133,
         "historical_bypass_rate": 0.0,
         "before_ml_recall": 0.969925,
-        "after_ml_recall": 0.962406,
-        "asr_reduction": -0.007519
+        "after_ml_recall": 0.781955,
+        "asr_reduction": -0.18797
       },
       {
         "family": "SIA-001",
         "attacks": 124,
         "historical_bypass_rate": 0.0,
         "before_ml_recall": 1.0,
-        "after_ml_recall": 1.0,
-        "asr_reduction": 0.0
+        "after_ml_recall": 0.903226,
+        "asr_reduction": -0.096774
       }
     ],
     "per_surface": [
       {
         "surface": "agent",
-        "attacks": 174,
+        "attacks": 186,
         "historical_bypass_rate": 0.0,
         "before_ml_recall": 1.0,
         "after_ml_recall": 1.0,
@@ -1761,8 +1744,8 @@
         "attacks": 63,
         "historical_bypass_rate": 0.0,
         "before_ml_recall": 1.0,
-        "after_ml_recall": 1.0,
-        "asr_reduction": 0.0
+        "after_ml_recall": 0.0,
+        "asr_reduction": -1.0
       },
       {
         "surface": "network",
@@ -1776,17 +1759,17 @@
         "surface": "open_banking",
         "attacks": 42,
         "historical_bypass_rate": 0.0,
-        "before_ml_recall": 0.0,
-        "after_ml_recall": 0.285714,
-        "asr_reduction": 0.285714
+        "before_ml_recall": 1.0,
+        "after_ml_recall": 1.0,
+        "asr_reduction": 0.0
       },
       {
         "surface": "payment",
         "attacks": 660,
         "historical_bypass_rate": 0.0,
-        "before_ml_recall": 0.763636,
-        "after_ml_recall": 0.742424,
-        "asr_reduction": -0.021212
+        "before_ml_recall": 0.833333,
+        "after_ml_recall": 0.830303,
+        "asr_reduction": -0.00303
       }
     ]
   },
@@ -1800,10 +1783,10 @@
         "nonzero_rate": 0.0
       },
       "distinct_devices_last_7d": {
-        "mean": 0.7091,
-        "std": 0.4542,
+        "mean": 0.8364,
+        "std": 0.3699,
         "max": 1.0,
-        "nonzero_rate": 0.7091
+        "nonzero_rate": 0.8364
       },
       "beneficiary_distinct_payer_count": {
         "mean": 0.0,
@@ -1818,14 +1801,14 @@
         "nonzero_rate": 0.0
       },
       "shared_device_customer_count": {
-        "mean": 0.697,
-        "std": 0.4596,
+        "mean": 0.8152,
+        "std": 0.3882,
         "max": 1.0,
-        "nonzero_rate": 0.697
+        "nonzero_rate": 0.8152
       },
       "graph_cluster_size": {
-        "mean": 1.7091,
-        "std": 0.4542,
+        "mean": 1.8364,
+        "std": 0.3699,
         "max": 2.0,
         "nonzero_rate": 1.0
       },
@@ -1839,7 +1822,7 @@
     "graph_heavy_count": 0,
     "graph_heavy_coverage": 0.0,
     "graph_heavy_recall": 0.0,
-    "graph_light_recall": 0.742424,
+    "graph_light_recall": 0.830303,
     "checks": [
       {
         "name": "distinct_beneficiaries_last_24h_not_constant",
@@ -1850,7 +1833,7 @@
       {
         "name": "distinct_devices_last_7d_not_constant",
         "passed": true,
-        "value": 0.4541816726107927,
+        "value": 0.3699452718068328,
         "detail": "Graph counters should vary across buffer attacks"
       }
     ],
@@ -1863,7 +1846,7 @@
     "composite_cross_account_count": 7,
     "composite_campaigns": [
       {
-        "campaign_id": "identity_9e6771",
+        "campaign_id": "identity_9874e9",
         "steps": 92,
         "families": [
           "SIA-001"
@@ -1876,7 +1859,7 @@
         "cross_account_signal": false
       },
       {
-        "campaign_id": "genai_ag_cd466b",
+        "campaign_id": "genai_ag_466b06",
         "steps": 104,
         "families": [
           "AG-001"
@@ -1889,7 +1872,7 @@
         "cross_account_signal": false
       },
       {
-        "campaign_id": "aml_laye_140994",
+        "campaign_id": "aml_laye_be7ad2",
         "steps": 104,
         "families": [
           "AML-004"
@@ -1897,12 +1880,12 @@
         "graph_heavy_steps": 0,
         "max_cluster_size": 1,
         "max_beneficiary_payers": 0,
-        "recall": 0.269231,
+        "recall": 0.0,
         "bypass_rate": 0.0,
         "cross_account_signal": false
       },
       {
-        "campaign_id": "ato_soci_733609",
+        "campaign_id": "ato_soci_2acbee",
         "steps": 88,
         "families": [
           "SEP-001"
@@ -1910,12 +1893,12 @@
         "graph_heavy_steps": 0,
         "max_cluster_size": 2,
         "max_beneficiary_payers": 0,
-        "recall": 0.943182,
+        "recall": 0.954545,
         "bypass_rate": 0.0,
         "cross_account_signal": false
       },
       {
-        "campaign_id": "bot_velo_1eb068",
+        "campaign_id": "bot_velo_e39b74",
         "steps": 104,
         "families": [
           "RAT-001"
@@ -1928,48 +1911,48 @@
         "cross_account_signal": false
       },
       {
-        "campaign_id": "ai-enhan_0bd5e5",
+        "campaign_id": "merchant_00dcbb",
         "steps": 84,
         "families": [
-          "GP-002"
-        ],
-        "graph_heavy_steps": 0,
-        "max_cluster_size": 1,
-        "max_beneficiary_payers": 0,
-        "recall": 0.0,
-        "bypass_rate": 0.0,
-        "cross_account_signal": false
-      },
-      {
-        "campaign_id": "ai-coord_1ec3bd",
-        "steps": 84,
-        "families": [
-          "AUT-003"
+          "FAM-062"
         ],
         "graph_heavy_steps": 0,
         "max_cluster_size": 2,
         "max_beneficiary_payers": 0,
-        "recall": 0.988095,
+        "recall": 1.0,
+        "bypass_rate": 0.0,
+        "cross_account_signal": false
+      },
+      {
+        "campaign_id": "syntheti_edff50",
+        "steps": 84,
+        "families": [
+          "FAM-065"
+        ],
+        "graph_heavy_steps": 0,
+        "max_cluster_size": 2,
+        "max_beneficiary_payers": 0,
+        "recall": 1.0,
         "bypass_rate": 0.0,
         "cross_account_signal": false
       }
     ],
-    "tabular_before_recall": 0.763636,
-    "tabular_after_recall": 0.742424,
-    "graph_before_recall": 0.763636,
-    "graph_after_recall": 0.742424,
+    "tabular_before_recall": 0.833333,
+    "tabular_after_recall": 0.830303,
+    "graph_before_recall": 0.833333,
+    "graph_after_recall": 0.830303,
     "graph_recall_lift": 0.0,
-    "tabular_before_asr": 0.236364,
-    "tabular_after_asr": 0.257576,
-    "graph_before_asr": 0.236364,
-    "graph_after_asr": 0.257576,
+    "tabular_before_asr": 0.166667,
+    "tabular_after_asr": 0.169697,
+    "graph_before_asr": 0.166667,
+    "graph_after_asr": 0.169697,
     "graph_asr_reduction": 0.0,
     "graph_heavy_tabular_recall": 0.0,
     "graph_heavy_graph_recall": 0.0,
     "graph_heavy_recall_lift": 0.0
   },
   "failure_analysis": {
-    "generated_at": "2026-08-29T12:21:59.510157+00:00",
+    "generated_at": "2026-08-30T12:34:12.920448+00:00",
     "before_version": "v1",
     "after_version": "v3",
     "payment_attacks": 660,
@@ -1982,18 +1965,12 @@
         "CTL-0043",
         "CTL-0044",
         "CTL-0045",
-        "CTL-0113",
-        "CTL-0114",
-        "CTL-0115",
         "CTL-0139",
-        "CTL-0150",
-        "CTL-0151",
         "CTL-0236",
         "CTL-0237",
         "CTL-0279",
         "CTL-0280",
         "CTL-0281",
-        "CTL-0285",
         "CTL-0304",
         "CTL-0305",
         "CTL-0306",
@@ -2010,18 +1987,12 @@
         "CTL-0043",
         "CTL-0044",
         "CTL-0045",
-        "CTL-0113",
-        "CTL-0114",
-        "CTL-0115",
         "CTL-0139",
-        "CTL-0150",
-        "CTL-0151",
         "CTL-0236",
         "CTL-0237",
         "CTL-0279",
         "CTL-0280",
         "CTL-0281",
-        "CTL-0285",
         "CTL-0304",
         "CTL-0305",
         "CTL-0306",
@@ -2034,13 +2005,224 @@
     },
     "ctl_heatmap": {
       "gap_CTL-0331": {
-        "triggered_count": 4,
+        "triggered_count": 7,
         "gap_count": 0,
         "miss_count": 0,
         "bypass_with_trigger": 0,
         "bypass_without_trigger": 0,
         "families_triggered": {
-          "SIA-001": 4
+          "SIA-001": 7
+        },
+        "families_missed": {},
+        "families_gapped": {}
+      },
+      "CTL-0140": {
+        "triggered_count": 353,
+        "gap_count": 0,
+        "miss_count": 0,
+        "bypass_with_trigger": 0,
+        "bypass_without_trigger": 0,
+        "families_triggered": {
+          "SIA-001": 7,
+          "AG-001": 44,
+          "SEP-001": 58,
+          "RAT-001": 84,
+          "FAM-062": 80,
+          "FAM-065": 80
+        },
+        "families_missed": {},
+        "families_gapped": {}
+      },
+      "gap_CTL-0330": {
+        "triggered_count": 7,
+        "gap_count": 0,
+        "miss_count": 0,
+        "bypass_with_trigger": 0,
+        "bypass_without_trigger": 0,
+        "families_triggered": {
+          "SIA-001": 7
+        },
+        "families_missed": {},
+        "families_gapped": {}
+      },
+      "gap_CTL-0332": {
+        "triggered_count": 7,
+        "gap_count": 0,
+        "miss_count": 0,
+        "bypass_with_trigger": 0,
+        "bypass_without_trigger": 0,
+        "families_triggered": {
+          "SIA-001": 7
+        },
+        "families_missed": {},
+        "families_gapped": {}
+      },
+      "CTL-0240": {
+        "triggered_count": 356,
+        "gap_count": 0,
+        "miss_count": 0,
+        "bypass_with_trigger": 0,
+        "bypass_without_trigger": 0,
+        "families_triggered": {
+          "SIA-001": 7,
+          "AG-001": 44,
+          "SEP-001": 61,
+          "RAT-001": 84,
+          "FAM-062": 80,
+          "FAM-065": 80
+        },
+        "families_missed": {},
+        "families_gapped": {}
+      },
+      "CTL-0018": {
+        "triggered_count": 356,
+        "gap_count": 0,
+        "miss_count": 0,
+        "bypass_with_trigger": 0,
+        "bypass_without_trigger": 0,
+        "families_triggered": {
+          "SIA-001": 7,
+          "AG-001": 44,
+          "SEP-001": 61,
+          "RAT-001": 84,
+          "FAM-062": 80,
+          "FAM-065": 80
+        },
+        "families_missed": {},
+        "families_gapped": {}
+      },
+      "genai_document_forgery": {
+        "triggered_count": 22,
+        "gap_count": 0,
+        "miss_count": 0,
+        "bypass_with_trigger": 0,
+        "bypass_without_trigger": 0,
+        "families_triggered": {
+          "SIA-001": 7,
+          "SEP-001": 3,
+          "RAT-001": 4,
+          "FAM-062": 4,
+          "FAM-065": 4
+        },
+        "families_missed": {},
+        "families_gapped": {}
+      },
+      "genai_cross_stage": {
+        "triggered_count": 36,
+        "gap_count": 0,
+        "miss_count": 0,
+        "bypass_with_trigger": 0,
+        "bypass_without_trigger": 0,
+        "families_triggered": {
+          "SIA-001": 7,
+          "AG-001": 20,
+          "SEP-001": 9
+        },
+        "families_missed": {},
+        "families_gapped": {}
+      },
+      "CTL-0096": {
+        "triggered_count": 356,
+        "gap_count": 0,
+        "miss_count": 0,
+        "bypass_with_trigger": 0,
+        "bypass_without_trigger": 0,
+        "families_triggered": {
+          "SIA-001": 7,
+          "AG-001": 44,
+          "SEP-001": 61,
+          "RAT-001": 84,
+          "FAM-062": 80,
+          "FAM-065": 80
+        },
+        "families_missed": {},
+        "families_gapped": {}
+      },
+      "genai_prompt_injection": {
+        "triggered_count": 57,
+        "gap_count": 0,
+        "miss_count": 0,
+        "bypass_with_trigger": 0,
+        "bypass_without_trigger": 0,
+        "families_triggered": {
+          "SIA-001": 7,
+          "AG-001": 20,
+          "SEP-001": 6,
+          "RAT-001": 16,
+          "FAM-062": 4,
+          "FAM-065": 4
+        },
+        "families_missed": {},
+        "families_gapped": {}
+      },
+      "CTL-0276": {
+        "triggered_count": 71,
+        "gap_count": 0,
+        "miss_count": 0,
+        "bypass_with_trigger": 0,
+        "bypass_without_trigger": 0,
+        "families_triggered": {
+          "SIA-001": 2,
+          "SEP-001": 20,
+          "RAT-001": 7,
+          "FAM-062": 21,
+          "FAM-065": 21
+        },
+        "families_missed": {},
+        "families_gapped": {}
+      },
+      "CTL-0236": {
+        "triggered_count": 356,
+        "gap_count": 1,
+        "miss_count": 0,
+        "bypass_with_trigger": 0,
+        "bypass_without_trigger": 0,
+        "families_triggered": {
+          "SIA-001": 7,
+          "AG-001": 44,
+          "SEP-001": 61,
+          "RAT-001": 84,
+          "FAM-062": 80,
+          "FAM-065": 80
+        },
+        "families_missed": {},
+        "families_gapped": {}
+      },
+      "gap_CTL-0333": {
+        "triggered_count": 7,
+        "gap_count": 0,
+        "miss_count": 0,
+        "bypass_with_trigger": 0,
+        "bypass_without_trigger": 0,
+        "families_triggered": {
+          "SIA-001": 7
+        },
+        "families_missed": {},
+        "families_gapped": {}
+      },
+      "CTL-0336": {
+        "triggered_count": 68,
+        "gap_count": 0,
+        "miss_count": 0,
+        "bypass_with_trigger": 0,
+        "bypass_without_trigger": 0,
+        "families_triggered": {
+          "SIA-001": 7,
+          "SEP-001": 61
+        },
+        "families_missed": {},
+        "families_gapped": {}
+      },
+      "CTL-0323": {
+        "triggered_count": 112,
+        "gap_count": 0,
+        "miss_count": 0,
+        "bypass_with_trigger": 0,
+        "bypass_without_trigger": 0,
+        "families_triggered": {
+          "SIA-001": 7,
+          "AG-001": 44,
+          "SEP-001": 61
         },
         "families_missed": {},
         "families_gapped": {}
@@ -2059,477 +2241,204 @@
         "families_missed": {},
         "families_gapped": {}
       },
-      "gap_CTL-0333": {
-        "triggered_count": 4,
+      "CTL-0321": {
+        "triggered_count": 68,
         "gap_count": 0,
         "miss_count": 0,
         "bypass_with_trigger": 0,
         "bypass_without_trigger": 0,
         "families_triggered": {
-          "SIA-001": 4
-        },
-        "families_missed": {},
-        "families_gapped": {}
-      },
-      "CTL-0336": {
-        "triggered_count": 65,
-        "gap_count": 0,
-        "miss_count": 0,
-        "bypass_with_trigger": 0,
-        "bypass_without_trigger": 0,
-        "families_triggered": {
-          "SIA-001": 4,
+          "SIA-001": 7,
           "SEP-001": 61
         },
         "families_missed": {},
         "families_gapped": {}
       },
-      "CTL-0323": {
-        "triggered_count": 169,
+      "CTL-0105": {
+        "triggered_count": 183,
         "gap_count": 0,
         "miss_count": 0,
         "bypass_with_trigger": 0,
         "bypass_without_trigger": 0,
         "families_triggered": {
-          "SIA-001": 4,
-          "AG-001": 96,
-          "SEP-001": 61,
-          "RAT-001": 8
+          "SIA-001": 3,
+          "SEP-001": 45,
+          "RAT-001": 7,
+          "FAM-062": 64,
+          "FAM-065": 64
         },
         "families_missed": {},
         "families_gapped": {}
       },
-      "genai_prompt_injection": {
-        "triggered_count": 65,
-        "gap_count": 0,
-        "miss_count": 0,
-        "bypass_with_trigger": 0,
-        "bypass_without_trigger": 0,
-        "families_triggered": {
-          "SIA-001": 4,
-          "AG-001": 28,
-          "SEP-001": 6,
-          "RAT-001": 24,
-          "AUT-003": 3
-        },
-        "families_missed": {},
-        "families_gapped": {}
-      },
-      "CTL-0236": {
-        "triggered_count": 253,
-        "gap_count": 1,
-        "miss_count": 0,
-        "bypass_with_trigger": 0,
-        "bypass_without_trigger": 0,
-        "families_triggered": {
-          "SIA-001": 4,
-          "AG-001": 96,
-          "SEP-001": 61,
-          "RAT-001": 92
-        },
-        "families_missed": {},
-        "families_gapped": {}
-      },
-      "genai_cross_stage": {
-        "triggered_count": 37,
-        "gap_count": 0,
-        "miss_count": 0,
-        "bypass_with_trigger": 0,
-        "bypass_without_trigger": 0,
-        "families_triggered": {
-          "SIA-001": 4,
-          "AG-001": 24,
-          "SEP-001": 9
-        },
-        "families_missed": {},
-        "families_gapped": {}
-      },
-      "CTL-0276": {
-        "triggered_count": 55,
+      "CTL-0013": {
+        "triggered_count": 320,
         "gap_count": 0,
         "miss_count": 0,
         "bypass_with_trigger": 0,
         "bypass_without_trigger": 0,
         "families_triggered": {
           "SIA-001": 1,
-          "AG-001": 7,
-          "SEP-001": 20,
-          "RAT-001": 7,
-          "AUT-003": 20
+          "AG-001": 38,
+          "SEP-001": 55,
+          "RAT-001": 78,
+          "FAM-062": 74,
+          "FAM-065": 74
         },
         "families_missed": {},
         "families_gapped": {}
       },
-      "genai_document_forgery": {
+      "mule_young_account_cashout": {
         "triggered_count": 18,
         "gap_count": 0,
         "miss_count": 0,
         "bypass_with_trigger": 0,
         "bypass_without_trigger": 0,
         "families_triggered": {
-          "SIA-001": 4,
+          "SIA-001": 1,
+          "SEP-001": 15,
+          "RAT-001": 2
+        },
+        "families_missed": {},
+        "families_gapped": {}
+      },
+      "beneficiary_unknown": {
+        "triggered_count": 36,
+        "gap_count": 0,
+        "miss_count": 0,
+        "bypass_with_trigger": 0,
+        "bypass_without_trigger": 0,
+        "families_triggered": {
+          "SIA-001": 1,
           "AG-001": 4,
-          "SEP-001": 3,
-          "RAT-001": 4,
-          "AUT-003": 3
-        },
-        "families_missed": {},
-        "families_gapped": {}
-      },
-      "CTL-0140": {
-        "triggered_count": 311,
-        "gap_count": 0,
-        "miss_count": 0,
-        "bypass_with_trigger": 0,
-        "bypass_without_trigger": 0,
-        "families_triggered": {
-          "SIA-001": 4,
-          "AG-001": 96,
-          "SEP-001": 58,
-          "RAT-001": 92,
-          "AUT-003": 61
-        },
-        "families_missed": {},
-        "families_gapped": {}
-      },
-      "CTL-0240": {
-        "triggered_count": 253,
-        "gap_count": 0,
-        "miss_count": 0,
-        "bypass_with_trigger": 0,
-        "bypass_without_trigger": 0,
-        "families_triggered": {
-          "SIA-001": 4,
-          "AG-001": 96,
-          "SEP-001": 61,
-          "RAT-001": 92
-        },
-        "families_missed": {},
-        "families_gapped": {}
-      },
-      "CTL-0096": {
-        "triggered_count": 314,
-        "gap_count": 0,
-        "miss_count": 0,
-        "bypass_with_trigger": 0,
-        "bypass_without_trigger": 0,
-        "families_triggered": {
-          "SIA-001": 4,
-          "AG-001": 96,
-          "SEP-001": 61,
-          "RAT-001": 92,
-          "AUT-003": 61
-        },
-        "families_missed": {},
-        "families_gapped": {}
-      },
-      "CTL-0321": {
-        "triggered_count": 65,
-        "gap_count": 0,
-        "miss_count": 0,
-        "bypass_with_trigger": 0,
-        "bypass_without_trigger": 0,
-        "families_triggered": {
-          "SIA-001": 4,
-          "SEP-001": 61
-        },
-        "families_missed": {},
-        "families_gapped": {}
-      },
-      "gap_CTL-0330": {
-        "triggered_count": 4,
-        "gap_count": 0,
-        "miss_count": 0,
-        "bypass_with_trigger": 0,
-        "bypass_without_trigger": 0,
-        "families_triggered": {
-          "SIA-001": 4
-        },
-        "families_missed": {},
-        "families_gapped": {}
-      },
-      "CTL-0018": {
-        "triggered_count": 314,
-        "gap_count": 0,
-        "miss_count": 0,
-        "bypass_with_trigger": 0,
-        "bypass_without_trigger": 0,
-        "families_triggered": {
-          "SIA-001": 4,
-          "AG-001": 96,
-          "SEP-001": 61,
-          "RAT-001": 92,
-          "AUT-003": 61
-        },
-        "families_missed": {},
-        "families_gapped": {}
-      },
-      "gap_CTL-0332": {
-        "triggered_count": 4,
-        "gap_count": 0,
-        "miss_count": 0,
-        "bypass_with_trigger": 0,
-        "bypass_without_trigger": 0,
-        "families_triggered": {
-          "SIA-001": 4
+          "SEP-001": 23,
+          "RAT-001": 8
         },
         "families_missed": {},
         "families_gapped": {}
       },
       "acquirer_mcc_mismatch": {
-        "triggered_count": 80,
+        "triggered_count": 84,
         "gap_count": 0,
         "miss_count": 0,
         "bypass_with_trigger": 0,
         "bypass_without_trigger": 0,
         "families_triggered": {
-          "SIA-001": 80
+          "SIA-001": 80,
+          "SEP-001": 4
         },
         "families_missed": {},
         "families_gapped": {}
       },
       "acquirer_high_risk_merchant": {
-        "triggered_count": 80,
+        "triggered_count": 84,
         "gap_count": 0,
         "miss_count": 0,
         "bypass_with_trigger": 0,
         "bypass_without_trigger": 0,
         "families_triggered": {
-          "SIA-001": 80
-        },
-        "families_missed": {},
-        "families_gapped": {}
-      },
-      "gap_CTL-0237": {
-        "triggered_count": 24,
-        "gap_count": 0,
-        "miss_count": 0,
-        "bypass_with_trigger": 0,
-        "bypass_without_trigger": 0,
-        "families_triggered": {
-          "AG-001": 24
+          "SIA-001": 80,
+          "SEP-001": 4
         },
         "families_missed": {},
         "families_gapped": {}
       },
       "genai_agent_tool_abuse": {
+        "triggered_count": 56,
+        "gap_count": 0,
+        "miss_count": 0,
+        "bypass_with_trigger": 0,
+        "bypass_without_trigger": 0,
+        "families_triggered": {
+          "AG-001": 20,
+          "SEP-001": 12,
+          "RAT-001": 24
+        },
+        "families_missed": {},
+        "families_gapped": {}
+      },
+      "gap_CTL-0237": {
+        "triggered_count": 180,
+        "gap_count": 0,
+        "miss_count": 0,
+        "bypass_with_trigger": 0,
+        "bypass_without_trigger": 0,
+        "families_triggered": {
+          "AG-001": 20,
+          "FAM-062": 80,
+          "FAM-065": 80
+        },
+        "families_missed": {},
+        "families_gapped": {}
+      },
+      "gateway_velocity_burst": {
+        "triggered_count": 304,
+        "gap_count": 0,
+        "miss_count": 0,
+        "bypass_with_trigger": 0,
+        "bypass_without_trigger": 0,
+        "families_triggered": {
+          "AG-001": 35,
+          "SEP-001": 52,
+          "RAT-001": 75,
+          "FAM-062": 71,
+          "FAM-065": 71
+        },
+        "families_missed": {},
+        "families_gapped": {}
+      },
+      "gap_CTL-0105": {
         "triggered_count": 89,
         "gap_count": 0,
         "miss_count": 0,
         "bypass_with_trigger": 0,
         "bypass_without_trigger": 0,
         "families_triggered": {
-          "AG-001": 36,
-          "SEP-001": 12,
-          "RAT-001": 32,
-          "AUT-003": 9
-        },
-        "families_missed": {},
-        "families_gapped": {}
-      },
-      "CTL-0013": {
-        "triggered_count": 286,
-        "gap_count": 0,
-        "miss_count": 0,
-        "bypass_with_trigger": 0,
-        "bypass_without_trigger": 0,
-        "families_triggered": {
-          "AG-001": 90,
-          "SEP-001": 55,
-          "RAT-001": 86,
-          "AUT-003": 55
-        },
-        "families_missed": {},
-        "families_gapped": {}
-      },
-      "gateway_velocity_burst": {
-        "triggered_count": 274,
-        "gap_count": 0,
-        "miss_count": 0,
-        "bypass_with_trigger": 0,
-        "bypass_without_trigger": 0,
-        "families_triggered": {
-          "AG-001": 87,
-          "SEP-001": 52,
-          "RAT-001": 83,
-          "AUT-003": 52
-        },
-        "families_missed": {},
-        "families_gapped": {}
-      },
-      "gap_CTL-0108": {
-        "triggered_count": 144,
-        "gap_count": 0,
-        "miss_count": 0,
-        "bypass_with_trigger": 0,
-        "bypass_without_trigger": 0,
-        "families_triggered": {
-          "AG-001": 72,
-          "RAT-001": 72
-        },
-        "families_missed": {},
-        "families_gapped": {}
-      },
-      "gap_CTL-0107": {
-        "triggered_count": 144,
-        "gap_count": 0,
-        "miss_count": 0,
-        "bypass_with_trigger": 0,
-        "bypass_without_trigger": 0,
-        "families_triggered": {
-          "AG-001": 72,
-          "RAT-001": 72
-        },
-        "families_missed": {},
-        "families_gapped": {}
-      },
-      "gap_CTL-0105": {
-        "triggered_count": 130,
-        "gap_count": 0,
-        "miss_count": 0,
-        "bypass_with_trigger": 0,
-        "bypass_without_trigger": 0,
-        "families_triggered": {
-          "AG-001": 65,
+          "AG-001": 24,
           "RAT-001": 65
         },
         "families_missed": {},
         "families_gapped": {}
       },
       "gap_CTL-0106": {
-        "triggered_count": 144,
+        "triggered_count": 96,
         "gap_count": 0,
         "miss_count": 0,
         "bypass_with_trigger": 0,
         "bypass_without_trigger": 0,
         "families_triggered": {
-          "AG-001": 72,
+          "AG-001": 24,
           "RAT-001": 72
         },
         "families_missed": {},
         "families_gapped": {}
       },
-      "CTL-0105": {
-        "triggered_count": 104,
+      "gap_CTL-0107": {
+        "triggered_count": 96,
         "gap_count": 0,
         "miss_count": 0,
         "bypass_with_trigger": 0,
         "bypass_without_trigger": 0,
         "families_triggered": {
-          "AG-001": 7,
-          "SEP-001": 45,
-          "RAT-001": 7,
-          "AUT-003": 45
+          "AG-001": 24,
+          "RAT-001": 72
         },
         "families_missed": {},
         "families_gapped": {}
       },
-      "aml_structuring_proxy": {
-        "triggered_count": 4,
+      "gap_CTL-0108": {
+        "triggered_count": 96,
         "gap_count": 0,
         "miss_count": 0,
         "bypass_with_trigger": 0,
         "bypass_without_trigger": 0,
         "families_triggered": {
-          "AG-001": 1,
-          "SEP-001": 1,
-          "RAT-001": 1,
-          "AUT-003": 1
+          "AG-001": 24,
+          "RAT-001": 72
         },
         "families_missed": {},
         "families_gapped": {}
       },
-      "mule_young_account_cashout": {
-        "triggered_count": 34,
-        "gap_count": 0,
-        "miss_count": 0,
-        "bypass_with_trigger": 0,
-        "bypass_without_trigger": 0,
-        "families_triggered": {
-          "AG-001": 2,
-          "SEP-001": 15,
-          "RAT-001": 2,
-          "AUT-003": 15
-        },
-        "families_missed": {},
-        "families_gapped": {}
-      },
-      "beneficiary_unknown": {
-        "triggered_count": 62,
-        "gap_count": 0,
-        "miss_count": 0,
-        "bypass_with_trigger": 0,
-        "bypass_without_trigger": 0,
-        "families_triggered": {
-          "AG-001": 8,
-          "SEP-001": 23,
-          "RAT-001": 8,
-          "AUT-003": 23
-        },
-        "families_missed": {},
-        "families_gapped": {}
-      },
-      "genai_adaptive_evasion": {
-        "triggered_count": 62,
-        "gap_count": 0,
-        "miss_count": 0,
-        "bypass_with_trigger": 0,
-        "bypass_without_trigger": 0,
-        "families_triggered": {
-          "AG-001": 12,
-          "SEP-001": 9,
-          "RAT-001": 32,
-          "AUT-003": 9
-        },
-        "families_missed": {},
-        "families_gapped": {}
-      },
-      "genai_vishing": {
-        "triggered_count": 17,
-        "gap_count": 0,
-        "miss_count": 0,
-        "bypass_with_trigger": 0,
-        "bypass_without_trigger": 0,
-        "families_triggered": {
-          "AG-001": 4,
-          "SEP-001": 6,
-          "RAT-001": 4,
-          "AUT-003": 3
-        },
-        "families_missed": {},
-        "families_gapped": {}
-      },
-      "genai_victim_coerced": {
-        "triggered_count": 14,
-        "gap_count": 0,
-        "miss_count": 0,
-        "bypass_with_trigger": 0,
-        "bypass_without_trigger": 0,
-        "families_triggered": {
-          "AG-001": 4,
-          "SEP-001": 3,
-          "RAT-001": 4,
-          "AUT-003": 3
-        },
-        "families_missed": {},
-        "families_gapped": {}
-      },
-      "genai_social_engineering": {
-        "triggered_count": 37,
-        "gap_count": 0,
-        "miss_count": 0,
-        "bypass_with_trigger": 0,
-        "bypass_without_trigger": 0,
-        "families_triggered": {
-          "AG-001": 4,
-          "SEP-001": 6,
-          "RAT-001": 24,
-          "AUT-003": 3
-        },
-        "families_missed": {},
-        "families_gapped": {}
-      },
-      "gap_CTL-0305": {
+      "gap_CTL-0306": {
         "triggered_count": 3,
         "gap_count": 0,
         "miss_count": 0,
@@ -2541,7 +2450,22 @@
         "families_missed": {},
         "families_gapped": {}
       },
-      "gap_CTL-0304": {
+      "genai_vishing": {
+        "triggered_count": 18,
+        "gap_count": 0,
+        "miss_count": 0,
+        "bypass_with_trigger": 0,
+        "bypass_without_trigger": 0,
+        "families_triggered": {
+          "SEP-001": 6,
+          "RAT-001": 4,
+          "FAM-062": 4,
+          "FAM-065": 4
+        },
+        "families_missed": {},
+        "families_gapped": {}
+      },
+      "gap_CTL-0305": {
         "triggered_count": 3,
         "gap_count": 0,
         "miss_count": 0,
@@ -2565,6 +2489,21 @@
         "families_missed": {},
         "families_gapped": {}
       },
+      "genai_social_engineering": {
+        "triggered_count": 30,
+        "gap_count": 0,
+        "miss_count": 0,
+        "bypass_with_trigger": 0,
+        "bypass_without_trigger": 0,
+        "families_triggered": {
+          "SEP-001": 6,
+          "RAT-001": 16,
+          "FAM-062": 4,
+          "FAM-065": 4
+        },
+        "families_missed": {},
+        "families_gapped": {}
+      },
       "genai_deepfake_identity": {
         "triggered_count": 3,
         "gap_count": 0,
@@ -2577,7 +2516,7 @@
         "families_missed": {},
         "families_gapped": {}
       },
-      "gap_CTL-0306": {
+      "gap_CTL-0304": {
         "triggered_count": 3,
         "gap_count": 0,
         "miss_count": 0,
@@ -2589,14 +2528,14 @@
         "families_missed": {},
         "families_gapped": {}
       },
-      "gap_CTL-0071": {
-        "triggered_count": 58,
+      "gap_CTL-0013": {
+        "triggered_count": 3,
         "gap_count": 0,
         "miss_count": 0,
         "bypass_with_trigger": 0,
         "bypass_without_trigger": 0,
         "families_triggered": {
-          "SEP-001": 58
+          "SEP-001": 3
         },
         "families_missed": {},
         "families_gapped": {}
@@ -2625,14 +2564,14 @@
         "families_missed": {},
         "families_gapped": {}
       },
-      "gap_CTL-0013": {
-        "triggered_count": 3,
+      "gap_CTL-0071": {
+        "triggered_count": 58,
         "gap_count": 0,
         "miss_count": 0,
         "bypass_with_trigger": 0,
         "bypass_without_trigger": 0,
         "families_triggered": {
-          "SEP-001": 3
+          "SEP-001": 58
         },
         "families_missed": {},
         "families_gapped": {}
@@ -2649,139 +2588,147 @@
         "families_missed": {},
         "families_gapped": {}
       },
-      "CTL-0215": {
-        "triggered_count": 92,
+      "aml_structuring_proxy": {
+        "triggered_count": 6,
         "gap_count": 0,
         "miss_count": 0,
         "bypass_with_trigger": 0,
         "bypass_without_trigger": 0,
         "families_triggered": {
-          "RAT-001": 92
+          "SEP-001": 1,
+          "RAT-001": 1,
+          "FAM-062": 2,
+          "FAM-065": 2
         },
         "families_missed": {},
         "families_gapped": {}
       },
-      "gap_CTL-0280": {
-        "triggered_count": 20,
+      "genai_adaptive_evasion": {
+        "triggered_count": 33,
         "gap_count": 0,
         "miss_count": 0,
         "bypass_with_trigger": 0,
         "bypass_without_trigger": 0,
         "families_triggered": {
-          "RAT-001": 20
+          "SEP-001": 9,
+          "RAT-001": 24
+        },
+        "families_missed": {},
+        "families_gapped": {}
+      },
+      "genai_victim_coerced": {
+        "triggered_count": 15,
+        "gap_count": 0,
+        "miss_count": 0,
+        "bypass_with_trigger": 0,
+        "bypass_without_trigger": 0,
+        "families_triggered": {
+          "SEP-001": 3,
+          "RAT-001": 4,
+          "FAM-062": 4,
+          "FAM-065": 4
         },
         "families_missed": {},
         "families_gapped": {}
       },
       "gap_CTL-0139": {
-        "triggered_count": 20,
+        "triggered_count": 12,
         "gap_count": 0,
         "miss_count": 0,
         "bypass_with_trigger": 0,
         "bypass_without_trigger": 0,
         "families_triggered": {
-          "RAT-001": 20
-        },
-        "families_missed": {},
-        "families_gapped": {}
-      },
-      "gap_CTL-0281": {
-        "triggered_count": 20,
-        "gap_count": 0,
-        "miss_count": 0,
-        "bypass_with_trigger": 0,
-        "bypass_without_trigger": 0,
-        "families_triggered": {
-          "RAT-001": 20
+          "RAT-001": 12
         },
         "families_missed": {},
         "families_gapped": {}
       },
       "CTL-0282": {
-        "triggered_count": 92,
+        "triggered_count": 84,
         "gap_count": 0,
         "miss_count": 0,
         "bypass_with_trigger": 0,
         "bypass_without_trigger": 0,
         "families_triggered": {
-          "RAT-001": 92
+          "RAT-001": 84
+        },
+        "families_missed": {},
+        "families_gapped": {}
+      },
+      "gap_CTL-0280": {
+        "triggered_count": 12,
+        "gap_count": 0,
+        "miss_count": 0,
+        "bypass_with_trigger": 0,
+        "bypass_without_trigger": 0,
+        "families_triggered": {
+          "RAT-001": 12
+        },
+        "families_missed": {},
+        "families_gapped": {}
+      },
+      "gap_CTL-0281": {
+        "triggered_count": 12,
+        "gap_count": 0,
+        "miss_count": 0,
+        "bypass_with_trigger": 0,
+        "bypass_without_trigger": 0,
+        "families_triggered": {
+          "RAT-001": 12
         },
         "families_missed": {},
         "families_gapped": {}
       },
       "CTL-0279": {
-        "triggered_count": 92,
+        "triggered_count": 84,
         "gap_count": 1,
         "miss_count": 0,
         "bypass_with_trigger": 0,
         "bypass_without_trigger": 0,
         "families_triggered": {
-          "RAT-001": 92
+          "RAT-001": 84
         },
         "families_missed": {},
         "families_gapped": {}
       },
-      "gap_CTL-0016": {
-        "triggered_count": 61,
+      "CTL-0215": {
+        "triggered_count": 84,
         "gap_count": 0,
         "miss_count": 0,
         "bypass_with_trigger": 0,
         "bypass_without_trigger": 0,
         "families_triggered": {
-          "AUT-003": 61
-        },
-        "families_missed": {},
-        "families_gapped": {}
-      },
-      "gap_CTL-0115": {
-        "triggered_count": 61,
-        "gap_count": 0,
-        "miss_count": 0,
-        "bypass_with_trigger": 0,
-        "bypass_without_trigger": 0,
-        "families_triggered": {
-          "AUT-003": 61
+          "RAT-001": 84
         },
         "families_missed": {},
         "families_gapped": {}
       },
       "CTL-0268": {
-        "triggered_count": 61,
+        "triggered_count": 160,
         "gap_count": 0,
         "miss_count": 0,
         "bypass_with_trigger": 0,
         "bypass_without_trigger": 0,
         "families_triggered": {
-          "AUT-003": 61
+          "FAM-062": 80,
+          "FAM-065": 80
         },
         "families_missed": {},
         "families_gapped": {}
       },
-      "gap_CTL-0113": {
-        "triggered_count": 61,
+      "gateway_rail_risk": {
+        "triggered_count": 1,
         "gap_count": 0,
         "miss_count": 0,
         "bypass_with_trigger": 0,
         "bypass_without_trigger": 0,
         "families_triggered": {
-          "AUT-003": 61
+          "FAM-065": 1
         },
         "families_missed": {},
         "families_gapped": {}
       },
-      "gap_CTL-0114": {
-        "triggered_count": 61,
-        "gap_count": 0,
-        "miss_count": 0,
-        "bypass_with_trigger": 0,
-        "bypass_without_trigger": 0,
-        "families_triggered": {
-          "AUT-003": 61
-        },
-        "families_missed": {},
-        "families_gapped": {}
-      },
-      "CTL-0113": {
+      "CTL-0237": {
         "triggered_count": 0,
         "gap_count": 20,
         "miss_count": 0,
@@ -2795,39 +2742,13 @@
       },
       "CTL-0016": {
         "triggered_count": 0,
-        "gap_count": 20,
+        "gap_count": 1,
         "miss_count": 0,
         "bypass_with_trigger": 0,
         "bypass_without_trigger": 0,
         "families_triggered": {},
         "families_missed": {},
-        "families_gapped": {
-          "expected": 20
-        }
-      },
-      "CTL-0114": {
-        "triggered_count": 0,
-        "gap_count": 20,
-        "miss_count": 0,
-        "bypass_with_trigger": 0,
-        "bypass_without_trigger": 0,
-        "families_triggered": {},
-        "families_missed": {},
-        "families_gapped": {
-          "expected": 20
-        }
-      },
-      "CTL-0115": {
-        "triggered_count": 0,
-        "gap_count": 20,
-        "miss_count": 0,
-        "bypass_with_trigger": 0,
-        "bypass_without_trigger": 0,
-        "families_triggered": {},
-        "families_missed": {},
-        "families_gapped": {
-          "expected": 20
-        }
+        "families_gapped": {}
       },
       "CTL-0042": {
         "triggered_count": 0,
@@ -2879,36 +2800,6 @@
         "families_missed": {},
         "families_gapped": {}
       },
-      "CTL-0150": {
-        "triggered_count": 0,
-        "gap_count": 1,
-        "miss_count": 0,
-        "bypass_with_trigger": 0,
-        "bypass_without_trigger": 0,
-        "families_triggered": {},
-        "families_missed": {},
-        "families_gapped": {}
-      },
-      "CTL-0151": {
-        "triggered_count": 0,
-        "gap_count": 1,
-        "miss_count": 0,
-        "bypass_with_trigger": 0,
-        "bypass_without_trigger": 0,
-        "families_triggered": {},
-        "families_missed": {},
-        "families_gapped": {}
-      },
-      "CTL-0237": {
-        "triggered_count": 0,
-        "gap_count": 1,
-        "miss_count": 0,
-        "bypass_with_trigger": 0,
-        "bypass_without_trigger": 0,
-        "families_triggered": {},
-        "families_missed": {},
-        "families_gapped": {}
-      },
       "CTL-0280": {
         "triggered_count": 0,
         "gap_count": 1,
@@ -2920,16 +2811,6 @@
         "families_gapped": {}
       },
       "CTL-0281": {
-        "triggered_count": 0,
-        "gap_count": 1,
-        "miss_count": 0,
-        "bypass_with_trigger": 0,
-        "bypass_without_trigger": 0,
-        "families_triggered": {},
-        "families_missed": {},
-        "families_gapped": {}
-      },
-      "CTL-0285": {
         "triggered_count": 0,
         "gap_count": 1,
         "miss_count": 0,
@@ -3022,56 +2903,28 @@
     },
     "top_ctl_gaps": [
       {
+        "control_id": "CTL-0237",
+        "triggered_count": 0,
+        "gap_count": 20,
+        "miss_count": 0,
+        "bypass_with_trigger": 0,
+        "bypass_without_trigger": 0,
+        "families_triggered": {},
+        "families_missed": {},
+        "families_gapped": {
+          "expected": 20
+        }
+      },
+      {
         "control_id": "CTL-0016",
         "triggered_count": 0,
-        "gap_count": 20,
+        "gap_count": 1,
         "miss_count": 0,
         "bypass_with_trigger": 0,
         "bypass_without_trigger": 0,
         "families_triggered": {},
         "families_missed": {},
-        "families_gapped": {
-          "expected": 20
-        }
-      },
-      {
-        "control_id": "CTL-0113",
-        "triggered_count": 0,
-        "gap_count": 20,
-        "miss_count": 0,
-        "bypass_with_trigger": 0,
-        "bypass_without_trigger": 0,
-        "families_triggered": {},
-        "families_missed": {},
-        "families_gapped": {
-          "expected": 20
-        }
-      },
-      {
-        "control_id": "CTL-0114",
-        "triggered_count": 0,
-        "gap_count": 20,
-        "miss_count": 0,
-        "bypass_with_trigger": 0,
-        "bypass_without_trigger": 0,
-        "families_triggered": {},
-        "families_missed": {},
-        "families_gapped": {
-          "expected": 20
-        }
-      },
-      {
-        "control_id": "CTL-0115",
-        "triggered_count": 0,
-        "gap_count": 20,
-        "miss_count": 0,
-        "bypass_with_trigger": 0,
-        "bypass_without_trigger": 0,
-        "families_triggered": {},
-        "families_missed": {},
-        "families_gapped": {
-          "expected": 20
-        }
+        "families_gapped": {}
       },
       {
         "control_id": "CTL-0042",
@@ -3129,7 +2982,38 @@
         "families_gapped": {}
       },
       {
-        "control_id": "CTL-0150",
+        "control_id": "CTL-0236",
+        "triggered_count": 356,
+        "gap_count": 1,
+        "miss_count": 0,
+        "bypass_with_trigger": 0,
+        "bypass_without_trigger": 0,
+        "families_triggered": {
+          "SIA-001": 7,
+          "AG-001": 44,
+          "SEP-001": 61,
+          "RAT-001": 84,
+          "FAM-062": 80,
+          "FAM-065": 80
+        },
+        "families_missed": {},
+        "families_gapped": {}
+      },
+      {
+        "control_id": "CTL-0279",
+        "triggered_count": 84,
+        "gap_count": 1,
+        "miss_count": 0,
+        "bypass_with_trigger": 0,
+        "bypass_without_trigger": 0,
+        "families_triggered": {
+          "RAT-001": 84
+        },
+        "families_missed": {},
+        "families_gapped": {}
+      },
+      {
+        "control_id": "CTL-0280",
         "triggered_count": 0,
         "gap_count": 1,
         "miss_count": 0,
@@ -3147,11 +3031,11 @@
         "sandbox_bypassed": 0,
         "sandbox_blocked": 104,
         "historical_bypass_rate": 0.0,
-        "before_ml_recall": 0.980132,
+        "before_ml_recall": 0.986755,
         "after_ml_recall": 0.986755,
-        "before_ml_asr": 0.019868,
+        "before_ml_asr": 0.013245,
         "after_ml_asr": 0.013245,
-        "asr_reduction": 0.006623,
+        "asr_reduction": 0.0,
         "control_gaps_in_campaign": 0,
         "steps_executed": 13,
         "top_ctl_triggers": [
@@ -3161,19 +3045,19 @@
           ],
           [
             "CTL-0096",
-            96
+            44
           ],
           [
             "CTL-0018",
-            96
+            44
           ],
           [
             "CTL-0323",
-            96
+            44
           ],
           [
             "CTL-0140",
-            96
+            44
           ]
         ]
       },
@@ -3183,65 +3067,86 @@
         "sandbox_bypassed": 0,
         "sandbox_blocked": 104,
         "historical_bypass_rate": 0.0,
-        "before_ml_recall": 0.330882,
-        "after_ml_recall": 0.352941,
-        "before_ml_asr": 0.669118,
-        "after_ml_asr": 0.647059,
-        "asr_reduction": 0.022059,
+        "before_ml_recall": 0.147059,
+        "after_ml_recall": 0.147059,
+        "before_ml_asr": 0.852941,
+        "after_ml_asr": 0.852941,
+        "asr_reduction": 0.0,
         "control_gaps_in_campaign": 0,
         "steps_executed": 139,
         "top_ctl_triggers": []
       },
       {
-        "family": "AUT-003",
+        "family": "FAM-062",
         "attacks": 84,
         "sandbox_bypassed": 0,
         "sandbox_blocked": 84,
         "historical_bypass_rate": 0.0,
         "before_ml_recall": 1.0,
-        "after_ml_recall": 0.988095,
+        "after_ml_recall": 1.0,
         "before_ml_asr": 0.0,
-        "after_ml_asr": 0.011905,
-        "asr_reduction": -0.011905,
+        "after_ml_asr": 0.0,
+        "asr_reduction": 0.0,
         "control_gaps_in_campaign": 0,
-        "steps_executed": 86,
+        "steps_executed": 97,
         "top_ctl_triggers": [
           [
             "CTL-0096",
-            61
+            80
           ],
           [
             "CTL-0268",
-            61
+            80
           ],
           [
             "CTL-0018",
-            61
+            80
           ],
           [
             "CTL-0140",
-            61
+            80
           ],
           [
-            "gap_CTL-0016",
-            61
+            "CTL-0240",
+            80
           ]
         ]
       },
       {
-        "family": "GP-002",
+        "family": "FAM-065",
         "attacks": 84,
         "sandbox_bypassed": 0,
         "sandbox_blocked": 84,
         "historical_bypass_rate": 0.0,
-        "before_ml_recall": 0.302083,
-        "after_ml_recall": 0.125,
-        "before_ml_asr": 0.697917,
-        "after_ml_asr": 0.875,
-        "asr_reduction": -0.177083,
+        "before_ml_recall": 1.0,
+        "after_ml_recall": 1.0,
+        "before_ml_asr": 0.0,
+        "after_ml_asr": 0.0,
+        "asr_reduction": 0.0,
         "control_gaps_in_campaign": 0,
-        "steps_executed": 96,
-        "top_ctl_triggers": []
+        "steps_executed": 97,
+        "top_ctl_triggers": [
+          [
+            "CTL-0096",
+            80
+          ],
+          [
+            "CTL-0268",
+            80
+          ],
+          [
+            "CTL-0018",
+            80
+          ],
+          [
+            "CTL-0140",
+            80
+          ],
+          [
+            "CTL-0240",
+            80
+          ]
+        ]
       },
       {
         "family": "RAT-001",
@@ -3249,33 +3154,33 @@
         "sandbox_bypassed": 0,
         "sandbox_blocked": 104,
         "historical_bypass_rate": 0.0,
-        "before_ml_recall": 0.748344,
+        "before_ml_recall": 0.847682,
         "after_ml_recall": 0.834437,
-        "before_ml_asr": 0.251656,
+        "before_ml_asr": 0.152318,
         "after_ml_asr": 0.165563,
-        "asr_reduction": 0.086093,
+        "asr_reduction": -0.013245,
         "control_gaps_in_campaign": 0,
         "steps_executed": 141,
         "top_ctl_triggers": [
           [
             "CTL-0096",
-            92
+            84
           ],
           [
             "CTL-0018",
-            92
+            84
           ],
           [
             "CTL-0140",
-            92
+            84
           ],
           [
             "CTL-0279",
-            92
+            84
           ],
           [
             "CTL-0282",
-            92
+            84
           ]
         ]
       },
@@ -3286,10 +3191,10 @@
         "sandbox_blocked": 88,
         "historical_bypass_rate": 0.0,
         "before_ml_recall": 0.969925,
-        "after_ml_recall": 0.962406,
+        "after_ml_recall": 0.781955,
         "before_ml_asr": 0.030075,
-        "after_ml_asr": 0.037594,
-        "asr_reduction": -0.007519,
+        "after_ml_asr": 0.218045,
+        "asr_reduction": -0.18797,
         "control_gaps_in_campaign": 0,
         "steps_executed": 123,
         "top_ctl_triggers": [
@@ -3322,10 +3227,10 @@
         "sandbox_blocked": 92,
         "historical_bypass_rate": 0.0,
         "before_ml_recall": 1.0,
-        "after_ml_recall": 1.0,
+        "after_ml_recall": 0.903226,
         "before_ml_asr": 0.0,
-        "after_ml_asr": 0.0,
-        "asr_reduction": 0.0,
+        "after_ml_asr": 0.096774,
+        "asr_reduction": -0.096774,
         "control_gaps_in_campaign": 0,
         "steps_executed": 127,
         "top_ctl_triggers": [
@@ -3343,11 +3248,11 @@
           ],
           [
             "CTL-0096",
-            4
+            7
           ],
           [
             "CTL-0018",
-            4
+            7
           ]
         ]
       }
@@ -3356,14 +3261,14 @@
       "families_tested": [
         "AG-001",
         "AML-004",
-        "AUT-003",
-        "GP-002",
+        "FAM-062",
+        "FAM-065",
         "RAT-001",
         "SEP-001",
         "SIA-001"
       ],
       "campaign_count": 8,
-      "total_steps": 852,
+      "total_steps": 864,
       "linear_retries_used": 495,
       "sandbox_bypass_count": 0,
       "sandbox_bypass_rate": 0.0,
@@ -3374,18 +3279,12 @@
         "CTL-0043",
         "CTL-0044",
         "CTL-0045",
-        "CTL-0113",
-        "CTL-0114",
-        "CTL-0115",
         "CTL-0139",
-        "CTL-0150",
-        "CTL-0151",
         "CTL-0236",
         "CTL-0237",
         "CTL-0279",
         "CTL-0280",
         "CTL-0281",
-        "CTL-0285",
         "CTL-0304",
         "CTL-0305",
         "CTL-0306",
@@ -3396,9 +3295,9 @@
         "CTL-0333"
       ],
       "blocking_control_breakdown": {
-        "Risk": 394,
-        "Payment Initiation": 78,
-        "KYC": 188
+        "Risk": 440,
+        "Payment Initiation": 116,
+        "KYC": 104
       },
       "outcomes_by_family": {
         "SIA-001": {
@@ -3426,76 +3325,76 @@
           "failures": 139,
           "final_decision": "BLOCK"
         },
-        "GP-002": {
-          "successes": 0,
+        "FAM-062": {
+          "successes": 1,
           "failures": 96,
           "final_decision": "BLOCK"
         },
-        "AUT-003": {
-          "successes": 2,
-          "failures": 84,
+        "FAM-065": {
+          "successes": 1,
+          "failures": 96,
           "final_decision": "BLOCK"
         }
       }
     },
     "asr_overall": {
-      "payment_attacks": 1108,
+      "payment_attacks": 1120,
       "historical_bypass_rate": 0.0,
-      "before_ml_asr": 0.277978,
-      "after_ml_asr": 0.279783,
-      "asr_reduction": -0.001805,
-      "before_ml_recall": 0.722022,
-      "after_ml_recall": 0.720217,
-      "ml_recall_lift": -0.001805
+      "before_ml_asr": 0.196429,
+      "after_ml_asr": 0.254464,
+      "asr_reduction": -0.058035,
+      "before_ml_recall": 0.803571,
+      "after_ml_recall": 0.745536,
+      "ml_recall_lift": -0.058035
     }
   },
   "summary": {
     "recommend_hardening": true,
     "hardening_gate_metric": "asr_reduction_matched",
     "gate_detail": {
-      "buffer_lift": 0.137,
-      "recall_at_1pct_fpr_delta": 0.183,
-      "recall_delta_native_threshold": -0.1555,
-      "fpr_delta": -0.067,
-      "asr_lift": 0.159747
+      "buffer_lift": 0.0801,
+      "recall_at_1pct_fpr_delta": 0.1795,
+      "recall_delta_native_threshold": -0.164,
+      "fpr_delta": -0.066,
+      "asr_lift": 0.090178
     },
     "integrity_passed": true,
     "integrity_score": "9/9",
     "fidelity_passed": true,
-    "primary_detection_metric": 0.961876,
-    "buffer_score_lift": 0.137,
-    "asr_ml_recall_lift": -0.001805,
-    "asr_reduction": -0.001805,
-    "before_ml_asr": 0.277978,
-    "after_ml_asr": 0.279783,
-    "asr_reduction_matched": 0.159747,
-    "before_ml_asr_matched": 0.333032,
-    "after_ml_asr_matched": 0.173285,
+    "primary_detection_metric": 0.959398,
+    "buffer_score_lift": 0.0801,
+    "asr_ml_recall_lift": -0.058035,
+    "asr_reduction": -0.058035,
+    "before_ml_asr": 0.196429,
+    "after_ml_asr": 0.254464,
+    "asr_reduction_matched": 0.090178,
+    "before_ml_asr_matched": 0.234821,
+    "after_ml_asr_matched": 0.144643,
     "matched_fpr": 0.05,
     "asr_by_surface": {
       "agent": 0.0,
       "auth_se": 0.0,
       "device": 0.0,
-      "kyc": 0.0,
+      "kyc": -1.0,
       "network": 0.0,
-      "open_banking": 0.285714,
-      "payment": -0.021212
+      "open_banking": 0.0,
+      "payment": -0.00303
     },
-    "mean_family_recall": 0.635401,
-    "mean_surface_recall": 0.575448,
+    "mean_family_recall": 0.652226,
+    "mean_surface_recall": 0.547186,
     "min_surface_recall": 0.0,
     "recall_by_surface": {
       "agent": 1.0,
       "auth_se": 0.0,
       "device": 0.0,
-      "kyc": 1.0,
+      "kyc": 0.0,
       "network": 1.0,
-      "open_banking": 0.285714,
-      "payment": 0.742424
+      "open_banking": 1.0,
+      "payment": 0.830303
     },
-    "mean_lofo_gap": -0.084565,
+    "mean_lofo_gap": -0.093175,
     "composite_campaign_count": 28,
-    "score_separation": 0.595357,
+    "score_separation": 0.588443,
     "graph_heavy_coverage": 0.0,
     "graph_recall_lift": 0.0,
     "graph_asr_reduction": 0.0,

@@ -44,7 +44,11 @@ export default function LabsPage() {
       api.runs(30).catch(() => []),
       api.controlsCatalog().catch(() => ({ controls: {} })),
     ]).then(([r, cat]) => {
-      const completed = (r || []).filter((run: any) => run.status === "completed")
+      // Include stopped runs — remote loops are often marked stopped, not completed,
+      // and still have evaluation / failure-analysis artifacts on disk.
+      const completed = (r || []).filter(
+        (run: any) => run.status === "completed" || run.status === "stopped"
+      )
       setRuns(completed)
       if (completed.length) setSelectedRun(completed[0].id)
       setCatalog(cat?.controls || {})
