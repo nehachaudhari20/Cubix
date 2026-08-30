@@ -31,11 +31,16 @@ COPY backend/ backend/
 COPY scripts/ scripts/
 COPY master_dataset.json .
 
-# Copy knowledge base
+# Copy knowledge base + data assets
 COPY data/knowledge/ data/knowledge/
+COPY data/baseline/ data/baseline/
+COPY data/chroma_kb/ data/chroma_kb/
+COPY data/models/ data/models/
+COPY data/evaluation/ data/evaluation/
+COPY data/known_fraud/ data/known_fraud/
 
-# Create data directories
-RUN mkdir -p data/chroma_kb data/models data/adversarial_buffer && \
+# Create runtime directories
+RUN mkdir -p data/adversarial_buffer && \
     chown -R appuser:appuser /app
 
 USER appuser

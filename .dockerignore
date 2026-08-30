@@ -20,12 +20,11 @@ frontend/build
 frontend/pnpm-lock.yaml
 frontend/package-lock.json
 
-# Data / Models (large, mount as volumes instead)
-data/chroma_kb
-data/models
+# Data — keep data/knowledge, data/baseline, data/models, data/chroma_kb
+# in the build image so KB loader, BaselineLoader, ChromaDB, and
+# pre-trained models work inside the container.
 data/synthetic_generated
 data/generated
-data/adversarial_buffer
 data/platform.db
 *.db
 *.sqlite
