@@ -103,6 +103,8 @@ data/models/hardening_report.json
 # Adversarial evidence buffer (runtime JSONL from Red Team)
 data/adversarial_buffer/*.jsonl
 !data/adversarial_buffer/.gitkeep
+# Keep demo snapshot used by Docker bake / EC2 seed
+!data/adversarial_buffer/evidence.jsonl
 
 # ==========================================
 # MLflow
@@ -127,6 +129,9 @@ tmp/
 temp/
 *.tmp
 *.bak
+*.bak-*
+bake-demo.tar
+data/platform.db.bak*
 
 # ==========================================
 # Frontend

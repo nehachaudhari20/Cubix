@@ -1,16 +1,4 @@
-master_dataset.json filter=lfs diff=lfs merge=lfs -text
-
-# Model artifacts must never have line endings converted.
-#
-# LightGBM's text format records byte offsets for each tree in `tree_sizes=`.
-# Checking a model out with CRLF on Windows shifts every offset, LightGBM seeks
-# into the middle of a tree, prints "Model format error, expect a tree here" and
-# aborts the process (exit 127, no Python traceback). That is what made
-# data/models/fraudshield_v3/lgb.txt unloadable on a fresh clone: .gitignore has
-# data/models/*.txt, but that glob does not cross a directory separator, so the
-# file inside fraudshield_v3/ was tracked and converted.
-data/models/** -text
-*.txt -text
-*.pkl -text binary
-*.joblib -text binary
-*.onnx -text binary
+# Keep shell entrypoints Unix-LF (CRLF breaks Docker ENTRYPOINT on Linux)
+*.sh text eol=lf
+scripts/docker-entrypoint.sh text eol=lf
+scripts/deploy-ec2.sh text eol=lf

@@ -38,24 +38,25 @@ services:
       RED_TEAM_USE_LLM: "true"
       LLM_PROVIDER: cohere
       COHERE_API_KEY: ${COHERE_API_KEY}
-    volumes:
-      - app-data:/app/data
+    # Do NOT mount a blank volume over /app/data — that hides baked demo
+    # knowledge/models/evaluation/buffer. Postgres holds run history; demo
+    # files live in the image (restored by entrypoint if needed).
     depends_on:
       postgres:
         condition: service_healthy
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
-      interval: 30s
+      interval: 10s
       timeout: 5s
-      start_period: 10s
-      retries: 3
+      start_period: 60s
+      retries: 12
 
   frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile
       args:
-        NEXT_PUBLIC_API_BASE_URL: http://13.51.196.173:8000
+        NEXT_PUBLIC_API_BASE_URL: ${NEXT_PUBLIC_API_BASE_URL:-http://13.51.196.173:8000}
     container_name: pdt-frontend
     restart: unless-stopped
     ports:
@@ -63,7 +64,7 @@ services:
     env_file:
       - .env
     environment:
-      NEXT_PUBLIC_API_BASE_URL: http://13.51.196.173:8000
+      NEXT_PUBLIC_API_BASE_URL: ${NEXT_PUBLIC_API_BASE_URL:-http://13.51.196.173:8000}
     depends_on:
       backend:
         condition: service_healthy
@@ -76,4 +77,3 @@ services:
 
 volumes:
   pgdata:
-  app-data:

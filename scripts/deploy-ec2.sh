@@ -1,51 +1,45 @@
 #!/bin/bash
-set -e
+set -euo pipefail
 
-echo "🚀 RedBlue EC2 Deploy"
-echo "====================="
+echo "RedBlue EC2 Deploy"
+echo "=================="
 
-# Pull latest code
-echo "📦 Pulling latest code..."
-cd /home/ubuntu/RedBlue 2>/dev/null || cd /home/ec2-user/RedBlue 2>/dev/null || { echo "❌ RedBlue repo not found"; exit 1; }
-git pull origin feat/mastercard-ui-v1
+cd /home/ec2-user/RedBlue 2>/dev/null || cd /home/ubuntu/RedBlue 2>/dev/null || {
+  echo "RedBlue repo not found under ~/RedBlue"
+  exit 1
+}
 
-# Backend — build and start with docker-compose
-echo "🐳 Building and starting backend containers..."
-docker compose down
-docker compose up -d --build
+echo "Pulling master..."
+git fetch origin
+git checkout master
+git pull origin master
 
-# Wait for backend to be healthy
-echo "⏳ Waiting for backend to be healthy..."
-for i in $(seq 1 30); do
-  if curl -s http://localhost:8000/health > /dev/null 2>&1; then
-    echo "✅ Backend is healthy on :8000"
-    break
-  fi
-  sleep 2
-done
-
-# Frontend — install deps, build, start
-echo "🏗️  Building frontend..."
-cd frontend
-npm install
-npm run build
-
-# Start frontend on port 3000
-echo "🌐 Starting frontend on :3000..."
-pkill -f "next start" 2>/dev/null || true
-nohup npx next start -p 3000 > /tmp/frontend.log 2>&1 &
-
-sleep 3
-if curl -s http://localhost:3000 > /dev/null 2>&1; then
-  echo "✅ Frontend is live on :3000"
-else
-  echo "⚠️  Frontend may still be starting — check http://localhost:3000"
+if [[ ! -f .env ]]; then
+  echo "Missing .env — copy from .env.example and set secrets first"
+  exit 1
 fi
 
+# Docker Compose DB must use service hostname "postgres"
+if grep -qE '^DB_URL=.*@(localhost|127\.0\.0\.1)' .env; then
+  echo "WARNING: DB_URL points at localhost. Inside containers use @postgres"
+fi
+
+echo "Rebuilding containers..."
+docker compose down
+docker compose build --no-cache frontend
+docker compose up -d --build
+
+echo "Waiting for health..."
+for i in $(seq 1 60); do
+  if curl -sf http://localhost:8000/health >/dev/null && curl -sf http://localhost:3000 >/dev/null; then
+    echo "Backend + frontend healthy"
+    break
+  fi
+  sleep 3
+done
+
 echo ""
-echo "====================="
-echo "✅ Deploy complete!"
-echo "   Backend:  http://localhost:8000"
-echo "   Frontend: http://localhost:3000"
-echo "   Docs:     http://localhost:8000/docs"
-echo "====================="
+echo "Deploy complete"
+echo "  UI:   http://$(curl -s ifconfig.me 2>/dev/null || echo YOUR_EC2_IP):3000/mission-control"
+echo "  API:  http://localhost:8000/docs"
+echo "=================="

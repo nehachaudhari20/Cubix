@@ -20,15 +20,10 @@ frontend/build
 frontend/pnpm-lock.yaml
 frontend/package-lock.json
 
-# Data — keep data/knowledge, data/baseline, data/models, data/chroma_kb
-# in the build image so KB loader, BaselineLoader, ChromaDB, and
-# pre-trained models work inside the container.
+# Data — keep knowledge/baseline/models/chroma/evaluation + demo snapshot
+# (platform.db + adversarial_buffer) in the image for EC2 demos.
 data/synthetic_generated
 data/generated
-data/platform.db
-*.db
-*.sqlite
-*.sqlite3
 mlruns
 mlartifacts
 

@@ -39,19 +39,22 @@ COPY data/models/ data/models/
 COPY data/evaluation/ data/evaluation/
 COPY data/known_fraud/ data/known_fraud/
 
-# Create runtime directories
-RUN mkdir -p data/adversarial_buffer && \
+# Demo snapshot (option-1 bake): loop history DB + evidence buffer
+COPY data/platform.db data/platform.db
+COPY data/adversarial_buffer/ data/adversarial_buffer/
+
+# Immutable seed copies (restore if a volume overlays /app/data)
+RUN mkdir -p /app/seed/adversarial_buffer && \
+    cp -a data/platform.db /app/seed/platform.db && \
+    cp -a data/adversarial_buffer/. /app/seed/adversarial_buffer/ && \
+    chmod +x scripts/docker-entrypoint.sh && \
     chown -R appuser:appuser /app
 
 USER appuser
 
 EXPOSE 8000
 
-HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
+HEALTHCHECK --interval=30s --timeout=5s --start-period=20s --retries=3 \
     CMD curl -f http://localhost:8000/health || exit 1
 
-CMD ["python", "-m", "uvicorn", "backend.api.main:app", \
-     "--host", "0.0.0.0", "--port", "8000", \
-     "--workers", "2", \
-     "--log-level", "info", \
-     "--access-log"]
+ENTRYPOINT ["/app/scripts/docker-entrypoint.sh"]
