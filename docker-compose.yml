@@ -54,6 +54,8 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_API_BASE_URL: http://13.51.196.173:8000
     container_name: pdt-frontend
     restart: unless-stopped
     ports:
