@@ -177,6 +177,7 @@ Thumbs.db
 reports/
 *.html
 *.png
+!docs/architecture.png
 *.jpg
 
 
