@@ -2,14 +2,16 @@
 Multi-provider LLM factory.
 
 Environment:
-  LLM_PROVIDER=cohere|gemini|bedrock|openai  (auto-detects cohere if COHERE_API_KEY set)
+  LLM_PROVIDER=cohere|gemini|bedrock|openai|nvidia|openrouter  (auto-detects based on available API keys)
   RED_TEAM_USE_LLM=true|false
   RED_TEAM_LLM_MODEL=<model id>
 
-Cohere:  COHERE_API_KEY
-Gemini:  GOOGLE_API_KEY or GEMINI_API_KEY
-OpenAI:  OPENAI_API_KEY
-Bedrock: AWS_REGION, BEDROCK_MODEL_ID
+Cohere:     COHERE_API_KEY
+Gemini:     GOOGLE_API_KEY or GEMINI_API_KEY
+OpenAI:     OPENAI_API_KEY
+Bedrock:    AWS_REGION, BEDROCK_MODEL_ID
+Nvidia:     NVIDIA_API_KEY
+OpenRouter: OPENROUTER_API_KEY
 """
 
 from __future__ import annotations
@@ -34,6 +36,8 @@ class LLMProvider(str, Enum):
     GEMINI = "gemini"
     BEDROCK = "bedrock"
     OPENAI = "openai"
+    NVIDIA = "nvidia"
+    OPENROUTER = "openrouter"
 
 
 def use_llm_enabled() -> bool:
@@ -56,6 +60,10 @@ def _resolve_provider() -> LLMProvider:
         return LLMProvider.GEMINI
     if os.environ.get("AWS_REGION") or os.environ.get("BEDROCK_MODEL_ID"):
         return LLMProvider.BEDROCK
+    if os.environ.get("NVIDIA_API_KEY"):
+        return LLMProvider.NVIDIA
+    if os.environ.get("OPENROUTER_API_KEY"):
+        return LLMProvider.OPENROUTER
     return LLMProvider.COHERE
 
 
@@ -127,6 +135,36 @@ def get_llm(model: Optional[str] = None, temperature: float = 0.4) -> Any | None
                     region_name=region,
                     model_kwargs={"temperature": temperature},
                 )
+
+        if provider == LLMProvider.NVIDIA:
+            api_key = os.environ.get("NVIDIA_API_KEY")
+            if not api_key:
+                logger.warning("RED_TEAM_USE_LLM=true but NVIDIA_API_KEY is missing.")
+                return None
+            from langchain_nvidia_ai_endpoints import ChatNVIDIA
+
+            return ChatNVIDIA(
+                model=model_id,
+                api_key=api_key,
+                temperature=temperature,
+                top_p=0.95,
+                max_tokens=16384,
+            )
+
+        if provider == LLMProvider.OPENROUTER:
+            api_key = os.environ.get("OPENROUTER_API_KEY")
+            if not api_key:
+                logger.warning("RED_TEAM_USE_LLM=true but OPENROUTER_API_KEY is missing.")
+                return None
+            from langchain_openai import ChatOpenAI
+
+            return ChatOpenAI(
+                model=model_id,
+                temperature=temperature,
+                api_key=api_key,
+                base_url="https://openrouter.ai/api/v1",
+                max_tokens=512,
+            )
     except Exception as exc:
         logger.warning("Failed to initialize LLM provider %s: %s", provider.value, exc)
         return None
@@ -144,6 +182,10 @@ def _default_model_for(provider: LLMProvider) -> str:
         )
     if provider == LLMProvider.OPENAI:
         return "gpt-4o-mini"
+    if provider == LLMProvider.NVIDIA:
+        return os.environ.get("NVIDIA_MODEL", "nvidia/nemotron-3.5-lightning-30b-a3b")
+    if provider == LLMProvider.OPENROUTER:
+        return os.environ.get("OPENROUTER_MODEL", "openai/gpt-4o")
     return "gemini-2.0-flash"
 
 
@@ -194,5 +236,7 @@ def llm_status() -> dict[str, Any]:
         "cohere_key_set": bool(_cohere_api_key()),
         "openai_key_set": bool(os.environ.get("OPENAI_API_KEY")),
         "gemini_key_set": bool(os.environ.get("GOOGLE_API_KEY") or os.environ.get("GEMINI_API_KEY")),
+        "nvidia_key_set": bool(os.environ.get("NVIDIA_API_KEY")),
+        "openrouter_key_set": bool(os.environ.get("OPENROUTER_API_KEY")),
         "client_ready": get_llm() is not None if use_llm_enabled() else False,
     }

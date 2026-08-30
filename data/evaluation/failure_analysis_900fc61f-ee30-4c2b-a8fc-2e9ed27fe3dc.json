@@ -1,0 +1,1481 @@
+{
+  "generated_at": "2026-08-29T12:21:59.510157+00:00",
+  "before_version": "v1",
+  "after_version": "v3",
+  "payment_attacks": 660,
+  "gap_summary": {
+    "total_findings": 660,
+    "control_gaps": 0,
+    "unique_missing_controls": [
+      "CTL-0016",
+      "CTL-0042",
+      "CTL-0043",
+      "CTL-0044",
+      "CTL-0045",
+      "CTL-0113",
+      "CTL-0114",
+      "CTL-0115",
+      "CTL-0139",
+      "CTL-0150",
+      "CTL-0151",
+      "CTL-0236",
+      "CTL-0237",
+      "CTL-0279",
+      "CTL-0280",
+      "CTL-0281",
+      "CTL-0285",
+      "CTL-0304",
+      "CTL-0305",
+      "CTL-0306",
+      "CTL-0307",
+      "CTL-0330",
+      "CTL-0331",
+      "CTL-0332",
+      "CTL-0333"
+    ],
+    "controls_with_misses": [],
+    "controls_with_gaps": [
+      "CTL-0016",
+      "CTL-0042",
+      "CTL-0043",
+      "CTL-0044",
+      "CTL-0045",
+      "CTL-0113",
+      "CTL-0114",
+      "CTL-0115",
+      "CTL-0139",
+      "CTL-0150",
+      "CTL-0151",
+      "CTL-0236",
+      "CTL-0237",
+      "CTL-0279",
+      "CTL-0280",
+      "CTL-0281",
+      "CTL-0285",
+      "CTL-0304",
+      "CTL-0305",
+      "CTL-0306",
+      "CTL-0307",
+      "CTL-0330",
+      "CTL-0331",
+      "CTL-0332",
+      "CTL-0333"
+    ]
+  },
+  "ctl_heatmap": {
+    "gap_CTL-0331": {
+      "triggered_count": 4,
+      "gap_count": 0,
+      "miss_count": 0,
+      "bypass_with_trigger": 0,
+      "bypass_without_trigger": 0,
+      "families_triggered": {
+        "SIA-001": 4
+      },
+      "families_missed": {},
+      "families_gapped": {}
+    },
+    "mcc_misrepresentation": {
+      "triggered_count": 284,
+      "gap_count": 0,
+      "miss_count": 0,
+      "bypass_with_trigger": 0,
+      "bypass_without_trigger": 0,
+      "families_triggered": {
+        "SIA-001": 92,
+        "AG-001": 104,
+        "SEP-001": 88
+      },
+      "families_missed": {},
+      "families_gapped": {}
+    },
+    "gap_CTL-0333": {
+      "triggered_count": 4,
+      "gap_count": 0,
+      "miss_count": 0,
+      "bypass_with_trigger": 0,
+      "bypass_without_trigger": 0,
+      "families_triggered": {
+        "SIA-001": 4
+      },
+      "families_missed": {},
+      "families_gapped": {}
+    },
+    "CTL-0336": {
+      "triggered_count": 65,
+      "gap_count": 0,
+      "miss_count": 0,
+      "bypass_with_trigger": 0,
+      "bypass_without_trigger": 0,
+      "families_triggered": {
+        "SIA-001": 4,
+        "SEP-001": 61
+      },
+      "families_missed": {},
+      "families_gapped": {}
+    },
+    "CTL-0323": {
+      "triggered_count": 169,
+      "gap_count": 0,
+      "miss_count": 0,
+      "bypass_with_trigger": 0,
+      "bypass_without_trigger": 0,
+      "families_triggered": {
+        "SIA-001": 4,
+        "AG-001": 96,
+        "SEP-001": 61,
+        "RAT-001": 8
+      },
+      "families_missed": {},
+      "families_gapped": {}
+    },
+    "genai_prompt_injection": {
+      "triggered_count": 65,
+      "gap_count": 0,
+      "miss_count": 0,
+      "bypass_with_trigger": 0,
+      "bypass_without_trigger": 0,
+      "families_triggered": {
+        "SIA-001": 4,
+        "AG-001": 28,
+        "SEP-001": 6,
+        "RAT-001": 24,
+        "AUT-003": 3
+      },
+      "families_missed": {},
+      "families_gapped": {}
+    },
+    "CTL-0236": {
+      "triggered_count": 253,
+      "gap_count": 1,
+      "miss_count": 0,
+      "bypass_with_trigger": 0,
+      "bypass_without_trigger": 0,
+      "families_triggered": {
+        "SIA-001": 4,
+        "AG-001": 96,
+        "SEP-001": 61,
+        "RAT-001": 92
+      },
+      "families_missed": {},
+      "families_gapped": {}
+    },
+    "genai_cross_stage": {
+      "triggered_count": 37,
+      "gap_count": 0,
+      "miss_count": 0,
+      "bypass_with_trigger": 0,
+      "bypass_without_trigger": 0,
+      "families_triggered": {
+        "SIA-001": 4,
+        "AG-001": 24,
+        "SEP-001": 9
+      },
+      "families_missed": {},
+      "families_gapped": {}
+    },
+    "CTL-0276": {
+      "triggered_count": 55,
+      "gap_count": 0,
+      "miss_count": 0,
+      "bypass_with_trigger": 0,
+      "bypass_without_trigger": 0,
+      "families_triggered": {
+        "SIA-001": 1,
+        "AG-001": 7,
+        "SEP-001": 20,
+        "RAT-001": 7,
+        "AUT-003": 20
+      },
+      "families_missed": {},
+      "families_gapped": {}
+    },
+    "genai_document_forgery": {
+      "triggered_count": 18,
+      "gap_count": 0,
+      "miss_count": 0,
+      "bypass_with_trigger": 0,
+      "bypass_without_trigger": 0,
+      "families_triggered": {
+        "SIA-001": 4,
+        "AG-001": 4,
+        "SEP-001": 3,
+        "RAT-001": 4,
+        "AUT-003": 3
+      },
+      "families_missed": {},
+      "families_gapped": {}
+    },
+    "CTL-0140": {
+      "triggered_count": 311,
+      "gap_count": 0,
+      "miss_count": 0,
+      "bypass_with_trigger": 0,
+      "bypass_without_trigger": 0,
+      "families_triggered": {
+        "SIA-001": 4,
+        "AG-001": 96,
+        "SEP-001": 58,
+        "RAT-001": 92,
+        "AUT-003": 61
+      },
+      "families_missed": {},
+      "families_gapped": {}
+    },
+    "CTL-0240": {
+      "triggered_count": 253,
+      "gap_count": 0,
+      "miss_count": 0,
+      "bypass_with_trigger": 0,
+      "bypass_without_trigger": 0,
+      "families_triggered": {
+        "SIA-001": 4,
+        "AG-001": 96,
+        "SEP-001": 61,
+        "RAT-001": 92
+      },
+      "families_missed": {},
+      "families_gapped": {}
+    },
+    "CTL-0096": {
+      "triggered_count": 314,
+      "gap_count": 0,
+      "miss_count": 0,
+      "bypass_with_trigger": 0,
+      "bypass_without_trigger": 0,
+      "families_triggered": {
+        "SIA-001": 4,
+        "AG-001": 96,
+        "SEP-001": 61,
+        "RAT-001": 92,
+        "AUT-003": 61
+      },
+      "families_missed": {},
+      "families_gapped": {}
+    },
+    "CTL-0321": {
+      "triggered_count": 65,
+      "gap_count": 0,
+      "miss_count": 0,
+      "bypass_with_trigger": 0,
+      "bypass_without_trigger": 0,
+      "families_triggered": {
+        "SIA-001": 4,
+        "SEP-001": 61
+      },
+      "families_missed": {},
+      "families_gapped": {}
+    },
+    "gap_CTL-0330": {
+      "triggered_count": 4,
+      "gap_count": 0,
+      "miss_count": 0,
+      "bypass_with_trigger": 0,
+      "bypass_without_trigger": 0,
+      "families_triggered": {
+        "SIA-001": 4
+      },
+      "families_missed": {},
+      "families_gapped": {}
+    },
+    "CTL-0018": {
+      "triggered_count": 314,
+      "gap_count": 0,
+      "miss_count": 0,
+      "bypass_with_trigger": 0,
+      "bypass_without_trigger": 0,
+      "families_triggered": {
+        "SIA-001": 4,
+        "AG-001": 96,
+        "SEP-001": 61,
+        "RAT-001": 92,
+        "AUT-003": 61
+      },
+      "families_missed": {},
+      "families_gapped": {}
+    },
+    "gap_CTL-0332": {
+      "triggered_count": 4,
+      "gap_count": 0,
+      "miss_count": 0,
+      "bypass_with_trigger": 0,
+      "bypass_without_trigger": 0,
+      "families_triggered": {
+        "SIA-001": 4
+      },
+      "families_missed": {},
+      "families_gapped": {}
+    },
+    "acquirer_mcc_mismatch": {
+      "triggered_count": 80,
+      "gap_count": 0,
+      "miss_count": 0,
+      "bypass_with_trigger": 0,
+      "bypass_without_trigger": 0,
+      "families_triggered": {
+        "SIA-001": 80
+      },
+      "families_missed": {},
+      "families_gapped": {}
+    },
+    "acquirer_high_risk_merchant": {
+      "triggered_count": 80,
+      "gap_count": 0,
+      "miss_count": 0,
+      "bypass_with_trigger": 0,
+      "bypass_without_trigger": 0,
+      "families_triggered": {
+        "SIA-001": 80
+      },
+      "families_missed": {},
+      "families_gapped": {}
+    },
+    "gap_CTL-0237": {
+      "triggered_count": 24,
+      "gap_count": 0,
+      "miss_count": 0,
+      "bypass_with_trigger": 0,
+      "bypass_without_trigger": 0,
+      "families_triggered": {
+        "AG-001": 24
+      },
+      "families_missed": {},
+      "families_gapped": {}
+    },
+    "genai_agent_tool_abuse": {
+      "triggered_count": 89,
+      "gap_count": 0,
+      "miss_count": 0,
+      "bypass_with_trigger": 0,
+      "bypass_without_trigger": 0,
+      "families_triggered": {
+        "AG-001": 36,
+        "SEP-001": 12,
+        "RAT-001": 32,
+        "AUT-003": 9
+      },
+      "families_missed": {},
+      "families_gapped": {}
+    },
+    "CTL-0013": {
+      "triggered_count": 286,
+      "gap_count": 0,
+      "miss_count": 0,
+      "bypass_with_trigger": 0,
+      "bypass_without_trigger": 0,
+      "families_triggered": {
+        "AG-001": 90,
+        "SEP-001": 55,
+        "RAT-001": 86,
+        "AUT-003": 55
+      },
+      "families_missed": {},
+      "families_gapped": {}
+    },
+    "gateway_velocity_burst": {
+      "triggered_count": 274,
+      "gap_count": 0,
+      "miss_count": 0,
+      "bypass_with_trigger": 0,
+      "bypass_without_trigger": 0,
+      "families_triggered": {
+        "AG-001": 87,
+        "SEP-001": 52,
+        "RAT-001": 83,
+        "AUT-003": 52
+      },
+      "families_missed": {},
+      "families_gapped": {}
+    },
+    "gap_CTL-0108": {
+      "triggered_count": 144,
+      "gap_count": 0,
+      "miss_count": 0,
+      "bypass_with_trigger": 0,
+      "bypass_without_trigger": 0,
+      "families_triggered": {
+        "AG-001": 72,
+        "RAT-001": 72
+      },
+      "families_missed": {},
+      "families_gapped": {}
+    },
+    "gap_CTL-0107": {
+      "triggered_count": 144,
+      "gap_count": 0,
+      "miss_count": 0,
+      "bypass_with_trigger": 0,
+      "bypass_without_trigger": 0,
+      "families_triggered": {
+        "AG-001": 72,
+        "RAT-001": 72
+      },
+      "families_missed": {},
+      "families_gapped": {}
+    },
+    "gap_CTL-0105": {
+      "triggered_count": 130,
+      "gap_count": 0,
+      "miss_count": 0,
+      "bypass_with_trigger": 0,
+      "bypass_without_trigger": 0,
+      "families_triggered": {
+        "AG-001": 65,
+        "RAT-001": 65
+      },
+      "families_missed": {},
+      "families_gapped": {}
+    },
+    "gap_CTL-0106": {
+      "triggered_count": 144,
+      "gap_count": 0,
+      "miss_count": 0,
+      "bypass_with_trigger": 0,
+      "bypass_without_trigger": 0,
+      "families_triggered": {
+        "AG-001": 72,
+        "RAT-001": 72
+      },
+      "families_missed": {},
+      "families_gapped": {}
+    },
+    "CTL-0105": {
+      "triggered_count": 104,
+      "gap_count": 0,
+      "miss_count": 0,
+      "bypass_with_trigger": 0,
+      "bypass_without_trigger": 0,
+      "families_triggered": {
+        "AG-001": 7,
+        "SEP-001": 45,
+        "RAT-001": 7,
+        "AUT-003": 45
+      },
+      "families_missed": {},
+      "families_gapped": {}
+    },
+    "aml_structuring_proxy": {
+      "triggered_count": 4,
+      "gap_count": 0,
+      "miss_count": 0,
+      "bypass_with_trigger": 0,
+      "bypass_without_trigger": 0,
+      "families_triggered": {
+        "AG-001": 1,
+        "SEP-001": 1,
+        "RAT-001": 1,
+        "AUT-003": 1
+      },
+      "families_missed": {},
+      "families_gapped": {}
+    },
+    "mule_young_account_cashout": {
+      "triggered_count": 34,
+      "gap_count": 0,
+      "miss_count": 0,
+      "bypass_with_trigger": 0,
+      "bypass_without_trigger": 0,
+      "families_triggered": {
+        "AG-001": 2,
+        "SEP-001": 15,
+        "RAT-001": 2,
+        "AUT-003": 15
+      },
+      "families_missed": {},
+      "families_gapped": {}
+    },
+    "beneficiary_unknown": {
+      "triggered_count": 62,
+      "gap_count": 0,
+      "miss_count": 0,
+      "bypass_with_trigger": 0,
+      "bypass_without_trigger": 0,
+      "families_triggered": {
+        "AG-001": 8,
+        "SEP-001": 23,
+        "RAT-001": 8,
+        "AUT-003": 23
+      },
+      "families_missed": {},
+      "families_gapped": {}
+    },
+    "genai_adaptive_evasion": {
+      "triggered_count": 62,
+      "gap_count": 0,
+      "miss_count": 0,
+      "bypass_with_trigger": 0,
+      "bypass_without_trigger": 0,
+      "families_triggered": {
+        "AG-001": 12,
+        "SEP-001": 9,
+        "RAT-001": 32,
+        "AUT-003": 9
+      },
+      "families_missed": {},
+      "families_gapped": {}
+    },
+    "genai_vishing": {
+      "triggered_count": 17,
+      "gap_count": 0,
+      "miss_count": 0,
+      "bypass_with_trigger": 0,
+      "bypass_without_trigger": 0,
+      "families_triggered": {
+        "AG-001": 4,
+        "SEP-001": 6,
+        "RAT-001": 4,
+        "AUT-003": 3
+      },
+      "families_missed": {},
+      "families_gapped": {}
+    },
+    "genai_victim_coerced": {
+      "triggered_count": 14,
+      "gap_count": 0,
+      "miss_count": 0,
+      "bypass_with_trigger": 0,
+      "bypass_without_trigger": 0,
+      "families_triggered": {
+        "AG-001": 4,
+        "SEP-001": 3,
+        "RAT-001": 4,
+        "AUT-003": 3
+      },
+      "families_missed": {},
+      "families_gapped": {}
+    },
+    "genai_social_engineering": {
+      "triggered_count": 37,
+      "gap_count": 0,
+      "miss_count": 0,
+      "bypass_with_trigger": 0,
+      "bypass_without_trigger": 0,
+      "families_triggered": {
+        "AG-001": 4,
+        "SEP-001": 6,
+        "RAT-001": 24,
+        "AUT-003": 3
+      },
+      "families_missed": {},
+      "families_gapped": {}
+    },
+    "gap_CTL-0305": {
+      "triggered_count": 3,
+      "gap_count": 0,
+      "miss_count": 0,
+      "bypass_with_trigger": 0,
+      "bypass_without_trigger": 0,
+      "families_triggered": {
+        "SEP-001": 3
+      },
+      "families_missed": {},
+      "families_gapped": {}
+    },
+    "gap_CTL-0304": {
+      "triggered_count": 3,
+      "gap_count": 0,
+      "miss_count": 0,
+      "bypass_with_trigger": 0,
+      "bypass_without_trigger": 0,
+      "families_triggered": {
+        "SEP-001": 3
+      },
+      "families_missed": {},
+      "families_gapped": {}
+    },
+    "gap_CTL-0307": {
+      "triggered_count": 3,
+      "gap_count": 0,
+      "miss_count": 0,
+      "bypass_with_trigger": 0,
+      "bypass_without_trigger": 0,
+      "families_triggered": {
+        "SEP-001": 3
+      },
+      "families_missed": {},
+      "families_gapped": {}
+    },
+    "genai_deepfake_identity": {
+      "triggered_count": 3,
+      "gap_count": 0,
+      "miss_count": 0,
+      "bypass_with_trigger": 0,
+      "bypass_without_trigger": 0,
+      "families_triggered": {
+        "SEP-001": 3
+      },
+      "families_missed": {},
+      "families_gapped": {}
+    },
+    "gap_CTL-0306": {
+      "triggered_count": 3,
+      "gap_count": 0,
+      "miss_count": 0,
+      "bypass_with_trigger": 0,
+      "bypass_without_trigger": 0,
+      "families_triggered": {
+        "SEP-001": 3
+      },
+      "families_missed": {},
+      "families_gapped": {}
+    },
+    "gap_CTL-0071": {
+      "triggered_count": 58,
+      "gap_count": 0,
+      "miss_count": 0,
+      "bypass_with_trigger": 0,
+      "bypass_without_trigger": 0,
+      "families_triggered": {
+        "SEP-001": 58
+      },
+      "families_missed": {},
+      "families_gapped": {}
+    },
+    "gap_CTL-0028": {
+      "triggered_count": 58,
+      "gap_count": 0,
+      "miss_count": 0,
+      "bypass_with_trigger": 0,
+      "bypass_without_trigger": 0,
+      "families_triggered": {
+        "SEP-001": 58
+      },
+      "families_missed": {},
+      "families_gapped": {}
+    },
+    "gap_CTL-0031": {
+      "triggered_count": 58,
+      "gap_count": 0,
+      "miss_count": 0,
+      "bypass_with_trigger": 0,
+      "bypass_without_trigger": 0,
+      "families_triggered": {
+        "SEP-001": 58
+      },
+      "families_missed": {},
+      "families_gapped": {}
+    },
+    "gap_CTL-0013": {
+      "triggered_count": 3,
+      "gap_count": 0,
+      "miss_count": 0,
+      "bypass_with_trigger": 0,
+      "bypass_without_trigger": 0,
+      "families_triggered": {
+        "SEP-001": 3
+      },
+      "families_missed": {},
+      "families_gapped": {}
+    },
+    "gap_CTL-0030": {
+      "triggered_count": 58,
+      "gap_count": 0,
+      "miss_count": 0,
+      "bypass_with_trigger": 0,
+      "bypass_without_trigger": 0,
+      "families_triggered": {
+        "SEP-001": 58
+      },
+      "families_missed": {},
+      "families_gapped": {}
+    },
+    "CTL-0215": {
+      "triggered_count": 92,
+      "gap_count": 0,
+      "miss_count": 0,
+      "bypass_with_trigger": 0,
+      "bypass_without_trigger": 0,
+      "families_triggered": {
+        "RAT-001": 92
+      },
+      "families_missed": {},
+      "families_gapped": {}
+    },
+    "gap_CTL-0280": {
+      "triggered_count": 20,
+      "gap_count": 0,
+      "miss_count": 0,
+      "bypass_with_trigger": 0,
+      "bypass_without_trigger": 0,
+      "families_triggered": {
+        "RAT-001": 20
+      },
+      "families_missed": {},
+      "families_gapped": {}
+    },
+    "gap_CTL-0139": {
+      "triggered_count": 20,
+      "gap_count": 0,
+      "miss_count": 0,
+      "bypass_with_trigger": 0,
+      "bypass_without_trigger": 0,
+      "families_triggered": {
+        "RAT-001": 20
+      },
+      "families_missed": {},
+      "families_gapped": {}
+    },
+    "gap_CTL-0281": {
+      "triggered_count": 20,
+      "gap_count": 0,
+      "miss_count": 0,
+      "bypass_with_trigger": 0,
+      "bypass_without_trigger": 0,
+      "families_triggered": {
+        "RAT-001": 20
+      },
+      "families_missed": {},
+      "families_gapped": {}
+    },
+    "CTL-0282": {
+      "triggered_count": 92,
+      "gap_count": 0,
+      "miss_count": 0,
+      "bypass_with_trigger": 0,
+      "bypass_without_trigger": 0,
+      "families_triggered": {
+        "RAT-001": 92
+      },
+      "families_missed": {},
+      "families_gapped": {}
+    },
+    "CTL-0279": {
+      "triggered_count": 92,
+      "gap_count": 1,
+      "miss_count": 0,
+      "bypass_with_trigger": 0,
+      "bypass_without_trigger": 0,
+      "families_triggered": {
+        "RAT-001": 92
+      },
+      "families_missed": {},
+      "families_gapped": {}
+    },
+    "gap_CTL-0016": {
+      "triggered_count": 61,
+      "gap_count": 0,
+      "miss_count": 0,
+      "bypass_with_trigger": 0,
+      "bypass_without_trigger": 0,
+      "families_triggered": {
+        "AUT-003": 61
+      },
+      "families_missed": {},
+      "families_gapped": {}
+    },
+    "gap_CTL-0115": {
+      "triggered_count": 61,
+      "gap_count": 0,
+      "miss_count": 0,
+      "bypass_with_trigger": 0,
+      "bypass_without_trigger": 0,
+      "families_triggered": {
+        "AUT-003": 61
+      },
+      "families_missed": {},
+      "families_gapped": {}
+    },
+    "CTL-0268": {
+      "triggered_count": 61,
+      "gap_count": 0,
+      "miss_count": 0,
+      "bypass_with_trigger": 0,
+      "bypass_without_trigger": 0,
+      "families_triggered": {
+        "AUT-003": 61
+      },
+      "families_missed": {},
+      "families_gapped": {}
+    },
+    "gap_CTL-0113": {
+      "triggered_count": 61,
+      "gap_count": 0,
+      "miss_count": 0,
+      "bypass_with_trigger": 0,
+      "bypass_without_trigger": 0,
+      "families_triggered": {
+        "AUT-003": 61
+      },
+      "families_missed": {},
+      "families_gapped": {}
+    },
+    "gap_CTL-0114": {
+      "triggered_count": 61,
+      "gap_count": 0,
+      "miss_count": 0,
+      "bypass_with_trigger": 0,
+      "bypass_without_trigger": 0,
+      "families_triggered": {
+        "AUT-003": 61
+      },
+      "families_missed": {},
+      "families_gapped": {}
+    },
+    "CTL-0113": {
+      "triggered_count": 0,
+      "gap_count": 20,
+      "miss_count": 0,
+      "bypass_with_trigger": 0,
+      "bypass_without_trigger": 0,
+      "families_triggered": {},
+      "families_missed": {},
+      "families_gapped": {
+        "expected": 20
+      }
+    },
+    "CTL-0016": {
+      "triggered_count": 0,
+      "gap_count": 20,
+      "miss_count": 0,
+      "bypass_with_trigger": 0,
+      "bypass_without_trigger": 0,
+      "families_triggered": {},
+      "families_missed": {},
+      "families_gapped": {
+        "expected": 20
+      }
+    },
+    "CTL-0114": {
+      "triggered_count": 0,
+      "gap_count": 20,
+      "miss_count": 0,
+      "bypass_with_trigger": 0,
+      "bypass_without_trigger": 0,
+      "families_triggered": {},
+      "families_missed": {},
+      "families_gapped": {
+        "expected": 20
+      }
+    },
+    "CTL-0115": {
+      "triggered_count": 0,
+      "gap_count": 20,
+      "miss_count": 0,
+      "bypass_with_trigger": 0,
+      "bypass_without_trigger": 0,
+      "families_triggered": {},
+      "families_missed": {},
+      "families_gapped": {
+        "expected": 20
+      }
+    },
+    "CTL-0042": {
+      "triggered_count": 0,
+      "gap_count": 1,
+      "miss_count": 0,
+      "bypass_with_trigger": 0,
+      "bypass_without_trigger": 0,
+      "families_triggered": {},
+      "families_missed": {},
+      "families_gapped": {}
+    },
+    "CTL-0043": {
+      "triggered_count": 0,
+      "gap_count": 1,
+      "miss_count": 0,
+      "bypass_with_trigger": 0,
+      "bypass_without_trigger": 0,
+      "families_triggered": {},
+      "families_missed": {},
+      "families_gapped": {}
+    },
+    "CTL-0044": {
+      "triggered_count": 0,
+      "gap_count": 1,
+      "miss_count": 0,
+      "bypass_with_trigger": 0,
+      "bypass_without_trigger": 0,
+      "families_triggered": {},
+      "families_missed": {},
+      "families_gapped": {}
+    },
+    "CTL-0045": {
+      "triggered_count": 0,
+      "gap_count": 1,
+      "miss_count": 0,
+      "bypass_with_trigger": 0,
+      "bypass_without_trigger": 0,
+      "families_triggered": {},
+      "families_missed": {},
+      "families_gapped": {}
+    },
+    "CTL-0139": {
+      "triggered_count": 0,
+      "gap_count": 1,
+      "miss_count": 0,
+      "bypass_with_trigger": 0,
+      "bypass_without_trigger": 0,
+      "families_triggered": {},
+      "families_missed": {},
+      "families_gapped": {}
+    },
+    "CTL-0150": {
+      "triggered_count": 0,
+      "gap_count": 1,
+      "miss_count": 0,
+      "bypass_with_trigger": 0,
+      "bypass_without_trigger": 0,
+      "families_triggered": {},
+      "families_missed": {},
+      "families_gapped": {}
+    },
+    "CTL-0151": {
+      "triggered_count": 0,
+      "gap_count": 1,
+      "miss_count": 0,
+      "bypass_with_trigger": 0,
+      "bypass_without_trigger": 0,
+      "families_triggered": {},
+      "families_missed": {},
+      "families_gapped": {}
+    },
+    "CTL-0237": {
+      "triggered_count": 0,
+      "gap_count": 1,
+      "miss_count": 0,
+      "bypass_with_trigger": 0,
+      "bypass_without_trigger": 0,
+      "families_triggered": {},
+      "families_missed": {},
+      "families_gapped": {}
+    },
+    "CTL-0280": {
+      "triggered_count": 0,
+      "gap_count": 1,
+      "miss_count": 0,
+      "bypass_with_trigger": 0,
+      "bypass_without_trigger": 0,
+      "families_triggered": {},
+      "families_missed": {},
+      "families_gapped": {}
+    },
+    "CTL-0281": {
+      "triggered_count": 0,
+      "gap_count": 1,
+      "miss_count": 0,
+      "bypass_with_trigger": 0,
+      "bypass_without_trigger": 0,
+      "families_triggered": {},
+      "families_missed": {},
+      "families_gapped": {}
+    },
+    "CTL-0285": {
+      "triggered_count": 0,
+      "gap_count": 1,
+      "miss_count": 0,
+      "bypass_with_trigger": 0,
+      "bypass_without_trigger": 0,
+      "families_triggered": {},
+      "families_missed": {},
+      "families_gapped": {}
+    },
+    "CTL-0304": {
+      "triggered_count": 0,
+      "gap_count": 1,
+      "miss_count": 0,
+      "bypass_with_trigger": 0,
+      "bypass_without_trigger": 0,
+      "families_triggered": {},
+      "families_missed": {},
+      "families_gapped": {}
+    },
+    "CTL-0305": {
+      "triggered_count": 0,
+      "gap_count": 1,
+      "miss_count": 0,
+      "bypass_with_trigger": 0,
+      "bypass_without_trigger": 0,
+      "families_triggered": {},
+      "families_missed": {},
+      "families_gapped": {}
+    },
+    "CTL-0306": {
+      "triggered_count": 0,
+      "gap_count": 1,
+      "miss_count": 0,
+      "bypass_with_trigger": 0,
+      "bypass_without_trigger": 0,
+      "families_triggered": {},
+      "families_missed": {},
+      "families_gapped": {}
+    },
+    "CTL-0307": {
+      "triggered_count": 0,
+      "gap_count": 1,
+      "miss_count": 0,
+      "bypass_with_trigger": 0,
+      "bypass_without_trigger": 0,
+      "families_triggered": {},
+      "families_missed": {},
+      "families_gapped": {}
+    },
+    "CTL-0330": {
+      "triggered_count": 0,
+      "gap_count": 1,
+      "miss_count": 0,
+      "bypass_with_trigger": 0,
+      "bypass_without_trigger": 0,
+      "families_triggered": {},
+      "families_missed": {},
+      "families_gapped": {}
+    },
+    "CTL-0331": {
+      "triggered_count": 0,
+      "gap_count": 1,
+      "miss_count": 0,
+      "bypass_with_trigger": 0,
+      "bypass_without_trigger": 0,
+      "families_triggered": {},
+      "families_missed": {},
+      "families_gapped": {}
+    },
+    "CTL-0332": {
+      "triggered_count": 0,
+      "gap_count": 1,
+      "miss_count": 0,
+      "bypass_with_trigger": 0,
+      "bypass_without_trigger": 0,
+      "families_triggered": {},
+      "families_missed": {},
+      "families_gapped": {}
+    },
+    "CTL-0333": {
+      "triggered_count": 0,
+      "gap_count": 1,
+      "miss_count": 0,
+      "bypass_with_trigger": 0,
+      "bypass_without_trigger": 0,
+      "families_triggered": {},
+      "families_missed": {},
+      "families_gapped": {}
+    }
+  },
+  "top_ctl_gaps": [
+    {
+      "control_id": "CTL-0016",
+      "triggered_count": 0,
+      "gap_count": 20,
+      "miss_count": 0,
+      "bypass_with_trigger": 0,
+      "bypass_without_trigger": 0,
+      "families_triggered": {},
+      "families_missed": {},
+      "families_gapped": {
+        "expected": 20
+      }
+    },
+    {
+      "control_id": "CTL-0113",
+      "triggered_count": 0,
+      "gap_count": 20,
+      "miss_count": 0,
+      "bypass_with_trigger": 0,
+      "bypass_without_trigger": 0,
+      "families_triggered": {},
+      "families_missed": {},
+      "families_gapped": {
+        "expected": 20
+      }
+    },
+    {
+      "control_id": "CTL-0114",
+      "triggered_count": 0,
+      "gap_count": 20,
+      "miss_count": 0,
+      "bypass_with_trigger": 0,
+      "bypass_without_trigger": 0,
+      "families_triggered": {},
+      "families_missed": {},
+      "families_gapped": {
+        "expected": 20
+      }
+    },
+    {
+      "control_id": "CTL-0115",
+      "triggered_count": 0,
+      "gap_count": 20,
+      "miss_count": 0,
+      "bypass_with_trigger": 0,
+      "bypass_without_trigger": 0,
+      "families_triggered": {},
+      "families_missed": {},
+      "families_gapped": {
+        "expected": 20
+      }
+    },
+    {
+      "control_id": "CTL-0042",
+      "triggered_count": 0,
+      "gap_count": 1,
+      "miss_count": 0,
+      "bypass_with_trigger": 0,
+      "bypass_without_trigger": 0,
+      "families_triggered": {},
+      "families_missed": {},
+      "families_gapped": {}
+    },
+    {
+      "control_id": "CTL-0043",
+      "triggered_count": 0,
+      "gap_count": 1,
+      "miss_count": 0,
+      "bypass_with_trigger": 0,
+      "bypass_without_trigger": 0,
+      "families_triggered": {},
+      "families_missed": {},
+      "families_gapped": {}
+    },
+    {
+      "control_id": "CTL-0044",
+      "triggered_count": 0,
+      "gap_count": 1,
+      "miss_count": 0,
+      "bypass_with_trigger": 0,
+      "bypass_without_trigger": 0,
+      "families_triggered": {},
+      "families_missed": {},
+      "families_gapped": {}
+    },
+    {
+      "control_id": "CTL-0045",
+      "triggered_count": 0,
+      "gap_count": 1,
+      "miss_count": 0,
+      "bypass_with_trigger": 0,
+      "bypass_without_trigger": 0,
+      "families_triggered": {},
+      "families_missed": {},
+      "families_gapped": {}
+    },
+    {
+      "control_id": "CTL-0139",
+      "triggered_count": 0,
+      "gap_count": 1,
+      "miss_count": 0,
+      "bypass_with_trigger": 0,
+      "bypass_without_trigger": 0,
+      "families_triggered": {},
+      "families_missed": {},
+      "families_gapped": {}
+    },
+    {
+      "control_id": "CTL-0150",
+      "triggered_count": 0,
+      "gap_count": 1,
+      "miss_count": 0,
+      "bypass_with_trigger": 0,
+      "bypass_without_trigger": 0,
+      "families_triggered": {},
+      "families_missed": {},
+      "families_gapped": {}
+    }
+  ],
+  "per_family_asr": [
+    {
+      "family": "AG-001",
+      "attacks": 104,
+      "sandbox_bypassed": 0,
+      "sandbox_blocked": 104,
+      "historical_bypass_rate": 0.0,
+      "before_ml_recall": 0.980132,
+      "after_ml_recall": 0.986755,
+      "before_ml_asr": 0.019868,
+      "after_ml_asr": 0.013245,
+      "asr_reduction": 0.006623,
+      "control_gaps_in_campaign": 0,
+      "steps_executed": 13,
+      "top_ctl_triggers": [
+        [
+          "mcc_misrepresentation",
+          104
+        ],
+        [
+          "CTL-0096",
+          96
+        ],
+        [
+          "CTL-0018",
+          96
+        ],
+        [
+          "CTL-0323",
+          96
+        ],
+        [
+          "CTL-0140",
+          96
+        ]
+      ]
+    },
+    {
+      "family": "AML-004",
+      "attacks": 104,
+      "sandbox_bypassed": 0,
+      "sandbox_blocked": 104,
+      "historical_bypass_rate": 0.0,
+      "before_ml_recall": 0.330882,
+      "after_ml_recall": 0.352941,
+      "before_ml_asr": 0.669118,
+      "after_ml_asr": 0.647059,
+      "asr_reduction": 0.022059,
+      "control_gaps_in_campaign": 0,
+      "steps_executed": 139,
+      "top_ctl_triggers": []
+    },
+    {
+      "family": "AUT-003",
+      "attacks": 84,
+      "sandbox_bypassed": 0,
+      "sandbox_blocked": 84,
+      "historical_bypass_rate": 0.0,
+      "before_ml_recall": 1.0,
+      "after_ml_recall": 0.988095,
+      "before_ml_asr": 0.0,
+      "after_ml_asr": 0.011905,
+      "asr_reduction": -0.011905,
+      "control_gaps_in_campaign": 0,
+      "steps_executed": 86,
+      "top_ctl_triggers": [
+        [
+          "CTL-0096",
+          61
+        ],
+        [
+          "CTL-0268",
+          61
+        ],
+        [
+          "CTL-0018",
+          61
+        ],
+        [
+          "CTL-0140",
+          61
+        ],
+        [
+          "gap_CTL-0016",
+          61
+        ]
+      ]
+    },
+    {
+      "family": "GP-002",
+      "attacks": 84,
+      "sandbox_bypassed": 0,
+      "sandbox_blocked": 84,
+      "historical_bypass_rate": 0.0,
+      "before_ml_recall": 0.302083,
+      "after_ml_recall": 0.125,
+      "before_ml_asr": 0.697917,
+      "after_ml_asr": 0.875,
+      "asr_reduction": -0.177083,
+      "control_gaps_in_campaign": 0,
+      "steps_executed": 96,
+      "top_ctl_triggers": []
+    },
+    {
+      "family": "RAT-001",
+      "attacks": 104,
+      "sandbox_bypassed": 0,
+      "sandbox_blocked": 104,
+      "historical_bypass_rate": 0.0,
+      "before_ml_recall": 0.748344,
+      "after_ml_recall": 0.834437,
+      "before_ml_asr": 0.251656,
+      "after_ml_asr": 0.165563,
+      "asr_reduction": 0.086093,
+      "control_gaps_in_campaign": 0,
+      "steps_executed": 141,
+      "top_ctl_triggers": [
+        [
+          "CTL-0096",
+          92
+        ],
+        [
+          "CTL-0018",
+          92
+        ],
+        [
+          "CTL-0140",
+          92
+        ],
+        [
+          "CTL-0279",
+          92
+        ],
+        [
+          "CTL-0282",
+          92
+        ]
+      ]
+    },
+    {
+      "family": "SEP-001",
+      "attacks": 88,
+      "sandbox_bypassed": 0,
+      "sandbox_blocked": 88,
+      "historical_bypass_rate": 0.0,
+      "before_ml_recall": 0.969925,
+      "after_ml_recall": 0.962406,
+      "before_ml_asr": 0.030075,
+      "after_ml_asr": 0.037594,
+      "asr_reduction": -0.007519,
+      "control_gaps_in_campaign": 0,
+      "steps_executed": 123,
+      "top_ctl_triggers": [
+        [
+          "mcc_misrepresentation",
+          88
+        ],
+        [
+          "CTL-0096",
+          61
+        ],
+        [
+          "CTL-0018",
+          61
+        ],
+        [
+          "CTL-0323",
+          61
+        ],
+        [
+          "CTL-0240",
+          61
+        ]
+      ]
+    },
+    {
+      "family": "SIA-001",
+      "attacks": 92,
+      "sandbox_bypassed": 0,
+      "sandbox_blocked": 92,
+      "historical_bypass_rate": 0.0,
+      "before_ml_recall": 1.0,
+      "after_ml_recall": 1.0,
+      "before_ml_asr": 0.0,
+      "after_ml_asr": 0.0,
+      "asr_reduction": 0.0,
+      "control_gaps_in_campaign": 0,
+      "steps_executed": 127,
+      "top_ctl_triggers": [
+        [
+          "mcc_misrepresentation",
+          92
+        ],
+        [
+          "acquirer_mcc_mismatch",
+          80
+        ],
+        [
+          "acquirer_high_risk_merchant",
+          80
+        ],
+        [
+          "CTL-0096",
+          4
+        ],
+        [
+          "CTL-0018",
+          4
+        ]
+      ]
+    }
+  ],
+  "red_eval": {
+    "families_tested": [
+      "AG-001",
+      "AML-004",
+      "AUT-003",
+      "GP-002",
+      "RAT-001",
+      "SEP-001",
+      "SIA-001"
+    ],
+    "campaign_count": 8,
+    "total_steps": 852,
+    "linear_retries_used": 495,
+    "sandbox_bypass_count": 0,
+    "sandbox_bypass_rate": 0.0,
+    "control_gaps_detected": 0,
+    "unique_missing_controls": [
+      "CTL-0016",
+      "CTL-0042",
+      "CTL-0043",
+      "CTL-0044",
+      "CTL-0045",
+      "CTL-0113",
+      "CTL-0114",
+      "CTL-0115",
+      "CTL-0139",
+      "CTL-0150",
+      "CTL-0151",
+      "CTL-0236",
+      "CTL-0237",
+      "CTL-0279",
+      "CTL-0280",
+      "CTL-0281",
+      "CTL-0285",
+      "CTL-0304",
+      "CTL-0305",
+      "CTL-0306",
+      "CTL-0307",
+      "CTL-0330",
+      "CTL-0331",
+      "CTL-0332",
+      "CTL-0333"
+    ],
+    "blocking_control_breakdown": {
+      "Risk": 394,
+      "Payment Initiation": 78,
+      "KYC": 188
+    },
+    "outcomes_by_family": {
+      "SIA-001": {
+        "successes": 3,
+        "failures": 124,
+        "final_decision": "BLOCK"
+      },
+      "AG-001": {
+        "successes": 1,
+        "failures": 12,
+        "final_decision": "BLOCK"
+      },
+      "AML-004": {
+        "successes": 3,
+        "failures": 136,
+        "final_decision": "BLOCK"
+      },
+      "SEP-001": {
+        "successes": 3,
+        "failures": 120,
+        "final_decision": "BLOCK"
+      },
+      "RAT-001": {
+        "successes": 2,
+        "failures": 139,
+        "final_decision": "BLOCK"
+      },
+      "GP-002": {
+        "successes": 0,
+        "failures": 96,
+        "final_decision": "BLOCK"
+      },
+      "AUT-003": {
+        "successes": 2,
+        "failures": 84,
+        "final_decision": "BLOCK"
+      }
+    }
+  },
+  "asr_overall": {
+    "payment_attacks": 1108,
+    "historical_bypass_rate": 0.0,
+    "before_ml_asr": 0.277978,
+    "after_ml_asr": 0.279783,
+    "asr_reduction": -0.001805,
+    "before_ml_recall": 0.722022,
+    "after_ml_recall": 0.720217,
+    "ml_recall_lift": -0.001805
+  }
+}

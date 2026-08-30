@@ -66,12 +66,31 @@ class EvidenceCollector:
         sandbox_state = sandbox_response.get("state") or {}
         state_snapshot = sandbox_response.get("state_snapshot") or {}
         features = self._build_features(action_type, action_payload, state, state_snapshot)
+        if state_snapshot.get("early_exit"):
+            features = {
+                **features,
+                "early_exit": True,
+                "early_exit_reason": state_snapshot.get("early_exit_reason"),
+            }
+        # Persist surface/prior risk into features so UI can show them even if
+        # top-level score fields were historically missing.
+        for key in ("surface_risk", "prior_risk", "genai_risk", "ml_score", "risk_score", "rule_risk"):
+            if key in state_snapshot and state_snapshot[key] is not None and key not in features:
+                features[key] = state_snapshot[key]
 
         control_triggers = sandbox_response.get("control_triggers") or sandbox_state.get("control_triggers") or []
 
         decision = sandbox_response.get("decision", "UNKNOWN")
         label = self._infer_label(decision, analysis, payload, action_payload)
         evasion = self._evasion_outcome(decision)
+
+        def _score(*sources: Dict[str, Any], key: str):
+            for src in sources:
+                if not isinstance(src, dict):
+                    continue
+                if key in src and src[key] is not None:
+                    return src[key]
+            return None
 
         record = EvidenceRecord(
             evidence_id=f"ev_{uuid.uuid4().hex[:10]}",
@@ -93,9 +112,9 @@ class EvidenceCollector:
             analysis_outcome=self._field(analysis, "outcome"),
             blocking_control=self._field(analysis, "blocking_control"),
             control_triggers=control_triggers,
-            ml_score=sandbox_state.get("ml_score") or sandbox_response.get("ml_score"),
-            rule_risk=sandbox_state.get("rule_risk") or sandbox_response.get("rule_risk"),
-            risk_score=sandbox_state.get("risk_score") or sandbox_response.get("risk_score"),
+            ml_score=_score(sandbox_state, sandbox_response, state_snapshot, key="ml_score"),
+            rule_risk=_score(sandbox_state, sandbox_response, state_snapshot, key="rule_risk"),
+            risk_score=_score(sandbox_state, sandbox_response, state_snapshot, key="risk_score"),
             label=label,
             features=features,
             amount=action_payload.get("amount"),

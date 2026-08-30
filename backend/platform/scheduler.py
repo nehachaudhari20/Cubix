@@ -30,6 +30,8 @@ class LoopScheduler:
         self.runner = LoopRunner()
         self._job_id = "red_blue_loop"
         self._running_loop_id: Optional[str] = None
+        self._cancel_event = threading.Event()
+        self._thread: Optional[threading.Thread] = None
 
     @classmethod
     def get(cls) -> "LoopScheduler":
@@ -41,6 +43,15 @@ class LoopScheduler:
     @property
     def running_loop_id(self) -> Optional[str]:
         return self._running_loop_id
+
+    def request_stop(self) -> Optional[str]:
+        """Signal the active loop to stop at the next safe checkpoint."""
+        if not self._running_loop_id:
+            return None
+        run_id = self._running_loop_id
+        self._cancel_event.set()
+        logger.info("Stop requested for loop %s", run_id)
+        return run_id
 
     def start(self) -> None:
         init_db()
@@ -160,6 +171,8 @@ class LoopScheduler:
 
         run_id = config.run_id or str(uuid4())
         config.run_id = run_id
+        self._cancel_event.clear()
+        config.should_cancel = self._cancel_event.is_set
         self._running_loop_id = run_id
 
         def _run():
@@ -181,7 +194,10 @@ class LoopScheduler:
                 logger.info("Loop run %s finished with status=%s", result.run_id, result.status)
             finally:
                 self._running_loop_id = None
+                self._cancel_event.clear()
+                self._thread = None
 
-        thread = threading.Thread(target=_run, daemon=True)
+        thread = threading.Thread(target=_run, daemon=True, name=f"loop-{run_id[:8]}")
+        self._thread = thread
         thread.start()
         return run_id

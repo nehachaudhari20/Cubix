@@ -132,9 +132,18 @@ ACTION_EVENT_PROFILE: Dict[str, Dict[str, Any]] = {
 # Control-surface signals lifted out of the sandbox observation snapshot.
 SURFACE_SIGNAL_KEYS = (
     "risk_score",
+    "rule_risk",
+    "ml_score",
+    "prior_risk",
+    "surface_risk",
+    "genai_risk",
     "kyc_risk",
     "auth_risk",
+    "auth_se_risk",
+    "agent_risk",
     "consent_risk",
+    "session_risk",
+    "network_risk",
     "liveness_passed",
     "document_verified",
     "otp_shared",

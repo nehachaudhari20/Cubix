@@ -24,6 +24,11 @@ class AttackFamilyResponse(BaseModel):
     detection_signals: List[dict]
     controls_targeted: List[str]
     evidence_confidence: str
+    surface: Optional[str] = None
+    objective: Optional[str] = None
+    attacker: Optional[str] = None
+    target: Optional[str] = None
+    technique_ids: List[str] = []
 
 
 class SignalResponse(BaseModel):
@@ -42,10 +47,16 @@ class LifecycleStageResponse(BaseModel):
 
 @router.get("/stats")
 async def get_stats():
+    from backend.red_team.kb_campaign_builder import is_simulatable
+
+    simulatable = [f for f in loader.families if is_simulatable(f)]
+    simulatable_ids = [f.get("attack_id") for f in simulatable if f.get("attack_id")]
     return {
         "total_families": len(loader.families),
         "total_signals": len(loader.signals),
         "total_stages": len(loader.stages),
+        "simulatable_families": len(simulatable),
+        "simulatable_ids": simulatable_ids,
         "families_by_stage": {
             stage: len(loader.get_families_by_stage(stage))
             for stage in loader.get_all_controls().keys()
@@ -91,6 +102,37 @@ async def get_all_stages():
 @router.get("/stages/controls")
 async def get_all_controls():
     return loader.get_all_controls()
+
+
+@router.get("/controls/catalog")
+async def get_controls_catalog():
+    """Flat control_id → name/stage map for UI (Labs, Evaluation)."""
+    catalog: dict = {}
+    # Prefer canonical defense/controls.json when available
+    try:
+        from backend.knowledge.canonical_loader import CanonicalKnowledgeLoader
+
+        canon = CanonicalKnowledgeLoader()
+        for item in canon.controls or []:
+            cid = item.get("control_id")
+            if not cid:
+                continue
+            catalog[cid] = {
+                "control_id": cid,
+                "name": item.get("name") or cid,
+                "lifecycle_stage_ids": item.get("lifecycle_stage_ids") or [],
+            }
+    except Exception:
+        pass
+
+    if not catalog:
+        # Fallback: stage → control name lists (no IDs)
+        for stage, names in (loader.get_all_controls() or {}).items():
+            for name in names or []:
+                key = str(name)
+                catalog[key] = {"control_id": key, "name": key, "lifecycle_stage_ids": [stage]}
+
+    return {"count": len(catalog), "controls": catalog}
 
 
 @router.get("/stages/{stage}/controls")

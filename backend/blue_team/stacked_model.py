@@ -108,15 +108,38 @@ class StackedFraudShieldModel:
         X_df = pd.DataFrame(X, columns=self.feature_order)
         return self._predict_proba_frame(X_df)
 
-    def _predict_proba_frame(self, X_df: pd.DataFrame) -> np.ndarray:
+    @staticmethod
+    def _patch_sklearn_estimator(est: Any) -> None:
+        """Repair attrs missing after cross-version sklearn unpickle."""
+        if est is None:
+            return
+        # LogisticRegression / LinearClassifierMixin in newer sklearn expect these.
+        if not hasattr(est, "multi_class"):
+            try:
+                setattr(est, "multi_class", "auto")
+            except Exception:
+                pass
+        if not hasattr(est, "solver"):
+            try:
+                setattr(est, "solver", "lbfgs")
+            except Exception:
+                pass
+
+    def _predict_proba_frame(self, X_df: "pd.DataFrame") -> np.ndarray:
         p_xgb = self.xgb_model.predict_proba(X_df)[:, 1]
         if self.lgb_model is not None:
             p_lgb = np.asarray(self.lgb_model.predict(X_df.values), dtype=float)
         else:
             p_lgb = p_xgb
-        p_log = self.log_model.predict_proba(X_df)[:, 1]
-        stack = np.column_stack([p_xgb, p_lgb, p_log])
-        return self.meta_model.predict_proba(stack)[:, 1]
+        try:
+            self._patch_sklearn_estimator(self.log_model)
+            self._patch_sklearn_estimator(self.meta_model)
+            p_log = self.log_model.predict_proba(X_df)[:, 1]
+            stack = np.column_stack([p_xgb, p_lgb, p_log])
+            return self.meta_model.predict_proba(stack)[:, 1]
+        except Exception:
+            # Sklearn pickle skew or broken LR/meta — still return a usable score.
+            return np.asarray(p_xgb, dtype=float)
 
     def predict_proba_from_encoded(self, X) -> np.ndarray:
         """Score already-encoded feature matrix (training/eval aligned path)."""

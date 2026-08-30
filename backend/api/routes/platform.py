@@ -2,7 +2,12 @@
 
 from __future__ import annotations
 
-from typing import List
+import json
+import math
+import os
+from datetime import datetime, timezone
+from pathlib import Path
+from typing import Any, Dict, List
 
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy import desc
@@ -21,6 +26,8 @@ from backend.platform.schemas import (
 )
 from backend.platform.scheduler import LoopScheduler
 from backend.platform.status_service import get_system_status, loop_run_out, scheduler_config_out
+
+EVAL_DIR = Path(__file__).resolve().parents[3] / "data" / "evaluation"
 
 router = APIRouter(prefix="/api/platform", tags=["Platform"])
 
@@ -88,9 +95,46 @@ async def trigger_loop(request: LoopRunRequest):
 
 
 @router.get("/loop/running")
-async def running_loop():
+async def running_loop(db: Session = Depends(get_db)):
     scheduler = LoopScheduler.get()
-    return {"running": scheduler.running_loop_id is not None, "run_id": scheduler.running_loop_id}
+    run_id = scheduler.running_loop_id
+    # Reconcile orphaned DB rows left as "running" after process restart / hard stop
+    if not run_id:
+        stuck = (
+            db.query(LoopRun)
+            .filter(LoopRun.status == "running")
+            .all()
+        )
+        if stuck:
+            now = datetime.now(timezone.utc)
+            for row in stuck:
+                row.status = "stopped"
+                row.error_message = row.error_message or "Cleared — no active scheduler thread"
+                row.finished_at = now
+            db.commit()
+    return {"running": run_id is not None, "run_id": run_id}
+
+
+@router.post("/loop/stop")
+async def stop_loop(db: Session = Depends(get_db)):
+    scheduler = LoopScheduler.get()
+    run_id = scheduler.request_stop()
+    if not run_id:
+        # Nothing in-memory — still clear any stuck DB rows so UI can Start again
+        stuck = db.query(LoopRun).filter(LoopRun.status == "running").all()
+        if stuck:
+            now = datetime.now(timezone.utc)
+            cleared = []
+            for row in stuck:
+                row.status = "stopped"
+                row.error_message = "Stopped (no active thread)"
+                row.finished_at = now
+                cleared.append(row.id)
+            db.commit()
+            return {"run_id": cleared[0] if cleared else None, "status": "cleared"}
+        raise HTTPException(status_code=404, detail="No loop is currently running")
+    return {"run_id": run_id, "status": "stopping"}
+
 
 
 @router.get("/scheduler", response_model=SchedulerConfigOut)
@@ -104,3 +148,56 @@ async def update_scheduler_config(update: SchedulerConfigUpdate):
     payload = update.model_dump(exclude_none=True)
     row = LoopScheduler.get().update_config(**payload)
     return scheduler_config_out(row)
+
+
+# ---------------------------------------------------------------------------
+# Reports — evaluation & failure analysis per loop run
+# ---------------------------------------------------------------------------
+
+def _sanitize_nan(obj: Any) -> Any:
+    """Recursively replace NaN/Inf floats with None so the response is JSON-safe."""
+    if isinstance(obj, float):
+        if math.isnan(obj) or math.isinf(obj):
+            return None
+        return obj
+    if isinstance(obj, dict):
+        return {k: _sanitize_nan(v) for k, v in obj.items()}
+    if isinstance(obj, list):
+        return [_sanitize_nan(v) for v in obj]
+    return obj
+
+
+def _load_run_report(run_id: str, filename_prefix: str) -> Dict[str, Any]:
+    """Load a JSON report saved by the loop runner for a given run_id.
+    Falls back to the most recent report of the same type if the exact ID isn't found."""
+    path = EVAL_DIR / f"{filename_prefix}_{run_id}.json"
+    if path.exists():
+        with open(path) as f:
+            return _sanitize_nan(json.load(f))
+
+    # Fallback: find the most recent report of this type
+    matches = sorted(EVAL_DIR.glob(f"{filename_prefix}_*.json"), key=os.path.getmtime, reverse=True)
+    if matches:
+        with open(matches[0]) as f:
+            data = json.load(f)
+        data["_note"] = f"Exact run {run_id} not found; showing latest available report ({matches[0].name})"
+        return _sanitize_nan(data)
+
+    raise HTTPException(
+        status_code=404,
+        detail=f"No {filename_prefix} reports found. Run the loop first to generate reports.",
+    )
+
+
+@router.get("/runs/{run_id}/evaluation")
+async def get_evaluation(run_id: str):
+    """Return the Phase 11-14 evaluation report for a loop run.
+    Loads directly from data/evaluation/ — works even if the DB was recreated."""
+    return _load_run_report(run_id, "loop")
+
+
+@router.get("/runs/{run_id}/failure-analysis")
+async def get_failure_analysis(run_id: str):
+    """Return the failure analysis (CTL heatmap + per-family ASR) for a loop run.
+    Loads directly from data/evaluation/ — works even if the DB was recreated."""
+    return _load_run_report(run_id, "failure_analysis")

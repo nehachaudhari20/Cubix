@@ -93,6 +93,7 @@ class SandboxOrchestrator:
             state=state,
             genai_engine=self.genai_engine,
             compiled_controls=compiled_controls,
+            ml_model=getattr(risk_engine, "ml_model", None) if risk_engine else None,
         )
         self._surface_engines: Dict[str, Any] = {
             "agent": self.agent_engine.evaluate,
@@ -214,6 +215,7 @@ class SandboxOrchestrator:
             ),
             risk_score=verdict.risk_score,
             rule_risk=verdict.rule_risk,
+            ml_score=verdict.ml_score,
             control_triggers=verdict.control_triggers,
             control_gaps=verdict.control_gaps,
             journey=verdict.journey,
@@ -649,17 +651,32 @@ class SandboxOrchestrator:
         timestamp: str,
         payment_path: str = "full",
     ) -> SandboxObservation:
+        """Early-exit payment decision (engine FAIL before RiskEngine).
+
+        ML never ran — leave ml_score None. Still record a rule/combined risk so
+        evidence and UI show why we blocked before scoring.
+        """
         if self.compiled_controls is not None:
             control_triggers = self.compiled_controls.resolve_triggers(control_triggers)
+        # Pre-risk BLOCK ⇒ high rule risk; otherwise leave unset
+        rule_risk = 0.92 if decision == "BLOCK" else (0.45 if decision == "CHALLENGE" else None)
+        risk_score = rule_risk
         return SandboxObservation(
             action_id=action_id,
             action_type=ActionType.INITIATE_PAYMENT.value,
             decision=decision,
             reason=reason,
             message=f"Transaction {decision.lower()}ed via {payment_path}: {reason}",
+            risk_score=risk_score,
+            ml_score=None,
+            rule_risk=rule_risk,
             control_triggers=control_triggers,
             journey=journey,
-            state_snapshot={"payment_path": payment_path},
+            state_snapshot={
+                "payment_path": payment_path,
+                "early_exit": True,
+                "early_exit_reason": reason,
+            },
             timestamp=timestamp,
             transaction_id=transaction_id,
         )
