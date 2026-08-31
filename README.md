@@ -106,7 +106,7 @@ KB → Red Team (DeepTeam + campaigns) → Sandbox adjudication → Evidence buf
 
 ---
 
-### Evaluation framework (Phases 11–14)
+### Evaluation framework
 Full loop scorecard — not a single accuracy number:
 
 | Pillar | What it measures |
